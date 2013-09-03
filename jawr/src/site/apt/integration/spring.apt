@@ -1,0 +1,153 @@
+																		------
+                                    Spring MVC integration
+                                    ------
+                                    ------
+                                    ------
+
+Spring MVC integration
+
+	Jawr includes a Spring MVC Controller implementation which you can use instead of the usual Jawr servlet. This way, 
+	you can keep all your configuration in a single consistent format and benefit with the incredibly flexible configuration system 
+	that ships with Spring. 
+	
+	Note that if you are new to Jawr, reading this guide alone will not suffice to understand how Jawr works, so do chek out 
+	the rest of the documentation because here you will only find the instructions to plug it into Spring. 
+	
+	     
+* Basic configuration
+
+	Assuming you have an up and running Spring web application, you will first need to add a bean definition for the 
+	class <net.jawr.web.servlet.JawrSpringController>. You will need an instance for each resource type (.js and .css), 
+	so it will be best if you declare an abstract bean and then you create two instances from it. Take a look at this 
+	full example and find all the details below: 
+	
++------------------------------------------+	
+<!-- Base Jawr config -->
+<bean abstract="true" id="jawrBase"  class="net.jawr.web.servlet.JawrSpringController" >
+	<!-- This must match the servlet-mapping to which the spring servlet is bound -->
+	<property name="mapping" value="/spring/"/>
+	<property name="configLocation" value="/jawr.properties" />
+	<property name="configuration">
+      	<props>
+	    	<prop>key="jawr.debug.on">false</prop>
+			<prop key="jawr.gzip.on">true</prop> 
+		</props>
+    </property>
+</bean>
+
+<!-- JS controller -->
+<bean id="jawrJsController" parent="jawrBase" />
+  
+<!-- CSS controller -->
+<bean id="jawrCSSController"  parent="jawrBase">
+	<property name="type" value="css" />
+</bean>
++------------------------------------------+
+
+	As you can see, the abstract bean holds most of the configuration details, which is common to both Jawr controllers. 
+	The properties which are being set configure the controllers in the following way: 
+	
+	* <<mapping>> is needed only if the dispatcher servlet is mapped to some subpath in the server (i.e., anything 
+	other than /*). So if the spring servlet-mapping property has a value of '/spring/*', the mapping attribute 
+	should be '/spring/' (without the '*'). 
+	
+	* <<configLocation>> is a location of the Jawr configuration file. Check the descriptor syntax 
+	page for an overview of what goes here. 
+	
+	* <<type>> tells the controller wether it is serving .js or .css files. Since by default .js is assumed, you only 
+	need to set it at the CSS controller declaration. 
+	
+	There are two additional properties you might need to set: 
+	
+	* <<configPropertiesSourceClass>>: This optional parameter holds the qualified class name of you custom implementation of 
+	ConfigPropertiesSource, in case you want to customize the way configuration is loaded when Jawr starts up. Now, this 
+	doesn't make much sense when using Spring, since it already makes config loading much more flexible, but since 
+	this is available when using the servlet it doesn't hurt to make it available for Spring users as well. 
+	
+	* <<controllerMapping>>: Depending on how you map the controllers, you might need to set this property. See below for 
+	more info. 
+	
+	* <<configuration>> is a Properties object holding the usual Jawr configuration values. 
+	If the <configLocation> property is defined, this property is used to override the values found in the properties defined at the <configLocation>.
+	If the <configLocation> property is not set, then this property is used for the jawr properties.
+	If you use reload feature by defining the <jawr.config.reload.interval> property, and if you use <configLocation> and <configuration> properties, 
+	then for any change in the file defined at the <configLocation>, the standard Jawr bundling process will happen. Jawr will reload with the new values of the file and the configuration property
+	will override the value set in the file. 
+	
+	Check the descriptor syntax page for an overview of what can be specified for the properties. 
+	
+* Mapping the controllers
+
+	Once you have set up the controllers to your liking, you need to add mappings in the URL handler mapping bean of the 
+	servlet. The simplest and possibly best form to do it is to simply map all .js or .css requests to the controllers: 
+	 
++------------------------------------------+
+<bean id="urlMapping"
+	  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	 <property name="mappings">
+	  <props>
+	  <prop key="/**/*.js">jawrJsController</prop>
+	  <prop key="/**/*.css">jawrCSSController</prop>
+	  <prop key="/**/*.jpg">jawrCSSController</prop>
+	  <prop key="/**/*.png">jawrCSSController</prop>
+	  </props>
+	 </property>
+</bean>
++------------------------------------------+
+	 
+	 You may have noticed the *.jpg and *.png mappings in the example. The reason for adding these is to handle background images referenced 
+	 at css files, when Jawr is in debug mode. This is due to a known problem which will be addressed in future versions. 
+	 
+	 If for some reason you need to add some kind of prefixing to the mappings, there is extra work to be done. For instance, if you mapped 
+	 like this: 
+
++------------------------------------------+
+<bean id="urlMapping"
+	  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	 <property name="mappings">
+	  <props>
+	  <prop key="/jawr/**/*.js">jawrJsController</prop>
+	  <prop key="/jawr/**/*.css">jawrCSSController</prop>
+	  <prop key="/jawr/**/*">jawrCSSController</prop>
+	  </props>
+	 </property>
+</bean>
++------------------------------------------+
+
+	For this configuration, you will need to let the controllers know the extra path information. The reason for this is that Jawr needs not  
+	only to attend to requests, but also to generate URLs which will match its own controllers (incidentially, that's the same reason to need 
+	the <mapping> configuration attribute too). Note that the additional images mapping is simpler now, reduced to '/jawr/**/*' to cover all 
+	types. The <<controllerMapping>> configuration attribute comes into play under this configuration. You will need 
+	to set it with the value of the additional prefixing: 
+	
++------------------------------------------+	
+<!-- Base Jawr config -->
+<bean abstract="true" id="jawrBase"  class="net.jawr.web.servlet.JawrSpringController" >
+	<!-- This must match the servlet-mapping to which the spring servlet is bound -->
+	<property name="mapping" value="/spring/"/>
+	
+	<!-- This must match the controller mapping prefix to which the 
+			jawr controllers are bound at the urlMapping bean  -->
+	<property name="controllerMapping" value="/jawr/"/>
+  	
+  	
+  	<property name="configuration">
+  		<util:properties location="classpath:jawr.properties"/>
+  	</property>
+</bean>
+
++------------------------------------------+	
+	
+	With controllers in place and mappings set, you are ready to start using the Jawr tag library in your pages to get really fast loading 
+	times. 
+	
+	
+* Using Spring's LocaleResolver with the i18n generator. 
+
+	If you will be using Spring's i18n facilities and want to generate 18n message scripts (check the 18n generator docs), you can integrate 
+	boths systems by letting Jawr use Spring's LocaleResolver. Jawr has its own way of resolving the locale of a request and a bit of extra 
+	configuration is needed to have it delegate in Spring. Actually, this single line in your jawr.properties file will do: 
+	
++------------------------------------------+	
+jawr.locale.resolver=net.jawr.web.resource.bundle.locale.SpringLocaleResolver
++------------------------------------------+	
