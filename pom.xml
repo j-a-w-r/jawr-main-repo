@@ -11,7 +11,7 @@
     <version>3.5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>jawr parent</name>
-    <url>http://jawr.java.net/</url></url>
+    <url>http://jawr.java.net/</url>
     <description>Javascript/CSS bundling and compressing tool for java web apps.
   	By using jawr resources are automatically bundled together and optionally minified and gzipped. 
   	Jawr provides tag libraries to reference a generated bundle either by id or by using the name of any of its members.</description>
@@ -60,8 +60,8 @@
 		<jsf-api.version>1.1_02</jsf-api.version>
 		<commons-validator.version>1.2.0</commons-validator.version>
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
-		<ehcache.version>2.4.6<ehcache.version>
-        <smartsprites.version>0.2.10<smartsprites.version>
+		<ehcache.version>2.4.6</ehcache.version>
+        <smartsprites.version>0.2.10</smartsprites.version>
         <google-closure.version>v20130823</google-closure.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
