@@ -1,0 +1,45 @@
+@charset "utf-8";
+.mandatory { 
+	color:black;
+	background: #fff url(../../../jar_cb3df496cbae960efd97933bdd50e5d454/fwk/img/iconInformation.gif) no-repeat left;
+	padding-left : 20px;
+	margin-top : 80px;
+	border : thin solid rgb(250,0,255);
+}
+
+.info { 
+	color:black;
+	background: #fff url(../../../jar_cb3df496cbae960efd97933bdd50e5d454/fwk/img/iconInformation.gif) no-repeat left;
+	padding-left : 20px;
+	margin-top : 80px;
+	border : thin solid rgb(250,0,255);
+}
+
+.generated_class { color : #DA00FF; }
+
+body {
+	background-image: url("../../../postprocessor/csscharset/img/logo.png");
+	background-repeat: no-repeat;
+}
+
+div {
+
+	padding-top : 8px;		
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../../postprocessor/csscharset/img/calendarIcons/calendar.png");
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../../jar_cbf1cabcee8d06aecc2dd8a9dd5b43549e/net/jawr/img/clock.png");
+}
+
+body {
+	color:white;
+	background-color:red;
+}

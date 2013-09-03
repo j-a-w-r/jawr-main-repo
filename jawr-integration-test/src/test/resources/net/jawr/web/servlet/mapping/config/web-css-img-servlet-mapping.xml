@@ -1,0 +1,79 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Basic Jawr web app sample</display-name>
+  	
+	<description>
+		
+	</description>
+	<context-param>
+		<param-name>contextPath</param-name>
+		<param-value>jawr-integration-test</param-value>
+	</context-param>
+	
+
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>CssServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>css</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mapping</param-name>
+			<param-value>/cssJawr/</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mapping</param-name>
+			<param-value>/imgJawr/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>img</param-value>
+		</init-param>
+		<!-- Start Jawr image servlet before Jawr CSS servlet -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<url-pattern>*.js</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CssServlet</servlet-name>
+		<url-pattern>/cssJawr/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JawrImgServlet</servlet-name>
+		<url-pattern>/imgJawr/*</url-pattern>
+	</servlet-mapping>
+	
+	<session-config>
+		<session-timeout>10</session-timeout>
+	</session-config>
+</web-app>
