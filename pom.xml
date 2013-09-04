@@ -6,7 +6,7 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-	<artifactId>jawr-parent</artifactId>
+	<artifactId>jawr-core-parent</artifactId>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.jawr</groupId>
 	<version>3.5-SNAPSHOT</version>
@@ -51,10 +51,23 @@
 			</roles>
 		</developer>
 	</developers>
+	<mailingLists>
+        <mailingList>
+            <name>Users mailing list</name>
+            <post>users@jawr.java.net</post>
+            <archive>https://java.net/projects/jawr/lists/users/archive</archive>
+        </mailingList>
+        <mailingList>
+            <name>Dev mailing list</name>
+            <post>dev@jawr.java.net</post>
+            <archive>https://java.net/projects/jawr/lists/dev/archive</archive>
+        </mailingList>
+    </mailingLists>
 	<properties>
-		<jawr.version>1.5.1-SNAPSHOT</jawr.version>
 		<mockito.version>1.9.5</mockito.version>
 		<junit.version>4.11</junit.version>
+		<log4j.version>1.2.9</log4j.version>
+		<servlet-api.version>2.3</servlet-api.version>
 		<jsp-api.version>2.0</jsp-api.version>
 		<rhino.version>1.7R4</rhino.version>
 		<yuicompressor.version>2.4.7</yuicompressor.version>
@@ -82,7 +95,7 @@
 				<artifactId>jawr-integration-test</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			<!-- Other Dependencies -->
+			<!-- Test Dependencies -->
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
@@ -95,16 +108,17 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
+			<!-- Other Dependencies -->
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
-				<version>2.3</version>
+				<version>${servlet-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.9</version>
+				<version>${log4j.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -194,7 +208,7 @@
 			<dependency>
 				<groupId>com.google.javascript</groupId>
 				<artifactId>closure-compiler</artifactId>
-				<version>v20130823</version>
+				<version>${google-closure.version}</version>
 				<scope>provided</scope>
 			</dependency>
 		</dependencies>
