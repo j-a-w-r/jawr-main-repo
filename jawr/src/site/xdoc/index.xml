@@ -179,8 +179,9 @@
 	    	 	 <li>
 	      		 	<strong>jawr.css.image.classpath.use.servlet</strong>  properties removed. It is replaced by <strong>jawr.css.classpath.handle.image</strong>.     
 	      		 </li>      
-	      	</ul>
-     		</li>
+	      </ul>
+     	  </li>
+      </ul>
       <ul>
       	  <li> <strong>08/15/2010</strong>: Version 3.3.3 released:<br/>
 	      	This version contains 2 bug fixes including a major one. It is highly recommended to upgrade to this version.<br/><br/>

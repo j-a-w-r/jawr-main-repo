@@ -8,7 +8,7 @@
 		<version>7</version>
 	</parent>
 	<groupId>net.jawr</groupId>
-	<artifactId>jawr</artifactId>
+	<artifactId>jawr-core</artifactId>
 	<packaging>jar</packaging>
 	<name>Java web resources bundling and compression</name>
 	<version>3.5</version>
