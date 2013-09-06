@@ -141,7 +141,6 @@ public class JawrIntegrationServer {
 	public void initializeWebAppConfig(JawrTestConfigFiles annotationConfig) throws Exception {
 		
 		String currentJawrConfigPath = annotationConfig.jawrConfig();
-		boolean configChange = false;
 		if(!JAWR_CONFIG_SRC_PATH.equals(currentJawrConfigPath)){
 			
 			OutputStream outFile = new FileOutputStream(new File(WEB_APP_JAWR_CONFIG_PATH));
@@ -149,7 +148,6 @@ public class JawrIntegrationServer {
 					currentJawrConfigPath), outFile);
 			IOUtils.closeQuietly(outFile);
 			JAWR_CONFIG_SRC_PATH = currentJawrConfigPath;
-			configChange = true;
 		}
 		
 		String currentWebXmlPath = annotationConfig.webXml();
@@ -161,14 +159,10 @@ public class JawrIntegrationServer {
 			IOUtils.closeQuietly(outFile);
 			
 			WEB_XML_SRC_PATH = currentWebXmlPath;
-			configChange = true;
 		}
 		
-		// Starts the web application if there were changes in the configuration 
-		//if(configChange){
-		//	LOGGER.info("Web application config change.");
-			startWebApplication();
-		//}
+		// Starts the web application 
+		startWebApplication();
 		
 		webAppConfigInitialized = true;
 	}
