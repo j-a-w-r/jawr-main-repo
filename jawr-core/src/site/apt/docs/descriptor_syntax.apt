@@ -228,7 +228,7 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.js.bundle.[name].locales  | Comma separated list.  | Defines the locale variants to generate for this bundle, which will be available whenever a locale resolver returns a key matching any of the specified values.    | None    |  3.0 |
 *---------------*---------*--------------+----------------+
-| jawr.css.image.classpath.use.servlet | Boolean | The flag indicating if the CSS images should be retrieved from the classpath, for the CSS defined in the classpath. | none| 3.2 |
+| jawr.css.classpath.handle.image | Boolean | The flag indicating if the CSS images should be retrieved from the classpath, for the CSS defined in the classpath. | none| 3.2 not supported since 3.5 |
 *---------------+---------+--------------+----------------+
 | factory.use.orphans.mapper | Boolean | Enable/disable auto scanning of non explicitly mapped files to auto-compress and to generate a one-file bundle out of each.  | true| 3.2.1 |
 *---------------+---------+--------------+----------------+

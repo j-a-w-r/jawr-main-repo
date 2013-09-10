@@ -60,7 +60,7 @@ Jawr plugin for Grails
 	So to enable the JS or the CSS servlet, you must at least define a bundle of the specified type.
 	To enable the Jawr Image servlet, you need to define one of the following property :
 		* jawr.img.mapping
-		* jawr.css.image.classpath.use.servlet
+		* jawr.css.classpath.handle.image
 		* jawr.img.* (Any property which starts with jawr.img)
 		* jawr.image.* (Any property which starts with jawr.image)
 		
