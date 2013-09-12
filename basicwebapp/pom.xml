@@ -25,6 +25,7 @@
 		<dependency>
 			<groupId>com.carrotsearch</groupId>
 			<artifactId>smartsprites</artifactId>
+			<scope>compile</scope> 
 			<!-- TODO : replace by version 0.2.11 containing the feature to track 
 				sprite images when available -->
 			<exclusions>
@@ -38,26 +39,22 @@
 		<dependency>
 			<groupId>com.google.javascript</groupId>
 			<artifactId>closure-compiler</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>maven</groupId>
-			<artifactId>maven-jetty-plugin</artifactId>
-			<version>1.1</version>
-			<scope>provided</scope>
+			<scope>compile</scope> 
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
+			<scope>compile</scope> 
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
 			<artifactId>rhino</artifactId>
-			<scope>provided</scope>
+			<scope>compile</scope> 
 		</dependency>
 		<dependency>
 			<groupId>com.yahoo.platform.yui</groupId>
 			<artifactId>yuicompressor</artifactId>
-			<scope>provided</scope>
+			<scope>compile</scope> 
 			<exclusions>
 				<exclusion>
 					<groupId>rhino</groupId>
