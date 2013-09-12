@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,28 +13,22 @@
  */
 package test.net.jawr.web.resource.bundle.renderer;
 
+import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
-import java.security.Principal;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
@@ -47,6 +41,9 @@ import net.jawr.web.resource.bundle.renderer.BundleRendererContext;
 import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+
+import org.mockito.Mockito;
+
 import test.net.jawr.web.resource.bundle.PredefinedBundlesHandlerUtil;
 import test.net.jawr.web.resource.bundle.handler.ResourceHandlerBasedTest;
 import test.net.jawr.web.servlet.mock.MockServletContext;
@@ -521,7 +518,8 @@ public class CssBundleLinkRendererTestCase extends ResourceHandlerBasedTest {
 		
 		// Test regular link creation
 	    bundleRendererCtx = new BundleRendererContext(CSS_CTX_PATH, null, false, false);
-	    HttpServletRequest request = getIERequest();
+	    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		when(request.getHeader("User-Agent")).thenReturn("MSIE 6");
 	    bundleRendererCtx.setRequest(request);
 	    
 	    String result = renderToString(renderer,"/css/lib/lib.css", bundleRendererCtx);
@@ -549,211 +547,5 @@ public class CssBundleLinkRendererTestCase extends ResourceHandlerBasedTest {
 		result = renderToString(renderer,"/css/lib/lib.css", bundleRendererCtx);
 		assertEquals("Tags were repeated","", result.trim());
 	}
-
-	private HttpServletRequest getIERequest() {
-		HttpServletRequest request = new HttpServletRequest() {
-			
-			public void setCharacterEncoding(String arg0)
-					throws UnsupportedEncodingException {
-				
-			}
-			
-			public void setAttribute(String name, Object o) {
-				
-			}
-			
-			public void removeAttribute(String name) {
-				
-			}
-			
-			public boolean isSecure() {
-				return false;
-			}
-			
-			public int getServerPort() {
-				return 0;
-			}
-			
-			public String getServerName() {
-				return null;
-			}
-			
-			public String getScheme() {
-				return null;
-			}
-			
-			public RequestDispatcher getRequestDispatcher(String path) {
-				return null;
-			}
-			
-			public String getRemoteHost() {
-				return null;
-			}
-			
-			public String getRemoteAddr() {
-				return null;
-			}
-			
-			public String getRealPath(String path) {
-				return null;
-			}
-			
-			public BufferedReader getReader() throws IOException {
-				return null;
-			}
-			
-			public String getProtocol() {
-				return null;
-			}
-			
-			public String[] getParameterValues(String name) {
-				return null;
-			}
-			
-			public Enumeration<?> getParameterNames() {
-				return null;
-			}
-			
-			public Map<?,?> getParameterMap() {
-				return null;
-			}
-			
-			public String getParameter(String name) {
-				return null;
-			}
-			
-			public Enumeration<?> getLocales() {
-				return null;
-			}
-			
-			public Locale getLocale() {
-				return null;
-			}
-			
-			public ServletInputStream getInputStream() throws IOException {
-				return null;
-			}
-			
-			public String getContentType() {
-				return null;
-			}
-			
-			public int getContentLength() {
-				return 0;
-			}
-			
-			public String getCharacterEncoding() {
-				return null;
-			}
-			
-			public Enumeration<?> getAttributeNames() {
-				return null;
-			}
-			
-			public Object getAttribute(String name) {
-				return null;
-			}
-			
-			public boolean isUserInRole(String role) {
-				return false;
-			}
-			
-			public boolean isRequestedSessionIdValid() {
-				return false;
-			}
-			
-			public boolean isRequestedSessionIdFromUrl() {
-				return false;
-			}
-			
-			public boolean isRequestedSessionIdFromURL() {
-				return false;
-			}
-			
-			public boolean isRequestedSessionIdFromCookie() {
-				return false;
-			}
-			
-			public Principal getUserPrincipal() {
-				return null;
-			}
-			
-			public HttpSession getSession(boolean create) {
-				return null;
-			}
-			
-			public HttpSession getSession() {
-				return null;
-			}
-			
-			public String getServletPath() {
-				return null;
-			}
-			
-			public String getRequestedSessionId() {
-				return null;
-			}
-			
-			public StringBuffer getRequestURL() {
-				return null;
-			}
-			
-			public String getRequestURI() {
-				return null;
-			}
-			
-			public String getRemoteUser() {
-				return null;
-			}
-			
-			public String getQueryString() {
-				return null;
-			}
-			
-			public String getPathTranslated() {
-				return null;
-			}
-			
-			public String getPathInfo() {
-				return null;
-			}
-			
-			public String getMethod() {
-				return null;
-			}
-			
-			public int getIntHeader(String name) {
-				return 0;
-			}
-			
-			public Enumeration<?> getHeaders(String name) {
-				return null;
-			}
-			
-			public Enumeration<?> getHeaderNames() {
-				return null;
-			}
-			
-			public String getHeader(String name) {
-				return "MSIE 6";
-			}
-			
-			public long getDateHeader(String name) {
-				return 0;
-			}
-			
-			public Cookie[] getCookies() {
-				return null;
-			}
-			
-			public String getContextPath() {
-				return null;
-			}
-			
-			public String getAuthType() {
-				return null;
-			}
-		};
-		return request;
-	}
+	
 }

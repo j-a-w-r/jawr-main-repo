@@ -67,8 +67,8 @@
 		<mockito.version>1.9.5</mockito.version>
 		<junit.version>4.11</junit.version>
 		<log4j.version>1.2.9</log4j.version>
-		<servlet-api.version>2.3</servlet-api.version>
-		<jsp-api.version>2.0</jsp-api.version>
+		<servlet-api.version>2.5</servlet-api.version>
+		<jsp-api.version>2.1</jsp-api.version>
 		<rhino.version>1.7R4</rhino.version>
 		<yuicompressor.version>2.4.7</yuicompressor.version>
 		<jsf-api.version>1.1_02</jsf-api.version>
@@ -338,6 +338,7 @@
 			<modules>
 				<module>jawr-core</module>
 				<module>jawr-integration-test</module>
+				<module>basicwebapp</module>
 			</modules>
 		</profile>
 	</profiles>
