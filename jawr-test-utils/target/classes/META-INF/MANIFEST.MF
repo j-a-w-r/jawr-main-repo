@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Built-By: icefox
+Build-Jdk: 1.7.0_25
+Implementation-Title: jawr-integration-test
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: net.jawr
+Created-By: Maven Integration for Eclipse
+
