@@ -338,6 +338,7 @@
 			<modules>
 				<module>jawr-core</module>
 				<module>jawr-integration-test</module>
+				<module>jawr-integration-test-utils</module>
 				<module>basicwebapp</module>
 			</modules>
 		</profile>
