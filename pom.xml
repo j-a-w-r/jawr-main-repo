@@ -77,6 +77,8 @@
 		<ehcache.version>2.4.6</ehcache.version>
 		<smartsprites.version>0.2.10</smartsprites.version>
 		<google-closure.version>v20130823</google-closure.version>
+		<jetty.version>6.1.10</jetty.version>
+		<htmlunit.version>2.5</htmlunit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compile.encoding>UTF-8</maven.compile.encoding>

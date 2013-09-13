@@ -20,9 +20,15 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.jawr</groupId>
+			<artifactId>jawr-integration-test-utils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.carrotsearch</groupId>
 			<artifactId>smartsprites</artifactId>
-			<!-- TODO : replace by version 0.2.11 containing the feature to track sprite images when available -->
+			<!-- TODO : replace by version 0.2.11 containing the feature to track 
+				sprite images when available -->
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.collections</groupId>
@@ -56,8 +62,8 @@
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
-					 <groupId>rhino</groupId>
-					 <artifactId>js</artifactId>
+					<groupId>rhino</groupId>
+					<artifactId>js</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
