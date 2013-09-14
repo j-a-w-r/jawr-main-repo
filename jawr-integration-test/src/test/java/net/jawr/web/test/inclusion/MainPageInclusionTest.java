@@ -1,8 +1,6 @@
 package net.jawr.web.test.inclusion;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class MainPageInclusionTest extends AbstractPageTest {
 
 	@Override
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/inclusion/inclusionTest.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/inclusion/inclusionTest.jsp";
 	}
 
 	@Test
@@ -55,19 +53,19 @@ public class MainPageInclusionTest extends AbstractPageTest {
 		assertEquals(5, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/N850584001/bundles/globalBundle.js",
+				getUrlPrefix()+"/N850584001/bundles/globalBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		assertEquals(
-				CONTEXT_PATH+"/N1676582413/bundles/compositeBundle.js",
+				getUrlPrefix()+"/N1676582413/bundles/compositeBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(2);
 		assertEquals(
-				CONTEXT_PATH+"/885880596/bundles/stdBundle.js",
+				getUrlPrefix()+"/885880596/bundles/stdBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(3);
 		assertEquals(
-				CONTEXT_PATH+"/N653009754/bundles/productionBundle.js",
+				getUrlPrefix()+"/N653009754/bundles/productionBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(4);
 		assertEquals(
@@ -104,15 +102,15 @@ public class MainPageInclusionTest extends AbstractPageTest {
 		assertEquals(4, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/N1822449606/bundles/globalStyleBundle.css",
+				getUrlPrefix()+"/N1822449606/bundles/globalStyleBundle.css",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(1);
 		assertEquals(
-				CONTEXT_PATH+"/N39807316/bundles/compositeStyleBundle.css",
+				getUrlPrefix()+"/N39807316/bundles/compositeStyleBundle.css",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(2);
 		assertEquals(
-				CONTEXT_PATH+"/N220599642/bundles/productionStyleBundle.css",
+				getUrlPrefix()+"/N220599642/bundles/productionStyleBundle.css",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(3);
 		assertEquals(

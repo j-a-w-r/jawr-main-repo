@@ -4,8 +4,6 @@
 package net.jawr.web.test.generator.iecssbundle;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +34,7 @@ public class MainPageIECssBundleTest extends MainPageTest {
 	 * @return the page URL to test
 	 */
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/index.jsp";
 	}
 
 	@Test
@@ -56,7 +54,7 @@ public class MainPageIECssBundleTest extends MainPageTest {
 		assertEquals(1, scripts.size());
 		final HtmlScript script = scripts.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/690372103.en_US/js/bundle/msg.js",
+				getUrlPrefix()+"/690372103.en_US/js/bundle/msg.js",
 				script.getSrcAttribute());
 	}
 
@@ -76,11 +74,11 @@ public class MainPageIECssBundleTest extends MainPageTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/N541884743/bundles/globalStyleBundle.css",
+				getUrlPrefix()+"/N541884743/bundles/globalStyleBundle.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(1);
 		assertEquals(
-				CONTEXT_PATH+"/N33754198/fwk/core/component.css",
+				getUrlPrefix()+"/N33754198/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -104,7 +102,7 @@ public class MainPageIECssBundleTest extends MainPageTest {
 		final List<?> images = getHtmlImageTags();
 		assertEquals(1, images.size());
 		final HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
 	}
@@ -115,7 +113,7 @@ public class MainPageIECssBundleTest extends MainPageTest {
 		final List<HtmlImageInput> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
 				img.getSrcAttribute());
 
 	}

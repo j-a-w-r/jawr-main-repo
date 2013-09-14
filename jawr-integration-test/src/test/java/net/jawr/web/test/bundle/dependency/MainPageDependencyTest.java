@@ -4,8 +4,6 @@
 package net.jawr.web.test.bundle.dependency;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +34,7 @@ public class MainPageDependencyTest extends AbstractPageTest {
 	 * @return the page URL to test
 	 */
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/dependency/dependencyTest.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/dependency/dependencyTest.jsp";
 	}
 
 	@Test
@@ -56,7 +54,7 @@ public class MainPageDependencyTest extends AbstractPageTest {
 		assertEquals(1, scripts.size());
 		final HtmlScript script = scripts.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/690372103.en_US/js/bundle/msg.js",
+				getUrlPrefix()+"/690372103.en_US/js/bundle/msg.js",
 				script.getSrcAttribute());
 	}
 
@@ -76,23 +74,23 @@ public class MainPageDependencyTest extends AbstractPageTest {
 		assertEquals(5, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/N541884743/bundles/globalStyleBundle.css",
+				getUrlPrefix()+"/N541884743/bundles/globalStyleBundle.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(1);
 		assertEquals(
-				CONTEXT_PATH+"/2145416155/fwk/core/component3.css",
+				getUrlPrefix()+"/2145416155/fwk/core/component3.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(2);
 		assertEquals(
-				CONTEXT_PATH+"/2145416155/fwk/core/component4.css",
+				getUrlPrefix()+"/2145416155/fwk/core/component4.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(3);
 		assertEquals(
-				CONTEXT_PATH+"/N1951876463/fwk/core/component2.css",
+				getUrlPrefix()+"/N1951876463/fwk/core/component2.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(4);
 		assertEquals(
-				CONTEXT_PATH+"/1581531432/fwk/core/component.css",
+				getUrlPrefix()+"/1581531432/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -124,7 +122,7 @@ public class MainPageDependencyTest extends AbstractPageTest {
 		final List<?> images = getHtmlImageTags();
 		assertEquals(1, images.size());
 		final HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
 	}
@@ -135,7 +133,7 @@ public class MainPageDependencyTest extends AbstractPageTest {
 		final List<HtmlImageInput> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
 				img.getSrcAttribute());
 
 	}

@@ -3,7 +3,7 @@
  */
 package net.jawr.web.test.locale;
 
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
@@ -47,11 +47,11 @@ public class MainPageLocaleFrDebugTest extends MainPageLocaleFrTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40fr",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40fr",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 	}
 	
@@ -75,12 +75,12 @@ public class MainPageLocaleFrDebugTest extends MainPageLocaleFrTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 	}
 
 	@Test

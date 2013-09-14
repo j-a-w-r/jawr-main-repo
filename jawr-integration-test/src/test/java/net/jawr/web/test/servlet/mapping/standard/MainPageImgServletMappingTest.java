@@ -1,8 +1,6 @@
 package net.jawr.web.test.servlet.mapping.standard;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +31,7 @@ public class MainPageImgServletMappingTest extends AbstractPageTest {
 	 * @return the page URL to test
 	 */
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/index.jsp";
 	}
 
 	@Test
@@ -53,7 +51,7 @@ public class MainPageImgServletMappingTest extends AbstractPageTest {
 		assertEquals(1, scripts.size());
 		final HtmlScript script = (HtmlScript) scripts.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/690372103.en_US/js/bundle/msg.js",
+				getUrlPrefix()+"/690372103.en_US/js/bundle/msg.js",
 				script.getSrcAttribute());
 	}
 
@@ -73,7 +71,7 @@ public class MainPageImgServletMappingTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = (HtmlLink) styleSheets.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/N762152484/fwk/core/component.css",
+				getUrlPrefix()+"/N762152484/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -93,7 +91,7 @@ public class MainPageImgServletMappingTest extends AbstractPageTest {
 		final List<?> images = getHtmlImageTags();
 		assertEquals(1, images.size());
 		final HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/imgJawr/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/imgJawr/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
 	}
@@ -104,7 +102,7 @@ public class MainPageImgServletMappingTest extends AbstractPageTest {
 		final List<?> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = (HtmlImageInput) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/imgJawr/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/imgJawr/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
 				img.getSrcAttribute());
 
 	}

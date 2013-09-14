@@ -1,6 +1,6 @@
 package net.jawr.web.test.generator.skin;
 
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -39,11 +39,11 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugTest extends Main
 		assertEquals(2, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 	}
 
@@ -67,40 +67,40 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugTest extends Main
 		assertEquals(8, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(2);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme%40en_US%40summer.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme%40en_US%40summer.css",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(3);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1%40en_US%40summer.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1%40en_US%40summer.css",css.getHrefAttribute());
 		
 		
 		css = (HtmlLink) styleSheets.get(4);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(5);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 		checkAlternateStyle(css, "winter");
 		
 		css = (HtmlLink) styleSheets.get(6);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme%40en_US%40winter.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme%40en_US%40winter.css",css.getHrefAttribute());
 		checkAlternateStyle(css, "winter");
 		
 		css = (HtmlLink) styleSheets.get(7);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1%40en_US%40winter.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1%40en_US%40winter.css",css.getHrefAttribute());
 		checkAlternateStyle(css, "winter");
 	}
 
@@ -148,7 +148,7 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugTest extends Main
 		final List<?> images = getHtmlImageTags();
 		assertEquals(1, images.size());
 		final HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
 	}
@@ -159,7 +159,7 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugTest extends Main
 		final List<HtmlImageInput> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
 				img.getSrcAttribute());
 
 	}

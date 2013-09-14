@@ -1,7 +1,6 @@
 package net.jawr.web.test.generator.skin;
 
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.Calendar;
@@ -54,7 +53,7 @@ public class MainPageGeneratedResourceSkinDebugIECssBundleTest extends AbstractP
 
 	@Override
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/index.jsp";
 	}
 
 	@Test
@@ -70,11 +69,11 @@ public class MainPageGeneratedResourceSkinDebugIECssBundleTest extends AbstractP
 		assertEquals(2, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 	}
 
@@ -98,7 +97,7 @@ public class MainPageGeneratedResourceSkinDebugIECssBundleTest extends AbstractP
 		assertEquals(1, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN101424371.en_US%40summer%2Ffwk%2Fcore%2Fcomponent.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN101424371.en_US%40summer%2Ffwk%2Fcore%2Fcomponent.css",
 				css.getHrefAttribute());
 	}
 
@@ -118,7 +117,7 @@ public class MainPageGeneratedResourceSkinDebugIECssBundleTest extends AbstractP
 		final List<?> images = getHtmlImageTags();
 		assertEquals(1, images.size());
 		final HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
 	}
@@ -129,7 +128,7 @@ public class MainPageGeneratedResourceSkinDebugIECssBundleTest extends AbstractP
 		final List<HtmlImageInput> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
 				img.getSrcAttribute());
 
 	}

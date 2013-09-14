@@ -3,8 +3,6 @@
  */
 package net.jawr.web.test;
 
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
@@ -30,7 +28,7 @@ public class PageOnlyJsCssJawrServletTest extends AbstractPageTest {
 	 * @return the page URL to test
 	 */
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/page-without-img-tags.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/page-without-img-tags.jsp";
 	}
 
 	@Test
@@ -50,7 +48,7 @@ public class PageOnlyJsCssJawrServletTest extends AbstractPageTest {
 		assertEquals(1, scripts.size());
 		final HtmlScript script = (HtmlScript) scripts.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/690372103.en_US/js/bundle/msg.js",
+				getUrlPrefix()+"/690372103.en_US/js/bundle/msg.js",
 				script.getSrcAttribute());
 	}
 
@@ -70,7 +68,7 @@ public class PageOnlyJsCssJawrServletTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = (HtmlLink) styleSheets.get(0);
 		assertEquals(
-				CONTEXT_PATH+"/1284644420/fwk/core/component.css",
+				getUrlPrefix()+"/1284644420/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

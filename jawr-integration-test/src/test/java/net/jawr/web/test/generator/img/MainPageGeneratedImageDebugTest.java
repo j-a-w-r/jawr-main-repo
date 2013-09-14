@@ -1,8 +1,6 @@
 package net.jawr.web.test.generator.img;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.List;
 
@@ -40,7 +38,7 @@ public class MainPageGeneratedImageDebugTest extends AbstractPageTest {
 
 	@Override
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/generator/img/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/generator/img/index.jsp";
 	}
 
 	@Test
@@ -56,11 +54,11 @@ public class MainPageGeneratedImageDebugTest extends AbstractPageTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 	}
 
@@ -84,12 +82,12 @@ public class MainPageGeneratedImageDebugTest extends AbstractPageTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/generator/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/generator/one.css?d=11111",css.getHrefAttribute());
 	}
 
 	@Test

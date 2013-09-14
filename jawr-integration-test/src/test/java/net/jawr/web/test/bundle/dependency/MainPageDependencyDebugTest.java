@@ -1,7 +1,6 @@
 package net.jawr.web.test.bundle.dependency;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,11 +41,11 @@ public class MainPageDependencyDebugTest extends MainPageDependencyTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 	}
 
@@ -70,36 +69,36 @@ public class MainPageDependencyDebugTest extends MainPageDependencyTest {
 		assertEquals(8, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/inclusion/global/global.css?d=11111",
+				getUrlPrefix()+"/css/inclusion/global/global.css?d=11111",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/inclusion/global/global_1.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/inclusion/global/global_1.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(2);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(3);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/two.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/two.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(4);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(5);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/two.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/two.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(6);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/two.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/two.css?d=11111",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(7);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 	}
 
 	@Test

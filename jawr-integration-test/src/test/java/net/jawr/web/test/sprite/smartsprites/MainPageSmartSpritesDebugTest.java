@@ -1,8 +1,6 @@
 package net.jawr.web.test.sprite.smartsprites;
 
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class MainPageSmartSpritesDebugTest extends MainPageSmartSpritesTest {
 
 	@Override
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/sprite/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/sprite/index.jsp";
 	}
 
 	@Test
@@ -55,11 +53,11 @@ public class MainPageSmartSpritesDebugTest extends MainPageSmartSpritesTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=messages%3Amessages%40en_US",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 	}
 
@@ -83,12 +81,12 @@ public class MainPageSmartSpritesDebugTest extends MainPageSmartSpritesTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2FtempCssWithSprite.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2FtempCssWithSprite.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/sprite/one.css?d=11111",css.getHrefAttribute());
+				getUrlPrefix()+"/css/sprite/one.css?d=11111",css.getHrefAttribute());
 	}
 
 	@Test

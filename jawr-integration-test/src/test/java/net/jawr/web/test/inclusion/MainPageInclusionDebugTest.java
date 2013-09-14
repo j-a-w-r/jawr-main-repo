@@ -2,8 +2,6 @@ package net.jawr.web.test.inclusion;
 
 import static net.jawr.web.test.utils.Utils.assertGeneratedLinkEquals;
 import static org.junit.Assert.assertEquals;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
 
 import java.util.List;
 
@@ -40,7 +38,7 @@ public class MainPageInclusionDebugTest extends AbstractPageTest {
 
 	@Override
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/inclusion/inclusionTest.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/inclusion/inclusionTest.jsp";
 	}
 
 	@Test
@@ -56,35 +54,35 @@ public class MainPageInclusionDebugTest extends AbstractPageTest {
 		assertEquals(8, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/global/jawr.js?d=11111",
+				getUrlPrefix()+"/js/global/jawr.js?d=11111",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/inclusion/global/global.js?d=11111",
+				getUrlPrefix()+"/js/inclusion/global/global.js?d=11111",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(2);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/inclusion/global/global_1.js?d=11111",
+				getUrlPrefix()+"/js/inclusion/global/global_1.js?d=11111",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(3);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/index/index.js?d=11111",
+				getUrlPrefix()+"/js/index/index.js?d=11111",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(4);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=testJs%3AgeneratedContent.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(5);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/inclusion/debugOnly.js?d=11111",
+				getUrlPrefix()+"/js/inclusion/debugOnly.js?d=11111",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(6);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/index/index.js?d=11111",
+				getUrlPrefix()+"/js/index/index.js?d=11111",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(7);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/js/inclusion/externalProduction.js?d=11111",
+				getUrlPrefix()+"/js/inclusion/externalProduction.js?d=11111",
 				script.getSrcAttribute());
 	}
 
@@ -134,27 +132,27 @@ public class MainPageInclusionDebugTest extends AbstractPageTest {
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 					
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/inclusion/global/global.css?d=11111",
+				getUrlPrefix()+"/css/inclusion/global/global.css?d=11111",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(1);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/inclusion/global/global_1.css?d=11111",
+				getUrlPrefix()+"/css/inclusion/global/global_1.css?d=11111",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(2);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/one.css?d=11111",
+				getUrlPrefix()+"/css/one.css?d=11111",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(3);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/jawr_generator.css?d=11111&generationConfigParam=testCss%3AgeneratedContent.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=testCss%3AgeneratedContent.css",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(4);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/inclusion/debugOnly.css?d=11111",
+				getUrlPrefix()+"/css/inclusion/debugOnly.css?d=11111",
 				css.getHrefAttribute());
 		css = (HtmlLink) styleSheets.get(5);
 		assertGeneratedLinkEquals(
-				CONTEXT_PATH+"/css/inclusion/externalProduction.css?d=11111",
+				getUrlPrefix()+"/css/inclusion/externalProduction.css?d=11111",
 				css.getHrefAttribute());
 
 	}

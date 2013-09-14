@@ -3,8 +3,6 @@
  */
 package net.jawr.web.test;
 
-import static net.jawr.web.test.JawrIntegrationServer.CONTEXT_PATH;
-import static net.jawr.web.test.JawrIntegrationServer.SERVER_URL;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
@@ -30,7 +28,7 @@ public class PageInSubDirTest extends MainPageTest {
 	 * @return the page URL to test
 	 */
 	protected String getPageUrl() {
-		return SERVER_URL + CONTEXT_PATH+"/subdir/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix()+"/subdir/index.jsp";
 	}
 
 	@Test
@@ -49,10 +47,10 @@ public class PageInSubDirTest extends MainPageTest {
 		final List<?> images = getHtmlImageTags();
 		assertEquals(2, images.size());
 		HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 		img = (HtmlImage) images.get(1);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cb30a18063ef42b090194a7e936086960f/subdir/img/cog.png",
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/subdir/img/cog.png",
 				img.getSrcAttribute());
 
 	}
@@ -63,7 +61,7 @@ public class PageInSubDirTest extends MainPageTest {
 		final List<?> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = (HtmlImageInput) images.get(0);
-		Utils.assertGeneratedLinkEquals(CONTEXT_PATH+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
 				img.getSrcAttribute());
 
 	}
