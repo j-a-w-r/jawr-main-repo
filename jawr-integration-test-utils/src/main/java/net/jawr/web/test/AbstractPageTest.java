@@ -3,13 +3,17 @@
  */
 package net.jawr.web.test;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jawr.web.test.utils.Utils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -65,10 +69,8 @@ public abstract class AbstractPageTest {
 
 		LOGGER.debug("****** Start Test "+getClass()+" *********");
 		
-		JawrTestConfigFiles annotationConfig = (JawrTestConfigFiles) getClass()
-				.getAnnotation(JawrTestConfigFiles.class);
-
-		JawrIntegrationServer.getInstance().setup(annotationConfig);
+		initConfigFile();
+		JawrIntegrationServer.getInstance().setup();
 
 		webClient = createWebClient();
 		collectedAlerts = new ArrayList<String>();
@@ -76,11 +78,54 @@ public abstract class AbstractPageTest {
 		page = webClient.getPage(getPageUrl());
 
 	}
+	
+	/**
+	 * Initialize the web app config files
+	 */
+	protected void initConfigFile(){
+	
+		JawrTestConfigFiles annotationConfig = (JawrTestConfigFiles) getClass()
+				.getAnnotation(JawrTestConfigFiles.class);
+		try{
+			String currentJawrConfigPath = annotationConfig.jawrConfig();
+			String webappRootDir = JawrIntegrationServer.getInstance().getWebAppRootDir();
+			
+			OutputStream outFile = new FileOutputStream(new File(webappRootDir, "/WEB-INF/classes/jawr.properties"));
+			IOUtils.copy(getClass().getClassLoader().getResourceAsStream(
+					currentJawrConfigPath), outFile);
+			IOUtils.closeQuietly(outFile);
+			
+			String currentWebXmlPath = annotationConfig.webXml();
+			outFile = new FileOutputStream(new File(webappRootDir, "/WEB-INF/web.xml"));
+			IOUtils.copy(getClass().getClassLoader().getResourceAsStream(
+					currentWebXmlPath), outFile);
+			IOUtils.closeQuietly(outFile);	
+		}catch(IOException e){
+			throw new RuntimeException(e);
+		}
+	}
 
 	@After
 	public void teardown(){
 		LOGGER.debug("****** End Test "+getClass()+" *********");
 	}
+	
+	/**
+	 * Returns the webapp context path
+	 * @return the webapp context path
+	 */
+	protected String getUrlPrefix(){
+		return JawrIntegrationServer.getInstance().getContextPath();
+	}
+	
+	/**
+	 * Returns the server url prefix
+	 * @return the server url prefix
+	 */
+	protected String getServerUrlPrefix() {
+		return JawrIntegrationServer.getInstance().getServerUrlPrefix();
+	}
+	
 	/**
 	 * Creates the web client
 	 * 
