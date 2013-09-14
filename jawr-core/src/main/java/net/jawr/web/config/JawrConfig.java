@@ -27,6 +27,7 @@ import javax.servlet.ServletContext;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.context.ThreadLocalJawrContext;
+import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.RegexUtil;
@@ -477,6 +478,11 @@ public class JawrConfig implements Serializable {
 		}
 
 		this.classpathCssHandleImage = getBooleanProperty(JAWR_CSS_CLASSPATH_HANDLE_IMAGE, false);
+		
+		// TODO : remove the below section in the next major release
+		if(StringUtils.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))){
+			throw new BundlingProcessException("The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"+JAWR_CSS_CLASSPATH_HANDLE_IMAGE+"' instead.");
+		}
 		
 		this.imageHashAlgorithm = getProperty(JAWR_IMAGE_HASH_ALGORITHM, "CRC32");
 				
