@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2013 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -30,7 +30,6 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.JavascriptStringUtil;
-import net.jawr.web.resource.bundle.generator.dwr.DWRParamWriter;
 import net.jawr.web.resource.bundle.postprocess.impl.JSMinPostProcessor;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.servlet.RendererRequestUtils;
@@ -40,7 +39,7 @@ import org.apache.log4j.Logger;
 /**
  * Implementation of ClientSideHandlerGenerator
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class ClientSideHandlerGeneratorImpl implements
@@ -52,15 +51,15 @@ public class ClientSideHandlerGeneratorImpl implements
 	/**
 	 * Global bundles, to include in every page
 	 */
-	private List<JoinableResourceBundle> globalBundles;
+	protected List<JoinableResourceBundle> globalBundles;
 	
 	/**
 	 * Bundles to include upon request
 	 */
-	private List<JoinableResourceBundle> contextBundles;
+	protected List<JoinableResourceBundle> contextBundles;
 	
 	/** The Jawr config */
-	private JawrConfig config;
+	protected JawrConfig config;
 	
 	/** The main script template */
 	private static StringBuffer mainScriptTemplate;
@@ -70,13 +69,19 @@ public class ClientSideHandlerGeneratorImpl implements
 
 	/**
 	 * Constructor
-	 * @param globalBundles the global bundles 
-	 * @param contextBundles teh context bundles
-	 * @param config the Jawr configuration
 	 */
-	public ClientSideHandlerGeneratorImpl(List<JoinableResourceBundle> globalBundles,
-			List<JoinableResourceBundle> contextBundles, JawrConfig config) {
-		super();
+	public ClientSideHandlerGeneratorImpl() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator#init(net.jawr.web.config.JawrConfig, java.util.List, java.util.List)
+	 */
+	@Override
+	public void init(JawrConfig config,
+			List<JoinableResourceBundle> globalBundles,
+			List<JoinableResourceBundle> contextBundles) {
+		
 		if(null == mainScriptTemplate){
 			mainScriptTemplate = loadScriptTemplate(SCRIPT_TEMPLATE);
 		}
@@ -86,24 +91,19 @@ public class ClientSideHandlerGeneratorImpl implements
 		this.globalBundles = globalBundles;
 		this.contextBundles = contextBundles;
 		this.config = config;
+		
 	}
-
-
+	
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator#getClientSideHandler(javax.servlet.http.HttpServletRequest)
 	 */
 	public StringBuffer getClientSideHandlerScript(HttpServletRequest request) {
 		
-		boolean useGzip = RendererRequestUtils.isRequestGzippable(request, this.config);
-		StringBuffer sb = new StringBuffer(mainScriptTemplate.toString());
-		Map<String, String> variants = this.config.getGeneratorRegistry().resolveVariants(request);
-		sb.append("JAWR.app_context_path='").append(request.getContextPath()).append("';\n");
+		StringBuffer sb = getHeaderSection(request);
 		
-		if(null != this.config.getDwrMapping()){
-			sb.append(DWRParamWriter.buildDWRJSParams(request.getContextPath(),PathNormalizer.joinPaths(request.getContextPath(),  
-																						 			this.config.getDwrMapping())));
-			sb.append("if(!window.DWR)window.DWR={};\nDWR.loader = JAWR.loader;\n");
-		}
+		boolean useGzip = RendererRequestUtils.isRequestGzippable(request, this.config);
+		
+		Map<String, String> variants = this.config.getGeneratorRegistry().resolveVariants(request);
 		sb.append("JAWR.loader.mapping='").append(getPathPrefix(request, this.config)).append("';\n");
 		
 		// Start an self executing function
@@ -163,6 +163,17 @@ public class ClientSideHandlerGeneratorImpl implements
 				throw new BundlingProcessException("Unexpected error creating client side resource handler",e);
 			}
 		}
+		return sb;
+	}
+
+	/**
+	 * Returns the header section for the client side handler
+	 * @param request the HTTP request
+	 * @return the header section for the client side handler
+	 */
+	protected StringBuffer getHeaderSection(HttpServletRequest request) {
+		StringBuffer sb = new StringBuffer(mainScriptTemplate.toString());
+		sb.append("JAWR.app_context_path='").append(request.getContextPath()).append("';\n");
 		return sb;
 	}
 	
@@ -302,4 +313,7 @@ public class ClientSideHandlerGeneratorImpl implements
 		
 		return sw.getBuffer();
 	}
+
+
+	
 }

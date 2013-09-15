@@ -49,6 +49,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundleContent;
 import net.jawr.web.resource.bundle.JoinableResourceBundlePropertySerializer;
 import net.jawr.web.resource.bundle.factory.global.postprocessor.GlobalPostProcessingContext;
 import net.jawr.web.resource.bundle.factory.global.preprocessor.GlobalPreprocessingContext;
+import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.global.processor.GlobalProcessor;
 import net.jawr.web.resource.bundle.hashcode.BundleHashcodeGenerator;
@@ -190,8 +191,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		this.bundles.addAll(bundles);
 		splitBundlesByType(bundles);
 
-		this.clientSideHandlerGenerator = new ClientSideHandlerGeneratorImpl(
-				globalBundles, contextBundles, config);
+		
+		this.clientSideHandlerGenerator = (ClientSideHandlerGenerator) ClassLoaderResourceUtils.buildObjectInstance(config.getClientSideHandlerGeneratorClass());
+		this.clientSideHandlerGenerator.init(config, globalBundles, contextBundles);
 	}
 
 	/* (non-Javadoc)

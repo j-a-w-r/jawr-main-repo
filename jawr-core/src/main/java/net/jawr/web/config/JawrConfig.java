@@ -179,6 +179,11 @@ public class JawrConfig implements Serializable {
 	private static final String DEBUG_MODE_SYSTEM_FLAG = "net.jawr.debug.on";
 
 	/**
+	 * The property name for the ClientSideHandlerGenerator class
+	 */
+	public static final String JAWR_JS_CLIENTSIDE_HANDLER = "jawr.js.clientside.handler.generator.class";
+	
+	/**
 	 * The property name for the flag indicating if the CSS image for the CSS retrieved from classpath must be also retrieved from classpath
 	 */
 	public static final String JAWR_CSS_CLASSPATH_HANDLE_IMAGE = "jawr.css.classpath.handle.image";
@@ -314,6 +319,9 @@ public class JawrConfig implements Serializable {
 	 */
 	private String contextPathSslOverride;
 
+	/** The client side handler generator class name */
+	private String clientSideHandlerGeneratorClass;
+	
 	/**
 	 * The flag indicating that we should use the overriden context path even in debug mode.
 	 * The default value is false.
@@ -469,6 +477,7 @@ public class JawrConfig implements Serializable {
 			bundleHashcodeGenerator = (BundleHashcodeGenerator) ClassLoaderResourceUtils.buildObjectInstance(bundleHashCodeGenerator);
 		}
 		
+		this.clientSideHandlerGeneratorClass = getProperty(JAWR_JS_CLIENTSIDE_HANDLER, JawrConstant.DEFAULT_JS_CLIENTSIDE_HANDLER);
 		
 		skinCookieName = getProperty(JAWR_CSS_SKIN_COOKIE, JawrConstant.JAWR_SKIN);
 		
@@ -488,6 +497,14 @@ public class JawrConfig implements Serializable {
 				
 		this.imageResourcesDefinition = getProperty(JAWR_IMAGE_RESOURCES);
 				
+	}
+
+	/**
+	 * Returns the client side hanlder generator class name
+	 * @return the client side hanlder generator class name
+	 */
+	public String getClientSideHandlerGeneratorClass() {
+		return clientSideHandlerGeneratorClass;
 	}
 
 	/**

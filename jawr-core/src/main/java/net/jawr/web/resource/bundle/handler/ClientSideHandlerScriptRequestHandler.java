@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2011 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2013 Jordi HernÃ¡ndez SellÃ©s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -29,18 +29,41 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.servlet.RendererRequestUtils;
 
-import org.directwebremoting.servlet.HttpConstants;
-
 /**
  * Handles requests for the client side script used in non dynamic html pages. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class ClientSideHandlerScriptRequestHandler {
 	
 	/** The start time */
 	private static final long START_TIME = System.currentTimeMillis();
+	
+	/**
+     * HTTP etag header
+     */
+    public static final String HEADER_ETAG = "ETag";
+
+    /**
+     * HTTP etag equivalent of HEADER_IF_MODIFIED
+     */
+    public static final String HEADER_IF_NONE = "If-None-Match";
+
+    /**
+     * HTTP header for when a file was last modified
+     */
+    public static final String HEADER_LAST_MODIFIED = "Last-Modified";
+
+    /**
+     * HTTP header to request only modified data
+     */
+    public static final String HEADER_IF_MODIFIED = "If-Modified-Since";
+
+    /**
+     * The name of the user agent HTTP header
+     */
+    public static final String HEADER_USER_AGENT = "User-Agent";
 
 	/** The resource bundle handler */
 	private ResourceBundlesHandler rsHandler;
@@ -55,7 +78,7 @@ public class ClientSideHandlerScriptRequestHandler {
 	 * Placeholder for a script stringbuffer and its hashcode, meant to 
 	 * avoid constant recalculation of the hash value. 
 	 * 
-	 * @author Jordi Hernández Sellés
+	 * @author Jordi Hernï¿½ndez Sellï¿½s
 	 */
 	private static class Handler {
 		String hash;
@@ -109,8 +132,8 @@ public class ClientSideHandlerScriptRequestHandler {
 			response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}
-		response.setHeader(HttpConstants.HEADER_ETAG, handler.hash);
-		response.setDateHeader(HttpConstants.HEADER_LAST_MODIFIED,START_TIME);
+		response.setHeader(HEADER_ETAG, handler.hash);
+		response.setDateHeader(HEADER_LAST_MODIFIED,START_TIME);
 		
 		if(RendererRequestUtils.isRequestGzippable(request, this.config)) {			
 			try {
@@ -146,12 +169,12 @@ public class ClientSideHandlerScriptRequestHandler {
 		long modifiedHeader = -1;
 		try
         {
-            modifiedHeader = request.getDateHeader(HttpConstants.HEADER_IF_MODIFIED);
+            modifiedHeader = request.getDateHeader(HEADER_IF_MODIFIED);
 			if(modifiedHeader != -1)
 				modifiedHeader -= modifiedHeader % 1000;
         }
         catch (RuntimeException ex){}
-        String eTag = request.getHeader(HttpConstants.HEADER_IF_NONE);
+        String eTag = request.getHeader(HEADER_IF_NONE);
         if(modifiedHeader == -1) {
         	return scriptEtag.equals(eTag);
         }

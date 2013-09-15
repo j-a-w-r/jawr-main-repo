@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2013 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,14 +13,18 @@
  */
 package net.jawr.web.resource.bundle.handler;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
+
 /**
  * Provides methods to generate a javascript equivalent of a resourcehandler, used to 
  * generate links in a non dynamic page where taglibs cannot be used. 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public interface ClientSideHandlerGenerator {
@@ -30,6 +34,14 @@ public interface ClientSideHandlerGenerator {
 	
 	/** The script template for debug mode */
 	public static final String DEBUG_SCRIPT_TEMPLATE = "/net/jawr/web/resource/bundle/handler/debughandler.js";
+	
+	/**
+	 * Initializes the ClientSideHandlerGenerator
+	 * @param config the jawr config
+	 * @param globalBundles the global bundles
+	 * @param contextBundles the context bundles
+	 */
+	public void init(JawrConfig config, List<JoinableResourceBundle> globalBundles, List<JoinableResourceBundle> contextBundles);
 	
 	/**
 	 * Builds a javascript script that can be used to include bundles in non dynamic html pages. 

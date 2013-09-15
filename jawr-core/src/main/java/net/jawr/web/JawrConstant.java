@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2011 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2011 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,10 +16,12 @@ package net.jawr.web;
 import java.util.Arrays;
 import java.util.List;
 
+import net.jawr.web.resource.bundle.handler.ClientSideHandlerGeneratorImpl;
+
 /**
  * The constant value for Jawr.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class JawrConstant {
@@ -278,5 +280,8 @@ public class JawrConstant {
 
 	/** The Jawr property name for MBean prefix */
 	public static final String JAWR_JMX_MBEAN_PREFIX = "jawr.jmx.mbean.prefix";
+
+	/** The default JS client side handler generator */
+	public static final String DEFAULT_JS_CLIENTSIDE_HANDLER = ClientSideHandlerGeneratorImpl.class.getName();
 	
 }
