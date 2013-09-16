@@ -803,7 +803,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		IOUtils.copy(rd, writer);
 		String content = writer.toString();
 
-		String imageServletMapping = imgRsHandler.getJawrConfig().getServletMapping();
+		String imageServletMapping = imgRsHandler.getConfig().getServletMapping();
 		
 		if (imageServletMapping == null) {
 			imageServletMapping = "";

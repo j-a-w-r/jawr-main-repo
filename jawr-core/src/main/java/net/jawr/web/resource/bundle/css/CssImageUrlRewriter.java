@@ -195,7 +195,7 @@ public class CssImageUrlRewriter {
 		// Retrieve the current CSS file from which the CSS image is referenced
 		boolean generatedImg = false;
 		if(imgRsHandler != null){
-			GeneratorRegistry imgRsGeneratorRegistry = imgRsHandler.getJawrConfig().getGeneratorRegistry();
+			GeneratorRegistry imgRsGeneratorRegistry = imgRsHandler.getConfig().getGeneratorRegistry();
 			generatedImg = imgRsGeneratorRegistry.isGeneratedImage(url);
 		}
 		

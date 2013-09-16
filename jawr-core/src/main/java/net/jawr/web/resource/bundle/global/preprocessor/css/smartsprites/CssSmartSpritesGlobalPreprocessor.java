@@ -146,7 +146,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 
 		SmartSpritesResourceHandler smartSpriteRsHandler = new SmartSpritesResourceHandler(
 				cssRsHandler, imgRsHandler.getRsReaderHandler(),
-				jawrConfig.getGeneratorRegistry(), imgRsHandler.getJawrConfig()
+				jawrConfig.getGeneratorRegistry(), imgRsHandler.getConfig()
 						.getGeneratorRegistry(), charset.toString(), messageLog);
 
 		smartSpriteRsHandler.setContextPath(jawrConfig

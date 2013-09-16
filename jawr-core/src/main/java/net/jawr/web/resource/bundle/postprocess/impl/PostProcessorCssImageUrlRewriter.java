@@ -68,7 +68,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 		String imgServletPath = "";
 		
 		if(imgRsHandler != null){
-			imgServletPath = PathNormalizer.asPath(imgRsHandler.getJawrConfig().getServletMapping());
+			imgServletPath = PathNormalizer.asPath(imgRsHandler.getConfig().getServletMapping());
 		}
 		
 		String imgUrl = null;
@@ -77,7 +77,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 		String currentCss = originalCssPath;
 		boolean generatedImg = false;
 		if(imgRsHandler != null){
-			GeneratorRegistry imgRsGeneratorRegistry = imgRsHandler.getJawrConfig().getGeneratorRegistry();
+			GeneratorRegistry imgRsGeneratorRegistry = imgRsHandler.getConfig().getGeneratorRegistry();
 			generatedImg = imgRsGeneratorRegistry.isGeneratedImage(url);
 		}
 		
@@ -196,7 +196,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 			}
 			// Retrieve the new URL with the cache prefix
 			try {
-				newUrl = CheckSumUtils.getCacheBustedUrl(url, imgRsHandler.getRsReaderHandler(), imgRsHandler.getJawrConfig());
+				newUrl = CheckSumUtils.getCacheBustedUrl(url, imgRsHandler.getRsReaderHandler(), imgRsHandler.getConfig());
 			} catch (ResourceNotFoundException e) {
 				LOGGER.info("Impossible to define the checksum for the resource '"+url+"'. ");
 				return url;

@@ -54,7 +54,7 @@ public class ImageResourcesHandler {
 	/**
 	 * @return the jawrConfig
 	 */
-	public JawrConfig getJawrConfig() {
+	public JawrConfig getConfig() {
 		return jawrConfig;
 	}
 

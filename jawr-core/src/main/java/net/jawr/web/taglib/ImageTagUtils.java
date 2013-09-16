@@ -95,7 +95,7 @@ public final class ImageTagUtils {
 		
 		String newUrl = (String) imgRsHandler.getCacheUrl(imgSrc);
 		
-        JawrConfig jawrConfig = imgRsHandler.getJawrConfig();
+        JawrConfig jawrConfig = imgRsHandler.getConfig();
 		if(newUrl == null){
         	try {
 				newUrl = CheckSumUtils.getCacheBustedUrl(imgSrc, imgRsHandler.getRsReaderHandler(), jawrConfig);
@@ -139,7 +139,7 @@ public final class ImageTagUtils {
 		
 		String contextPath = request.getContextPath();
 		// relative path
-		if(!imgRsHandler.getJawrConfig().getGeneratorRegistry().isGeneratedImage(imgSrc) && !imgSrc.startsWith("/")){ 
+		if(!imgRsHandler.getConfig().getGeneratorRegistry().isGeneratedImage(imgSrc) && !imgSrc.startsWith("/")){ 
 			imgSrc = PathNormalizer.concatWebPath(request.getRequestURI(), imgSrc);
 			int idx = imgSrc.indexOf(contextPath);
 			if(idx > -1){

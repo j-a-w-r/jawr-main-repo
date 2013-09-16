@@ -848,7 +848,7 @@ public class JawrConfig implements Serializable {
 	}
 	
 	/**
-	 * Sets the the CSS Bundle link render class name
+	 * Sets the CSS Bundle link render class name
 	 * @param cssBundleLinkRenderClass the class name to set
 	 */
 	public void setCssBundleLinkRenderClass(String cssBundleLinkRenderClass) {
@@ -861,6 +861,14 @@ public class JawrConfig implements Serializable {
 	 */
 	public String getImgRendererClass() {
 		return imgRenderClass;
+	}
+
+	/**
+	 * Sets the image render class name
+	 * @param imgRenderClass the class name to set
+	 */
+	public void setImgRendererClass(String imgRenderClass) {
+		this.imgRenderClass = imgRenderClass;
 	}
 
 	/**

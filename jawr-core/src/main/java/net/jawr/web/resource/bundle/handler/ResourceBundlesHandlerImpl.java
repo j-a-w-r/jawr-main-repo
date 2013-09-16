@@ -614,7 +614,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				if (imgRsHandler != null) {
 					// Here we update the image mapping if we are using the
 					// build time bundle processor
-					JawrConfig imgJawrConfig = imgRsHandler.getJawrConfig();
+					JawrConfig imgJawrConfig = imgRsHandler.getConfig();
 
 					// If we use the full image bundle mapping and the jawr
 					// working directory is not located inside the web

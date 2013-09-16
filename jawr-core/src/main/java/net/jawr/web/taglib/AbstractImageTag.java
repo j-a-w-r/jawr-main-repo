@@ -21,7 +21,7 @@ import javax.servlet.jsp.JspException;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
-import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
 import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
 
@@ -242,8 +242,8 @@ public abstract class AbstractImageTag extends ImagePathTag {
 
 		try {
 
-			ResourceBundlesHandler rsHandler = null;
-			if ((rsHandler = (ResourceBundlesHandler) pageContext.getServletContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE)) == null)
+			ImageResourcesHandler rsHandler = null;
+			if ((rsHandler = (ImageResourcesHandler) pageContext.getServletContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE)) == null)
 				throw new IllegalStateException(
 						"ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
 

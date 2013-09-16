@@ -95,7 +95,7 @@ public abstract class AbstractJawrImageReference extends WebMarkupContainer {
     		
     		Writer writer = new RedirectWriter(response);
               
-    		this.renderer = RendererFactory.getImgRenderer(imgRsHandler.getJawrConfig(), isPlainImage());
+    		this.renderer = RendererFactory.getImgRenderer(imgRsHandler.getConfig(), isPlainImage());
         	this.renderer.renderImage(src, 
            								attributes, 
     	   								writer);

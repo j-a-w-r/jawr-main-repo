@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.jawr.web.resource.bundle.handler.ClientSideHandlerGeneratorImpl;
-import net.jawr.web.resource.bundle.renderer.CssBundleLinkRenderer;
-import net.jawr.web.resource.bundle.renderer.JsBundleLinkRenderer;
-import net.jawr.web.resource.bundle.renderer.image.ImgHtmlRenderer;
+import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.image.ImgHTMLRenderer;
 
 /**
  * The constant value for Jawr.
@@ -288,12 +288,12 @@ public class JawrConstant {
 	public static final String DEFAULT_JS_CLIENTSIDE_HANDLER_CLASS = ClientSideHandlerGeneratorImpl.class.getName();
 	
 	/** The default JS bundle link renderer class */
-	public static final String DEFAULT_JS_BUNDLE_LINK_RENDERER_CLASS = JsBundleLinkRenderer.class.getName();
+	public static final String DEFAULT_JS_BUNDLE_LINK_RENDERER_CLASS = JavascriptHTMLBundleLinkRenderer.class.getName();
 
 	/** The default CSS bundle link renderer class */
-	public static final String DEFAULT_CSS_BUNDLE_LINK_RENDERER_CLASS = CssBundleLinkRenderer.class.getName();
+	public static final String DEFAULT_CSS_BUNDLE_LINK_RENDERER_CLASS = CSSHTMLBundleLinkRenderer.class.getName();
 
 	/** The default Image renderer class */
-	public static final String DEFAULT_IMG_RENDERER_CLASS = ImgHtmlRenderer.class.getName();
+	public static final String DEFAULT_IMG_RENDERER_CLASS = ImgHTMLRenderer.class.getName();
 
 }

@@ -26,7 +26,7 @@ import java.util.Map.Entry;
  * @author Jordi Hernandez
  * @author ibrahim Chaehoi
  */
-public class ImgHtmlRenderer implements Serializable {
+public class ImgHTMLRenderer implements ImgRenderer, Serializable {
 	
 	/** The serial versio UID */
 	private static final long serialVersionUID = 5070489835130503527L;
@@ -44,7 +44,7 @@ public class ImgHtmlRenderer implements Serializable {
 	 * Constructor
 	 * @param isPlainImage If true, will render an IMG tag, otherwise an input type="image" is rendered instead
 	 */
-	public ImgHtmlRenderer(){
+	public ImgHTMLRenderer(){
 		
 	}
 	

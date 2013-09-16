@@ -191,8 +191,8 @@ public class CSSImportPostProcessorTest extends TestCase {
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
 		
 		ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) config.getContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
-		imgRsHandler.getJawrConfig().getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		imgRsHandler.getJawrConfig().setContext(config.getContext());
+		imgRsHandler.getConfig().getGeneratorRegistry().setResourceReaderHandler(rsHandler);
+		imgRsHandler.getConfig().setContext(config.getContext());
 		BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,bundle, rsHandler, config);
 		status.setLastPathAdded(filePath);
 		return status;

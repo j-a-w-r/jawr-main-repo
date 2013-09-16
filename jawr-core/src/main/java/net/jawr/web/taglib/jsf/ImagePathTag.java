@@ -53,7 +53,7 @@ public class ImagePathTag extends UIOutput {
 		ImageResourcesHandler imgRsHandler = getImgResourcesHandler(context);
 		
 		//Refresh the config if needed
-        RendererRequestUtils.refreshConfigIfNeeded(request, imgRsHandler.getJawrConfig());
+        RendererRequestUtils.refreshConfigIfNeeded(request, imgRsHandler.getConfig());
         
 		render(context);
 

@@ -336,7 +336,7 @@ public class JawrImageRequestHandler extends JawrRequestHandler {
 					+ dirName + "] to image bundle");
 		}
 
-		GeneratorRegistry generatorRegistry = imgRsHandler.getJawrConfig().getGeneratorRegistry();
+		GeneratorRegistry generatorRegistry = imgRsHandler.getConfig().getGeneratorRegistry();
 		
 		// Add remaining resources (remaining after sorting, or all if no sort
 		// file present)

@@ -114,7 +114,7 @@ public class CSSImportPostProcessor extends
 		// Retrieve the image servlet mapping
 		ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) jawrConfig.getContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
 		if(imgRsHandler != null){
-			jawrConfig = imgRsHandler.getJawrConfig();
+			jawrConfig = imgRsHandler.getConfig();
 		}
 		// Rewrite image URL
 		CssImportedUrlRewriter urlRewriter = new CssImportedUrlRewriter(jawrConfig);
