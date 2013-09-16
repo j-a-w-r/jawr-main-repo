@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -22,10 +22,10 @@ import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 /**
  * Renderer that creates javascript link tags. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
-public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer implements BundleRenderer{
+public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer implements JsBundleLinkRenderer{
     
 	/** The serial version UID */
 	private static final long serialVersionUID = -7753927288041046690L;
@@ -49,8 +49,17 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
     private boolean renderGlobalLinks;
     
     /** Creates a new instance of JavascriptHTMLBundleLinkRenderer */
-    public JavascriptHTMLBundleLinkRenderer(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean defer) {
-        super(bundler, useRandomParam);
+    public JavascriptHTMLBundleLinkRenderer(){
+    	
+    }
+    
+    /* (non-Javadoc)
+     * @see net.jawr.web.resource.bundle.renderer.JsBundleRenderer#init(net.jawr.web.resource.bundle.handler.ResourceBundlesHandler, java.lang.Boolean, java.lang.Boolean)
+     */
+    @Override
+    public void init(ResourceBundlesHandler bundler, Boolean useRandomParam,
+    		Boolean defer) {
+       init(bundler, useRandomParam);
         if(defer != null){
         	this.defer = defer.booleanValue(); 
         }

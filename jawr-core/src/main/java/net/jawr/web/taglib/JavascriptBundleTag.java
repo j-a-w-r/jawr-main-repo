@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,12 +16,12 @@ package net.jawr.web.taglib;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
-import net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
  * Implementation of a jsp taglib AbstractResourceBundleTag used to render javascript bundles. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class JavascriptBundleTag extends AbstractResourceBundleTag {
@@ -47,7 +47,7 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler,
 			Boolean useRandomParam) {
 		
-		return  new JavascriptHTMLBundleLinkRenderer(rsHandler, useRandomParam, defer);
+		return  RendererFactory.getJsBundleRenderer(rsHandler, useRandomParam, defer);
 	}
 
 }

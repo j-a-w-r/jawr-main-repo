@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  */
 package net.jawr.web.wicket;
 
-import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
 
 /**
  * This class defines the Jawr Html image reference for wicket
@@ -34,10 +33,11 @@ public class JawrHtmlImageReference extends AbstractJawrImageReference {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.wicket.AbstractJawrImageReference#createRenderer()
+	 * @see net.jawr.web.wicket.AbstractJawrImageReference#isPlainImage()
 	 */
-	protected ImgRenderer createRenderer() {
-		return new ImgRenderer(true);
+	@Override
+	protected boolean isPlainImage() {
+		return true;
 	}
 
 }

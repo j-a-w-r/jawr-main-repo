@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,12 +16,12 @@ package net.jawr.web.taglib;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
-import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
  * JSP taglib which uses a CSSHTMLBundleLinkRenderer to render links for CSS bundles. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class CSSBundleTag  extends AbstractResourceBundleTag {
@@ -77,7 +77,7 @@ public class CSSBundleTag  extends AbstractResourceBundleTag {
      * @see net.jawr.web.taglib.AbstractResourceBundleTag#createRenderer(boolean)
      */
     protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler, Boolean useRandomParam) {
-		return  new CSSHTMLBundleLinkRenderer(rsHandler, useRandomParam, this.media, this.alternate, this.displayAlternate, this.title);
+		return  RendererFactory.getCssBundleRenderer(rsHandler, useRandomParam, this.media, this.alternate, this.displayAlternate, this.title);
 	}
 
     /* (non-Javadoc)

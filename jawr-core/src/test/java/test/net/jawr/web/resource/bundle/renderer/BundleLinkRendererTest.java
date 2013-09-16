@@ -80,7 +80,8 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	public void setUp(){
-		jsRenderer = new JavascriptHTMLBundleLinkRenderer(jsHandler,true, false);
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, false);
 	}
 	
 	private String renderToString(BundleRenderer renderer, String path, BundleRendererContext ctx){
@@ -153,7 +154,8 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	@Test
 	public void testWriteJSBundleLinksWithDeferAttributes()
 	{
-		jsRenderer = new JavascriptHTMLBundleLinkRenderer(jsHandler,true, true);
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, true);
 		
 		jawrConfig.setDebugModeOn(false);
 		

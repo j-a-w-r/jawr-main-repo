@@ -16,7 +16,7 @@ package net.jawr.web.wicket;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
-import net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.util.value.IValueMap;
@@ -64,6 +64,6 @@ public class JawrJavascriptReference extends AbstractJawrReference {
 		
 		final IValueMap attributes = tag.getAttributes();
 		boolean defer = attributes.getBoolean(JawrConstant.DEFER_ATTR);
-        return new JavascriptHTMLBundleLinkRenderer(rsHandler, useRandomParam, defer);
+        return RendererFactory.getJsBundleRenderer(rsHandler, useRandomParam, defer);
 	}
 }

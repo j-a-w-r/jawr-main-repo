@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  */
 package net.jawr.web.taglib;
 
-import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
 
 /**
  * This class defines the image tag.
@@ -31,10 +30,21 @@ public class ImageInputTag extends AbstractImageTag {
 	 */
 	private static final long serialVersionUID = -3608810516737758870L;
 
+	/**
+	 * Constructor 
+	 */
 	public ImageInputTag() {
-		super(new ImgRenderer(false));
+		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.taglib.AbstractImageTag#isPlainImage()
+	 */
+	@Override
+	protected boolean isPlainImage() {
+		return false;
+	}
+	
 	/**
 	 * @param accesskey the accesskey to set
 	 */
@@ -83,6 +93,8 @@ public class ImageInputTag extends AbstractImageTag {
 	public void setOnchange(String onchange) {
 		getAttributeMap().put("onchange", onchange);
 	}
+
+	
 
 
 }

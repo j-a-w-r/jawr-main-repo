@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -11,33 +11,23 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.wicket;
+package net.jawr.web.resource.bundle.renderer;
 
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 
 /**
- * This class defines the Jawr image reference for wicket
- *  
+ * The interface of JS bundle renderer. 
+ * 
  * @author Ibrahim Chaehoi
  */
-public class JawrImageReference extends AbstractJawrImageReference {
-
-	/** The serial version UID */
-	private static final long serialVersionUID = 3738894824289808984L;
+public interface JsBundleLinkRenderer extends BundleRenderer {
 
 	/**
-	 * Constructor
-	 * @param id the ID of the component
+	 * Initializes the JS Bundle renderer
+	 * @param bundler the resource bundle handler
+	 * @param useRandomParam the flag indicating if it should use random param
+	 * @param defer the flag indicating if the link has a deferred attribute
 	 */
-	public JawrImageReference(String id) {
-		super(id);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.jawr.web.wicket.AbstractJawrImageReference#isPlainImage()
-	 */
-	@Override
-	protected boolean isPlainImage() {
-		return false;
-	}
-
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean defer);
+	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -34,7 +34,6 @@ import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
-import net.jawr.web.resource.bundle.generator.dwr.DWRGeneratorFactory;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver;
@@ -63,7 +62,7 @@ import net.jawr.web.util.StringUtils;
  * a colon, such as 'messages:'). 
  * Generators provided with Jawr will be automatically mapped. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class GeneratorRegistry {
@@ -157,17 +156,6 @@ public class GeneratorRegistry {
 			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(COMMONS_VALIDATOR_PREFIX), CommonsValidatorGenerator.class);
 			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(SKIN_SWTICHER_GENERATOR_PREFIX), SkinSwitcherJsGenerator.class);
 			commonGenerators.put(new SuffixedPathResourceGeneratorResolver(COFEESCRIPT_GENERATOR_SUFFIX), CoffeeScriptGenerator.class);
-			
-			boolean dwrDependencyExists = false;
-			try{
-				ClassLoaderResourceUtils.getClass("org.directwebremoting.util.VersionUtil");
-				dwrDependencyExists = true;
-			}catch(BundlingProcessException e){
-				// Nothing to do
-			}
-			if(dwrDependencyExists){
-				commonGenerators.put(new PrefixedPathResourceGeneratorResolver(DWR_BUNDLE_PREFIX), DWRGeneratorFactory.getDWRGeneratorClass());
-			}
 		}
 		
 		if(resourceType.equals(JawrConstant.CSS_TYPE)){

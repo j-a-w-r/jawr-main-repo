@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  */
 package net.jawr.web.taglib;
 
-import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
 
 /**
  * This class defines the image tag.
@@ -24,40 +23,75 @@ import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
  */
 public class ImgHtmlTag extends AbstractImageTag {
 
-	// -------------------------------------------------------------
 	/**
 	 * The serial version UID
 	 */
 	private static final long serialVersionUID = -6048102958207543073L;
 
-	// ----------------------------------------------------- Constructor
-
+	
+	/**
+	 * Constructor
+	 */
 	public ImgHtmlTag() {
-		super(new ImgRenderer(true));
+	
 	}
 
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.taglib.AbstractImageTag#isPlainImage()
+	 */
+	@Override
+	protected boolean isPlainImage() {
+		return true;
+	}
+	
+	/**
+	 * Sets the height attribute
+	 * @param height the value to set
+	 */
 	public void setHeight(String height) {
 		getAttributeMap().put("height", height);
 	}
 
+	/**
+	 * Sets the hspace attribute
+	 * @param hspace the value to set
+	 */
 	public void setHspace(String hspace) {
 		getAttributeMap().put("hspace", hspace);
 	}
 
+	/**
+	 * Sets the ismap attribute
+	 * @param ismap the value to set
+	 */
 	public void setIsmap(String ismap) {
 		getAttributeMap().put("ismap", ismap);
 	}
 
+	/**
+	 * Sets the usemap attribute
+	 * @param usemap the value to set
+	 */
 	public void setUsemap(String usemap) {
 		getAttributeMap().put("usemap", usemap);
 	}
 
+	/**
+	 * Sets the vspace attribute
+	 * @param vspace the value to set
+	 */
 	public void setVspace(String vspace) {
 		getAttributeMap().put("vspace", vspace);
 	}
 
+	/**
+	 * Sets the width attribute
+	 * @param width the value to set
+	 */
 	public void setWidth(String width) {
 		getAttributeMap().put("width", width);
 	}
+
 	
 }

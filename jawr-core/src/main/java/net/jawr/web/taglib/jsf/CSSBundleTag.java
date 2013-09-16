@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2013 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,12 +18,12 @@ import javax.faces.context.FacesContext;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
-import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
  * Facelets taglib which uses a CSSHTMLBundleLinkRenderer to render links for CSS bundles. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class CSSBundleTag extends AbstractResourceBundleTag {
@@ -40,7 +40,7 @@ public class CSSBundleTag extends AbstractResourceBundleTag {
 		boolean displayAlternate = Boolean.valueOf((String) getAttributes().get(JawrConstant.DISPLAY_ALTERNATE_ATTR)).booleanValue();
 		String title = (String)getAttributes().get(JawrConstant.TITLE_ATTR);
 		
-        return  new CSSHTMLBundleLinkRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), media, alternate, displayAlternate, title);
+        return  RendererFactory.getCssBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), media, alternate, displayAlternate, title);
 	}
 	
 	/* (non-Javadoc)

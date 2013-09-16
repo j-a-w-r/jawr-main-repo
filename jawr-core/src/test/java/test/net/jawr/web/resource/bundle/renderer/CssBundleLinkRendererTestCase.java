@@ -106,7 +106,9 @@ public class CssBundleLinkRendererTestCase extends ResourceHandlerBasedTest {
 			throw new RuntimeException(e);
 		}
 		
-		return new CSSHTMLBundleLinkRenderer(cssHandler,useRandomParam,media,alternate, displayAlternateStyles, title);
+	    CSSHTMLBundleLinkRenderer renderer = new CSSHTMLBundleLinkRenderer();
+	    renderer.init(cssHandler,useRandomParam,media,alternate, displayAlternateStyles, title);
+		return renderer;
 	}
 	
 	private String renderToString(BundleRenderer renderer, String path, BundleRendererContext ctx){

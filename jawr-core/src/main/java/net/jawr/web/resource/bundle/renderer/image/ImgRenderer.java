@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Jordi Hernández
+ * Copyright 2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,39 +14,22 @@
 package net.jawr.web.resource.bundle.renderer.image;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
- * Renders an img or input type img tag in HTML. 
+ * This interface defines the image renderer
  * 
- * @author Jordi Hernandez
+ * @author ibrahim Chaehoi
  *
  */
-public class ImgRenderer implements Serializable {
-	
-	/** The serial versio UID */
-	private static final long serialVersionUID = 5070489835130503527L;
-	
-	/** The image start tag */
-	private static final String IMG_TAG_START = "<img ";
-	
-	/** The input image start tag */
-	private static final String INPUT_TAG_START = "<input type=\"image\" ";
-	
-	/** The start tag prefix used by the renderer */
-	private String tagStart;
-	
+public interface ImgRenderer {
+
 	/**
-	 * Constructor
-	 * @param isPlainImage If true, will render an IMG tag, otherwise an input type="image" is rendered instead
+	 * Initializes the image renderer
+	 * @param isPlainImage
 	 */
-	public ImgRenderer(boolean isPlainImage) {
-		this.tagStart = isPlainImage ? IMG_TAG_START : INPUT_TAG_START;
-	}
+	public void init(boolean isPlainImage);
 	
 	/**
 	 * Render the actual tag
@@ -56,21 +39,6 @@ public class ImgRenderer implements Serializable {
 	 * 
 	 * @throws IOException if an exception occurs
 	 */
-	public void renderImage(String imgSource, Map<String, Object> attributes, final Writer writer) throws IOException{
-		StringBuffer sb = new StringBuffer(tagStart);
-		sb.append("src=\"").append(imgSource).append("\" ");
-		for(Iterator<Entry<String, Object>> it = attributes.entrySet().iterator();it.hasNext();) {
-			Entry<String, Object> mapEntry = it.next();
-			sb.append(mapEntry.getKey())
-				.append("=\"")
-				.append(mapEntry.getValue())
-				.append("\" ");
-			
-		}
-		sb.append("/>");
-		
-		writer.write(sb.toString());
-		
-	}
-
+	public void renderImage(String imgSource, Map<String, Object> attributes, final Writer writer) throws IOException;
+	
 }

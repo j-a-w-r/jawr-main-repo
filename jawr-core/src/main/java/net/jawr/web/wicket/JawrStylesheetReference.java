@@ -16,7 +16,7 @@ package net.jawr.web.wicket;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
-import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 import net.jawr.web.util.StringUtils;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -76,7 +76,7 @@ public class JawrStylesheetReference extends AbstractJawrReference {
         boolean alternate = attributes.getBoolean(JawrConstant.ALTERNATE_ATTR);
         boolean displayAlternateStyles = attributes.getBoolean(JawrConstant.DISPLAY_ALTERNATE_ATTR);
         
-        return new CSSHTMLBundleLinkRenderer(rsHandler, useRandomParam, media, alternate, displayAlternateStyles, title);
+        return RendererFactory.getCssBundleRenderer(rsHandler, useRandomParam, media, alternate, displayAlternateStyles, title);
 	}
     
 }

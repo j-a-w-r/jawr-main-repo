@@ -184,6 +184,21 @@ public class JawrConfig implements Serializable {
 	public static final String JAWR_JS_CLIENTSIDE_HANDLER = "jawr.js.clientside.handler.generator.class";
 	
 	/**
+	 * The property name for the JS Bundle link renderer
+	 */
+	public static final String JAWR_JS_BUNDLE_LINK_RENDERER_CLASS = "jawr.js.bundle.link.renderer.class";
+	
+	/**
+	 * The property name for the CSS Bundle link renderer
+	 */
+	public static final String JAWR_CSS_BUNDLE_LINK_RENDERER_CLASS = "jawr.css.bundle.link.renderer.class";
+	
+	/**
+	 * The property name for the CSS Bundle link renderer
+	 */
+	public static final String JAWR_IMG_RENDERER_CLASS = "jawr.img.bundle.link.renderer.class";
+	
+	/**
 	 * The property name for the flag indicating if the CSS image for the CSS retrieved from classpath must be also retrieved from classpath
 	 */
 	public static final String JAWR_CSS_CLASSPATH_HANDLE_IMAGE = "jawr.css.classpath.handle.image";
@@ -358,6 +373,15 @@ public class JawrConfig implements Serializable {
 	/** The skin cookie name*/
 	private String skinCookieName = JawrConstant.JAWR_SKIN;
 	
+	/** The JS Bundle link renderer class name */
+	private String jsBundleLinkRenderClass;
+	
+	/** The CSS Bundle link renderer class name */
+	private String cssBundleLinkRenderClass;
+	
+	/** The Image renderer class name */
+	private String imgRenderClass;
+	
 	/**
 	 * Initialize configuration using params contained in the initialization properties file.
 	 * 
@@ -477,7 +501,13 @@ public class JawrConfig implements Serializable {
 			bundleHashcodeGenerator = (BundleHashcodeGenerator) ClassLoaderResourceUtils.buildObjectInstance(bundleHashCodeGenerator);
 		}
 		
-		this.clientSideHandlerGeneratorClass = getProperty(JAWR_JS_CLIENTSIDE_HANDLER, JawrConstant.DEFAULT_JS_CLIENTSIDE_HANDLER);
+		this.clientSideHandlerGeneratorClass = getProperty(JAWR_JS_CLIENTSIDE_HANDLER, JawrConstant.DEFAULT_JS_CLIENTSIDE_HANDLER_CLASS);
+		
+		this.jsBundleLinkRenderClass = getProperty(JAWR_JS_BUNDLE_LINK_RENDERER_CLASS, JawrConstant.DEFAULT_JS_BUNDLE_LINK_RENDERER_CLASS);
+		
+		this.cssBundleLinkRenderClass = getProperty(JAWR_CSS_BUNDLE_LINK_RENDERER_CLASS, JawrConstant.DEFAULT_CSS_BUNDLE_LINK_RENDERER_CLASS);
+		
+		this.imgRenderClass = getProperty(JAWR_IMG_RENDERER_CLASS, JawrConstant.DEFAULT_IMG_RENDERER_CLASS);
 		
 		skinCookieName = getProperty(JAWR_CSS_SKIN_COOKIE, JawrConstant.JAWR_SKIN);
 		
@@ -791,6 +821,46 @@ public class JawrConfig implements Serializable {
 	 */
 	public void setUseContextPathOverrideInDebugMode(boolean useContextPathOverrideInDebugMode) {
 		this.useContextPathOverrideInDebugMode = useContextPathOverrideInDebugMode;
+	}
+
+	/**
+	 * Returns the JS Bundle link render class name
+	 * @return the JS Bundle link render class name
+	 */
+	public String getJsBundleLinkRenderClass() {
+		return jsBundleLinkRenderClass;
+	}
+	
+	/**
+	 * Sets the the JS Bundle link render class name
+	 * @param jsBundleLinkRenderClass the class name to set
+	 */
+	public void setJsBundleLinkRenderClass(String jsBundleLinkRenderClass) {
+		this.jsBundleLinkRenderClass = jsBundleLinkRenderClass;
+	}
+
+	/**
+	 * Returns the CSS Bundle link render class name
+	 * @return the CSS Bundle link render class name
+	 */
+	public String getCssBundleLinkRenderClass() {
+		return cssBundleLinkRenderClass;
+	}
+	
+	/**
+	 * Sets the the CSS Bundle link render class name
+	 * @param cssBundleLinkRenderClass the class name to set
+	 */
+	public void setCssBundleLinkRenderClass(String cssBundleLinkRenderClass) {
+		this.cssBundleLinkRenderClass = cssBundleLinkRenderClass;
+	}
+	
+	/**
+	 * Returns the img renderer class name
+	 * @return the img renderer class name
+	 */
+	public String getImgRendererClass() {
+		return imgRenderClass;
 	}
 
 	/**

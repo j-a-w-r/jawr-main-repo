@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2013 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,12 +18,12 @@ import javax.faces.context.FacesContext;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
-import net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
  * Implementation of a facelets taglib AbstractResourceBundleTag used to render javascript bundles. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author ibrahim Chaehoi
  */
 public class JavascriptBundleTag extends AbstractResourceBundleTag {
@@ -35,7 +35,7 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 
 		ResourceBundlesHandler rsHandler = getResourceBundlesHandler(context);
 		boolean defer = Boolean.valueOf((String) getAttributes().get(JawrConstant.DEFER_ATTR)).booleanValue();
-		return  new JavascriptHTMLBundleLinkRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), defer);
+		return  RendererFactory.getJsBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), defer);
 	}
 
 	/* (non-Javadoc)

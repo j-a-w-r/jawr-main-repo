@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,7 +24,6 @@ import net.jawr.web.DebugMode;
 import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
-import net.jawr.web.resource.bundle.generator.dwr.DWRParamWriter;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.servlet.RendererRequestUtils;
@@ -33,7 +32,7 @@ import net.jawr.web.util.StringUtils;
 /**
  * Abstract base class for implementations of a link renderer.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Matt Ruby
  * @author Ibrahim Chaehoi
  */
@@ -49,11 +48,13 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	private boolean useRandomParam;
 	
 	/**
-	 * Creates a new instance of AbstractBundleLinkRenderer
+	 * Initializes the bundle link renderer
 	 * 
-	 * @param bundler ResourceBundlesHandler Handles resolving of paths.
+	 * @param bundler  ResourceBundlesHandler Handles resolving of paths.
+	 * @param useRandomParam
 	 */
-	protected AbstractBundleLinkRenderer(ResourceBundlesHandler bundler, Boolean useRandomParam) {
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam){
+		
 		this.bundler = bundler;
 		if(useRandomParam == null){
 			this.useRandomParam = bundler.getConfig().isDebugUseRandomParam();
@@ -159,20 +160,11 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @param debugOn the debug flag
 	 * @throws IOException if an IOException occurs.
 	 */
-	private void renderGlobalBundleLinks(BundleRendererContext ctx, Writer out,
+	protected void renderGlobalBundleLinks(BundleRendererContext ctx, Writer out,
 			boolean debugOn) throws IOException {
 		
 		if (debugOn) {
 			addComment("Start adding global members.", out);
-		}
-		
-		// If DWR is being used, add a path var to the page
-		if (null != bundler.getConfig().getDwrMapping()) {
-
-			String contextPath = ctx.getContextPath();
-			StringBuffer sb = DWRParamWriter.buildRequestSpecificParams(contextPath, PathNormalizer.joinPaths(contextPath, bundler.getConfig()
-					.getDwrMapping()));
-			out.write(sb.toString());
 		}
 		
 		performGlobalBundleLinksRendering(ctx, out, debugOn);

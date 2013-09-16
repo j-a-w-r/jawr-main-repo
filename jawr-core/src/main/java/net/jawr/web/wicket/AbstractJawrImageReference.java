@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.bundle.renderer.RendererFactory;
 import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
 import net.jawr.web.taglib.ImageTagUtils;
 
@@ -59,7 +60,6 @@ public abstract class AbstractJawrImageReference extends WebMarkupContainer {
 	 */
 	public AbstractJawrImageReference(String id) {
 		super(id);
-		this.renderer = createRenderer();
 	}
 
 	/* (non-Javadoc)
@@ -88,14 +88,15 @@ public abstract class AbstractJawrImageReference extends WebMarkupContainer {
 				throw new IllegalStateException(
 						"You are using a Jawr image tag while the Jawr Image servlet has not been initialized. Initialization of Jawr Image servlet either failed or never occurred.");
 		
-		
+         	
             final Response response = getResponse();
             
     		src = ImageTagUtils.getImageUrl(src, base64, imgRsHandler, request, getHttpServletResponseUrlEncoder(response));
     		
     		Writer writer = new RedirectWriter(response);
               
-           	this.renderer.renderImage(src, 
+    		this.renderer = RendererFactory.getImgRenderer(imgRsHandler.getJawrConfig(), isPlainImage());
+        	this.renderer.renderImage(src, 
            								attributes, 
     	   								writer);
     		
@@ -107,12 +108,11 @@ public abstract class AbstractJawrImageReference extends WebMarkupContainer {
     }
 
     /**
-     * Create the tag renderer.
-     * @param tag the tag
-     * @return the tag renderer.
-     */
-    protected abstract ImgRenderer createRenderer();
-    
+	 * Returns the flag indicating if the image to render is a plain image or not
+	 * @return true if the image to render is a plain image or not
+	 */
+	protected abstract boolean isPlainImage();
+	
     /**
      * Returns the HttpServletResponse which will be used to encode the URL
      * @param response the response
