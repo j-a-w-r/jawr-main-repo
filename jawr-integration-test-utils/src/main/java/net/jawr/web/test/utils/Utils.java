@@ -30,6 +30,8 @@ public class Utils {
 	public static String removeGeneratedRandomReferences(String content){
 		
 		// remove session id
+		content = content.replaceAll("JAWR.dwr_scriptSessionId='[^']*'", "JAWR.dwr_scriptSessionId='11111'");
+		
 		content = content.replaceAll("\\.(png|gif|js|css)[^\\?% \"']*", ".$1");
 		
 		// Remove generated random parameter 
