@@ -35,7 +35,7 @@ import net.jawr.web.resource.handler.reader.FileSystemResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
 
-import org.apache.wicket.util.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;

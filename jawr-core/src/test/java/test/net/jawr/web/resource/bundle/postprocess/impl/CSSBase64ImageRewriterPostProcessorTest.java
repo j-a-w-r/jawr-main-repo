@@ -1,6 +1,7 @@
 package test.net.jawr.web.resource.bundle.postprocess.impl;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
@@ -18,9 +19,6 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.css.base64.Base64ImageEncoderPostProcessor;
-
-import org.apache.wicket.util.file.File;
-
 import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
 import test.net.jawr.web.resource.bundle.handler.MockResourceReaderHandler;

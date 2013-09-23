@@ -73,9 +73,6 @@ public class GeneratorRegistry {
 	/** The classpath resource bundle prefix */
 	public static final String CLASSPATH_RESOURCE_BUNDLE_PREFIX = "jar";
 	
-	/** The DWR bundle prefix */
-	public static final String DWR_BUNDLE_PREFIX = "dwr";
-	
 	/** The commons validator bundle prefix */
 	public static final String COMMONS_VALIDATOR_PREFIX = "acv";
 	

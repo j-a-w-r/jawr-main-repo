@@ -183,12 +183,12 @@
 				<version>${taglibs-standard.version}</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
+			<!-- dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
 				<version>1.4.3</version>
 				<scope>provided</scope>
-			</dependency>
+			</dependency  -->
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache-core</artifactId>
