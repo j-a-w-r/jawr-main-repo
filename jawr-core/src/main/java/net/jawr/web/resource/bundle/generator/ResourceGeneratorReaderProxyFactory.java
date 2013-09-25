@@ -41,14 +41,14 @@ public class ResourceGeneratorReaderProxyFactory {
 	 * @param config the jawr config
 	 * @return the Resource reader
 	 */
-	public static ResourceReader getResourceReaderProxy(BaseResourceGenerator generator, ResourceReaderHandler rsReaderHandler, JawrConfig config){
+	public static ResourceReader getResourceReaderProxy(ResourceGenerator generator, ResourceReaderHandler rsReaderHandler, JawrConfig config){
 		
 		ResourceReader proxy = null;
 		
 		// Defines the interfaces to be implemented by the ResourceReader 
 		int nbExtraInterface = 0;
 		Class<?>[] extraInterfaces = new Class<?>[2];
-		boolean isResourceGenerator = generator instanceof BaseResourceGenerator;
+		boolean isResourceGenerator = generator instanceof ResourceGenerator;
 		boolean isStreamResourceGenerator= generator instanceof StreamResourceGenerator;
 		
 		if(isResourceGenerator){
@@ -83,7 +83,7 @@ public class ResourceGeneratorReaderProxyFactory {
 	 * @return the array of interfaces implemented by the PrefixedResourceGenerator
 	 */
 	private static Class<?>[] getGeneratorInterfaces(
-			BaseResourceGenerator generator) {
+			ResourceGenerator generator) {
 		
 		Set<Class<?>> interfaces = new HashSet<Class<?>>();
 		addInterfaces(generator, interfaces);
@@ -125,7 +125,7 @@ public class ResourceGeneratorReaderProxyFactory {
 	private static class ResourceGeneratorReaderWrapperInvocationHandler implements InvocationHandler {
 		
 		/** The resource generator wrapped */
-		private BaseResourceGenerator generator;
+		private ResourceGenerator generator;
 		
 		/** The resource readre wrapper */
 		private ResourceGeneratorReaderWrapper rsReaderWrapper;
@@ -146,7 +146,7 @@ public class ResourceGeneratorReaderProxyFactory {
 		 * @param config the jawr config
 		 */
 		public ResourceGeneratorReaderWrapperInvocationHandler(
-				BaseResourceGenerator generator, ResourceReaderHandler rsReaderHandler, JawrConfig config) {
+				ResourceGenerator generator, ResourceReaderHandler rsReaderHandler, JawrConfig config) {
 			this.generator = generator;
 			if(generator instanceof TextResourceGenerator){
 				this.rsReaderWrapper = new ResourceGeneratorReaderWrapper((TextResourceGenerator) generator, rsReaderHandler, config);

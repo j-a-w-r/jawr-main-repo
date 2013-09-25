@@ -20,6 +20,6 @@ package net.jawr.web.resource.bundle.generator;
  *
  */
 public interface InitializingResourceGenerator extends
-		BaseResourceGenerator {
+		ResourceGenerator {
 	
 }

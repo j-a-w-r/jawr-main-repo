@@ -22,7 +22,7 @@ import java.util.List;
  * @author Ibrahim Chaehoi
  *
  */
-public interface LocaleAwareResourceGenerator extends BaseResourceGenerator{
+public interface LocaleAwareResourceGenerator extends ResourceGenerator{
 	
 	/**
 	 * Returns the list of available locales for a resource 

@@ -19,7 +19,7 @@ package net.jawr.web.resource.bundle.generator;
  * @author Ibrahim Chaehoi
  *
  */
-public interface SpecificCDNDebugPathResourceGenerator extends BaseResourceGenerator {
+public interface SpecificCDNDebugPathResourceGenerator extends ResourceGenerator {
 
 	/**
 	 * Returns the path to use when generating a resource for the "build time processor". 

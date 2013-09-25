@@ -30,7 +30,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
-import net.jawr.web.resource.bundle.generator.BaseResourceGenerator;
+import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.servlet.util.ImageMIMETypesSupport;
 import net.jawr.web.util.StringUtils;
@@ -226,8 +226,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 				TextResourceReader rsReader = iterator.next();
 				
 				if(!isInstanceOf(rsReader, excludedReader)){
-					if (!(rsReader instanceof BaseResourceGenerator) 
-							|| ((BaseResourceGenerator)rsReader).getResolver().matchPath(resourceName))
+					if (!(rsReader instanceof ResourceGenerator) 
+							|| ((ResourceGenerator)rsReader).getResolver().matchPath(resourceName))
 					{
 							
 						rd = rsReader.getResource(resourceName, processingBundle);
@@ -287,8 +287,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 			for (Iterator<StreamResourceReader> iterator = streamResourceReaders.iterator(); iterator.hasNext();) {
 				
 				StreamResourceReader rsReader = iterator.next();
-				if (!(rsReader instanceof BaseResourceGenerator) 
-						|| ((BaseResourceGenerator)rsReader).getResolver().matchPath(resourceName)){
+				if (!(rsReader instanceof ResourceGenerator) 
+						|| ((ResourceGenerator)rsReader).getResolver().matchPath(resourceName)){
 				
 					is = rsReader.getResourceAsStream(resourceName);
 					if(is != null){
@@ -314,15 +314,15 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders.iterator(); iterator.hasNext();) {
 			ResourceBrowser rsBrowser = iterator.next();
 			if(generatorRegistry.isPathGenerated(dirName)){
-				if (rsBrowser instanceof BaseResourceGenerator) {
-					BaseResourceGenerator rsGeneratorBrowser = (BaseResourceGenerator) rsBrowser;
+				if (rsBrowser instanceof ResourceGenerator) {
+					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
 					if(rsGeneratorBrowser.getResolver().matchPath(dirName)){
 						resourceNames.addAll(rsBrowser.getResourceNames(dirName));
 						break;
 					}
 				}
 			}else{
-				if (!(rsBrowser instanceof BaseResourceGenerator)) {
+				if (!(rsBrowser instanceof ResourceGenerator)) {
 					resourceNames.addAll(rsBrowser.getResourceNames(dirName));
 						break;
 				}
@@ -340,14 +340,14 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders.iterator(); iterator.hasNext() && !result;) {
 			ResourceBrowser rsBrowser = iterator.next();
 			if(generatorRegistry.isPathGenerated(resourceName)){
-				if (rsBrowser instanceof BaseResourceGenerator) {
-					BaseResourceGenerator rsGeneratorBrowser = (BaseResourceGenerator) rsBrowser;
+				if (rsBrowser instanceof ResourceGenerator) {
+					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
 					if(rsGeneratorBrowser.getResolver().matchPath(resourceName)){
 						result = rsBrowser.isDirectory(resourceName);
 					}
 				}
 			}else{
-				if(!(rsBrowser instanceof BaseResourceGenerator)){
+				if(!(rsBrowser instanceof ResourceGenerator)){
 					result = rsBrowser.isDirectory(resourceName);
 				}
 			}

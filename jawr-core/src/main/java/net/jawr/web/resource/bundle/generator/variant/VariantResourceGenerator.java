@@ -15,7 +15,7 @@ package net.jawr.web.resource.bundle.generator.variant;
 
 import java.util.Map;
 
-import net.jawr.web.resource.bundle.generator.BaseResourceGenerator;
+import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 
 /**
@@ -24,7 +24,7 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
  * @author Ibrahim Chaehoi
  *
  */
-public interface VariantResourceGenerator extends BaseResourceGenerator{
+public interface VariantResourceGenerator extends ResourceGenerator{
 
 	/**
 	 * Returns the map of available variant for a resource.

@@ -101,16 +101,16 @@ public class GeneratorRegistry {
 	private final Map<ResourceGeneratorResolver, Class<?>> commonGenerators = new ConcurrentHashMap<ResourceGeneratorResolver, Class<?>>();
 	
 	/** The generator registry */
-	private final List<BaseResourceGenerator> resourceGeneratorRegistry = new CopyOnWriteArrayList<BaseResourceGenerator>();
+	private final List<ResourceGenerator> resourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
 	
 	/** The generator resolver registry */
 	private final List<ResourceGeneratorResolverWrapper> resolverRegistry = new CopyOnWriteArrayList<ResourceGeneratorResolverWrapper>();
 	
 	/** The CSS image resource prefix registry */
-	private final List<BaseResourceGenerator> cssImageResourceGeneratorRegistry = new CopyOnWriteArrayList<BaseResourceGenerator>();
+	private final List<ResourceGenerator> cssImageResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
 	
 	/** The image resource prefix registry */
-	private final List<BaseResourceGenerator> imageResourceGeneratorRegistry = new CopyOnWriteArrayList<BaseResourceGenerator>();
+	private final List<ResourceGenerator> imageResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
 	
 	/** The resource type */
 	private String resourceType;
@@ -191,14 +191,14 @@ public class GeneratorRegistry {
 	 * 
 	 * @return the resource generator
 	 */
-	private BaseResourceGenerator loadCommonGenerator(String resourcePath) {
-		BaseResourceGenerator generator = null;
+	private ResourceGenerator loadCommonGenerator(String resourcePath) {
+		ResourceGenerator generator = null;
 		
 		for (Iterator<Entry<ResourceGeneratorResolver, Class<?>>> iterator = commonGenerators.entrySet().iterator(); iterator.hasNext();) {
 			Entry<ResourceGeneratorResolver, Class<?>> entry = iterator.next();
 			ResourceGeneratorResolver resolver = entry.getKey();
 			if(resolver.matchPath(resourcePath)){
-				generator = (BaseResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(entry.getValue());
+				generator = (ResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(entry.getValue());
 				if(!generator.getResolver().isSameAs(resolver)){
 					throw new BundlingProcessException("The resolver defined for "+generator.getClass().getName()+" is different from the one expected by Jawr.");
 				}
@@ -216,7 +216,7 @@ public class GeneratorRegistry {
 	 * Initialize the generator
 	 * @param generator the generator to intialize
 	 */
-	private void initGenerator(BaseResourceGenerator generator){
+	private void initGenerator(ResourceGenerator generator){
 		
 		initializeGeneratorProperties(generator);
 		updateRegistries(generator);
@@ -228,7 +228,7 @@ public class GeneratorRegistry {
 	 * Update the registries with the generator given in parameter
 	 * @param generator the generator
 	 */
-	private void updateRegistries(BaseResourceGenerator generator) {
+	private void updateRegistries(ResourceGenerator generator) {
 		
 		resolverRegistry.add(new ResourceGeneratorResolverWrapper(generator, generator.getResolver()));
 		
@@ -287,7 +287,7 @@ public class GeneratorRegistry {
 	 */
 	public void registerGenerator(String clazz){
 		
-		BaseResourceGenerator generator = (BaseResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(clazz);
+		ResourceGenerator generator = (ResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(clazz);
 		
 		if(null == generator.getResolver()){
 			throw new IllegalStateException("The getResolver() method must return something at " + clazz);
@@ -316,7 +316,7 @@ public class GeneratorRegistry {
 	 * @param generator the generator
 	 */
 	private void initializeGeneratorProperties(
-			BaseResourceGenerator generator) {
+			ResourceGenerator generator) {
 		// Initialize the generator
 		if(generator instanceof InitializingResourceGenerator){
 			if(generator instanceof ConfigurationAwareResourceGenerator){
@@ -353,7 +353,7 @@ public class GeneratorRegistry {
 	 */
 	public String getDebugModeGenerationPath(String path) {
 		
-		BaseResourceGenerator resourceGenerator = resolveResourceGenerator(path);
+		ResourceGenerator resourceGenerator = resolveResourceGenerator(path);
 		return resourceGenerator.getDebugModeRequestPath();
 	}
 	
@@ -370,7 +370,7 @@ public class GeneratorRegistry {
 		
 		int jawrGenerationParamIdx = path.indexOf(JawrRequestHandler.GENERATION_PARAM);
 		String parameter = path.substring(jawrGenerationParamIdx+JawrRequestHandler.GENERATION_PARAM.length()+1); // Add 1 for the '=' character 
-		BaseResourceGenerator resourceGenerator = resolveResourceGenerator(parameter);
+		ResourceGenerator resourceGenerator = resolveResourceGenerator(parameter);
 		String suffixPath = null;
 		if(resourceGenerator instanceof SpecificCDNDebugPathResourceGenerator){
 			suffixPath = ((SpecificCDNDebugPathResourceGenerator)resourceGenerator).getDebugModeBuildTimeGenerationPath(parameter);
@@ -385,9 +385,9 @@ public class GeneratorRegistry {
 	 * @param path the resource path
 	 * @return the resource generator
 	 */
-	private BaseResourceGenerator resolveResourceGenerator(String path) {
+	private ResourceGenerator resolveResourceGenerator(String path) {
 		
-		BaseResourceGenerator resourceGenerator = null;
+		ResourceGenerator resourceGenerator = null;
 		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry.iterator(); iterator.hasNext();) {
 			ResourceGeneratorResolverWrapper resolver = iterator.next();
 			if(resolver.matchPath(path)){
@@ -409,11 +409,11 @@ public class GeneratorRegistry {
 	 * @param path the path
 	 * @return the resource generator for the path given in parameter
 	 */
-	public BaseResourceGenerator getResourceGenerator(String path){
+	public ResourceGenerator getResourceGenerator(String path){
 		
-		BaseResourceGenerator resourceGenerator = null;
-		for (Iterator<BaseResourceGenerator> iterator = resourceGeneratorRegistry.iterator(); iterator.hasNext();) {
-			BaseResourceGenerator rsGenerator = (BaseResourceGenerator) iterator.next();
+		ResourceGenerator resourceGenerator = null;
+		for (Iterator<ResourceGenerator> iterator = resourceGeneratorRegistry.iterator(); iterator.hasNext();) {
+			ResourceGenerator rsGenerator = (ResourceGenerator) iterator.next();
 			if(rsGenerator.getResolver().matchPath(path)){
 				resourceGenerator = rsGenerator;
 				break;
@@ -464,7 +464,7 @@ public class GeneratorRegistry {
 	public Map<String, VariantSet> getAvailableVariants(String bundle) {
 		
 		Map<String, VariantSet> availableVariants = new TreeMap<String, VariantSet>();
-		BaseResourceGenerator generator = resolveResourceGenerator(bundle);
+		ResourceGenerator generator = resolveResourceGenerator(bundle);
 		if(generator != null){
 			if(generator instanceof VariantResourceGenerator){
 				
@@ -492,7 +492,7 @@ public class GeneratorRegistry {
 	public Set<String> getGeneratedResourceVariantTypes(String path) {
 		
 		Set<String> variantTypes = new HashSet<String>();
-		BaseResourceGenerator generator = resolveResourceGenerator(path);
+		ResourceGenerator generator = resolveResourceGenerator(path);
 		if(generator != null){
 			if(generator instanceof VariantResourceGenerator){
 				
@@ -518,7 +518,7 @@ public class GeneratorRegistry {
 	
 		boolean isHandlingCssImage = false;
 		
-		BaseResourceGenerator generator = resolveResourceGenerator(cssResourcePath);
+		ResourceGenerator generator = resolveResourceGenerator(cssResourcePath);
 		if(generator != null && cssImageResourceGeneratorRegistry.contains(generator)){
 			isHandlingCssImage = true;
 		}
@@ -535,7 +535,7 @@ public class GeneratorRegistry {
 	
 		boolean isGeneratedImage = false;
 		
-		BaseResourceGenerator generator = resolveResourceGenerator(imgResourcePath);
+		ResourceGenerator generator = resolveResourceGenerator(imgResourcePath);
 		if(generator != null && imageResourceGeneratorRegistry.contains(generator)){
 			isGeneratedImage = true;
 		}

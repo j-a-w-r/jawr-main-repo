@@ -13,7 +13,7 @@
  */
 package net.jawr.web.resource.bundle.generator.resolver;
 
-import net.jawr.web.resource.bundle.generator.BaseResourceGenerator;
+import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 
 /**
  * This class defines the wrapper which link the resource resolver and its generator
@@ -24,12 +24,12 @@ public class ResourceGeneratorResolverWrapper implements
 		ResourceGeneratorResolver {
 
 	/** The resource generator */
-	private BaseResourceGenerator generator;
+	private ResourceGenerator generator;
 	
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 	
-	public ResourceGeneratorResolverWrapper(BaseResourceGenerator generator, ResourceGeneratorResolver resolver) {
+	public ResourceGeneratorResolverWrapper(ResourceGenerator generator, ResourceGeneratorResolver resolver) {
 		this.generator = generator;
 		this.resolver = resolver;
 	}
@@ -38,7 +38,7 @@ public class ResourceGeneratorResolverWrapper implements
 	 * Returns the resource generator
 	 * @return the resource generator
 	 */
-	public BaseResourceGenerator getResourceGenerator() {
+	public ResourceGenerator getResourceGenerator() {
 		return generator;
 	}
 

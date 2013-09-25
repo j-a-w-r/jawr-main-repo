@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,7 +28,7 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 /**
  * Abstract implementation of ResourceGenerator with a default return value for the getMappingPrefix method.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public abstract class AbstractCSSGenerator implements SpecificCDNDebugPathResourceGenerator, CssResourceGenerator {

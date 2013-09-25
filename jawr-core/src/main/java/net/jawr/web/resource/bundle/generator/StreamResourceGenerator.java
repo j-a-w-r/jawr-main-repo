@@ -21,7 +21,7 @@ import java.io.InputStream;
  * @author Ibrahim Chaehoi
  *
  */
-public interface StreamResourceGenerator extends BaseResourceGenerator{
+public interface StreamResourceGenerator extends ResourceGenerator{
 
 	/**
 	 * Created an inputStream on a generated image resource (any image not read from the war file 

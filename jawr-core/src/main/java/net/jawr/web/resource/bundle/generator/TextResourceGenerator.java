@@ -21,7 +21,7 @@ import java.io.Reader;
  * @author Ibrahim Chaehoi
  *
  */
-public interface TextResourceGenerator extends BaseResourceGenerator{
+public interface TextResourceGenerator extends ResourceGenerator{
 
 	/**
 	 * Create a reader on a generated resource (any script not read from the war file 
