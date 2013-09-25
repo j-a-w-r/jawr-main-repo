@@ -21,7 +21,6 @@ import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
 import net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer;
 import net.jawr.web.resource.bundle.renderer.image.ImgHTMLRenderer;
 import net.jawr.web.resource.handler.reader.BaseServletContextResourceReader;
-import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
 
 /**
  * The constant value for Jawr.

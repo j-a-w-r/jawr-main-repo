@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 /**
  * Factory to create a ResourceBundlesHandler as per configuration options set by the user.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  * 
  */
@@ -595,7 +595,7 @@ public class BundlesHandlerFactory {
 						String dependencyBundleName = dependencyBundle.getBundleName();
 						if (dependencyBundleName.equals(dependency)) {
 
-							if (!bundleDependencies.contains(dependencyBundleName)){
+							if (!bundleListContains(bundleDependencies, dependencyBundleName)){
 								
 								if(!processedBundles.contains(dependencyBundleName)) {
 									initBundleDependencies(rootBundleDefinition, dependencyBundle,
@@ -616,6 +616,23 @@ public class BundlesHandlerFactory {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Checks if the bundle name exists in the bundle list
+	 * @param bundles the bundle list
+	 * @param bundleName the bundle name
+	 * @return true if the bundle name exists in the bundle list 
+	 */
+	private boolean bundleListContains(List<JoinableResourceBundle> bundles, String bundleName){
+		boolean contains = false;
+		for (JoinableResourceBundle bundle : bundles) {
+			if(bundle.getName().equals(bundleName)){
+				contains = true;
+				break;
+			}
+		}
+		return contains;
 	}
 	
 	/**

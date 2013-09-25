@@ -1,5 +1,5 @@
 /**
- * Copyright 2008  Jordi Hernández Sellés
+ * Copyright 2008  Jordi Hernï¿½ndez Sellï¿½s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,7 @@
  */
 package net.jawr.web.resource.bundle.factory.util;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -20,10 +21,13 @@ import org.apache.log4j.Logger;
 /**
  * A threaded component that periodically checks for updates to the configuration of Jawr. 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  */
-public class ConfigChangeListenerThread extends Thread {
+public class ConfigChangeListenerThread extends Thread implements Serializable {
 	
+	/** The serial version UID */
+	private static final long serialVersionUID = -7816209592970823852L;
+
 	private static final Logger LOGGER = Logger.getLogger(ConfigChangeListenerThread.class.getName());
 	
 	private long waitMillis;

@@ -13,6 +13,8 @@
  */
 package net.jawr.web.resource.bundle.hashcode;
 
+import java.io.Serializable;
+
 import net.jawr.web.config.JawrConfig;
 
 /**
@@ -20,7 +22,10 @@ import net.jawr.web.config.JawrConfig;
  * @author Ibrahim Chaehoi
  *
  */
-public class BundleStringHashcodeGenerator implements BundleHashcodeGenerator {
+public class BundleStringHashcodeGenerator implements BundleHashcodeGenerator, Serializable {
+
+	/** The serial version UID */
+	private static final long serialVersionUID = -6293097053045176614L;
 
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.hash.IBundleHashcodeGenerator#generateHashCode(java.lang.String)

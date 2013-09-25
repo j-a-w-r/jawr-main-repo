@@ -14,6 +14,7 @@
 package net.jawr.web.resource.bundle.handler;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.Map;
@@ -35,8 +36,11 @@ import net.jawr.web.servlet.RendererRequestUtils;
  * @author Jordi Hern�ndez Sell�s
  * @author Ibrahim Chaehoi
  */
-public class ClientSideHandlerScriptRequestHandler {
+public class ClientSideHandlerScriptRequestHandler implements Serializable {
 	
+	/** The serial version UID */
+	private static final long serialVersionUID = 5891646272143678994L;
+
 	/** The start time */
 	private static final long START_TIME = System.currentTimeMillis();
 	

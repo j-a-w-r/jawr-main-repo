@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2010 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2010 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -32,7 +32,7 @@ import net.jawr.web.util.StringUtils;
  * 
  * are allowed within the url.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
 public class LocaleUtils {
@@ -241,15 +241,15 @@ public class LocaleUtils {
 		String country = locale.getCountry();
 		String variant = locale.getVariant();
 
-		if (language == "" && country == "" && variant == "") {
+		if (StringUtils.isEmpty(language) && StringUtils.isEmpty(country) && StringUtils.isEmpty(variant)) {
 			return baseName;
 		}
 
 		StringBuffer sb = new StringBuffer(baseName);
 		sb.append('_');
-		if (variant != "") {
+		if (StringUtils.isNotEmpty(variant)) {
 			sb.append(language).append('_').append(country).append('_').append(variant);
-		} else if (country != "") {
+		} else if (StringUtils.isNotEmpty(country)) {
 			sb.append(language).append('_').append(country);
 		} else {
 			sb.append(language);
@@ -275,9 +275,9 @@ public class LocaleUtils {
 				String country = locale.getCountry();
 				String variant = locale.getVariant();
 
-				if (variant != "") {
+				if (StringUtils.isNotEmpty(variant)) {
 					sb.append(language).append('_').append(country).append('_').append(variant);
-				} else if (country != "") {
+				} else if (StringUtils.isNotEmpty("")) {
 					sb.append(language).append('_').append(country);
 				} else {
 					sb.append(language);

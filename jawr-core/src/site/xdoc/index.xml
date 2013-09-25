@@ -83,7 +83,7 @@
 	<br/>By using a tag library, Jawr allows you to use the same, unchanged pages for development and production. 
 	Jawr also minifies and compresses the files, resulting in reduced page load times. 
 	<br/>Jawr is configured using a simple .properties descriptor, and aside of standard java web applications it can also be used with 
-	<a href="https://facelets.dev.java.net/">Facelets</a> and <a href="http://grails.org/">Grails</a> applications.   
+	<a href="https://facelets.dev.java.net/">Facelets</a>, <a href="http://grails.org/">Grails</a>, <a href="http://wicket.apache.org/">Wicket</a> and <a href="http://projects.spring.io/spring-framework/">Spring</a> applications.   
 	</p>
 	</div>
   	
@@ -163,11 +163,8 @@
       </subsection>
       <subsection name="Requirements">
       	<p>
-      		You can use Jawr with any compliant Java Servlet 2.3 or higher container implementation (i.e. Tomcat, Jetty, BEA Weblogic etc.), as long as the 
-			virtual machine it runs on is 1.4 or higher. Jawr uses Apache log4j for logging messages, so it is a required library. There are no other requirements, 
-			although if your JVM version is 1.4, you can improve performance by using the backport-util-concurrent library, which can be found at: 
-			<a href="http://backport-jsr166.sourceforge.net/">http://backport-jsr166.sourceforge.net</a>. However, this is completely optional and Jawr will work 
-			just fine if you choose not to use it.  
+      		You can use Jawr with any compliant Java Servlet 2.5 or higher container implementation (i.e. Tomcat, Jetty, BEA Weblogic etc.), as long as the 
+			virtual machine it runs on is 1.6 or higher. Jawr uses Apache log4j for logging messages, so it is a required library. There are no other requirements.  
       	</p>
       </subsection>
       <subsection name="Announcements">
@@ -175,6 +172,8 @@
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
       	  <li> <strong>08/15/2010</strong>: Version 3.5 released:<br/>
+	      This version is a major version. This version requires the use of java 6 and servlet API 2.5.
+	      For those, who were using the version 3.3.x, please read the <a href="/migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <ul>   
 	    	 	 <li>
 	      		 	<strong>jawr.css.image.classpath.use.servlet</strong>  properties removed. It is replaced by <strong>jawr.css.classpath.handle.image</strong>.     

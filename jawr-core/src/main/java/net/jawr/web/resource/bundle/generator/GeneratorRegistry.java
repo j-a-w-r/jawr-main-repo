@@ -13,6 +13,7 @@
  */
 package net.jawr.web.resource.bundle.generator;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,8 +66,11 @@ import net.jawr.web.util.StringUtils;
  * @author Jordi Hern�ndez Sell�s
  * @author Ibrahim Chaehoi
  */
-public class GeneratorRegistry {
+public class GeneratorRegistry implements Serializable {
 	
+	/** The serial version UID */
+	private static final long serialVersionUID = -7988265144352433701L;
+
 	/** The message bundle prefix */
 	public static final String MESSAGE_BUNDLE_PREFIX = "messages";
 	
