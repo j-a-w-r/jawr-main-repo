@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,6 +15,8 @@ package net.jawr.web.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +32,10 @@ import org.apache.log4j.Logger;
  * be cached), and served as a single file. 
  * 
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  */
-public class JawrServlet extends HttpServlet {
+public class JawrServlet extends HttpServlet implements ServletContextListener {
 	
 	/** The serial version UID */ 
 	private static final long serialVersionUID = -4551240917172286444L;
@@ -81,8 +83,23 @@ public class JawrServlet extends HttpServlet {
 	 * @see javax.servlet.GenericServlet#destroy()
 	 */
 	public void destroy() {		
-		super.destroy();
 		requestHandler.destroy();
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 */
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		requestHandler.destroy();		
 	}
      
 }
