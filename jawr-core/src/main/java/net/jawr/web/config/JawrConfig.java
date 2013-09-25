@@ -224,6 +224,11 @@ public class JawrConfig implements Serializable {
 	public static final String JAWR_STRICT_MODE = "jawr.strict.mode";
 
 	/**
+	 * The property name for the jawr servlet context reader class name 
+	 */
+	public static final String JAWR_SERVLET_CTX_READER_CLASS = "jawr.servlet.context.reader.class";
+	
+	/**
 	 * The generator registry
 	 */
 	private GeneratorRegistry generatorRegistry;
@@ -373,6 +378,9 @@ public class JawrConfig implements Serializable {
 	/** The skin cookie name*/
 	private String skinCookieName = JawrConstant.JAWR_SKIN;
 	
+	/** The servletContext reader class name */
+	private String servletContextRsReaderClass;
+	
 	/** The JS Bundle link renderer class name */
 	private String jsBundleLinkRenderClass;
 	
@@ -508,6 +516,8 @@ public class JawrConfig implements Serializable {
 		this.cssBundleLinkRenderClass = getProperty(JAWR_CSS_BUNDLE_LINK_RENDERER_CLASS, JawrConstant.DEFAULT_CSS_BUNDLE_LINK_RENDERER_CLASS);
 		
 		this.imgRenderClass = getProperty(JAWR_IMG_RENDERER_CLASS, JawrConstant.DEFAULT_IMG_RENDERER_CLASS);
+		
+		this.servletContextRsReaderClass = getProperty(JAWR_SERVLET_CTX_READER_CLASS, JawrConstant.DEFAULT_SERVLET_CTX_RESOURCE_READER_CLASS);
 		
 		skinCookieName = getProperty(JAWR_CSS_SKIN_COOKIE, JawrConstant.JAWR_SKIN);
 		
@@ -869,6 +879,22 @@ public class JawrConfig implements Serializable {
 	 */
 	public void setImgRendererClass(String imgRenderClass) {
 		this.imgRenderClass = imgRenderClass;
+	}
+
+	/**
+	 * Returns the servlet context reader class name
+	 * @return the servlet context reader class name
+	 */
+	public String getServletContextResourceReaderClass() {
+		return servletContextRsReaderClass;
+	}
+
+	/**
+	 * Sets the servlet context reader class name
+	 * @param servletContextReaderClass the class name to set
+	 */
+	public void setServletContextResourceReaderClass(String servletContextReaderClass) {
+		this.servletContextRsReaderClass = servletContextReaderClass;
 	}
 
 	/**

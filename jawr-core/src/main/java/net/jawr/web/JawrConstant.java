@@ -20,6 +20,8 @@ import net.jawr.web.resource.bundle.handler.ClientSideHandlerGeneratorImpl;
 import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
 import net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer;
 import net.jawr.web.resource.bundle.renderer.image.ImgHTMLRenderer;
+import net.jawr.web.resource.handler.reader.BaseServletContextResourceReader;
+import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
 
 /**
  * The constant value for Jawr.
@@ -238,37 +240,6 @@ public class JawrConstant {
 
 	public static final String JAWR_CSS_URL_REWRITER_CONTEXT_PATH = "jawr.css.url.rewriter.context.path";
 
-	// Grails constant 
-	/** The attribute name of the Grails plugins paths */
-	public static final String JAWR_GRAILS_PLUGIN_PATHS = "net.jawr.grails.plugins.paths";
-
-	/** The attribute name of the flag determining if we are in deployed war mode or not */
-	public static final String GRAILS_WAR_DEPLOYED = "jawr.grails.war.deployed";
-
-	/** The attribute name of the JS request handler */
-	public static final String JAWR_GRAILS_JS_REQUEST_HANDLER  = "net.jawr.grails.js.request.handler";
-	
-	/** The attribute name of the CSS request handler */
-	public static final String JAWR_GRAILS_CSS_REQUEST_HANDLER  = "net.jawr.grails.css.request.handler";
-	
-	/** The attribute name of the IMG request handler */
-	public static final String JAWR_GRAILS_IMG_REQUEST_HANDLER  = "net.jawr.grails.img.request.handler";
-	
-	/** The attribute name of the JS config */
-	public static final String JAWR_GRAILS_JS_CONFIG  = "net.jawr.grails.js.config";
-	
-	/** The attribute name of the JS config */
-	public static final String JAWR_GRAILS_CSS_CONFIG = "net.jawr.grails.css.config";
-	
-	/** The attribute name of the JS config */
-	public static final String JAWR_GRAILS_IMG_CONFIG = "net.jawr.grails.img.config";
-	
-	/** The attribute name of the config hashcode */
-	public static final String JAWR_GRAILS_CONFIG_HASH = "net.jawr.grails.config.hash";
-	
-	/** The attribute name of the config properties */
-	public static final String JAWR_GRAILS_CONFIG_PROPERTIES_KEY = "configProperties";
-
 	/** The Jawr config property to set the base context directory */
 	public static final String JAWR_BASECONTEXT_DIRECTORY = "jawr.basecontext.directory";
 
@@ -295,5 +266,8 @@ public class JawrConstant {
 
 	/** The default Image renderer class */
 	public static final String DEFAULT_IMG_RENDERER_CLASS = ImgHTMLRenderer.class.getName();
+
+	/** The default servlet context resource reader class */
+	public static final String DEFAULT_SERVLET_CTX_RESOURCE_READER_CLASS = BaseServletContextResourceReader.class.getName();
 
 }

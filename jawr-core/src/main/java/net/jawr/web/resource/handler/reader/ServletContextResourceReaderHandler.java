@@ -29,9 +29,9 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.FileNameUtils;
+import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.BaseResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.handler.reader.grails.GrailsServletContextResourceReader;
 import net.jawr.web.servlet.util.ImageMIMETypesSupport;
 import net.jawr.web.util.StringUtils;
 
@@ -105,23 +105,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		
 		this.workingDirectory = tempWorkingDirectory;
 		
-		ServletContextResourceReader rd = null;
-		
-		// In grails apps, the generator uses a special implementation
-		if(null == servletContext.getAttribute(JawrConstant.GRAILS_WAR_DEPLOYED)){
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("Using standard servlet context resource reader.");
-			}
-		
-			rd = new ServletContextResourceReader(servletContext, jawrConfig);
-		}else{
-			
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("Using grails context resource reader.");
-			}
-		
-			rd = new GrailsServletContextResourceReader(servletContext, jawrConfig);
-		}
+		ServletContextResourceReader rd = (ServletContextResourceReader) ClassLoaderResourceUtils.buildObjectInstance(jawrConfig.getServletContextResourceReaderClass());
+		rd.init(servletContext, jawrConfig);
 		addResourceReaderToEnd(rd);
 		
 		// Add FileSystemResourceReader if needed
