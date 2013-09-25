@@ -14,8 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.jawr</groupId>
-			<artifactId>jawr</artifactId>
-			<version>${project.version}</version>
+			<artifactId>jawr-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

@@ -78,8 +78,9 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		if(processingBundle){
 			String path = resourceName;
 			if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
-				path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path.replace(':', '/');
+				path = path.replace(':', '/');
 			}
+			path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
 			rd = ((TextResourceReader) resourceReader).getResource(path, processingBundle);
 		}
 		
@@ -103,8 +104,9 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		String path = resourceName;
 		GeneratorRegistry generatorRegistry = jawrConfig.getGeneratorRegistry();
 		if(generatorRegistry.isGeneratedImage(path)){
-			path = JawrConstant.SPRITE_GENERATED_IMG_DIR+path.replace(':', '/');
+			path = path.replace(':', '/');
 		}
+		path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
 		return ((StreamResourceReader) resourceReader).getResourceAsStream(path, processingBundle);
 	}
 

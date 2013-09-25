@@ -6,8 +6,8 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-	<artifactId>jawr-core-parent</artifactId>
 	<modelVersion>4.0.0</modelVersion>
+	<artifactId>jawr-core-parent</artifactId>
 	<groupId>net.jawr</groupId>
 	<version>3.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
