@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi, Matt Ruby
+ * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi, Matt Ruby
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -93,15 +93,15 @@ public class JawrConfig implements Serializable {
 	public static final String JAWR_CSS_SKIN_RESOLVER = "jawr.css.skin.resolver";
 	
 	/**
-	 * The property name for the bundle hashcode generator
-	 */
-	public static final String JAWR_BUNDLE_HASHCODE_GENERATOR = "jawr.bundle.hashcode.generator";
-	
-	/**
 	 * The property name for the connection type resolver
 	 */
 	public static final String JAWR_CONNECTION_TYPE_SCHEME_RESOLVER = "jawr.url.connection.type.resolver";
 
+	/**
+	 * The property name for the bundle hashcode generator
+	 */
+	public static final String JAWR_BUNDLE_HASHCODE_GENERATOR = "jawr.bundle.hashcode.generator";
+	
 	/**
 	 * The property name for the dwr mapping
 	 */

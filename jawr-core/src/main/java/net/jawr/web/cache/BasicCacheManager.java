@@ -23,7 +23,7 @@ import net.jawr.web.config.JawrConfig;
  * 
  * @author Ibrahim Chaehoi
  */
-public class BasicCacheManager extends AbstractCacheManager {
+public class BasicCacheManager extends JawrCacheManager {
 
 	/** The cache hash map */
 	private Map<String, Object> cache = new ConcurrentHashMap<String, Object>();

@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jawr.web.DebugMode;
-import net.jawr.web.cache.AbstractCacheManager;
+import net.jawr.web.cache.JawrCacheManager;
 import net.jawr.web.cache.CacheManagerFactory;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
@@ -42,7 +42,7 @@ import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
  * in subsequent calls. Every method call not related to retrieving data is
  * delegated to the wrapped implementation.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  * 
  */
@@ -58,7 +58,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	private ResourceBundlesHandler rsHandler;
 
 	/** The cache manager */
-	private AbstractCacheManager cacheMgr;
+	private JawrCacheManager cacheMgr;
 	
 	/**
 	 * Build a cached wrapper around the supplied ResourceBundlesHandler.

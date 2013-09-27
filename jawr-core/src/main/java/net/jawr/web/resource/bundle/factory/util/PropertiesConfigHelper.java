@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2011 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2011 Jordi Hernï¿½ndez Sellï¿½s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,7 @@ import net.jawr.web.util.StringUtils;
 /**
  * Helper class to make properties access less verbose.
  * 
- * @author Jordi Hernández Sellés
+ * @author Jordi Hernï¿½ndez Sellï¿½s
  * @author Ibrahim Chaehoi
  * 
  */
@@ -86,7 +86,7 @@ public class PropertiesConfigHelper {
 	 * @return the value of the common property
 	 */
 	public String getCommonProperty(String key, String defaultValue) {
-		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key, defaultValue);
+		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key, defaultValue).trim();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class PropertiesConfigHelper {
 	 * @return the value of the common property
 	 */
 	public String getCommonProperty(String key) {
-		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key);
+		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key).trim();
 	}
 
 	/**
@@ -105,10 +105,10 @@ public class PropertiesConfigHelper {
 	 */
 	public Set<String> getCommonPropertyAsSet(String key) {
 		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(props.getProperty(PropertiesBundleConstant.PROPS_PREFIX+key, ""),
+		StringTokenizer tk = new StringTokenizer(props.getProperty(PropertiesBundleConstant.PROPS_PREFIX+key, "").trim(),
 				",");
 		while (tk.hasMoreTokens())
-			propertiesSet.add(tk.nextToken().trim());
+			propertiesSet.add(tk.nextToken());
 		return propertiesSet;
 	}
 	
@@ -122,7 +122,7 @@ public class PropertiesConfigHelper {
 	public String getCustomBundleProperty(String bundleName, String key,
 			String defaultValue) {
 		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key, defaultValue);
+				+ bundleName + key, defaultValue).trim();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class PropertiesConfigHelper {
 	 */
 	public String getCustomBundleProperty(String bundleName, String key) {
 		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key);
+				+ bundleName + key).trim();
 	}
 
 	/**
@@ -143,10 +143,10 @@ public class PropertiesConfigHelper {
 	 */
 	public List<String> getCustomBundlePropertyAsList(String bundleName, String key) {
 		List<String> propertiesList = new ArrayList<String>();
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, "").trim(),
 				",");
 		while (tk.hasMoreTokens())
-			propertiesList.add(tk.nextToken().trim());
+			propertiesList.add(tk.nextToken());
 		return propertiesList;
 	}
 	
@@ -157,7 +157,7 @@ public class PropertiesConfigHelper {
 	 */
 	public Set<String> getCustomBundlePropertyAsSet(String bundleName, String key) {
 		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, "").trim(),
 				",");
 		while (tk.hasMoreTokens())
 			propertiesSet.add(tk.nextToken().trim());
@@ -172,7 +172,7 @@ public class PropertiesConfigHelper {
 	public Map<String,List<String>> getCustomBundlePropertyAsMap(String bundleName, String key) {
 		Map<String,List<String>> propertiesMap = new HashMap<String,List<String>>();
 		
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, "").trim(),
 				";");
 		while (tk.hasMoreTokens()){
 			String[] mapEntry = tk.nextToken().trim().split(":");
@@ -314,7 +314,7 @@ public class PropertiesConfigHelper {
 	 * @return the value of the property jawr.+key
 	 */
 	public String getProperty(String key) {
-		return props.getProperty(prefix + key);
+		return props.getProperty(prefix + key).trim();
 	}
 
 }

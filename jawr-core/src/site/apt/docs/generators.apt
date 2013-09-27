@@ -6,6 +6,8 @@
 
 Jawr Generators
 
+	TODO : Update documentation for new resolver
+
 	In some cases it is convenient to generate scripts, CSS or images dynamically. For instance, Jawr will create certain scripts to, say, copy i18n 
 	messages from a ResourceBundle over to a special script. You may need to retrieve some data from a database and create parameters that 
 	scripts will need, or simply grab parameters from a configuration file and pass them over to the scripting context. For any case where you 
@@ -114,7 +116,30 @@ Jawr Generators
 	Unlike the normal mapping, this way of referring to resources does not yet allow wildcards (i.e.: <jar:/com/mycompany/myapp/**> would not 
 	work).  
 	
-		
+<<Less CSS generator>>
+
+	* <<Suffix>>: .less
+	
+	This one will handle LESS CSS resources to compile them to plain CSS resources
+	
++------------------------------------------+
+	jawr.css.bundle.styles.mappings=/css/foo.less,/css/bar.less	
++------------------------------------------+
+	 
+	[]
+	
+<<CofeeScript generator>>
+
+	* <<Suffix>>: .coffee
+	
+	This one will handle coffeeScript resources to compile them to plain JS resources
+	
++------------------------------------------+
+	jawr.js.bundle.myScript.mappings=/js/foo.coffee,/js/bar.coffee	
++------------------------------------------+
+	 
+	[]
+			
 <<Skin generator>>
 
 	* <<Prefix>>: skin

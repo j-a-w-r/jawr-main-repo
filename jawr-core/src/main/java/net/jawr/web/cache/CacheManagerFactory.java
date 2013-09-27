@@ -29,13 +29,13 @@ public class CacheManagerFactory {
 	 * @param resourceType the resource type
 	 * @return the cache manager for a resource type 
 	 */
-	public static AbstractCacheManager getCacheManager(JawrConfig config, String resourceType){
+	public static JawrCacheManager getCacheManager(JawrConfig config, String resourceType){
 	
 		String cacheMgrAttributeName = "JAWR."+resourceType.toUpperCase()+".CACHE.MANAGER";
-		AbstractCacheManager cacheManager = (AbstractCacheManager) config.getContext().getAttribute(cacheMgrAttributeName);
+		JawrCacheManager cacheManager = (JawrCacheManager) config.getContext().getAttribute(cacheMgrAttributeName);
 		if(cacheManager == null){
 			String cacheManagerClass = config.getProperty("jawr.cache.manager", BasicCacheManager.class.getName());
-			cacheManager = (AbstractCacheManager) ClassLoaderResourceUtils.buildObjectInstance(cacheManagerClass, new Object[]{config});
+			cacheManager = (JawrCacheManager) ClassLoaderResourceUtils.buildObjectInstance(cacheManagerClass, new Object[]{config});
 			config.getContext().setAttribute(cacheMgrAttributeName, cacheManager);
 		}
 		return cacheManager;
@@ -47,10 +47,10 @@ public class CacheManagerFactory {
 	 * @param resourceType the resource type
 	 * @return the cache manager for a resource type
 	 */
-	public static synchronized AbstractCacheManager resetCacheManager(JawrConfig config, String resourceType){
+	public static synchronized JawrCacheManager resetCacheManager(JawrConfig config, String resourceType){
 		
 		String cacheMgrAttributeName = "JAWR."+resourceType.toUpperCase()+".CACHE.MANAGER";
-		AbstractCacheManager cacheManager = (AbstractCacheManager) config.getContext().getAttribute(cacheMgrAttributeName);
+		JawrCacheManager cacheManager = (JawrCacheManager) config.getContext().getAttribute(cacheMgrAttributeName);
 		if(cacheManager != null){
 			cacheManager.clear();
 			config.getContext().removeAttribute(cacheMgrAttributeName);

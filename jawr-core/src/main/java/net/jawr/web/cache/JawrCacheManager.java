@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2012 Ibrahim Chaehoi
+ * Copyright 2011-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,13 +20,13 @@ import net.jawr.web.config.JawrConfig;
  * 
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractCacheManager {
+public abstract class JawrCacheManager {
 
 	/**
 	 * Constructor
 	 * @param config the config
 	 */
-	public AbstractCacheManager(JawrConfig config) {
+	public JawrCacheManager(JawrConfig config) {
 		
 	}
 	

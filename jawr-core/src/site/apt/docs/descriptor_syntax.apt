@@ -23,6 +23,8 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+
 | jawr.debug.ie.force.css.bundle | Boolean | Force Jawr to aggregate CSS bundle for IE in debug mode. This allows you to overcome the IE limitation, which can only handle 30 stylesheets. If you set this flag to true, with an IE browser in debug mode, Jawr will render each CSS bundle as a unique CSS resource, instead of referencing all the resources of the bundle.  | false    |
 *---------------+---------+--------------+----------------+
+| jawr.debug.use.random.parameter | Boolean | The flag indicating if the random paramter must be added by default to all debug URL | true | 
+*---------------+---------+--------------+----------------+
 | jawr.gzip.on | Boolean | Enable the ability to serve gzipped resources to browsers that support it. | true    | 
 *---------------+---------+--------------+----------------+
 | jawr.gzip.ie6.on | Boolean | Disable the serving of gzipped resources to Internet Explorer 6 or less. | true    | 
@@ -31,17 +33,23 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+
 | jawr.working.directory | String | Path to the jawr working directory. | <javax.servlet.context.tempdir>/jawrTmp
 *---------------+---------+--------------+----------------+
+| jawr.basecontext.directory | String | the path to the external base context directory where the resource can be found |  
+*---------------+---------+--------------+----------------+
+| jawr.basecontext.directory.high.priority | Boolean | the flag indicating if the resource must be searched in priority in the basecontext directory of not | false |  
+*---------------+---------+--------------+----------------+
 | jawr.config.reload.interval | int | The interval in seconds in which Jawr checks wether the configuration has changed. If this value is set, when you change the properties file Jawr will detect it and redeploy itself so you don't need to restart the server to test your changes.  | none| 
 *---------------+---------+--------------+----------------+
 | jawr.config.reload.refreshKey | String | Force a full refresh of all bundles on request.  Hit any bundle URL and add ?refreshKey=value to reload the bundles. | none    | 
-*---------------*---------*--------------+----------------+
-| jawr.locale.resolver | String | Name of a class implementing net.jawr.web.resource.bundle.locale.LocaleResolver. An instance of this class will be created and used to determine the Locale to use for a given request when using an {{{./messages_gen.html}i18n messages generator}}.   | none|
 *---------------*---------*--------------+----------------+
 | jawr.browser.resolver | String | Name of a class implementing net.jawr.web.resource.bundle.variant.VariantResolver. An instance of this class will be created and used to determine the Browser type to use for a given request.   | net.jawr.web.resource.bundle.variant.resolver.BrowserResolver |
 *---------------*---------*--------------+----------------+
 | jawr.url.connection.type.resolver | String | Name of a class implementing net.jawr.web.resource.bundle.variant.VariantResolver. An instance of this class will be created and used to determine the connection type (standard or ssl) of a given request.   | net.jawr.web.resource.bundle.variant.resolver.ConnectionTypeResolver |
 *---------------*---------*--------------+----------------+
 | jawr.css.skin.resolver | String | Name of a class extending net.jawr.web.resource.bundle.variant.css.AbstractCssSkinResolver. An instance of this class will be created and used to determine the css skin used in a given request.   | net.jawr.web.resource.bundle.variant.css.CssSkinResolver |
+*---------------*---------*--------------+----------------+
+| jawr.locale.resolver | String | Name of a class implementing net.jawr.web.resource.bundle.locale.LocaleResolver. An instance of this class will be created and used to determine the Locale to use for a given request when using an {{{./messages_gen.html}i18n messages generator}}.   | none|
+*---------------*---------*--------------+----------------+
+| jawr.locale.generator.fallbackToSystemLocale | Boolean | The flag indicatinf if Jawr must use the System locale if no locale is found for a request. | true |
 *---------------*---------*--------------+----------------+
 | jawr.url.contextpath.override | URL (absolute or fragment) [<<http://...>>],[<<//somepath>> protocol relative],[<</somepath >>] or [<</>>] or []. | Override the use of the application's contextpath to prefix every generated URL.  | none    | 
 | | | Using '<</>>' will cause Jawr to skip the context path altogether ('/001/bundles/mybundle.js').  |     | 
@@ -80,6 +88,8 @@ Descriptor file syntax
 | jawr.css.skin.default.root.dirs | String | The comma separated list of skin base directory.  | none| 
 *---------------*---------*--------------+----------------+
 | jawr.css.skin.cookie | String | The name of the cookie where the current user CSS skin name is store.  | jawrSkin | 
+*---------------*---------*--------------+----------------+
+|jawr.jmx.mbean.prefix | String | The prefix for Jawr MBean. This can be useful for application which are deployed on different server using the same application context. | default |  
 *---------------*---------*--------------+----------------+
 
 
@@ -124,6 +134,10 @@ Descriptor file syntax
 | jawr.js.factory.dirmapper.excluded  | Comma separated list. | List of directories to exclude when using the dirmapper. You must exclude directory names for those resources already mapped explicitly to a bundle.   | None    | 
 | jawr.css.factory.dirmapper.excluded | | 																																										 |     | 
 *---------------+---------+--------------+----------------+
+| jawr.js.bundle.link.renderer.class | String | The JS link render class, which must implements net.jawr.web.resource.bundle.renderer.JsBundleLinkRenderer | net.jawr.web.resource.bundle.renderer.JavascriptHTMLBundleLinkRenderer | 
+*---------------*---------*--------------+----------------+
+| jawr.css.bundle.link.renderer.class | String | The CSS link render class, which must implements net.jawr.web.resource.bundle.renderer.CssBundleLinkRenderer | net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer | 
+*---------------*---------*--------------+----------------+
 
 	
 * JS/CSS bundle definition properties
@@ -168,6 +182,8 @@ Descriptor file syntax
 | jawr.image.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    | 
 *---------------+---------+--------------+----------------+
 | jawr.image.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 | 
+*---------------*---------*--------------+----------------+
+| jawr.img.bundle.link.renderer.class | String | The image link render class, which must implements net.jawr.web.resource.bundle.renderer.image.ImgRenderer | net.jawr.web.resource.bundle.renderer.image.ImgHTMLRenderer | 
 *---------------*---------*--------------+----------------+
 
 * JS/CSS custom global preprocessor definition properties

@@ -1,0 +1,73 @@
+																		------
+                                    Jawr Migration Guide
+                                    ------
+                                    ------
+                                    ------
+
+Introduction
+
+The version 3.3.x and 3.5 are not backward compatible.
+You will fin below a migration guide to migrate from 3.3.x to 3.5.
+
+* Migration Guide from 3.3.x to 3.5
+
+It is important to note that the 3.5 version requires at least the use of java 6 and servlet API 2.5,
+while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
+
+	* Jawr Project module
+	
+	...
+
+	* Generators
+
+	Since the version 3.5, Jawr allows the users to define their custom GeneratorPathResolver. 
+	This means that the users can now define generators, wich will be triggered by prefix path 
+	(like built-in 'jar:' or 'message:' prefixes) or with for example a specific path suffix (like '*.less' resources).
+
+	In the version 3.3.x, the generator should implement the method "getMappingPrefix". This method has been replaced by "ResourceGeneratorResolver getResolver()" method.
+	Jawr defines built-in ResourceGeneratorResolvers :
+	
+		* net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver : For prefix path resolver
+		* net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResourceGeneratorResolver : For suffix path resolver
+
+	To replace the following your custom generator, you need to replace
+
++------------------------------------------+
+						public class SampleJsGenerator extends AbstractJavascriptGenerator {
+
+							/* (non-Javadoc)
+							 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#getResolver()
+							 */
+							public String getMappingPrefix() {
+								return "foo";
+							}
+
+						    ...
+						}
++------------------------------------------+
+
+	With the following :
+
++------------------------------------------+
+						public class SampleJsGenerator extends AbstractJavascriptGenerator {
+
+							/** The resolver */
+							private ResourceGeneratorResolver resolver;
+
+
+							public SampleJsGenerator(){
+							
+								resolver = new PrefixedPathResourceGeneratorResolver("foo");
+							}
+							
+							/* (non-Javadoc)
+							 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#getResolver()
+							 */
+							public ResourceGeneratorResolver getResolver() {
+								return resolver;
+							}
+
+						    ...
+						}
++------------------------------------------+
+

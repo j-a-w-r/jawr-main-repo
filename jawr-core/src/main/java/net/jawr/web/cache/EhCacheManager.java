@@ -26,12 +26,21 @@ import org.apache.log4j.Logger;
  * 
  * @author Ibrahim Chaehoi
  */
-public class EhCacheManager extends AbstractCacheManager {
+public class EhCacheManager extends JawrCacheManager {
 
 	/** The logger */
 	private static final Logger LOGGER = Logger
 			.getLogger(EhCacheManager.class);
 	
+	/** The EhCache config file path */
+	private static final String JAWR_EHCACHE_CONFIG_PATH = "jawr.ehcache.config.path";
+	
+	/** The EhCache name */
+	private static final String JAWR_EHCACHE_CACHE_NAME = "jawr.ehcache.cache.name";
+
+	/** The default EhCache config path */
+	private static final String DEFAULT_EHCACHE_CONFIG_PATH = "ehcache.xml";
+
 	/** The cache */
 	private Cache cache;
 	
@@ -42,11 +51,12 @@ public class EhCacheManager extends AbstractCacheManager {
 	public EhCacheManager(JawrConfig config) {
 	
 		super(config);
-		String configPath = config.getProperty("jawr.ehcache.config.path");
-		String cacheName = config.getProperty("jawr.ehcache.cache.name");
+		String configPath = config.getProperty(JAWR_EHCACHE_CONFIG_PATH, DEFAULT_EHCACHE_CONFIG_PATH);
+		String cacheName = config.getProperty(JAWR_EHCACHE_CACHE_NAME);
 		try {
 			CacheManager cacheMgr = CacheManager.create(ClassLoaderResourceUtils.getResourceAsStream(configPath, this));
 			cache = cacheMgr.getCache(cacheName);
+			
 		} catch (Exception e) {
 			LOGGER.error("Unable to load EHCACHE configuration file", e);
 		}

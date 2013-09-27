@@ -46,6 +46,9 @@ The Jawr servlet
 	* <<configPropertiesSourceClass>>: This optional parameter holds the qualified class name of you custom implementation of ConfigPropertiesSource, 
 	in case you want to customize the way configuration is loaded when Jawr starts up. More on this below. 
 	
+	* <<configPropertyResolverClass>>: This optional parameter holds the qualified class name of your custom implementation of ConfigPropertyResolver, 
+	in case you want to customize the way configuration properties are resolved. More on this below. 
+	
 	* <<mapping>>: In normal situations, you will have the Jawr servlet attend all requests for a certain type of resource, using a servlet-mapping 
 	like this: 
 	
@@ -329,4 +332,54 @@ The Jawr servlet
 	If you only intend to override some values of the properties file for some reason (like mapping the debug mode to some global property from your 
 	own application), the best way to go is to subclass <net.jawr.web.resource.bundle.factory.util.PropsFilePropertiesSource>. Check the javadoc 
 	for details. 
+
+* Defining a custom property resolver
+
+	By default no ConfigPropertyResolver is used in Jawr, but you can customize the way properties are resolved in Jawr.\
+	The property resolver is used to resolve values from placeholder, which are like "${myValueToReplace}".
+	To do that you must create an implementation of the interface 
+	<net.jawr.web.config.ConfigPropertyResolver> and then you must declare it when defining the Jawr servlet, by setting the 
+	<<configPropertyResolverClass>> init param:  	
+
++------------------------------------------+
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configPropertyResolverClass</param-name>
+			<param-value>com.mycompany.mypackage.MyConfigPropertyResolverImplementation</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
++------------------------------------------+	
+
+	The ConfigPropertyResolver interface declares one method: 
+
++------------------------------------------+
+	/**
+	 * Resolve the property. If the property has not been resolved <b>null</b> should be return
+	 * @param property the property to resolve
+	 * @return the property value or null if not resolved
+	 */
+	public String resolve(String property);
+	
++------------------------------------------+	
+
+	 Jawr provides a built-in System property resolver which will find the value of the properties in the System Property.\
+	 To use this property resolver, you need to configure your servlet as below :
+	 
++------------------------------------------+
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configPropertyResolverClass</param-name>
+			<param-value>net.jawr.web.config.ConfigSystemPropertyResolver</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
++------------------------------------------+	
+	   
 	
