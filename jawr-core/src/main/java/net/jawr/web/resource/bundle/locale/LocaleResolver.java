@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Jordi Hern·ndez SellÈs
+ * Copyright 2008 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * An adapter to let Jawr access the user's locale based on the current request.  
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public interface LocaleResolver {
 	

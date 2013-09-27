@@ -17,7 +17,7 @@ public class JSMinPostProcessorTest extends TestCase {
      * Test the ability to compress javascript using JSMin. 
      */
     public void testPostProcessBundle() {
-		String script = "//comment\n        \talert('αιρν')";
+		String script = "//comment\n        \talert('Γ‘Γ©Γ±Γ­')";
 		Charset charset = Charset.forName("UTF-8");
 		JawrConfig config = new JawrConfig("js", new Properties());
 		config.setCharsetName("UTF-8");
@@ -32,7 +32,7 @@ public class JSMinPostProcessorTest extends TestCase {
 		StringBuffer ret = processor.postProcessBundle(status, new StringBuffer(script));
 		
 		// Not really testing JSMin, that is supposed to work. 
-		assertEquals("\nalert('αιρν');", ret.toString());
+		assertEquals("\nalert('Γ‘Γ©Γ±Γ­');", ret.toString());
 	}
     
     public void testPostProcessAnonymousFunc() {

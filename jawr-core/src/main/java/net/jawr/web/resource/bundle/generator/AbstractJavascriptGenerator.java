@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hern�ndez Sell�s
+ * Copyright 2008-2012 Jordi Hernández Sellés
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import net.jawr.web.JawrConstant;
  * Abstract implementation of ResourceGenerator with a default return value for the 
  * getMappingPrefix method. 
  * 
- * @author Jordi Hern�ndez Sell�s
+ * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public abstract class AbstractJavascriptGenerator implements TextResourceGenerator, SpecificCDNDebugPathResourceGenerator{

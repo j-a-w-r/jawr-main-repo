@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2011 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +25,7 @@ import net.jawr.web.resource.handler.reader.BaseServletContextResourceReader;
 /**
  * The constant value for Jawr.
  * 
- * @author Jordi Hern�ndez Sell�s
+ * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public class JawrConstant {

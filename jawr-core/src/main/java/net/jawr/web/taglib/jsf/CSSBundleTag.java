@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2013 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * Copyright 2008-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import net.jawr.web.resource.bundle.renderer.RendererFactory;
 /**
  * Facelets taglib which uses a CSSHTMLBundleLinkRenderer to render links for CSS bundles. 
  * 
- * @author Jordi Hern�ndez Sell�s
+ * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public class CSSBundleTag extends AbstractResourceBundleTag {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Jordi Hern·ndez SellÈs
+ * Copyright 2008 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import javax.servlet.ServletContext;
  * Defines a component which can get a ServletContext injected during initializing. 
  * Usable currently for custom ConfigPropertiesSource instances. 
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public interface ServletContextAware {
 

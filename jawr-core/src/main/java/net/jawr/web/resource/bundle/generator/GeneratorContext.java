@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Jordi Hern·ndez SellÈs, Ibrahim Chaehoi
+ * Copyright 2008-2010 Jordi Hern√°ndez Sell√©s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 /**
  * Encapsulates the parameters needed in Generators.
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  * @author Ibrahim Chaehoi
  */
 public class GeneratorContext {

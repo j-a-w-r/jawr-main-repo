@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2011 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * Copyright 2007-2011 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,7 @@ import net.jawr.web.util.StringUtils;
 /**
  * Helper class to make properties access less verbose.
  * 
- * @author Jordi Hern�ndez Sell�s
+ * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  * 
  */

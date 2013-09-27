@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Jordi Hern·ndez SellÈs
+ * Copyright 2008 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  * Mappings, children of composites and other properties are extended rather than overwritten, so 
  * that an existing bundle from the source can get additional mappings.  
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public class ConfigPropertiesAugmenter {
 	

@@ -1,5 +1,5 @@
 /**
- * Copyright 2007 Jordi Hern·ndez SellÈs
+ * Copyright 2007 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * This class is used to determine which files are named with the convention of using a 
  * conditional comment expression as a suffix. 
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public class IENamedResourceFilter {
 	

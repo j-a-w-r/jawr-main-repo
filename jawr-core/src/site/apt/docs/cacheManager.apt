@@ -6,7 +6,7 @@
 
 Introduction
 
-	To increase performance, Jawr uses a cache manager to cache the used resource. \
+	To increase performance, Jawr uses a cache manager to cache the used resource.\
 	
 	By default, Jawr uses an in-mermory cache manager, but Jawr allows the user to define their own cache manager.
 	
@@ -46,7 +46,7 @@ Introduction
 | jawr.ehcache.cache.name | String | The name of the cache.  | none | 
 *---------------+---------+--------------+----------------+
 		
-Here is a example of jawr property file, to unable EhCache manager :
+	Here is a example of jawr property file, to unable EhCache manager :
 
 +------------------------------------------+
 
@@ -57,8 +57,8 @@ jawr.ehcache.cache.name=sampleCache1
 ...
 +------------------------------------------+
 
-You will find below a example of EhCache configuration.
-Please note that this is just an example, you will have to configure EhCache depending on your need :
+	You will find below a example of EhCache configuration.
+	Please note that this is just an example, you will have to configure EhCache depending on your need :
 
 +------------------------------------------+
 

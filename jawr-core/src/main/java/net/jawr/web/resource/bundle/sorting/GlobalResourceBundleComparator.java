@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hern·ndez SellÈs, ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hern√°ndez Sell√©s, ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
  * of global bundles. Compares the inclusion order attribute of each bundle's 
  * InclusionPattern attribute.  
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  * @author ibrahim Chaehoi
  *
  */

@@ -20,6 +20,7 @@
       <item name="Descriptor syntax" href="/docs/descriptor_syntax.html"/>
       <item name="Bundle definition" href="/docs/custom_bundles.html"/>
       <item name="Source order in bundles" href="/docs/source_ordering.html"/>
+      <item name="Cache manager" href="/docs/cacheManager.html"/>
       <item name="Global preprocessors" href="/docs/global_preprocessors.html"/>
       <item name="Postprocessors" href="/docs/postprocessors.html"/>
       <item name="Generators" href="/docs/generators.html"/>

@@ -1,5 +1,5 @@
 /**
- * Copyright 2008  Jordi Hern·ndez SellÈs
+ * Copyright 2008  Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 /**
  * ConfigPropertiesSource implementation that reads its values from a .properties file. 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 

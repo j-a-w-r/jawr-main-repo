@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2008 Jordi Hern·ndez SellÈs
+ * Copyright 2007-2008 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +25,7 @@ import net.jawr.web.resource.bundle.generator.JavascriptStringUtil;
 /**
  * Creates a Json like structure (an object literal) from a set of message resource properties. 
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public class BundleStringJsonifier {
 	

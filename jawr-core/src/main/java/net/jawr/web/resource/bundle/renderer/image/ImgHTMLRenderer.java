@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Jordi Hern�ndez, Ibrahim Chaehoi
+ * Copyright 2009-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 /**
  * Renders an img or input type img tag in HTML. 
  * 
- * @author Jordi Hernandez
+ * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
  */
 public class ImgHTMLRenderer implements ImgRenderer, Serializable {

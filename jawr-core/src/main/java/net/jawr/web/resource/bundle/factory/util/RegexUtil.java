@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Jordi Hern·ndez SellÈs
+ * Copyright 2008 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package net.jawr.web.resource.bundle.factory.util;
 
 /**
  * Utils to work with regular expressions and matchers
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  */
 public class RegexUtil {
 	

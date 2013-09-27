@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2009 Jordi Hern·ndez SellÈs, Ibrahim Chaehoi
+ * Copyright 2007-2009 Jordi Hern√°ndez Sell√©s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
  * Base class to implement map-based automatic bundles generators. The generated bundles are added to a Map instance in which the keys are bundles ids
  * and the values are the bundles.
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  * @author Ibrahim Chaehoi
  * 
  */

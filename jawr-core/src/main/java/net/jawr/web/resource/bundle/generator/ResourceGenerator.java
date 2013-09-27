@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  * it from the contents of a WAR file. It is used for creating resources programatically or to 
  * retrieve them from sources outside the scope of a WAR file. 
  * 
- * @author Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * @author Jordi Hernández Sellés, Ibrahim Chaehoi
  */
 public interface ResourceGenerator {
 

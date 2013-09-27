@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hern·ndez SellÈs, Ibrahim Chaehoi
+ * Copyright 2008-2012 Jordi Hern√°ndez Sell√©s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,16 +27,20 @@ import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
  * Holds a reference to the supported media types paired with their corresponding MIME types. 
  * 
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
+ * @author Ibrahim Chaehoi
  *
  */
 public class ImageMIMETypesSupport {
 	
+	/** The properties of supported MIME types*/
 	private static Properties supportedMIMETypes;
+	
+	/** The mime type properties file location */
 	private static final String MIME_PROPS_LOCATION = "/net/jawr/web/resource/image/mimetypes.properties";
 	
 	/**
-	 * Returns a Map object containing all the supopported media 
+	 * Returns a Map object containing all the supported media 
 	 * extensions, paired to their MIME type.  
 	 * @param ref An object reference to anchor the classpath (any 'this' reference does). 
 	 * @return

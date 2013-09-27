@@ -33,7 +33,7 @@ import net.jawr.web.servlet.RendererRequestUtils;
 /**
  * Handles requests for the client side script used in non dynamic html pages. 
  * 
- * @author Jordi Hern�ndez Sell�s
+ * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public class ClientSideHandlerScriptRequestHandler implements Serializable {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hern·ndez SellÈs, Ibrahim Chaehoi
+ * Copyright 2007-2012 Jordi Hern√°ndez Sell√©s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,7 +42,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 /**
  * Properties based configuration entry point.
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  * @author Ibrahim Chaehoi
  * 
  */

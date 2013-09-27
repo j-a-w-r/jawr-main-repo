@@ -173,7 +173,7 @@
       <ul>
       	  <li> <strong>08/15/2010</strong>: Version 3.5 released:<br/>
 	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
-	      For those, who were using the version 3.3.x, please read the <a href="/migrationGuide.html">migration guide</a>.<br/><br/>
+	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <strong>New features: </strong>
 	    	<ul>
       		 	<li>
@@ -214,11 +214,11 @@
       			</li>
       			<li>
       			Jawr adds support for built-in EhCache manager. <strong>jawr.cache.manager</strong>.
-      			Please check <a href="./docs/cacheManager.html">descriptor syntax doc</a> for more detail.
+      			Please check the <a href="./docs/cacheManager.html">cache manager documentation</a> for more detail.
       			</li>
       			<li>
       			Jawr allows the user to define the configuration property resolver in the Jawr configurationd files using <strong>configPropertyResolverClass</strong> in the Jawr servlet definition.
-      			Please check <a href="./docs/servlet.html">servlet configuration documentation for more detail</a> for more detail.
+      			Please check <a href="./docs/servlet.html">servlet configuration documentation</a> for more detail.
       			</li>
       			<li>
       			Jawr allows the user to define an external base context directory where Jawr will be able to find resources using the <strong>jawr.basecontext.directory</strong>,
@@ -357,7 +357,7 @@
 	      		 	<strong>Issue #233 fixed:</strong> Issue with base64 postprocessor when the css files are not in the same directory level     
 	      		 </li>  
 	      		 <li>
-	      		 	<strong>Issue #245 fixed:</strong> Issue with bas64 postprocessor, which didn't work properly. Please check the <a href="./tutorial/howToUseJawrToGenerateBase64Image.html">tutorial</a> on how to set up the bas64 postprocessor.     
+	      		 	<strong>Issue #245 fixed:</strong> Issue with bas64 postprocessor, which didn't work properly. Please check the <a href="./tutorials/howToUseJawrToGenerateBase64Image.html">tutorial</a> on how to set up the bas64 postprocessor.     
 	      		 </li>  
 	      	</ul>
      	  </li>

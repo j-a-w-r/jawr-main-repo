@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hern·ndez SellÈs, Ibrahim CHAEHOI
+ * Copyright 2007-2012 Jordi Hern√°ndez Sell√©s, Ibrahim CHAEHOI
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ package net.jawr.web.resource.bundle;
  * considered global (a library), the order of inclusion if it is global, and
  * the behavior for debugging. 
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  * @author ibrahim Chaehoi
  */
 public class InclusionPattern {

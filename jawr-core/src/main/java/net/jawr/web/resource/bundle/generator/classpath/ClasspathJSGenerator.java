@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hern·ndez SellÈs
+ * Copyright 2008-2012 Jordi Hern√°ndez Sell√©s
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 /**
  * This class defines the resource generator, which loads Javascript resources from the classpath.  
  * 
- * @author Jordi Hern·ndez SellÈs
+ * @author Jordi Hern√°ndez Sell√©s
  * @author Ibrahim Chaehoi
  */
 public class ClasspathJSGenerator extends AbstractJavascriptGenerator {

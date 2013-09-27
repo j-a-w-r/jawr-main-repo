@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2011 Jordi Hern�ndez Sell�s, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2011 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,7 +33,7 @@ import net.jawr.web.util.StringUtils;
 /**
  * Utility class to work with relative paths. 
  * 
- * @author Jordi Hern�ndez Sell�s
+ * @author Jordi Hernández Sellés
  * @author Matt Ruby
  * @author Ibrahim Chaehoi
  *
