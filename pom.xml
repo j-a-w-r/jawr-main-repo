@@ -74,7 +74,7 @@
 		<jsf-api.version>1.1_02</jsf-api.version>
 		<commons-validator.version>1.2.0</commons-validator.version>
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
-		<ehcache.version>2.4.6</ehcache.version>
+		<ehcache.version>2.7.4</ehcache.version>
 		<smartsprites.version>0.2.10</smartsprites.version>
 		<google-closure.version>v20130823</google-closure.version>
 		<jetty.version>6.1.10</jetty.version>
@@ -173,7 +173,7 @@
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache-core</artifactId>
+				<artifactId>ehcache</artifactId>
 				<version>${ehcache.version}</version>
 				<scope>provided</scope>
 			</dependency>
