@@ -13,6 +13,8 @@
  */
 package net.jawr.web.resource.bundle.generator.resolver;
 
+import java.io.Serializable;
+
 import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 
 /**
@@ -21,7 +23,10 @@ import net.jawr.web.resource.bundle.generator.ResourceGenerator;
  * @author ibrahim Chaehoi
  */
 public class ResourceGeneratorResolverWrapper implements
-		ResourceGeneratorResolver {
+		ResourceGeneratorResolver, Serializable {
+
+	/** The serial version UID */
+	private static final long serialVersionUID = -5731212158947768492L;
 
 	/** The resource generator */
 	private ResourceGenerator generator;
