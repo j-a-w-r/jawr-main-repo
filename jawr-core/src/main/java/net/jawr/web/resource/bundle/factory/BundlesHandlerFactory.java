@@ -70,8 +70,8 @@ public class BundlesHandlerFactory {
 	private static final Logger LOGGER = Logger
 			.getLogger(BundlesHandlerFactory.class);
 
-	/** The flag indicating if we should use the in memory cache */
-	private boolean useInMemoryCache = true;
+	/** The flag indicating if we should use the cache manager*/
+	private boolean useCacheManager = true;
 	
 	/** The root directory for the resources */
 	private String baseDir = "";
@@ -263,7 +263,7 @@ public class BundlesHandlerFactory {
 				unitProcessor, compositeBundleProcessor, compositeUnitProcessor, resourceTypePreprocessor, resourceTypePostprocessor);
 
 		// Use the cached proxy if specified when debug mode is off.
-		if (useInMemoryCache && !jawrConfig.isDebugModeOn())
+		if (useCacheManager && !jawrConfig.isDebugModeOn())
 			collector = new CachedResourceBundlesHandler(collector);
 
 		collector.initAllBundles();
@@ -841,12 +841,12 @@ public class BundlesHandlerFactory {
 	}
 
 	/**
-	 * Set wether bundles will be cached in memory instead of being always read from the filesystem.
+	 * Set wether bundles will be cached using a cache manager instead of being always read from the filesystem.
 	 * 
-	 * @param useInMemoryCache
+	 * @param useCacheManager
 	 */
-	public void setUseInMemoryCache(boolean useInMemoryCache) {
-		this.useInMemoryCache = useInMemoryCache;
+	public void setUseCacheManager(boolean useCacheManager) {
+		this.useCacheManager = useCacheManager;
 	}
 
 	/**

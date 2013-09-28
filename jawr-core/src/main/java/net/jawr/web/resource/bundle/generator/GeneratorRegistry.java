@@ -27,9 +27,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.bundle.factory.BundlesHandlerFactory;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGenerator;
@@ -67,6 +70,10 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  */
 public class GeneratorRegistry implements Serializable {
+	
+	/** The logger */
+	private static final Logger LOGGER = Logger
+			.getLogger(GeneratorRegistry.class);
 	
 	/** The serial version UID */
 	private static final long serialVersionUID = -7988265144352433701L;
@@ -298,6 +305,8 @@ public class GeneratorRegistry implements Serializable {
 		}
 		
 		ResourceGeneratorResolver resolver = generator.getResolver();
+		
+		// Checks if another generator is already define with the same resolver 
 		for (ResourceGeneratorResolver resourceGeneratorResolver : resolverRegistry) {
 			if(resourceGeneratorResolver.isSameAs(resolver)){
 				String generatorName = generator.getClass().getName();
@@ -308,6 +317,15 @@ public class GeneratorRegistry implements Serializable {
 									+ generatorName + ". Please specify a different resolver in the getResolver() method.";
 					throw new IllegalStateException(errorMsg);
 				}
+			}
+		}
+		
+		// Warns the user about if the generator override a built-in generator
+		Set<ResourceGeneratorResolver> commonResolvers = commonGenerators.keySet();
+		for (ResourceGeneratorResolver commonGeneratorResolver : commonResolvers) {
+			if(commonGeneratorResolver.isSameAs(resolver)){
+				String generatorName = generator.getClass().getName();
+				LOGGER.warn("The custom generator '"+generatorName+"' override a built-in generator");
 			}
 		}
 		
@@ -429,28 +447,6 @@ public class GeneratorRegistry implements Serializable {
 		return resourceGenerator;
 	}
 	
-//	/**
-//	 * Get the key from the mappings that corresponds to the specified path. 
-//	 * @param path the resource path
-//	 * @return the registry key corresponding to the path
-//	 */
-//	private String matchPath(String path) {
-//		
-//		
-//		
-//		String generatorKey = null;
-//		for(Iterator<String> it = prefixRegistry.iterator();it.hasNext() && generatorKey == null;) {
-//			String prefix = it.next();
-//			if(path.startsWith(prefix))
-//				generatorKey = prefix;			
-//		}	
-//		// Lazy load generator
-//		if(null != generatorKey && !registry.containsKey(generatorKey))
-//			loadGenerator(generatorKey);
-//		
-//		return generatorKey;
-//	}
-
 	/**
 	 * Loads the generator which corresponds to the specified path. 
 	 * @param path the resource path

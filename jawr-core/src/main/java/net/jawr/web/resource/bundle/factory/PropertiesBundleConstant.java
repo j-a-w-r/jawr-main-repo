@@ -66,11 +66,9 @@ public class PropertiesBundleConstant {
 	/** The suffix for the property defining the file composite post processors */ 
 	public static final String COMPOSITE_BUNDLE_FACTORY_FILE_POSTPROCESSOR = "bundle.factory.composite.filepostprocessors";
 
-	/** The name of the property indicating if we must use the bundle names property to define the bundles to process */
-	public static final String USE_BUNDLE_NAMES = "jawr.use.bundle.names";
-
 	/** The prefix for the property defining the custom post processors */
 	public static final String CUSTOM_POSTPROCESSORS = "jawr.custom.postprocessors";
+	
 	/** The suffix for the property defining the names of custom post processors */
 	public static final String CUSTOM_POSTPROCESSORS_NAMES = ".names";
 	

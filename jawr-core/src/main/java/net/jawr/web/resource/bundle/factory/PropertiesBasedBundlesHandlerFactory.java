@@ -86,7 +86,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 		factory.setBaseDir(props.getProperty(PropertiesBundleConstant.RESOURCES_BASEDIR, "/"));
 
 		// Use cache by default
-		factory.setUseInMemoryCache(Boolean.valueOf(
+		factory.setUseCacheManager(Boolean.valueOf(
 				props.getProperty(PropertiesBundleConstant.RESOURCES_USE_CACHE, "true")).booleanValue());
 
 		// Postprocessor definitions

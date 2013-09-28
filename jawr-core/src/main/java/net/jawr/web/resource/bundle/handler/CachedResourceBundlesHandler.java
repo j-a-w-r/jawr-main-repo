@@ -68,8 +68,6 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	public CachedResourceBundlesHandler(ResourceBundlesHandler rsHandler) {
 		super();
 		this.rsHandler = rsHandler;
-		
-		// TODO check this 
 		cacheMgr = CacheManagerFactory.getCacheManager(rsHandler.getConfig(), rsHandler.getResourceType());
 	}
 
