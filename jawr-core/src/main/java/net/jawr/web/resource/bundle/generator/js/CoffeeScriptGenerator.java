@@ -1,5 +1,5 @@
 /**
- * Copyright 2012  Ibrahim Chaehoi
+ * Copyright 2012-2013  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -47,6 +47,18 @@ import org.mozilla.javascript.Scriptable;
  */
 public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implements ConfigurationAwareResourceGenerator, PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
 
+	/** The coffee script suffix */
+	private static final String COFFEE_SCRIPT_SUFFIX = "coffee";
+
+	/** The coffee script options property name */
+	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS = "jawr.js.generator.coffee.script.options";
+
+	/** The coffee script generator location */
+	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION = "jawr.js.generator.coffee.script.location";
+
+	/** The default coffee script JS location */
+	private static final String DEFAULT_COFFEE_SCRIPT_JS_LOCATION = "net/jawr/web/resource/bundle/generator/js/coffee-script.js";
+
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 	
@@ -63,7 +75,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 	 * Constructor 
 	 */
 	public CoffeeScriptGenerator() {
-		resolver = ResourceGeneratorResolverFactory.createSuffixResolver("coffee");
+		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(COFFEE_SCRIPT_SUFFIX);
 	}
 	
 	/* (non-Javadoc)
@@ -78,10 +90,10 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 	 */
 	public void afterPropertiesSet() {
 		
-		options = config.getProperty("jawr.js.generator.coffee.script.options", "");
+		options = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, "");
 		
 		// Load JavaScript Script Engine
-		String script = config.getProperty("jawr.js.generator.coffee.script.location", "net/jawr/web/resource/bundle/generator/js/coffee-script.js");
+		String script = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION);
 		InputStream inputStream = getResourceInputStream(script);
         try {
             try {
