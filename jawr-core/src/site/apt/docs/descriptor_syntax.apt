@@ -101,7 +101,7 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+
 | <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  |
 *---------------+---------+--------------+----------------+
-| jawr.js.use.cache  | Boolean  | Toggle the use of a cache that will store and serve all the bundles directly from system memory. | true    | 
+| jawr.js.use.cache  | Boolean  | Toggle the use of a cache manager that will store and serve all the bundles directly from system memory. | true    | 
 | jawr.css.use.cache |	    		| 																																											 |     | 
 *---------------+---------+--------------+----------------+
 | jawr.js.bundle.basedir  | URL fragment  | This optional parameter tells Jawr to look for js or css files only in the specified directory, which may speed the starting time up a bit.  | None    | 

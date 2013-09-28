@@ -11,7 +11,7 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle.generator.js;
+package net.jawr.web.resource.bundle.generator.js.coffee;
 
 /**
  * The interface for the coffee script generator

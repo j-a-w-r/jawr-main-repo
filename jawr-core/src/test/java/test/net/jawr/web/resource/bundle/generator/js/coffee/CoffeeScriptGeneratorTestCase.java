@@ -1,4 +1,4 @@
-package test.net.jawr.web.resource.bundle.generator.js;
+package test.net.jawr.web.resource.bundle.generator.js.coffee;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.js.CoffeeScriptGenerator;
+import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;

@@ -39,7 +39,7 @@ import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGene
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
-import net.jawr.web.resource.bundle.generator.js.CoffeeScriptGenerator;
+import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverWrapper;

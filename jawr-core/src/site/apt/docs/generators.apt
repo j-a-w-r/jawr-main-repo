@@ -137,6 +137,19 @@ Jawr Generators
 +------------------------------------------+
 	jawr.js.bundle.myScript.mappings=/js/foo.coffee,/js/bar.coffee	
 +------------------------------------------+
+	
+	* <<Configuration properties>>
+	
+	Jawr provides 2 properties to configure the CoffeeScript generator. 
+
+*---------------+---------+--------------+----------------+----------------+
+| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+----------------+----------------+
+| jawr.js.generator.coffee.script.options  | The coffee script compiler options (Please see : http://coffeescript.org/)  |  None    |
+*---------------*---------*--------------+----------------+
+| jawr.js.generator.coffee.script.location  | The coffee script location  |  net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js    |
+*---------------*---------*--------------+----------------+
+
 	 
 	[]
 			

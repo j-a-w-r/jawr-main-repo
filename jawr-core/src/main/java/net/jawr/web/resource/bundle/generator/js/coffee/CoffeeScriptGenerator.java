@@ -11,7 +11,7 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle.generator.js;
+package net.jawr.web.resource.bundle.generator.js.coffee;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION = "jawr.js.generator.coffee.script.location";
 
 	/** The default coffee script JS location */
-	private static final String DEFAULT_COFFEE_SCRIPT_JS_LOCATION = "net/jawr/web/resource/bundle/generator/js/coffee-script.js";
+	private static final String DEFAULT_COFFEE_SCRIPT_JS_LOCATION = "net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js";
 
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
