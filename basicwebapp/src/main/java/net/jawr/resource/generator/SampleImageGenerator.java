@@ -12,6 +12,16 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 
 public class SampleImageGenerator implements StreamResourceGenerator {
 
+	/** The generator resolver */
+	private ResourceGeneratorResolver resolver;
+	
+	/**
+	 * Constructor 
+	 */
+	public SampleImageGenerator() {
+		resolver = new PrefixedPathResourceGeneratorResolver("img");
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.StreamResourceGenerator#createResourceAsStream(net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
@@ -26,7 +36,7 @@ public class SampleImageGenerator implements StreamResourceGenerator {
 	 */
 	@Override
 	public ResourceGeneratorResolver getResolver() {
-		return new PrefixedPathResourceGeneratorResolver("img");
+		return resolver;
 	}
 
 	/* (non-Javadoc)
