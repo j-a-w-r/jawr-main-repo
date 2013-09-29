@@ -86,7 +86,7 @@ public class PropertiesConfigHelper {
 	 * @return the value of the common property
 	 */
 	public String getCommonProperty(String key, String defaultValue) {
-		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key, defaultValue).trim();
+		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key, defaultValue);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class PropertiesConfigHelper {
 	 * @return the value of the common property
 	 */
 	public String getCommonProperty(String key) {
-		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key).trim();
+		return props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key);
 	}
 
 	/**
@@ -105,10 +105,10 @@ public class PropertiesConfigHelper {
 	 */
 	public Set<String> getCommonPropertyAsSet(String key) {
 		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(props.getProperty(PropertiesBundleConstant.PROPS_PREFIX+key, "").trim(),
+		StringTokenizer tk = new StringTokenizer(props.getProperty(PropertiesBundleConstant.PROPS_PREFIX+key, ""),
 				",");
 		while (tk.hasMoreTokens())
-			propertiesSet.add(tk.nextToken());
+			propertiesSet.add(tk.nextToken().trim());
 		return propertiesSet;
 	}
 	
@@ -122,7 +122,7 @@ public class PropertiesConfigHelper {
 	public String getCustomBundleProperty(String bundleName, String key,
 			String defaultValue) {
 		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key, defaultValue).trim();
+				+ bundleName + key, defaultValue);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class PropertiesConfigHelper {
 	 */
 	public String getCustomBundleProperty(String bundleName, String key) {
 		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key).trim();
+				+ bundleName + key);
 	}
 
 	/**
@@ -143,10 +143,10 @@ public class PropertiesConfigHelper {
 	 */
 	public List<String> getCustomBundlePropertyAsList(String bundleName, String key) {
 		List<String> propertiesList = new ArrayList<String>();
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, "").trim(),
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
 				",");
 		while (tk.hasMoreTokens())
-			propertiesList.add(tk.nextToken());
+			propertiesList.add(tk.nextToken().trim());
 		return propertiesList;
 	}
 	
@@ -157,7 +157,7 @@ public class PropertiesConfigHelper {
 	 */
 	public Set<String> getCustomBundlePropertyAsSet(String bundleName, String key) {
 		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, "").trim(),
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
 				",");
 		while (tk.hasMoreTokens())
 			propertiesSet.add(tk.nextToken().trim());
@@ -172,7 +172,7 @@ public class PropertiesConfigHelper {
 	public Map<String,List<String>> getCustomBundlePropertyAsMap(String bundleName, String key) {
 		Map<String,List<String>> propertiesMap = new HashMap<String,List<String>>();
 		
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, "").trim(),
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
 				";");
 		while (tk.hasMoreTokens()){
 			String[] mapEntry = tk.nextToken().trim().split(":");
@@ -314,7 +314,7 @@ public class PropertiesConfigHelper {
 	 * @return the value of the property jawr.+key
 	 */
 	public String getProperty(String key) {
-		return props.getProperty(prefix + key).trim();
+		return props.getProperty(prefix + key);
 	}
 
 }

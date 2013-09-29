@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2010 JJordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2010 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -161,7 +161,7 @@ public class LocaleUtils {
 	}
 	
 	/**
-	 * Add the locale suffix if the message resource bundle file exists.
+	 * Adds the locale suffix if the message resource bundle file exists.
 	 * 
 	 * @param messageBundlePath the message resource bundle path
 	 * @param availableLocaleSuffixes the list of available locale suffix to update
@@ -241,15 +241,15 @@ public class LocaleUtils {
 		String country = locale.getCountry();
 		String variant = locale.getVariant();
 
-		if (StringUtils.isEmpty(language) && StringUtils.isEmpty(country) && StringUtils.isEmpty(variant)) {
+		if (language == "" && country == "" && variant == "") {
 			return baseName;
 		}
 
 		StringBuffer sb = new StringBuffer(baseName);
 		sb.append('_');
-		if (StringUtils.isNotEmpty(variant)) {
+		if (variant != "") {
 			sb.append(language).append('_').append(country).append('_').append(variant);
-		} else if (StringUtils.isNotEmpty(country)) {
+		} else if (country != "") {
 			sb.append(language).append('_').append(country);
 		} else {
 			sb.append(language);
@@ -275,9 +275,9 @@ public class LocaleUtils {
 				String country = locale.getCountry();
 				String variant = locale.getVariant();
 
-				if (StringUtils.isNotEmpty(variant)) {
+				if (variant != "") {
 					sb.append(language).append('_').append(country).append('_').append(variant);
-				} else if (StringUtils.isNotEmpty("")) {
+				} else if (country != "") {
 					sb.append(language).append('_').append(country);
 				} else {
 					sb.append(language);

@@ -52,6 +52,7 @@ import org.apache.log4j.Logger;
  */
 public class MessageBundleScriptCreator {
 
+	/** The logger */
 	private static final Logger LOGGER = Logger
 			.getLogger(MessageBundleScriptCreator.class.getName());
 
@@ -105,7 +106,8 @@ public class MessageBundleScriptCreator {
 	 * Loads a template containing the functions which convert properties into
 	 * methods.
 	 * 
-	 * @return
+	 * @return the template containing the functions which convert properties into
+	 * methods.
 	 */
 	private StringBuffer loadScriptTemplate() {
 		StringWriter sw = new StringWriter();
@@ -127,10 +129,10 @@ public class MessageBundleScriptCreator {
 	}
 
 	/**
-	 * Loads the message resource bundles specified and uses a
-	 * BundleStringJasonifier to generate the properties.
+	 * Create the message resource bundles specified and uses a
+	 * BundleStringJsonifier to generate the properties.
 	 * 
-	 * @return
+	 * @return the script
 	 */
 	public Reader createScript(Charset charset) {
 
@@ -216,7 +218,9 @@ public class MessageBundleScriptCreator {
 	}
 
 	/**
-	 * @return
+	 * Returns the JS script from the message properties
+	 * @param props the message properties
+	 * @return the JS script from the message properties
 	 */
 	protected Reader doCreateScript(Properties props) {
 		BundleStringJsonifier bsj = new BundleStringJsonifier(props);
@@ -233,8 +237,8 @@ public class MessageBundleScriptCreator {
 	/**
 	 * Determines wether a key matches any of the set filters.
 	 * 
-	 * @param key
-	 * @return
+	 * @param key the property key
+	 * @return true if the key matches any of the set filters.
 	 */
 	protected boolean matchesFilter(String key) {
 		boolean rets = (null == filterList);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim Chaehoi
+ * Copyright 2012-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -42,6 +42,27 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  */
 public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssResourceGenerator, ConfigurationAwareResourceGenerator, PostInitializationAwareResourceGenerator {
 
+	/** The less script location property name */
+	private static final String LESS_SCRIPT_LOCATION_PROPERTY_NAME = "jawr.css.less.generator.less.script.location";
+
+	/** The default less script location  */
+	private static final String DEFAULT_LESS_SCRIPT_LOCATION = "net/jawr/web/resource/bundle/generator/css/less/less.js";
+
+	/** The engine script location property name */
+	private static final String LESS_ENGINE_SCRIPT_LOCATION_PROPERTY_NAME = "jawr.css.less.generator.engine.script.location";
+
+	/** The default engine script location  */
+	private static final String DEFAULT_ENGINE_JS_LOCATION = "net/jawr/web/resource/bundle/generator/css/less/engine.js";
+
+	/** The browser script location property name */
+	private static final String BROWSER_SCRIPT_LOCATION_PROPERTY_NAME = "jawr.css.less.generator.browser.script.location";
+
+	/** The default browser script location  */
+	private static final String DEFAULT_BROWSER_JS_LOCATION = "net/jawr/web/resource/bundle/generator/css/less/browser.js";
+
+	/** The Less suffix */
+	private static final String LESS_SUFFIX = "less";
+
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 	
@@ -55,7 +76,7 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 	 * Constructor
 	 */
 	public LessCssGenerator() {
-		resolver = ResourceGeneratorResolverFactory.createSuffixResolver("less");
+		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(LESS_SUFFIX);
 	}
 	
 	/* (non-Javadoc)
@@ -78,16 +99,15 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 	 */
 	public void afterPropertiesSet() {
 		
-		String lessScript = config.getProperty("jawr.css.less.generator.less.script.location", "net/jawr/web/resource/bundle/generator/css/less/less.js");
+		String lessScript = config.getProperty(LESS_SCRIPT_LOCATION_PROPERTY_NAME, DEFAULT_LESS_SCRIPT_LOCATION);
 		InputStream isLessScript = getResourceInputStream(lessScript);
 		
-		String engineScript = config.getProperty("jawr.css.less.generator.engine.script.location", "net/jawr/web/resource/bundle/generator/css/less/engine.js");
+		String engineScript = config.getProperty(LESS_ENGINE_SCRIPT_LOCATION_PROPERTY_NAME, DEFAULT_ENGINE_JS_LOCATION);
 		InputStream isEngineScript = getResourceInputStream(engineScript);
 		
-		String browserScript = config.getProperty("jawr.css.less.generator.browser.script.location", "net/jawr/web/resource/bundle/generator/css/less/browser.js");
+		String browserScript = config.getProperty(BROWSER_SCRIPT_LOCATION_PROPERTY_NAME, DEFAULT_BROWSER_JS_LOCATION);
 		InputStream isBrowserScript = getResourceInputStream(browserScript);
 		
-		//config.getAllowedExtensions().add("less");
 		engine =  new LessEngine(isLessScript, isEngineScript, isBrowserScript);
     }
 
