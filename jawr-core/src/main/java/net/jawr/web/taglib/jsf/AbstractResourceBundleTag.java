@@ -21,6 +21,7 @@ import javax.faces.context.ResponseWriter;
 import javax.servlet.http.HttpServletRequest;
 
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.BundleRendererContext;
@@ -71,15 +72,18 @@ public abstract class AbstractResourceBundleTag extends UIOutput {
         if(null == this.renderer || !this.renderer.getBundler().getConfig().isValid())
              this.renderer = createRenderer(context);		
         
-        
-        // 
         RendererRequestUtils.setRequestDebuggable(request,renderer.getBundler().getConfig());
-        
-        BundleRendererContext ctx = RendererRequestUtils.getBundleRendererContext(request, renderer);
-        renderer.renderBundleLinks( src,
+        try {
+        	BundleRendererContext ctx = RendererRequestUtils.getBundleRendererContext(request, renderer);
+            renderer.renderBundleLinks( src,
                 ctx, writer);
-
+        }finally{
+        	// Reset the Thread local for the Jawr context
+    		ThreadLocalJawrContext.reset();
+        }
 		super.encodeBegin(context);
+		
+		
 	}
 
 	/**

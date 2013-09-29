@@ -262,6 +262,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			long totaltime = System.currentTimeMillis() - initialTime;
 			LOGGER.info("Init method succesful. jawr started in " + (totaltime / 1000) + " seconds....");
 		}
+		
+		// Reset ThreadLocalJawrContext 
+		ThreadLocalJawrContext.reset();
 	}
 
 	/**

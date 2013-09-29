@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
 import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
@@ -243,25 +244,33 @@ public abstract class AbstractImageTag extends ImagePathTag {
 		try {
 
 			ImageResourcesHandler rsHandler = null;
-			if ((rsHandler = (ImageResourcesHandler) pageContext.getServletContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE)) == null)
+			if ((rsHandler = (ImageResourcesHandler) pageContext
+					.getServletContext().getAttribute(
+							JawrConstant.IMG_CONTEXT_ATTRIBUTE)) == null)
 				throw new IllegalStateException(
 						"ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
 
 			JawrConfig jawrConfig = rsHandler.getConfig();
-			this.renderer = RendererFactory.getImgRenderer(jawrConfig, isPlainImage());
+			this.renderer = RendererFactory.getImgRenderer(jawrConfig,
+					isPlainImage());
 			this.renderer.renderImage(getImgSrcToRender(), getAttributeMap(),
 					pageContext.getOut());
 		} catch (IOException e) {
 			throw new JspException(e);
+		} finally {
+			// Reset the Thread local for the Jawr context
+			ThreadLocalJawrContext.reset();
 		}
 
 		return (EVAL_PAGE);
 	}
-	
+
 	/**
-	 * Returns the flag indicating if the image to render is a plain image or not
+	 * Returns the flag indicating if the image to render is a plain image or
+	 * not
+	 * 
 	 * @return true if the image to render is a plain image or not
 	 */
 	protected abstract boolean isPlainImage();
-	
+
 }

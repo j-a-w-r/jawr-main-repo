@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jawr.web.JawrConstant;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.servlet.RendererRequestUtils;
 import net.jawr.web.taglib.ImageTagUtils;
@@ -58,6 +59,9 @@ public class ImagePathTag extends UIOutput {
 		render(context);
 
 		super.encodeBegin(context);
+		
+		// Reset the Thread local for the Jawr context
+		ThreadLocalJawrContext.reset();
 	}
 
 	/*

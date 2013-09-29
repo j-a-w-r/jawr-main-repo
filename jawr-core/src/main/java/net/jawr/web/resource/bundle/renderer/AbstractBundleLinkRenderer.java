@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 import net.jawr.web.DebugMode;
 import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
@@ -38,6 +40,10 @@ import net.jawr.web.util.StringUtils;
  */
 public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 
+	/** The logger */
+	private static final Logger LOGGER = Logger
+			.getLogger(AbstractBundleLinkRenderer.class);
+	
 	/** The serial version UID */
 	private static final long serialVersionUID = 7440895269616865487L;
 
@@ -79,9 +85,13 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 		
 		boolean debugOn = bundler.getConfig().isDebugModeOn();
 		JoinableResourceBundle bundle = bundler.resolveBundleForPath(requestedPath);
-		//bundle.get
-		if (null == bundle)
+		
+		if (null == bundle){
+			
+			LOGGER.warn("No bundle found for path : "+requestedPath);
 			return;
+		}
+			
 
 		// If the global bundles had been added before, it will not be included again.
 		if(!ctx.isGlobalBundleAdded()){

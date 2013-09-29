@@ -20,6 +20,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.BundleRendererContext;
@@ -81,12 +82,16 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 			BundleRendererContext ctx = RendererRequestUtils
 					.getBundleRendererContext(request, renderer);
 			renderer.renderBundleLinks(src, ctx, pageContext.getOut());
+
 		} catch (IOException ex) {
 			throw new JspException(
 					"Unexpected IOException when writing script tags for path "
 							+ src, ex);
+		}finally{
+			// Reset the Thread local for the Jawr context
+			ThreadLocalJawrContext.reset();
 		}
-
+		
 		return SKIP_BODY;
 	}
 
@@ -132,6 +137,9 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 
 		src = null;
 		useRandomParam = null;
+		
+		// Reset the Thread local for the Jawr context
+		ThreadLocalJawrContext.reset();
 	}
 
 }
