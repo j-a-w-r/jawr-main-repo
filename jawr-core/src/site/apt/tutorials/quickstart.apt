@@ -11,32 +11,15 @@ Getting started with Jawr
 	{{{https://jawr.dev.java.net/servlets/ProjectDocumentList?folderID=8543}Download Jawr from the documents area}} and place it within the classpath of 
 	your application (typically, under WEB-INF/lib). Add log4j.jar to the path as well. 
 	
-	If you are using java 1.4, you can optionally download {{{http://backport-jsr166.sourceforge.net/}backport-util-concurrent}} and add it to 
-	the classpath as well for improved performance. This is <<not>> needed if the JDK version of your server is 5 or higher. 
-	
 	Alternatively, if you are using Maven 2, add a dependency to Jawr in your POM file: 
 	
 +------------------------------------------+
 	<dependency>
 	  <groupId>net.jawr</groupId>
-	  <artifactId>jawr</artifactId>
+	  <artifactId>jawr-core</artifactId>
 	  <version>[3,]</version>
 	</dependency>
 +------------------------------------------+
-
-	Also, if you are using Maven 2 make sure your project will access the Maven repository at java.net, by specifying it in you POM: 
-	
-+------------------------------------------+
-  <repositories>
-  	<repository>
-	  <id>maven2-repository.dev.java.net</id>
-	  <name>Java.net Repository for Maven</name>
-	  <url>http://download.java.net/maven/2/</url>
-	  <layout>default</layout>
-	</repository>
-  </repositories>
-+------------------------------------------+
-	
 	
 
 * Develop your scripts and stylesheets

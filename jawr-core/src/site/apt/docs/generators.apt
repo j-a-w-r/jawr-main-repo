@@ -125,6 +125,21 @@ Jawr Generators
 +------------------------------------------+
 	jawr.css.bundle.styles.mappings=/css/foo.less,/css/bar.less	
 +------------------------------------------+
+
+	* <<Configuration properties>>
+	
+	Jawr provides properties to configure the Less CSS generator. 
+
+*---------------+---------+--------------+----------------+
+| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+----------------+
+| jawr.css.less.generator.less.script.location  | The less script location  |  net/jawr/web/resource/bundle/generator/css/less/less.js    |
+*---------------*---------*--------------+----------------+
+| jawr.css.less.generator.engine.script.location  | The less engine script location  |  net/jawr/web/resource/bundle/generator/css/less/engine.js    |
+*---------------*---------*--------------+----------------+
+| jawr.css.less.generator.browser.script.location  | The less browser script location  |  net/jawr/web/resource/bundle/generator/css/less/browser.js    |
+*---------------*---------*--------------+----------------+	
+	
 	 
 	[]
 	
@@ -140,11 +155,11 @@ Jawr Generators
 	
 	* <<Configuration properties>>
 	
-	Jawr provides 2 properties to configure the CoffeeScript generator. 
+	Jawr provides properties to configure the CoffeeScript generator. 
 
-*---------------+---------+--------------+----------------+----------------+
+*---------------+---------+--------------+----------------+
 | <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
-*---------------+---------+--------------+----------------+----------------+
+*---------------+---------+--------------+----------------+
 | jawr.js.generator.coffee.script.options  | The coffee script compiler options (Please see : http://coffeescript.org/)  |  None    |
 *---------------*---------*--------------+----------------+
 | jawr.js.generator.coffee.script.location  | The coffee script location  |  net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js    |

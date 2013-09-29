@@ -12,7 +12,19 @@ Jawr with wicket
 * Setup Jawr in a Wicket application
 	
 	There is a very small difference in the way you will use Jawr in your Wicket application, compared to using JSPs. Everything is setup the 
-	same way except that you need to reference the bundles in your pages in a different way. 
+	same way except that you need to reference the bundles in your pages in a different way.
+	You need to add the jawr-wicket-extension module in your classpath.
+	For maven users, you'll need to add the following dependency in your pom file :
+	
++------------------------------------------+		
+    <dependency>
+      <groupId>net.jawr.extensions</groupId>
+      <artifactId>jawr-wicket-extension</artifactId>
+      <version>3.5</version>
+    </dependency>
++------------------------------------------+	
+	
+	 Note that this module support the version 6.x of wicket
 
 ** 1. Configure the Jawr servlet
 

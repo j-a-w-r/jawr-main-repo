@@ -321,6 +321,9 @@
 	      		 	<strong>Issue #213 fixed:</strong> Orphan resources cannot be found if basedir is set to webapp root directory     
 	      		 </li>
 	      		 <li>
+	      		 	<strong>Issue #215 fixed:</strong> Issue when using a Servlet API 2.5 with Jawr bundle preprocessor     
+	      		 </li>
+	      		 <li>
 	      		 	<strong>Issue #217 fixed:</strong> Issue with character encoding for Grails messages     
 	      		 </li>  
 	      		 <li>

@@ -23,22 +23,19 @@ Using DWR with Jawr
 	Finally, using this approach you have a consistent way of serving all javascript, instead of using different methods to serve DWR scripts or 
 	Jawr bundles. 
 	
-	Jawr supports DWR 2.x out of the box, and it can also be used with version 3 by adding an additional plugin jar to the classpath. The plugin 
-	can be downloaded from {{{https://jawr.dev.java.net/servlets/ProjectDocumentList?folderID=9382}this page}}. Maven 2 users can also 
-	add a dependency as the following: 
+	Jawr supports DWR 2.x  using the <jawr-dwr2.x-extension> extension module.
+	Maven users can add a dependency as the following: 
 
 +------------------------------------------+		
     <dependency>
-      <groupId>net.jawr.dwr</groupId>
-      <artifactId>dwr3plugin</artifactId>
-      <version>1.0</version>
+      <groupId>net.jawr.extensions</groupId>
+      <artifactId>jawr-dwr2.x-extension</artifactId>
+      <version>3.5</version>
     </dependency>
 +------------------------------------------+	
 	
-	Currently this plugin is only available for a Java 5 or higher JVM. 
-	
 	There is a sample application that you can download to chek out how integration with DWR works, which you can download from 
-	{{{https://jawr.dev.java.net/servlets/ProjectDocumentList?folderID=9330}this page}}. 
+	{{{https://svn.java.net/svn/jawr~svn/extensions/dwr2.x/trunk/jawr-dwr2.x-webapp-sample}this link}}. 
 	
 * Set up
 
@@ -78,7 +75,7 @@ Using DWR with Jawr
 +------------------------------------------+	
 	
 ** Additional DWR servlet instances
-
+ 
 	If you declare more than one DWR servlet, Jawr will need to access the additional mappings for these. In this case, for every additional 
 	servlet you must add a special init-param, named <<jawr_mapping>>. The value, again, must be the servlet-mapping used for the servlet, without 
 	the wildcard. Note that this init-param is added to the DWR servlet config,	<<not>> the Jawr servlet config. 
@@ -105,11 +102,24 @@ Using DWR with Jawr
 	
 	You need to do this for additional DWR servlets, but you can skip it for the one to which mapping you point in the <<jawr.dwr.mapping>> param.
 	You can't skip using this param though, since it acts as a flag to Jawr indicating that DWR integration is on. 
+
+* DWR generator and JS link renderer :
+
+	A specific generator is used for dwr resources (check below for more information on dwr resources). 
+	Prior to the 3.5 version, this generator was a built-in generator, now users must declare it specifically in their jawr configuration file. 
+	To render the DWR bundles properly, the declaration of a specific DWR JS bundle link renderer is needed. 
+	
++------------------------------------------+  
+	# Configure DWR generator and DWR link renderer
+	jawr.custom.generators=net.jawr.web.resource.bundle.generator.dwr.DWRBeanGenerator
+	jawr.js.bundle.link.renderer.class=net.jawr.web.resource.bundle.renderer.DWRJsBundleLinkRenderer
++------------------------------------------+  
+
 	
 * Maping DWR resources in bundles
 
 	Once you have performed setup, you can start using DWR beans in your bundle mappings. All DWR resources are mapped using the special prefix 
-	'<<dwr:>>'. As stated before, DWR has several static resources that you will probably want to bundle with the rest of your javascript 
+	'<<dwr:>>', which is the prefix for a specific generator. As stated before, DWR has several static resources that you will probably want to bundle with the rest of your javascript 
 	infrastructure code (Prototype, YUI or whichever, etc). You map to these using several special keywords: 
 	
 *---------------+---------+
@@ -128,10 +138,15 @@ Using DWR with Jawr
 	DWR generates some variables depending on the user's request. This is not optimal, since users will get a new copy on every new session with 
 	the application. Jawr solves this by generating these parameters in a very small inline script that contains only the dynamic variables. 
 	
-	So in a typical use case, you would be adding these to a global bundle: 
+	So in a typical use case, you would define your DWR generator, a specific Javascript LinkRenderer and add these to a global bundle: 
 	
 	
 +------------------------------------------+  
+	# Configure DWR generator and DWR link renderer
+	jawr.custom.generators=net.jawr.web.resource.bundle.generator.dwr.DWRBeanGenerator
+	jawr.js.bundle.link.renderer.class=net.jawr.web.resource.bundle.renderer.DWRJsBundleLinkRenderer
+
+	# Configure DWR bundle
 	jawr.js.bundle.global.id=/bundles/global.js
 	jawr.js.bundle.global.mappings=/js/protaculous/**, dwr:_engine, dwr:_util
 	jawr.js.bundle.global.global=true

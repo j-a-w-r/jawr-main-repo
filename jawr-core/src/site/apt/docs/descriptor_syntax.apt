@@ -147,7 +147,7 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+
 | <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  |
 *---------------+---------+--------------+----------------+
-| jawr.[type].bundle.[name].id  | URL fragment (ex: '/bundles/global.js')   | Defines a bundle by giving it a name (the [name] part of the property) and a path, which must be unique. For members of a composite, this property must NOT be defined.  | None    | 
+| jawr.[type].bundle.[name].id  | URL fragment (ex: '/bundles/global.js')   | Defines a bundle by giving it a name (the [name] part of the property) and a path, which must be unique. For members of a composite, this property must NOT be defined. The bundle Id must follow the following pattern '/[a-zA-Z0-9-_/]*\.((js)|(css))' for example : /myBundles/bundle-tree12.js. The bundle ID must not starts with '/WEB-INF/' or '/META-INF/' | None    | 
 *---------------+---------+--------------+----------------+
 | jawr.[type].bundle.[name].mappings  | Comma separated list.  | Mapping of the resources to include in the bundle. Values can be either a directory path ('/someDir'), a directory path with wildcards to include subdirs ('/someDir/**'), or a single resource path ('/js/foo.js'). It is mandatory for each custom bundle unless it is a child of a composite.   | None    | 
 *---------------+---------+--------------+----------------+
