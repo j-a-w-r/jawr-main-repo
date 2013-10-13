@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim Chaehoi
+ * Copyright 2012-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,8 @@ package net.jawr.web.resource.bundle.postprocess.impl;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
@@ -23,40 +24,53 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 
 /**
  * This class defines the abstract JS postprocessor
+ * 
  * @author Ibrahim Chaehoi
  */
 public abstract class AbstractJsChainedResourceBundlePostProcessor extends
 		AbstractChainedResourceBundlePostProcessor {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger.getLogger(AbstractChainedResourceBundlePostProcessor.class);
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AbstractChainedResourceBundlePostProcessor.class);
+
 	/**
 	 * Constructor
-	 * @param id the post processor ID
+	 * 
+	 * @param id
+	 *            the post processor ID
 	 */
 	public AbstractJsChainedResourceBundlePostProcessor(String id) {
 		super(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor#postProcessBundle(java.lang.StringBuffer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor#
+	 * postProcessBundle(java.lang.StringBuffer)
 	 */
-	public StringBuffer postProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) {
+	public StringBuffer postProcessBundle(BundleProcessingStatus status,
+			StringBuffer bundleData) {
 		StringBuffer processedBundle = null;
 		try {
-			if(LOGGER.isDebugEnabled())
-				LOGGER.debug("postprocessing bundle:" + status.getCurrentBundle().getId());
-			processedBundle = doPostProcessBundle(status,bundleData);
-			if(processedBundle.toString().endsWith(")")){
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("postprocessing bundle:"
+						+ status.getCurrentBundle().getId());
+			processedBundle = doPostProcessBundle(status, bundleData);
+			if (processedBundle.toString().endsWith(")")) {
 				processedBundle.append(";");
 			}
 		} catch (IOException e) {
-			throw new BundlingProcessException("Unexpected IOException during execution of a postprocessor.",e);
+			throw new BundlingProcessException(
+					"Unexpected IOException during execution of a postprocessor.",
+					e);
 		}
-		if(null != nextProcessor) {
-			processedBundle = nextProcessor.postProcessBundle(status,processedBundle);
-		}		
+		if (null != nextProcessor) {
+			processedBundle = nextProcessor.postProcessBundle(status,
+					processedBundle);
+		}
 		return processedBundle;
 	}
 

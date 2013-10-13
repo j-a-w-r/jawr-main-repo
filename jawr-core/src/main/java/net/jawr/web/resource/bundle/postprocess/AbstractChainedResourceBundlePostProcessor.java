@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -17,84 +17,106 @@ import java.io.IOException;
 
 import net.jawr.web.exception.BundlingProcessException;
 
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Chained abstract implementation of ResourceBundlePostProcessor. Implementations
- * can be used as a processing chain. 
+ * Chained abstract implementation of ResourceBundlePostProcessor.
+ * Implementations can be used as a processing chain.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
- */ 
+ */
 public abstract class AbstractChainedResourceBundlePostProcessor implements
 		ChainedResourceBundlePostProcessor {
-	
+
 	/** The logger */
-	private static final Logger LOGGER = Logger.getLogger(AbstractChainedResourceBundlePostProcessor.class);
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(AbstractChainedResourceBundlePostProcessor.class);
+
 	/** The next post processor */
 	protected ChainedResourceBundlePostProcessor nextProcessor;
-	
+
 	/** The ID of the chained bundle post processor */
 	private String id;
-	
+
 	/**
 	 * Constructor
-	 * @param id the id of the post processor
+	 * 
+	 * @param id
+	 *            the id of the post processor
 	 */
 	public AbstractChainedResourceBundlePostProcessor(String id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Returns the ID of the ChainedResourceBundlePostProcessor
+	 * 
 	 * @return the ID of the ChainedResourceBundlePostProcessor
 	 */
-	public String getId(){
+	public String getId() {
 		StringBuffer strId = new StringBuffer();
 		strId.append(id);
-		if(nextProcessor != null){
-			strId.append(","+nextProcessor.getId());
+		if (nextProcessor != null) {
+			strId.append("," + nextProcessor.getId());
 		}
 		return strId.toString();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor#postProcessBundle(java.lang.StringBuffer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor#
+	 * postProcessBundle(java.lang.StringBuffer)
 	 */
-	public StringBuffer postProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) {
+	public StringBuffer postProcessBundle(BundleProcessingStatus status,
+			StringBuffer bundleData) {
 		StringBuffer processedBundle = null;
 		try {
-			if(LOGGER.isDebugEnabled())
-				LOGGER.debug("postprocessing bundle:" + status.getCurrentBundle().getId());
-			processedBundle = doPostProcessBundle(status,bundleData);
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("postprocessing bundle:"
+						+ status.getCurrentBundle().getId());
+			processedBundle = doPostProcessBundle(status, bundleData);
 		} catch (IOException e) {
-			throw new BundlingProcessException("Unexpected IOException during execution of a postprocessor.",e);
+			throw new BundlingProcessException(
+					"Unexpected IOException during execution of a postprocessor.",
+					e);
 		}
-		if(null != nextProcessor) {
-			processedBundle = nextProcessor.postProcessBundle(status,processedBundle);
-		}		
+		if (null != nextProcessor) {
+			processedBundle = nextProcessor.postProcessBundle(status,
+					processedBundle);
+		}
 		return processedBundle;
 	}
-	
+
 	/**
-	 * Set the next post processor in the chain. 
-	 * @param nextProcessor the post processor to set
+	 * Set the next post processor in the chain.
+	 * 
+	 * @param nextProcessor
+	 *            the post processor to set
 	 */
-	public void addNextProcessor(ChainedResourceBundlePostProcessor nextProcessor) {
-		if(this.nextProcessor == null){
+	public void addNextProcessor(
+			ChainedResourceBundlePostProcessor nextProcessor) {
+		if (this.nextProcessor == null) {
 			this.nextProcessor = nextProcessor;
-		}else{
+		} else {
 			this.nextProcessor.addNextProcessor(nextProcessor);
 		}
 	}
-	
+
 	/**
-	 * Postprocess a bundle of resources in the context of this chain of processors. 
-	 * @param bundleData the bundle data
+	 * Postprocess a bundle of resources in the context of this chain of
+	 * processors.
+	 * 
+	 * @param bundleData
+	 *            the bundle data
 	 * @return the processed content
-	 * @throws IOException if an IOException occurs
+	 * @throws IOException
+	 *             if an IOException occurs
 	 */
-	protected abstract StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) throws IOException;
+	protected abstract StringBuffer doPostProcessBundle(
+			BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException;
 }

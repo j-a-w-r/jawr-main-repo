@@ -40,7 +40,10 @@ import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.util.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
  * Creates a script which holds the data from a message bundle(s). The script is
@@ -53,7 +56,7 @@ import org.apache.log4j.Logger;
 public class MessageBundleScriptCreator {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(MessageBundleScriptCreator.class.getName());
 
 	public static final String DEFAULT_NAMESPACE = "messages";
@@ -94,8 +97,10 @@ public class MessageBundleScriptCreator {
 
 		this.configParam = context.getPath();
 
-		String fallbackToSystemLocaleProperty = context.getConfig()
-				.getProperty(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE);
+		String fallbackToSystemLocaleProperty = context
+				.getConfig()
+				.getProperty(
+						JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE);
 		if (StringUtils.isNotEmpty(fallbackToSystemLocaleProperty)) {
 			this.fallbackToSystemLocale = Boolean
 					.valueOf(fallbackToSystemLocaleProperty);
@@ -106,8 +111,8 @@ public class MessageBundleScriptCreator {
 	 * Loads a template containing the functions which convert properties into
 	 * methods.
 	 * 
-	 * @return the template containing the functions which convert properties into
-	 * methods.
+	 * @return the template containing the functions which convert properties
+	 *         into methods.
 	 */
 	private StringBuffer loadScriptTemplate() {
 		StringWriter sw = new StringWriter();
@@ -117,7 +122,8 @@ public class MessageBundleScriptCreator {
 					this);
 			IOUtils.copy(is, sw);
 		} catch (IOException e) {
-			LOGGER.fatal("a serious error occurred when initializing MessageBundleScriptCreator");
+			Marker fatal = MarkerFactory.getMarker("FATAL");
+			LOGGER.error(fatal, "a serious error occurred when initializing MessageBundleScriptCreator");
 			throw new BundlingProcessException(
 					"Classloading issues prevent loading the message template to be loaded. ",
 					e);
@@ -219,7 +225,9 @@ public class MessageBundleScriptCreator {
 
 	/**
 	 * Returns the JS script from the message properties
-	 * @param props the message properties
+	 * 
+	 * @param props
+	 *            the message properties
 	 * @return the JS script from the message properties
 	 */
 	protected Reader doCreateScript(Properties props) {
@@ -237,7 +245,8 @@ public class MessageBundleScriptCreator {
 	/**
 	 * Determines wether a key matches any of the set filters.
 	 * 
-	 * @param key the property key
+	 * @param key
+	 *            the property key
 	 * @return true if the key matches any of the set filters.
 	 */
 	protected boolean matchesFilter(String key) {

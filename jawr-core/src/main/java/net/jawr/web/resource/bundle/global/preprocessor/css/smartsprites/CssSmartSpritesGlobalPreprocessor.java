@@ -32,7 +32,8 @@ import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters.PngDepth;
 import org.carrot2.labs.smartsprites.SpriteBuilder;
@@ -52,7 +53,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		AbstractChainedGlobalProcessor<GlobalPreprocessingContext> {
 
 	/** The logger */
-	private static Logger LOGGER = Logger
+	private static Logger LOGGER = LoggerFactory
 			.getLogger(CssSmartSpritesGlobalPreprocessor.class);
 
 	/** The error level name */
@@ -128,17 +129,15 @@ public class CssSmartSpritesGlobalPreprocessor extends
 			ImageResourcesHandler imgRsHandler, Set<String> resourcePaths,
 			JawrConfig jawrConfig, Charset charset) {
 
-		Level logLevel = LOGGER.getEffectiveLevel();
 		MessageLevel msgLevel = MessageLevel.valueOf(ERROR_LEVEL);
-		Level sinkLevel = LOGGER.getEffectiveLevel();
-		if (logLevel != null) {
-			if (logLevel.isGreaterOrEqual(Level.DEBUG)) {
-				msgLevel = MessageLevel.valueOf(INFO_LEVEL);
-				sinkLevel = Level.INFO;
-			} else if (logLevel.isGreaterOrEqual(Level.WARN)) {
-				msgLevel = MessageLevel.valueOf(WARN_LEVEL);
-				sinkLevel = Level.WARN;
-			}
+		Level sinkLevel = Level.WARN;
+		if (LOGGER.isTraceEnabled() || LOGGER.isDebugEnabled()
+				|| LOGGER.isInfoEnabled()) { // logLevel.isGreaterOrEqual(Level.DEBUG)
+			msgLevel = MessageLevel.valueOf(INFO_LEVEL);
+			sinkLevel = Level.INFO;
+		} else if (LOGGER.isWarnEnabled() || LOGGER.isErrorEnabled()) { // logLevel.isGreaterOrEqual(Level.WARN)
+			msgLevel = MessageLevel.valueOf(WARN_LEVEL);
+			sinkLevel = Level.WARN;
 		}
 
 		MessageLog messageLog = new MessageLog(
@@ -167,10 +166,11 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		SmartSpritesParameters params = new SmartSpritesParameters("/", null,
 				outDir, null, msgLevel, "", PngDepth.valueOf("AUTO"), false,
 				charset.toString());
-		// TODO : use below parameters when Smartsprites will handle keepingSpriteTrack parameter
-//		SmartSpritesParameters params = new SmartSpritesParameters("/", null,
-//				outDir, null, msgLevel, "", PngDepth.valueOf("AUTO"), false,
-//				charset.toString(), true);
+		// TODO : use below parameters when Smartsprites will handle
+		// keepingSpriteTrack parameter
+		// SmartSpritesParameters params = new SmartSpritesParameters("/", null,
+		// outDir, null, msgLevel, "", PngDepth.valueOf("AUTO"), false,
+		// charset.toString(), true);
 
 		SpriteBuilder spriteBuilder = new SpriteBuilder(params, messageLog,
 				smartSpriteRsHandler);
@@ -231,7 +231,15 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		 * .labs.smartsprites.message.Message)
 		 */
 		public void add(Message message) {
-			LOGGER.log(logLevel, message.getFormattedMessage());
+			
+			if(LOGGER.isInfoEnabled() && logLevel.equals(INFO_LEVEL)){
+				LOGGER.info(message.getFormattedMessage());
+			}else if(LOGGER.isWarnEnabled() && logLevel.equals(WARN_LEVEL)){
+				LOGGER.warn(message.getFormattedMessage());
+			}else if(LOGGER.isErrorEnabled() && logLevel.equals(ERROR_LEVEL)){
+				LOGGER.error(message.getFormattedMessage());
+			}
+			
 		}
 	}
 }

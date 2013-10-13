@@ -23,11 +23,15 @@ import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
- * Base class to implement map-based automatic bundles generators. The generated bundles are added to a Map instance in which the keys are bundles ids
- * and the values are the bundles.
+ * Base class to implement map-based automatic bundles generators. The generated
+ * bundles are added to a Map instance in which the keys are bundles ids and the
+ * values are the bundles.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
@@ -36,7 +40,7 @@ import org.apache.log4j.Logger;
 public abstract class AbstractResourceMapper {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractResourceMapper.class);
 
 	/** The base directory */
@@ -57,13 +61,19 @@ public abstract class AbstractResourceMapper {
 	/**
 	 * Constructor
 	 * 
-	 * @param baseDir the base directory of the resource mapper
-	 * @param rsHandler the resource handler
-	 * @param currentBundles the list of current bundles
-	 * @param resourceExtension the resource file extension
+	 * @param baseDir
+	 *            the base directory of the resource mapper
+	 * @param rsHandler
+	 *            the resource handler
+	 * @param currentBundles
+	 *            the list of current bundles
+	 * @param resourceExtension
+	 *            the resource file extension
 	 */
-	public AbstractResourceMapper(String baseDir, ResourceReaderHandler rsHandler,
-			List<JoinableResourceBundle> currentBundles, String resourceExtension) {
+	public AbstractResourceMapper(String baseDir,
+			ResourceReaderHandler rsHandler,
+			List<JoinableResourceBundle> currentBundles,
+			String resourceExtension) {
 		super();
 		this.baseDir = baseDir;
 		this.rsHandler = rsHandler;
@@ -75,14 +85,17 @@ public abstract class AbstractResourceMapper {
 	}
 
 	/**
-	 * Find the required files to add to the mapping. Subclasses must use the addBundleToMap method.
+	 * Find the required files to add to the mapping. Subclasses must use the
+	 * addBundleToMap method.
 	 * 
-	 * @throws DuplicateBundlePathException if we try to add a bundle with a name, which already exists.
+	 * @throws DuplicateBundlePathException
+	 *             if we try to add a bundle with a name, which already exists.
 	 */
 	protected abstract void addBundlesToMapping()
 			throws DuplicateBundlePathException;
 
-	public final Map<String, String> getBundleMapping() throws DuplicateBundlePathException {
+	public final Map<String, String> getBundleMapping()
+			throws DuplicateBundlePathException {
 		addBundlesToMapping();
 		return bundleMapping;
 	}
@@ -90,18 +103,23 @@ public abstract class AbstractResourceMapper {
 	/**
 	 * Add a bundle and its mapping to the resulting Map.
 	 * 
-	 * @param bundleId the bundle Id
-	 * @param mapping the mapping
-	 * @throws DuplicateBundlePathException if we try to add a bundle with a name, which already exists.
+	 * @param bundleId
+	 *            the bundle Id
+	 * @param mapping
+	 *            the mapping
+	 * @throws DuplicateBundlePathException
+	 *             if we try to add a bundle with a name, which already exists.
 	 */
 	protected final void addBundleToMap(String bundleId, String mapping)
 			throws DuplicateBundlePathException {
 
-		for (Iterator<JoinableResourceBundle> it = currentBundles.iterator(); it.hasNext();) {
+		for (Iterator<JoinableResourceBundle> it = currentBundles.iterator(); it
+				.hasNext();) {
 			JoinableResourceBundle bundle = it.next();
 			if (bundleId.equals(bundle.getId())
 					|| this.bundleMapping.containsKey(bundleId)) {
-				LOGGER.fatal("Duplicate bundle id resulted from mapping:"
+				Marker fatal = MarkerFactory.getMarker("FATAL");
+				LOGGER.error(fatal, "Duplicate bundle id resulted from mapping:"
 						+ bundleId);
 				throw new DuplicateBundlePathException(bundleId);
 			}

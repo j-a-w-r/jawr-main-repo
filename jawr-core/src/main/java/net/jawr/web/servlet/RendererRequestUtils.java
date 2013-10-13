@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2013 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,7 +28,7 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.BundleRendererContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for tag rendering components, which help in handling request lifecycle aspects.
@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 public class RendererRequestUtils {
 	
 	/** The logger */
-	private static final Logger LOGGER = Logger.getLogger(RendererRequestUtils.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(RendererRequestUtils.class.getName());
 	
 	/** The bundle renderer context attribute name */
 	private static final String BUNDLE_RENDERER_CONTEXT_ATTR_PREFIX = "net.jawr.web.resource.renderer.BUNDLE_RENDERER_CONTEXT";

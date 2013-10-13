@@ -39,7 +39,8 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
 import net.jawr.web.resource.bundle.renderer.ConditionalCommentRenderer;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines a generator which will bundle all the CSS defines in
@@ -54,7 +55,7 @@ import org.apache.log4j.Logger;
 public class IECssBundleGenerator extends AbstractCSSGenerator {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(IECssBundleGenerator.class);
 
 	/** The resolver */

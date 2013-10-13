@@ -49,7 +49,8 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Image Request handling class. Jawr image servlet delegates to this class to
@@ -63,7 +64,7 @@ public class JawrImageRequestHandler extends JawrRequestHandler {
 	private static final long serialVersionUID = -8342090032443416738L;
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JawrImageRequestHandler.class);
 
 	/** The cache buster pattern */
@@ -193,7 +194,7 @@ public class JawrImageRequestHandler extends JawrRequestHandler {
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Configuration read. Current config:");
-			LOGGER.debug(jawrConfig);
+			LOGGER.debug(jawrConfig.toString());
 		}
 
 		// Warn when in debug mode

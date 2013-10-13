@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -22,29 +22,34 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.resource.bundle.postprocess.impl.AbstractJsChainedResourceBundlePostProcessor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
 /**
- * This postprocessor will minify a javascript bundle or file using Julien Lecomte's YUICompressor. See http://developer.yahoo.com/yui/compressor/ for
+ * This postprocessor will minify a javascript bundle or file using Julien
+ * Lecomte's YUICompressor. See http://developer.yahoo.com/yui/compressor/ for
  * more information.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class YUIJSCompressor extends AbstractJsChainedResourceBundlePostProcessor {
-	
+public class YUIJSCompressor extends
+		AbstractJsChainedResourceBundlePostProcessor {
+
 	/** The logger */
-	private static final Logger LOGGER = Logger.getLogger(YUIJSCompressor.class);
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(YUIJSCompressor.class);
+
 	/** The flag indicating if the content should be obfuscated or not */
 	private boolean obfuscate;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param obfuscate Wether obfuscation should be applied.
+	 * @param obfuscate
+	 *            Wether obfuscation should be applied.
 	 */
 	public YUIJSCompressor(boolean obfuscate) {
 		super(obfuscate ? PostProcessFactoryConstant.YUI_COMPRESSOR_OBFUSCATOR
@@ -55,8 +60,9 @@ public class YUIJSCompressor extends AbstractJsChainedResourceBundlePostProcesso
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess
+	 * @see net.jawr.web.resource.bundle.postprocess.
+	 * AbstractChainedResourceBundlePostProcessor
+	 * #doPostProcessBundle(net.jawr.web.resource.bundle.postprocess
 	 * .BundleProcessingStatus, java.lang.StringBuffer)
 	 */
 	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
@@ -68,8 +74,10 @@ public class YUIJSCompressor extends AbstractJsChainedResourceBundlePostProcesso
 
 		StringWriter wr = new StringWriter();
 		/*
-		 * Params for this call: Writer: the StringWriter. int linebreak: always -1... boolean munge: obfuscated or not. boolean verbose: logging
-		 * level boolean preserveAllSemiColons: leave to false. boolean disableOptimizations: leave to true. *
+		 * Params for this call: Writer: the StringWriter. int linebreak: always
+		 * -1... boolean munge: obfuscated or not. boolean verbose: logging
+		 * level boolean preserveAllSemiColons: leave to false. boolean
+		 * disableOptimizations: leave to true. *
 		 */
 		compressor.compress(wr, -1, obfuscate, LOGGER.isDebugEnabled(), false,
 				false);

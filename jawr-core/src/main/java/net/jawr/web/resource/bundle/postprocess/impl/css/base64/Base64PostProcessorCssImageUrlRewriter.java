@@ -34,14 +34,15 @@ import net.jawr.web.servlet.util.ImageMIMETypesSupport;
 import net.jawr.web.util.Base64Encoder;
 import net.jawr.web.util.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class defines the image URL rewriter for the base64 image post processor.
- * This postprocessor will apply the standard URL rewriting process if the image URL
- * is annotated as "jawr:base64-skip" or if the brwoser is IE7, because
- * the MHTML is not properly supported with IE7 on Windows Vista and Windows 7
- * Please check the following link for more info.
+ * This class defines the image URL rewriter for the base64 image post
+ * processor. This postprocessor will apply the standard URL rewriting process
+ * if the image URL is annotated as "jawr:base64-skip" or if the brwoser is IE7,
+ * because the MHTML is not properly supported with IE7 on Windows Vista and
+ * Windows 7 Please check the following link for more info.
  * 
  * http://www.phpied.com/data-uris-mhtml-ie7-win7-vista-blues/#vista
  * 
@@ -51,7 +52,7 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 		PostProcessorCssImageUrlRewriter {
 
 	/** The logger */
-	private Logger LOGGER = Logger
+	private Logger LOGGER = LoggerFactory
 			.getLogger(Base64PostProcessorCssImageUrlRewriter.class);
 
 	/** The data prefix */
@@ -60,11 +61,19 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 	/** The mhtml prefix */
 	private static final String MHTML_PREFIX = "mhtml:";
 
-	/** The annotation to skip or force the base64 encoding (jawr:base64 or jawr:base64-skip ) */
-	private static final Pattern ANNOTATION_BASE64_PATTERN = Pattern.compile("jawr(?:\\s)*:(?:\\s)*(base64)(-skip)?");
+	/**
+	 * The annotation to skip or force the base64 encoding (jawr:base64 or
+	 * jawr:base64-skip )
+	 */
+	private static final Pattern ANNOTATION_BASE64_PATTERN = Pattern
+			.compile("jawr(?:\\s)*:(?:\\s)*(base64)(-skip)?");
 
-	/** The annotation to skip or force the base64 encoding (jawr:base64 or jawr:base64-skip ) */
-	private static final Pattern ANNOTATION_SPRITE_PATTERN = Pattern.compile("sprite(?:\\s)*:(?:\\s)*?");
+	/**
+	 * The annotation to skip or force the base64 encoding (jawr:base64 or
+	 * jawr:base64-skip )
+	 */
+	private static final Pattern ANNOTATION_SPRITE_PATTERN = Pattern
+			.compile("sprite(?:\\s)*:(?:\\s)*?");
 
 	/** The annotation group in the URL pattern */
 	private static final int ANNOTATION_GROUP = 9;
@@ -83,13 +92,13 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 
 	/** The maximum image file size authorized to be encoded in base64 */
 	private int maxFileSize;
-	
+
 	/** The map of encoded resources */
 	private Map<String, Base64EncodedResource> encodedResources = null;
-	
+
 	/** The flag which determine if we must encode by default or not */
 	private boolean encodeByDefault;
-	
+
 	/** The flag indicating if we must encode the sprites or not */
 	private boolean encodeSprite;
 
@@ -109,40 +118,43 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 				.getData(JawrConstant.BASE64_ENCODED_RESOURCES);
 		maxFileSize = MAX_LENGTH_FILE;
 		Properties configProperties = status.getJawrConfig()
-			.getConfigProperties();
-		String maxLengthProperty = (String) configProperties.get(
-						JawrConstant.BASE64_MAX_IMG_FILE_SIZE);
-		
+				.getConfigProperties();
+		String maxLengthProperty = (String) configProperties
+				.get(JawrConstant.BASE64_MAX_IMG_FILE_SIZE);
+
 		if (StringUtils.isNotEmpty(maxLengthProperty)) {
 			maxFileSize = Integer.parseInt(maxLengthProperty);
 		}
-		
-		String strEncodeByDefault = (String) configProperties.get(
-				JawrConstant.BASE64_ENCODE_BY_DEFAULT);
+
+		String strEncodeByDefault = (String) configProperties
+				.get(JawrConstant.BASE64_ENCODE_BY_DEFAULT);
 		encodeByDefault = getBooleanValue(strEncodeByDefault, true);
-				
-		String strEncodeSprite = (String) configProperties.get(
-				JawrConstant.BASE64_ENCODE_SPRITE);
+
+		String strEncodeSprite = (String) configProperties
+				.get(JawrConstant.BASE64_ENCODE_SPRITE);
 		encodeSprite = getBooleanValue(strEncodeSprite, false);
-		
+
 		LOGGER.debug("max file length: " + maxFileSize);
 	}
-	
+
 	/**
-	 * Returns the boolean value of the string passed in parameter or the default value 
-	 * if the string is null
-	 * @param strVal the string value
-	 * @param defaultValue the default value
-	 * @return the boolean value of the string passed in parameter or the default value 
-	 * if the string is null
+	 * Returns the boolean value of the string passed in parameter or the
+	 * default value if the string is null
+	 * 
+	 * @param strVal
+	 *            the string value
+	 * @param defaultValue
+	 *            the default value
+	 * @return the boolean value of the string passed in parameter or the
+	 *         default value if the string is null
 	 */
-	private boolean getBooleanValue(String strVal, boolean defaultValue){
-		
+	private boolean getBooleanValue(String strVal, boolean defaultValue) {
+
 		boolean result = defaultValue;
-		if(strVal != null){
+		if (strVal != null) {
 			result = Boolean.valueOf(strVal).booleanValue();
 		}
-		
+
 		return result;
 	}
 
@@ -169,45 +181,48 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 		while (matcher.find()) {
 
 			String annotation = matcher.group(ANNOTATION_GROUP);
-			if(StringUtils.isNotEmpty(annotation)){
-				Matcher annotationMatcher = ANNOTATION_BASE64_PATTERN.matcher(annotation);
-				if(annotationMatcher.find()){
+			if (StringUtils.isNotEmpty(annotation)) {
+				Matcher annotationMatcher = ANNOTATION_BASE64_PATTERN
+						.matcher(annotation);
+				if (annotationMatcher.find()) {
 					skipBase64Encoding = annotationMatcher.group(2) != null;
-				}else{
-					annotationMatcher = ANNOTATION_SPRITE_PATTERN.matcher(annotation);
-					if(annotationMatcher.find()){
+				} else {
+					annotationMatcher = ANNOTATION_SPRITE_PATTERN
+							.matcher(annotation);
+					if (annotationMatcher.find()) {
 						skipBase64Encoding = !encodeSprite;
-					}	
+					}
 				}
-			}else{
+			} else {
 				// If no annotation use the default encoding mode
 				skipBase64Encoding = !encodeByDefault;
 			}
-			
+
 			StringBuffer sbUrl = new StringBuffer();
 			Matcher urlMatcher = URL_PATTERN.matcher(matcher.group());
 			while (urlMatcher.find()) {
-				
+
 				String url = urlMatcher.group();
-		
+
 				// Skip sprite encoding if it is configured so
-				if(!encodeSprite && url.indexOf(GeneratorRegistry.SPRITE_GENERATOR_PREFIX+GeneratorRegistry.PREFIX_SEPARATOR) != -1){
+				if (!encodeSprite
+						&& url.indexOf(GeneratorRegistry.SPRITE_GENERATOR_PREFIX
+								+ GeneratorRegistry.PREFIX_SEPARATOR) != -1) {
 					skipBase64Encoding = true;
 				}
-				
-				if(LOGGER.isDebugEnabled() && skipBase64Encoding){
-					LOGGER.debug("Skip encoding image resource : "+url);
-				}
-				
-				url = getUrlPath(url, originalCssPath,
-						newCssPath);
 
-				urlMatcher.appendReplacement(sbUrl, RegexUtil
-						.adaptReplacementToMatcher(url));
+				if (LOGGER.isDebugEnabled() && skipBase64Encoding) {
+					LOGGER.debug("Skip encoding image resource : " + url);
+				}
+
+				url = getUrlPath(url, originalCssPath, newCssPath);
+
+				urlMatcher.appendReplacement(sbUrl,
+						RegexUtil.adaptReplacementToMatcher(url));
 			}
 			urlMatcher.appendTail(sbUrl);
-			matcher.appendReplacement(sb, RegexUtil
-					.adaptReplacementToMatcher(sbUrl.toString()));
+			matcher.appendReplacement(sb,
+					RegexUtil.adaptReplacementToMatcher(sbUrl.toString()));
 
 		}
 		matcher.appendTail(sb);
@@ -231,7 +246,8 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 		String imgUrl = url;
 		String browser = status.getVariant(JawrConstant.BROWSER_VARIANT_TYPE);
 
-		if (skipBase64Encoding) { // Skip base64 encoding if it has ben deactivated
+		if (skipBase64Encoding) { // Skip base64 encoding if it has ben
+									// deactivated
 			imgUrl = super.rewriteURL(status, imgUrl, imgServletPath,
 					newCssPath, imgRsHandler);
 		} else {
@@ -248,10 +264,11 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 				IOUtils.copy(is, out, true);
 
 				int size = out.size();
-				if (size > maxFileSize) { // Check file size 
+				if (size > maxFileSize) { // Check file size
 
-					LOGGER.warn("File content length of '"+url+"' exceeds maximum file length: "
-							+ size + " > " + maxFileSize);
+					LOGGER.warn("File content length of '" + url
+							+ "' exceeds maximum file length: " + size + " > "
+							+ maxFileSize);
 				} else {
 
 					byte[] data = out.toByteArray();
@@ -265,28 +282,31 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 					encodedResources.put(encodedImage.getId(), encodedImage);
 
 					// For IE under IE8, use MHTML
-					if (JawrConstant.BROWSER_IE6.equals(browser) || JawrConstant.BROWSER_IE7.equals(browser)) {
+					if (JawrConstant.BROWSER_IE6.equals(browser)
+							|| JawrConstant.BROWSER_IE7.equals(browser)) {
 
 						/**
-						 * For Internet Explorer 6 and 7, the url must be mhtml: followed
-						 * by an absolute url. However, this URL is not known at
-						 * post process time. So we make add a place holder which will
-						 * be resolved at runtime.
+						 * For Internet Explorer 6 and 7, the url must be mhtml:
+						 * followed by an absolute url. However, this URL is not
+						 * known at post process time. So we make add a place
+						 * holder which will be resolved at runtime.
 						 */
-						imgUrl = MHTML_PREFIX+JawrConstant.JAWR_BUNDLE_PATH_PLACEHOLDER+"!"+encodedImage.getId();
+						imgUrl = MHTML_PREFIX
+								+ JawrConstant.JAWR_BUNDLE_PATH_PLACEHOLDER
+								+ "!" + encodedImage.getId();
 
 					} else {
 						imgUrl = DATA_PREFIX + fileMimeType + ";base64," + s;
 					}
 				}
 			} catch (IOException e) {
-				LOGGER.error(e);
+				LOGGER.error("Unable to rewrite image URL", e);
 
 			} catch (ResourceNotFoundException e) {
 				LOGGER.error("The resource '" + e.getRequestedPath()
 						+ "' has not been found.");
 			} catch (Throwable e) {
-				LOGGER.error(e);
+				LOGGER.error("Unable to rewrite image URL", e);
 			}
 		}
 
@@ -294,9 +314,10 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 	}
 
 	/**
-	 * Encodes the data in base64 
+	 * Encodes the data in base64
 	 * 
-	 * @param data the byte array of data to encode
+	 * @param data
+	 *            the byte array of data to encode
 	 * @return the base64 encoded string of the data
 	 */
 	private String encodeInBase64(byte[] data) {

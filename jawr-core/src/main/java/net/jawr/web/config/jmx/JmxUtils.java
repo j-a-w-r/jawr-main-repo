@@ -26,7 +26,7 @@ import net.jawr.web.exception.JmxConfigException;
 import net.jawr.web.util.ServletContextUtils;
 import net.jawr.web.util.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for JMX.
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 public final class JmxUtils {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger.getLogger(JmxUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JmxUtils.class);
 
 	/** The default prefix value */
 	private static final String DEFAULT_PREFIX = "default";

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2013 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -32,7 +32,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.commons.collections.iterators.IteratorEnumeration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines a mock servlet container.
@@ -42,7 +43,8 @@ import org.apache.log4j.Logger;
 public class MockServletContext implements ServletContext {
 
 	/** The logger */
-	private static Logger logger = Logger.getLogger(MockServletContext.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(MockServletContext.class);
 
 	/** The base directory */
 	private String baseDir;
@@ -57,9 +59,9 @@ public class MockServletContext implements ServletContext {
 	 * Constructor
 	 */
 	public MockServletContext() {
-	
+
 	}
-	
+
 	/**
 	 * Constructor
 	 */
@@ -180,11 +182,11 @@ public class MockServletContext implements ServletContext {
 	 * @see javax.servlet.ServletContext#getResource(java.lang.String)
 	 */
 	public URL getResource(String path) throws MalformedURLException {
-		
+
 		URL url = null;
-		File file = new File(baseDir + path); 
-		if(file.exists()){
-			url =file.toURI().toURL();
+		File file = new File(baseDir + path);
+		if (file.exists()) {
+			url = file.toURI().toURL();
 		}
 		return url;
 	}
@@ -216,17 +218,18 @@ public class MockServletContext implements ServletContext {
 
 		path = path.replace('/', File.separatorChar);
 		File resource = new File(baseDir, path);
-		if(!resource.exists()){
-			//throw new InvalidPathException(baseDir + File.separator + path);
+		if (!resource.exists()) {
+			// throw new InvalidPathException(baseDir + File.separator + path);
 			return null;
 		}
-		
+
 		// If the path is not valid throw an exception
 		String[] resArray = resource.list();
 		if (null == resArray)
 			return null;
 
-		// Make the returned dirs end with '/', to match a servletcontext behavior.
+		// Make the returned dirs end with '/', to match a servletcontext
+		// behavior.
 		for (int i = 0; i < resArray.length; i++) {
 
 			resArray[i] = path + resArray[i];
@@ -242,7 +245,9 @@ public class MockServletContext implements ServletContext {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.ResourceHandler#isDirectory(java.lang.String)
+	 * @see
+	 * net.jawr.web.resource.bundle.ResourceHandler#isDirectory(java.lang.String
+	 * )
 	 */
 	public boolean isDirectory(String path) {
 		path = path.replace('/', File.separatorChar);
@@ -306,7 +311,8 @@ public class MockServletContext implements ServletContext {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.servlet.ServletContext#log(java.lang.Exception, java.lang.String)
+	 * @see javax.servlet.ServletContext#log(java.lang.Exception,
+	 * java.lang.String)
 	 */
 	public void log(Exception exception, String msg) {
 		logger.info(msg, exception);
@@ -315,7 +321,8 @@ public class MockServletContext implements ServletContext {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.servlet.ServletContext#log(java.lang.String, java.lang.Throwable)
+	 * @see javax.servlet.ServletContext#log(java.lang.String,
+	 * java.lang.Throwable)
 	 */
 	public void log(String message, Throwable throwable) {
 		logger.info(message, throwable);
@@ -333,13 +340,16 @@ public class MockServletContext implements ServletContext {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.servlet.ServletContext#setAttribute(java.lang.String, java.lang.Object)
+	 * @see javax.servlet.ServletContext#setAttribute(java.lang.String,
+	 * java.lang.Object)
 	 */
 	public void setAttribute(String name, Object object) {
 		attributes.put(name, object);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.ServletContext#getContextPath()
 	 */
 	@Override

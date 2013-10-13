@@ -16,28 +16,32 @@ package net.jawr.web.resource.bundle.factory.util;
 import java.io.Serializable;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A threaded component that periodically checks for updates to the configuration of Jawr. 
+ * A threaded component that periodically checks for updates to the
+ * configuration of Jawr.
  * 
  * @author Jordi Hernández Sellés
  */
 public class ConfigChangeListenerThread extends Thread implements Serializable {
-	
+
 	/** The serial version UID */
 	private static final long serialVersionUID = -7816209592970823852L;
 
-	private static final Logger LOGGER = Logger.getLogger(ConfigChangeListenerThread.class.getName());
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ConfigChangeListenerThread.class.getName());
+
 	private long waitMillis;
 	private ConfigPropertiesSource propertiesSource;
 	private Properties overrideProperties;
 	private ConfigChangeListener listener;
 	private boolean continuePolling;
-	
+
 	public ConfigChangeListenerThread(ConfigPropertiesSource propertiesSource,
-			Properties overrideProperties, ConfigChangeListener listener, long secondsToWait ) {
+			Properties overrideProperties, ConfigChangeListener listener,
+			long secondsToWait) {
 		super();
 		this.propertiesSource = propertiesSource;
 		this.overrideProperties = overrideProperties;
@@ -47,43 +51,47 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 		this.setDaemon(true);
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		// Flag to avoid checking the very first time, when the request handler has just started. 
+		// Flag to avoid checking the very first time, when the request handler
+		// has just started.
 		boolean firstRun = true;
-		
-		while(continuePolling) {
+
+		while (continuePolling) {
 			try {
-				// Must check before sleeping, otherwise stopPolling does not work.  
-				if(!firstRun && propertiesSource.configChanged()){
+				// Must check before sleeping, otherwise stopPolling does not
+				// work.
+				if (!firstRun && propertiesSource.configChanged()) {
 					Properties props = propertiesSource.getConfigProperties();
-					if(overrideProperties != null){
+					if (overrideProperties != null) {
 						props.putAll(overrideProperties);
 					}
 					listener.configChanged(props);
 				}
 				sleep(waitMillis);
-				firstRun = false;				
-				/* It is painful to show a log statement every certain amount of seconds...		  
-				 if(log.isDebugEnabled())
-					log.debug("Verifying wether properties are changed...");
-					*/
+				firstRun = false;
+				/*
+				 * It is painful to show a log statement every certain amount of
+				 * seconds... if(log.isDebugEnabled())
+				 * log.debug("Verifying wether properties are changed...");
+				 */
 			} catch (InterruptedException e) {
 				LOGGER.error("Failure at config reloading checker thread.");
 			}
 		}
 	}
-	
+
 	/**
-	 * Causes the thread to stop polling for changes. 
+	 * Causes the thread to stop polling for changes.
 	 */
 	public void stopPolling() {
-		if(LOGGER.isDebugEnabled())
+		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Stopping the configuration change polling");
-		
+
 		continuePolling = false;
 	}
 

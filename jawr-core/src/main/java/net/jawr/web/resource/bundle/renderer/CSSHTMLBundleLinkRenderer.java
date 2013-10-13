@@ -32,7 +32,8 @@ import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.servlet.RendererRequestUtils;
 import net.jawr.web.util.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Renderer that creates css link tags.
@@ -47,7 +48,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	private static final long serialVersionUID = 8478334123266702133L;
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(CSSHTMLBundleLinkRenderer.class);
 
 	/** The start tag */
@@ -98,13 +99,18 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	/**
 	 * Constructor
 	 * 
-	  */
+	 */
 	public CSSHTMLBundleLinkRenderer() {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.renderer.CssBundleRenderer#init(net.jawr.web.resource.bundle.handler.ResourceBundlesHandler, java.lang.Boolean, java.lang.String, boolean, boolean, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.renderer.CssBundleRenderer#init(net.jawr
+	 * .web.resource.bundle.handler.ResourceBundlesHandler, java.lang.Boolean,
+	 * java.lang.String, boolean, boolean, java.lang.String)
 	 */
 	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam,
 			String media, boolean alternate, boolean displayAlternateStyles,

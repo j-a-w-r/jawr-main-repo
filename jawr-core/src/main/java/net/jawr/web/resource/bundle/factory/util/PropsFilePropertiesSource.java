@@ -21,102 +21,117 @@ import java.util.Properties;
 
 import net.jawr.web.resource.bundle.IOUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * ConfigPropertiesSource implementation that reads its values from a .properties file. 
+ * ConfigPropertiesSource implementation that reads its values from a
+ * .properties file.
+ * 
  * @author Jordi Hernández Sellés
  */
 public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 
-	private static final Logger LOGGER = Logger.getLogger(PropsFilePropertiesSource.class.getName());
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(PropsFilePropertiesSource.class.getName());
+
 	private String configLocation;
 	protected int propsHashCode;
 	protected static final String FILE_PREFIX = "file:";
 	private boolean checking;
-	
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#getConfigProperties()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
+	 * getConfigProperties()
 	 */
-	public final Properties getConfigProperties() {		
-		Properties props = doReadConfig();		
-		
-		// Initialize hashcode of newly loaded properties. 
-		if(0 == this.propsHashCode) {
+	public final Properties getConfigProperties() {
+		Properties props = doReadConfig();
+
+		// Initialize hashcode of newly loaded properties.
+		if (0 == this.propsHashCode) {
 			this.propsHashCode = props.hashCode();
 		}
-		
+
 		return props;
 	}
 
 	/**
-	 * Implements the loic to load the properties. Subclasses will override this method to 
-	 * implement the specific logic to load their configuration properties. 
+	 * Implements the loic to load the properties. Subclasses will override this
+	 * method to implement the specific logic to load their configuration
+	 * properties.
+	 * 
 	 * @return
 	 */
-	protected Properties doReadConfig(){
-		return  readConfigFile(this.configLocation);
+	protected Properties doReadConfig() {
+		return readConfigFile(this.configLocation);
 	}
-	
+
 	/**
-	 * Reads a config file at the specified path. If the path starts with file:, it will 
-	 * be read from the filesystem. Otherwise it will be loaded from the classpath. 
+	 * Reads a config file at the specified path. If the path starts with file:,
+	 * it will be read from the filesystem. Otherwise it will be loaded from the
+	 * classpath.
 	 * 
 	 * @param path
 	 * @return
 	 */
 	protected Properties readConfigFile(String path) {
-		Properties props = new Properties();	
+		Properties props = new Properties();
 		// Load properties file
 		InputStream is = null;
-		try {	
-			if(path.startsWith(FILE_PREFIX)) {
-				if(LOGGER.isDebugEnabled() && !checking) 			
-					LOGGER.debug("Using filesystem properties file location at: " + configLocation);
-				is = new FileInputStream(new File(path.substring(FILE_PREFIX.length())));
-			}
-			else {
-				if(LOGGER.isDebugEnabled() && !checking) 
-					LOGGER.debug("Reading properties from file at classpath: " + configLocation);				
-				is = ClassLoaderResourceUtils.getResourceAsStream(path,this);
+		try {
+			if (path.startsWith(FILE_PREFIX)) {
+				if (LOGGER.isDebugEnabled() && !checking)
+					LOGGER.debug("Using filesystem properties file location at: "
+							+ configLocation);
+				is = new FileInputStream(new File(path.substring(FILE_PREFIX
+						.length())));
+			} else {
+				if (LOGGER.isDebugEnabled() && !checking)
+					LOGGER.debug("Reading properties from file at classpath: "
+							+ configLocation);
+				is = ClassLoaderResourceUtils.getResourceAsStream(path, this);
 			}
 			// load properties into a Properties object
 			props.load(is);
-			
-		} 
-		catch (IOException e) {
-			throw new IllegalArgumentException("jawr configuration could not be found at "
-					+ path + ". Make sure parameter is properly set "
-					+ "in web.xml. ");
-		}finally{
+
+		} catch (IOException e) {
+			throw new IllegalArgumentException(
+					"jawr configuration could not be found at " + path
+							+ ". Make sure parameter is properly set "
+							+ "in web.xml. ");
+		} finally {
 			IOUtils.close(is);
 		}
-		
+
 		return props;
 	}
 
 	/**
-	 * @param configLocation the configLocation to set
+	 * @param configLocation
+	 *            the configLocation to set
 	 */
 	public void setConfigLocation(String configLocation) {
 		this.configLocation = configLocation;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#configChanged()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
+	 * configChanged()
 	 */
 	public final boolean configChanged() {
 		checking = true;
 		int currentConfigHash = doReadConfig().hashCode();
 		boolean configChanged = this.propsHashCode != currentConfigHash;
-		
-		if(configChanged && LOGGER.isDebugEnabled())
+
+		if (configChanged && LOGGER.isDebugEnabled())
 			LOGGER.debug("Changes in configuration properties file detected.");
-			
+
 		this.propsHashCode = currentConfigHash;
-		
+
 		return configChanged;
 	}
 

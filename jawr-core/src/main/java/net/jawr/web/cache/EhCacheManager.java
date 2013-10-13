@@ -19,7 +19,8 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the EhCache manager
@@ -29,12 +30,11 @@ import org.apache.log4j.Logger;
 public class EhCacheManager extends JawrCacheManager {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
-			.getLogger(EhCacheManager.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EhCacheManager.class);
+
 	/** The EhCache config file path */
 	private static final String JAWR_EHCACHE_CONFIG_PATH = "jawr.ehcache.config.path";
-	
+
 	/** The EhCache name */
 	private static final String JAWR_EHCACHE_CACHE_NAME = "jawr.ehcache.cache.name";
 
@@ -43,60 +43,73 @@ public class EhCacheManager extends JawrCacheManager {
 
 	/** The cache */
 	private Cache cache;
-	
+
 	/**
 	 * The constructor
-	 * @param config the jawr config
+	 * 
+	 * @param config
+	 *            the jawr config
 	 */
 	public EhCacheManager(JawrConfig config) {
-	
+
 		super(config);
-		String configPath = config.getProperty(JAWR_EHCACHE_CONFIG_PATH, DEFAULT_EHCACHE_CONFIG_PATH);
+		String configPath = config.getProperty(JAWR_EHCACHE_CONFIG_PATH,
+				DEFAULT_EHCACHE_CONFIG_PATH);
 		String cacheName = config.getProperty(JAWR_EHCACHE_CACHE_NAME);
 		try {
-			CacheManager cacheMgr = CacheManager.create(ClassLoaderResourceUtils.getResourceAsStream(configPath, this));
+			CacheManager cacheMgr = CacheManager
+					.create(ClassLoaderResourceUtils.getResourceAsStream(
+							configPath, this));
 			cache = cacheMgr.getCache(cacheName);
-			
+
 		} catch (Exception e) {
 			LOGGER.error("Unable to load EHCACHE configuration file", e);
 		}
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.cache.AbstractCacheManager#put(java.lang.String, java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.cache.AbstractCacheManager#put(java.lang.String,
+	 * java.lang.Object)
 	 */
 	public void put(String key, Object obj) {
-	
+
 		cache.put(new Element(key, obj));
 	}
 
-	 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#get(java.lang.String)
 	 */
 	public Object get(String key) {
-	
+
 		Element element = cache.get(key);
-	     if (element != null) {
-	         return element.getValue();
-	     }
-	     return null;
+		if (element != null) {
+			return element.getValue();
+		}
+		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#remove(java.lang.String)
 	 */
 	public Object remove(String key) {
-	
+
 		Element element = cache.get(key);
-		 if (element != null) {
-	         cache.remove(key);
-	     }
-	     return element;
+		if (element != null) {
+			cache.remove(key);
+		}
+		return element;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#clear()
 	 */
 	public void clear() {

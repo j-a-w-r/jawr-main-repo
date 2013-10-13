@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -39,7 +39,8 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.util.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the abstract class for the resource bundle handler
@@ -47,10 +48,11 @@ import org.apache.log4j.Logger;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractResourceBundleHandler implements ResourceBundleHandler {
+public abstract class AbstractResourceBundleHandler implements
+		ResourceBundleHandler {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractResourceBundleHandler.class.getName());
 
 	/** The name of the Jawr temp directory */
@@ -62,7 +64,10 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/** The name of the directory which contain the bundles in gzip format */
 	protected static final String TEMP_GZIP_SUBDIR = "gzip";
 
-	/** The name of the directory which contain the CSS defined in classpath for the DEBUG mode */
+	/**
+	 * The name of the directory which contain the CSS defined in classpath for
+	 * the DEBUG mode
+	 */
 	protected static final String TEMP_CSS_CLASSPATH_SUBDIR = "cssClasspath";
 
 	/** The path of the temporary working directory */
@@ -74,7 +79,10 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/** The path of the directory which contain the bundles in gzip format */
 	protected String gzipDirPath;
 
-	/** The path of the directory which contain the CSS defined in classpath for the DEBUG mode */
+	/**
+	 * The path of the directory which contain the CSS defined in classpath for
+	 * the DEBUG mode
+	 */
 	protected String cssClasspathDirPath;
 
 	/** The charset to use for the files */
@@ -86,33 +94,48 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/** The resource type */
 	private String resourceType;
 
-	/** The flag indicating if the temp directory is a file system directory or if it's embedded in the web application itself */
+	/**
+	 * The flag indicating if the temp directory is a file system directory or
+	 * if it's embedded in the web application itself
+	 */
 	private boolean useFileSystemTempDir = true;
 
 	/**
-	 * Build a resource handler based on the specified temporary files root path and charset.
+	 * Build a resource handler based on the specified temporary files root path
+	 * and charset.
 	 * 
-	 * @param tempDirRoot Root dir for storing bundle files.
-	 * @param charset Charset to read/write characters.
-	 * @param generatorRegistry the generator registry
-	 * @param resourceType the resource type
+	 * @param tempDirRoot
+	 *            Root dir for storing bundle files.
+	 * @param charset
+	 *            Charset to read/write characters.
+	 * @param generatorRegistry
+	 *            the generator registry
+	 * @param resourceType
+	 *            the resource type
 	 */
 	protected AbstractResourceBundleHandler(File tempDirRoot, Charset charset,
 			GeneratorRegistry generatorRegistry, String resourceType) {
 
 		this(tempDirRoot, charset, resourceType, true);
 	}
-	
+
 	/**
-	 * Build a resource handler based on the specified temporary files root path and charset.
+	 * Build a resource handler based on the specified temporary files root path
+	 * and charset.
 	 * 
-	 * @param tempDirRoot Root dir for storing bundle files.
-	 * @param charset Charset to read/write characters.
-	 * @param resourceType the resource type
-	 * @param createTempSubDir the flag indicating if we should use the jawrTemp sub directory
+	 * @param tempDirRoot
+	 *            Root dir for storing bundle files.
+	 * @param charset
+	 *            Charset to read/write characters.
+	 * @param resourceType
+	 *            the resource type
+	 * @param createTempSubDir
+	 *            the flag indicating if we should use the jawrTemp sub
+	 *            directory
 	 */
-	protected AbstractResourceBundleHandler(String tempDirRoot, Charset charset,
-			final String resourceType, final boolean createTempSubDir) {
+	protected AbstractResourceBundleHandler(String tempDirRoot,
+			Charset charset, final String resourceType,
+			final boolean createTempSubDir) {
 		super();
 		this.resourceType = resourceType;
 		this.charset = charset;
@@ -127,7 +150,8 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 		}
 
 		if (tempDirRoot.startsWith(JawrConstant.FILE_URI_PREFIX)) {
-			tempDirRoot = tempDirRoot.substring(JawrConstant.FILE_URI_PREFIX.length());
+			tempDirRoot = tempDirRoot.substring(JawrConstant.FILE_URI_PREFIX
+					.length());
 		} else {
 			useFileSystemTempDir = false;
 		}
@@ -136,19 +160,25 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	}
 
 	/**
-	 * Build a resource handler based on the specified temporary files root path and charset.
+	 * Build a resource handler based on the specified temporary files root path
+	 * and charset.
 	 * 
-	 * @param tempDirRoot Root dir for storing bundle files.
-	 * @param charset Charset to read/write characters.
-	 * @param resourceType the resource type
-	 * @param createTempSubDir the flag indicating if we should use the jawrTemp sub directory
+	 * @param tempDirRoot
+	 *            Root dir for storing bundle files.
+	 * @param charset
+	 *            Charset to read/write characters.
+	 * @param resourceType
+	 *            the resource type
+	 * @param createTempSubDir
+	 *            the flag indicating if we should use the jawrTemp sub
+	 *            directory
 	 */
 	protected AbstractResourceBundleHandler(File tempDirRoot, Charset charset,
 			String resourceType, boolean createTempSubDir) {
 		super();
 		this.resourceType = resourceType;
 		this.charset = charset;
-		
+
 		if (StringUtils.isEmpty(resourceType)
 				|| resourceType.equals(JawrConstant.JS_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_JS_MAPPING_PROPERTIES_FILENAME;
@@ -166,14 +196,17 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 					"Unexpected IOException creating temporary jawr directory",
 					e);
 		}
-		
+
 	}
 
 	/**
 	 * Initialize the temporary directories
 	 * 
-	 * @param tempDirRoot the temporary directory root
-	 * @param createTempSubDir the flag indicating if we should create the temporary directory.
+	 * @param tempDirRoot
+	 *            the temporary directory root
+	 * @param createTempSubDir
+	 *            the flag indicating if we should create the temporary
+	 *            directory.
 	 */
 	private void initTempDirectory(String tempDirRoot, boolean createTempSubDir) {
 
@@ -269,16 +302,20 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 
 		InputStream is = null;
 		try {
-			is = getTemporaryResourceAsStream(PathNormalizer.concatWebPath(tempDirPath+"/",
-					mappingFileName));
+			is = getTemporaryResourceAsStream(PathNormalizer.concatWebPath(
+					tempDirPath + "/", mappingFileName));
 		} catch (ResourceNotFoundException e) {
 			// Nothing to do
 		}
 		return is;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.ResourceHandler#getTemporaryResourceAsStream(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.ResourceHandler#getTemporaryResourceAsStream(java
+	 * .lang.String)
 	 */
 	public InputStream getTemporaryResourceAsStream(String resourceName)
 			throws ResourceNotFoundException {
@@ -290,26 +327,32 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 			} catch (FileNotFoundException e) {
 				throw new ResourceNotFoundException(resourceName);
 			}
-		}else{
+		} else {
 			is = doGetResourceAsStream(resourceName);
 		}
-		
+
 		if (is == null) {
 			throw new ResourceNotFoundException(resourceName);
 		}
-		
+
 		return is;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.ResourceHandler#getResourceAsStream(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.ResourceHandler#getResourceAsStream(java.lang.String
+	 * )
 	 */
 	protected abstract InputStream doGetResourceAsStream(String resourceName);
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.ResourceHandler#storeJawrBundleMapping(java.util.Properties)
+	 * @see
+	 * net.jawr.web.resource.ResourceHandler#storeJawrBundleMapping(java.util
+	 * .Properties)
 	 */
 	public void storeJawrBundleMapping(Properties bundleMapping) {
 
@@ -325,39 +368,49 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 		}
 
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.ResourceHandler#getResourceBundleBytes(java.lang.String)
+	 * @see
+	 * net.jawr.web.resource.bundle.ResourceHandler#getResourceBundleBytes(java
+	 * .lang.String)
 	 */
 	public ReadableByteChannel getResourceBundleChannel(String bundleName)
 			throws ResourceNotFoundException {
-	
+
 		return getResourceBundleChannel(bundleName, true);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.ResourceHandler#getResourcebundleReader(java.lang.String)
+	 * @see
+	 * net.jawr.web.resource.bundle.ResourceHandler#getResourcebundleReader(
+	 * java.lang.String)
 	 */
 	public Reader getResourceBundleReader(String bundleName)
 			throws ResourceNotFoundException {
-		
-		ReadableByteChannel inchannel = getResourceBundleChannel(bundleName, false);
+
+		ReadableByteChannel inchannel = getResourceBundleChannel(bundleName,
+				false);
 		return Channels.newReader(inchannel, charset.newDecoder(), -1);
 	}
 
 	/**
 	 * Returns the readable byte channel from the bundle name
-	 * @param bundleName the bundle name
-	 * @param gzipBundle the flag indicating if we want to retrieve the gzip version or not
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param gzipBundle
+	 *            the flag indicating if we want to retrieve the gzip version or
+	 *            not
 	 * @return the readable byte channel from the bundle name
-	 * @throws ResourceNotFoundException if the resource is not found
+	 * @throws ResourceNotFoundException
+	 *             if the resource is not found
 	 */
-	public ReadableByteChannel getResourceBundleChannel(String bundleName, boolean gzipBundle)
-			throws ResourceNotFoundException {
+	public ReadableByteChannel getResourceBundleChannel(String bundleName,
+			boolean gzipBundle) throws ResourceNotFoundException {
 
 		String tempFileName = getStoredBundlePath(bundleName, gzipBundle);
 		InputStream is = getTemporaryResourceAsStream(tempFileName);
@@ -367,8 +420,10 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/**
 	 * Resolves the file name with which a bundle is stored.
 	 * 
-	 * @param bundleName the bundle name
-	 * @param asGzippedBundle the flag indicating if it's a gzipped bundle or not
+	 * @param bundleName
+	 *            the bundle name
+	 * @param asGzippedBundle
+	 *            the flag indicating if it's a gzipped bundle or not
 	 * @return the file name.
 	 */
 	private String getStoredBundlePath(String bundleName,
@@ -386,8 +441,10 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/**
 	 * Resolves the file path of the bundle from the root directory.
 	 * 
-	 * @param rootDir the rootDir
-	 * @param bundleName the bundle name
+	 * @param rootDir
+	 *            the rootDir
+	 * @param bundleName
+	 *            the bundle name
 	 * @return the file path
 	 */
 	private String getStoredBundlePath(String rootDir, String bundleName) {
@@ -395,17 +452,19 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 			bundleName = bundleName.replace('/', File.separatorChar);
 		}
 
-		if (!bundleName.startsWith(File.separator)){
+		if (!bundleName.startsWith(File.separator)) {
 			rootDir += File.separator;
 		}
-		
+
 		return rootDir + PathNormalizer.escapeToPhysicalPath(bundleName);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.ResourceHandler#storebundle(java.lang.String, java.lang.StringBuffer)
+	 * @see
+	 * net.jawr.web.resource.bundle.ResourceHandler#storebundle(java.lang.String
+	 * , java.lang.StringBuffer)
 	 */
 	public void storeBundle(String bundleName, StringBuffer bundledResources) {
 
@@ -417,7 +476,8 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.ResourceHandler#storeBundle(java.lang.String, net.jawr.web.resource.bundle.JoinableResourceBundleContent)
+	 * @see net.jawr.web.resource.ResourceHandler#storeBundle(java.lang.String,
+	 * net.jawr.web.resource.bundle.JoinableResourceBundleContent)
 	 */
 	public void storeBundle(String bundleName,
 			JoinableResourceBundleContent bundleResourcesContent) {
@@ -433,10 +493,14 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	/**
 	 * Stores a resource bundle either in text or binary gzipped format.
 	 * 
-	 * @param bundleName the bundle name
-	 * @param bundledResources the bundledRessources
-	 * @param gzipFile a fag defining if the file is gzipped or not
-	 * @param rootDir the root directory
+	 * @param bundleName
+	 *            the bundle name
+	 * @param bundledResources
+	 *            the bundledRessources
+	 * @param gzipFile
+	 *            a fag defining if the file is gzipped or not
+	 * @param rootDir
+	 *            the root directory
 	 */
 	@SuppressWarnings("resource")
 	private void storeBundle(String bundleName, String bundledResources,
@@ -450,14 +514,14 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 
 		try {
 			// Create subdirs if needed
-			bundleName = bundleName.replaceAll(":","_");
+			bundleName = bundleName.replaceAll(":", "_");
 			if (bundleName.indexOf('/') != -1) {
 				StringTokenizer tk = new StringTokenizer(bundleName, "/");
 				StringBuffer pathName = new StringBuffer(rootdir);
 				while (tk.hasMoreTokens()) {
 					String name = tk.nextToken();
 					if (tk.hasMoreTokens()) {
-						pathName.append(File.separator+name);
+						pathName.append(File.separator + name);
 						createDir(pathName.toString());
 					}
 				}
@@ -468,7 +532,7 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 
 			GZIPOutputStream gzOut = null;
 			Writer wr = null;
-			try{
+			try {
 				if (gzipFile) {
 					FileOutputStream fos = new FileOutputStream(store);
 					gzOut = new GZIPOutputStream(fos);
@@ -478,11 +542,10 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 				} else {
 					FileOutputStream fos = new FileOutputStream(store);
 					FileChannel channel = fos.getChannel();
-					wr = Channels.newWriter(channel, charset.newEncoder(),
-							-1);
+					wr = Channels.newWriter(channel, charset.newEncoder(), -1);
 					wr.write(bundledResources.toString());
 				}
-			}finally{
+			} finally {
 				IOUtils.close(gzOut);
 				IOUtils.close(wr);
 			}
@@ -494,7 +557,8 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	}
 
 	/**
-	 * Creates a directory. If dir is note created for some reason a runtimeexception is thrown.
+	 * Creates a directory. If dir is note created for some reason a
+	 * runtimeexception is thrown.
 	 * 
 	 * @param dir
 	 * @throws IOException
@@ -509,14 +573,15 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 					"Error creating temporary jawr directory with path:"
 							+ dir.getPath());
 
-		if (LOGGER.isDebugEnabled()){
+		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Created dir: " + dir.getCanonicalPath());
 		}
 		return dir;
 	}
 
 	/**
-	 * Creates a file. If dir is note created for some reson a runtimeexception is thrown.
+	 * Creates a file. If dir is note created for some reson a runtimeexception
+	 * is thrown.
 	 * 
 	 * @param path
 	 * @return
@@ -529,11 +594,11 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 			path = path.replaceAll("%20", " ");
 		File newFile = new File(path);
 
-		if (!newFile.exists() && !newFile.createNewFile()){
-			throw new BundlingProcessException("Unable to create a temporary file at "
-					+ path);
+		if (!newFile.exists() && !newFile.createNewFile()) {
+			throw new BundlingProcessException(
+					"Unable to create a temporary file at " + path);
 		}
-		
+
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Created file: " + newFile.getCanonicalPath());
 		return newFile;

@@ -18,49 +18,60 @@ import java.util.Properties;
 import net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource;
 import net.jawr.web.resource.bundle.factory.util.PropsFilePropertiesSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * ConfigPropertiesSource implementation that reads its values from a Properties object.
+ * ConfigPropertiesSource implementation that reads its values from a Properties
+ * object.
  * 
  * @author Ibrahim Chaehoi
  */
 public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 
 	/** The logger */
-	private static final Logger LOGGER = Logger.getLogger(PropsFilePropertiesSource.class.getName());
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(PropsFilePropertiesSource.class.getName());
+
 	/** The configuration properties */
 	private Properties configProps;
-	
+
 	/** The properties hashcode */
 	protected int propsHashCode;
-	
+
 	/**
 	 * Constructor
-	 * @param props the properties
+	 * 
+	 * @param props
+	 *            the properties
 	 */
 	public PropsConfigPropertiesSource(Properties props) {
 		this.configProps = props;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#configChanged()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
+	 * configChanged()
 	 */
 	public boolean configChanged() {
 		int currentConfigHash = this.configProps.hashCode();
 		boolean configChanged = this.propsHashCode != currentConfigHash;
-		
-		if(configChanged && LOGGER.isDebugEnabled())
+
+		if (configChanged && LOGGER.isDebugEnabled())
 			LOGGER.debug("Changes in configuration properties file detected.");
-			
+
 		this.propsHashCode = currentConfigHash;
-		
+
 		return configChanged;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#getConfigProperties()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
+	 * getConfigProperties()
 	 */
 	public Properties getConfigProperties() {
 		return configProps;
