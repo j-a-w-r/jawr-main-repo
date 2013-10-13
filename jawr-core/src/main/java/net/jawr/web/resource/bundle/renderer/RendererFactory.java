@@ -34,17 +34,19 @@ public class RendererFactory {
 	 *            the ResourceBundlesHandler
 	 * @param useRandomParam
 	 *            the flag indicating if it should use the random param
+	 * @param async
+	 *            the flag indicating the value of the async attribute
 	 * @param defer
 	 *            the flag indicating the value of the deferred attribute
 	 * @return the JS Bundle renderer
 	 */
 	public final static JsBundleLinkRenderer getJsBundleRenderer(
 			ResourceBundlesHandler bundler, Boolean useRandomParam,
-			Boolean defer) {
+			Boolean async, Boolean defer) {
 		JsBundleLinkRenderer renderer = (JsBundleLinkRenderer) ClassLoaderResourceUtils
 				.buildObjectInstance(bundler.getConfig()
 						.getJsBundleLinkRenderClass());
-		renderer.init(bundler, useRandomParam, defer);
+		renderer.init(bundler, useRandomParam, async, defer);
 
 		return renderer;
 	}

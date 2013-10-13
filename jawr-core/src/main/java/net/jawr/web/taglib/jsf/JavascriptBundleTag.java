@@ -34,8 +34,9 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	protected BundleRenderer createRenderer(FacesContext context) {
 
 		ResourceBundlesHandler rsHandler = getResourceBundlesHandler(context);
+		boolean async = Boolean.valueOf((String) getAttributes().get(JawrConstant.ASYNC_ATTR)).booleanValue();
 		boolean defer = Boolean.valueOf((String) getAttributes().get(JawrConstant.DEFER_ATTR)).booleanValue();
-		return  RendererFactory.getJsBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), defer);
+		return  RendererFactory.getJsBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), async, defer);
 	}
 
 	/* (non-Javadoc)

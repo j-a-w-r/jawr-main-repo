@@ -17,6 +17,7 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
+import net.jawr.web.util.StringUtils;
 
 /**
  * Implementation of a jsp taglib AbstractResourceBundleTag used to render javascript bundles. 
@@ -29,9 +30,30 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	/** The serial version UID */
 	private static final long serialVersionUID = 5087323727715427593L;
 
-	/** The defer attribute */
-	protected boolean defer;
+	/** The async attribute */
+	protected String async;
 	
+	/** The defer attribute */
+	protected String defer;
+	
+	/**
+	 * Set the async attribute.
+	 * 
+	 * @param async
+	 */
+	public void setAsync(String async) {
+		this.async = async;
+	}
+	
+	/**
+	 * Set the defer attribute.
+	 * 
+	 * @param defer
+	 */
+	public void setDefer(String defer) {
+		this.defer = defer;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#getResourceHandlerAttributeName()
 	 */
@@ -47,7 +69,26 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler,
 			Boolean useRandomParam) {
 		
-		return  RendererFactory.getJsBundleRenderer(rsHandler, useRandomParam, defer);
+		Boolean asyncFlag = null;
+		if(StringUtils.isNotEmpty(async)){
+			asyncFlag = Boolean.valueOf(async);
+		}
+		Boolean deferFlag = null;
+		if(StringUtils.isNotEmpty(defer)){
+			deferFlag = Boolean.valueOf(defer);
+		}
+		return  RendererFactory.getJsBundleRenderer(rsHandler, useRandomParam, asyncFlag, deferFlag);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.jsp.tagext.TagSupport#release()
+	 */
+	public void release() {
+		
+		super.release();
+		async = null;
+		defer = null;
+	}
 }

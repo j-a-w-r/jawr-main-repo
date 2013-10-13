@@ -36,6 +36,9 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
     /** The source attribute*/
     private static final String SRC_END_ATTRIBUTE = "\"";
     
+    /** The async attribute */
+    private static final String ASYNC_ATTRIBUTE = " async=\"async\"";
+    
     /** The defer attribute */
     private static final String DEFER_ATTRIBUTE = " defer=\"defer\"";
     
@@ -44,6 +47,9 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
     
     /** The defer attribute */
     private boolean defer;
+    
+    /** The async attribute */
+    private boolean async;
     
     /** A flag indicating if we are rendering the global links */
     private boolean renderGlobalLinks;
@@ -54,12 +60,15 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
     }
     
     /* (non-Javadoc)
-     * @see net.jawr.web.resource.bundle.renderer.JsBundleRenderer#init(net.jawr.web.resource.bundle.handler.ResourceBundlesHandler, java.lang.Boolean, java.lang.Boolean)
+     * @see net.jawr.web.resource.bundle.renderer.JsBundleLinkRenderer#init(net.jawr.web.resource.bundle.handler.ResourceBundlesHandler, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
      */
     @Override
     public void init(ResourceBundlesHandler bundler, Boolean useRandomParam,
-    		Boolean defer) {
-       init(bundler, useRandomParam);
+    		Boolean async, Boolean defer) {
+    	init(bundler, useRandomParam);
+        if(async != null){
+        	this.async = async.booleanValue(); 
+        }
         if(defer != null){
         	this.defer = defer.booleanValue(); 
         }
@@ -96,6 +105,9 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
     	StringBuffer sb = new StringBuffer(PRE_TAG);
     	sb.append(fullPath);
     	sb.append(SRC_END_ATTRIBUTE);
+    	if(async && !renderGlobalLinks){
+    		sb.append(ASYNC_ATTRIBUTE);
+    	}
     	if(defer && !renderGlobalLinks){
     		sb.append(DEFER_ATTRIBUTE);
     	}

@@ -45,7 +45,9 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	
 	private static final String JS_PRE_TAG = "<script type=\"text/javascript\" src=\"";
     private static final String JS_POST_TAG = "\" ></script>";
-    private static final String JS_WITH_DEFER_POST_TAG = "\" defer=\"defer\" ></script>";
+    private static final String JS_WITH_ASYNC_POST_TAG = "\" async=\"async\" ></script>";
+	private static final String JS_WITH_DEFER_POST_TAG = "\" defer=\"defer\" ></script>";
+	private static final String JS_WITH_ASYNC_AND_DEFER_POST_TAG = "\" async=\"async\" defer=\"defer\" ></script>";
 	
 	private JavascriptHTMLBundleLinkRenderer jsRenderer;
 	private JawrConfig jawrConfig;
@@ -81,7 +83,7 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	 */
 	public void setUp(){
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler,true, false);
+		jsRenderer.init(jsHandler,true, false, false);
 	}
 	
 	private String renderToString(BundleRenderer renderer, String path, BundleRendererContext ctx){
@@ -155,7 +157,7 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	public void testWriteJSBundleLinksWithDeferAttributes()
 	{
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler,true, true);
+		jsRenderer.init(jsHandler,true, false, true);
 		
 		jawrConfig.setDebugModeOn(false);
 		
@@ -205,6 +207,114 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 		
 	}
 	
+	@Test
+	public void testWriteJSBundleLinksWithAsyncAttributes()
+	{
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, true, false);
+		
+		jawrConfig.setDebugModeOn(false);
+		
+		// Test regular link creation
+	    bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, true, false);
+	    String result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		
+		assertNotSame("No script tag written ", "", result.trim());
+			
+		String libTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/libPfx/library.js" + JS_POST_TAG;
+		String globalTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/globalPfx/global.js" + JS_POST_TAG;
+		String debOffTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/pfx/debugOff.js" + JS_POST_TAG;
+		String oneTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/pfx/js/one.js" + JS_WITH_ASYNC_POST_TAG;
+		StringTokenizer tk = new StringTokenizer(result,"\n");
+		
+		
+		assertEquals("Invalid number of tags written. ",4, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0", assertStartEndSimmilarity(libTag,"libPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 1", assertStartEndSimmilarity(globalTag,"globalPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",assertStartEndSimmilarity(debOffTag,"pfx",tk.nextToken()) );
+		assertTrue("Unexpected tag added at position 3", assertStartEndSimmilarity(oneTag,"pfx",tk.nextToken()) );
+		
+		// Reusing the set, we test that no repeats are allowed. 
+		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
+		
+
+		// Test gzipped link creation
+		String libZTag = JS_PRE_TAG+ "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "libPfx/library.js" + JS_POST_TAG;
+		String globalZTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "globalPfx/global.js" + JS_POST_TAG;
+		String debOffZTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "pfx/debugOff.js" + JS_POST_TAG;
+		String debOffoneTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "pfx/js/one.js" + JS_WITH_ASYNC_POST_TAG;
+		bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, true, false);
+	    //globalBundleAdded = false;
+		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		assertNotSame("No gzip script tags written ", "", result.trim());
+		tk = new StringTokenizer(result,"\n");
+		assertEquals("Invalid number of gzip script tags written. ",4, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0", assertStartEndSimmilarity(libZTag,"libPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 1",assertStartEndSimmilarity(globalZTag,"globalPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",assertStartEndSimmilarity(debOffZTag,"pfx",tk.nextToken()) );
+		assertTrue("Unexpected tag added at position 3",assertStartEndSimmilarity(debOffoneTag,"pfx",tk.nextToken()) );
+		
+		// Reusing the set, we test that no repeats are allowed. 
+		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
+		
+	}
+	
+	@Test
+	public void testWriteJSBundleLinksWithAsyncAndDeferAttributes()
+	{
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, true, true);
+		
+		jawrConfig.setDebugModeOn(false);
+		
+		// Test regular link creation
+	    bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, true, false);
+	    String result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		
+		assertNotSame("No script tag written ", "", result.trim());
+			
+		String libTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/libPfx/library.js" + JS_POST_TAG;
+		String globalTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/globalPfx/global.js" + JS_POST_TAG;
+		String debOffTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/pfx/debugOff.js" + JS_POST_TAG;
+		String oneTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/pfx/js/one.js" + JS_WITH_ASYNC_AND_DEFER_POST_TAG;
+		StringTokenizer tk = new StringTokenizer(result,"\n");
+		
+		
+		assertEquals("Invalid number of tags written. ",4, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0", assertStartEndSimmilarity(libTag,"libPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 1", assertStartEndSimmilarity(globalTag,"globalPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",assertStartEndSimmilarity(debOffTag,"pfx",tk.nextToken()) );
+		assertTrue("Unexpected tag added at position 3", assertStartEndSimmilarity(oneTag,"pfx",tk.nextToken()) );
+		
+		// Reusing the set, we test that no repeats are allowed. 
+		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
+		
+
+		// Test gzipped link creation
+		String libZTag = JS_PRE_TAG+ "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "libPfx/library.js" + JS_POST_TAG;
+		String globalZTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "globalPfx/global.js" + JS_POST_TAG;
+		String debOffZTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "pfx/debugOff.js" + JS_POST_TAG;
+		String debOffoneTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "pfx/js/one.js" + JS_WITH_ASYNC_AND_DEFER_POST_TAG;
+		bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, true, false);
+	    //globalBundleAdded = false;
+		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		assertNotSame("No gzip script tags written ", "", result.trim());
+		tk = new StringTokenizer(result,"\n");
+		assertEquals("Invalid number of gzip script tags written. ",4, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0", assertStartEndSimmilarity(libZTag,"libPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 1",assertStartEndSimmilarity(globalZTag,"globalPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",assertStartEndSimmilarity(debOffZTag,"pfx",tk.nextToken()) );
+		assertTrue("Unexpected tag added at position 3",assertStartEndSimmilarity(debOffoneTag,"pfx",tk.nextToken()) );
+		
+		// Reusing the set, we test that no repeats are allowed. 
+		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
+		
+	}
+	
 	private boolean assertStartEndSimmilarity(String toCompare, String splitter, String toMatch) {
 		String[] parts = toCompare.split(splitter);
 		return toMatch.startsWith(parts[0]) && toMatch.endsWith(parts[1]);
@@ -213,6 +323,8 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	@Test
 	public void testWriteJSDebugLinks() 
 	{
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, false, false);
 		jawrConfig.setDebugModeOn(true);
 		
 		// Test regular link creation
@@ -271,6 +383,198 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 		
 	}
 
+	@Test
+	public void testWriteJSDebugLinksWithDefer() 
+	{
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, false, true);
+		
+		jawrConfig.setDebugModeOn(true);
+		
+		// Test regular link creation
+	    bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, false, false);
+	    
+	    String result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+	    // Reusing the set, we test that no repeats are allowed. 
+	    String repeated = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+	    
+	    assertNotSame("No script tag written ", "", result.trim());
+
+	    Pattern comment = Pattern.compile("<script type=\"text/javascript\">/.*/</script>");
+	   
+		StringTokenizer tk = new StringTokenizer(result,"\n");
+		
+		// First item should be a comment		
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		
+	    String regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/prototype/protoype.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/protoype.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/lib2.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/lib2.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/scriptaculous/scriptaculous.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/scriptaculous/scriptaculous.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/global/global2.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /global/global2.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/global/global.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /global/global.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		// Even though we set dbug to off, the handler was initialized in non-debug mode, thus we still get the debugoff.js file. 
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/debug/on/debugOn.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /debug/on/debugOn.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/one.js\\?d=\\d*" + JS_WITH_DEFER_POST_TAG;
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertTrue("No match for /js/one/one.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/one2.js\\?d=\\d*" + JS_WITH_DEFER_POST_TAG;
+		assertTrue("No match for /js/one/one2.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/sub/one3.js\\?d=\\d*" + JS_WITH_DEFER_POST_TAG;
+		assertTrue("No match for /js/one/sub/one3.js", Pattern.matches(regX, tk.nextToken()));
+		
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+	}
+	
+	@Test
+	public void testWriteJSDebugLinksWithAsync() 
+	{
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, true, false);
+		
+		jawrConfig.setDebugModeOn(true);
+		
+		// Test regular link creation
+	    bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, false, false);
+	    
+	    String result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+	    // Reusing the set, we test that no repeats are allowed. 
+	    String repeated = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+	    
+	    assertNotSame("No script tag written ", "", result.trim());
+
+	    Pattern comment = Pattern.compile("<script type=\"text/javascript\">/.*/</script>");
+	   
+		StringTokenizer tk = new StringTokenizer(result,"\n");
+		
+		// First item should be a comment		
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		
+	    String regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/prototype/protoype.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/protoype.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/lib2.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/lib2.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/scriptaculous/scriptaculous.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/scriptaculous/scriptaculous.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/global/global2.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /global/global2.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/global/global.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /global/global.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		// Even though we set dbug to off, the handler was initialized in non-debug mode, thus we still get the debugoff.js file. 
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/debug/on/debugOn.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /debug/on/debugOn.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/one.js\\?d=\\d*" + JS_WITH_ASYNC_POST_TAG;
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertTrue("No match for /js/one/one.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/one2.js\\?d=\\d*" + JS_WITH_ASYNC_POST_TAG;
+		assertTrue("No match for /js/one/one2.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/sub/one3.js\\?d=\\d*" + JS_WITH_ASYNC_POST_TAG;
+		assertTrue("No match for /js/one/sub/one3.js", Pattern.matches(regX, tk.nextToken()));
+		
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+	}
+	
+	@Test
+	public void testWriteJSDebugLinksWithAsyncAndDefer() 
+	{
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler,true, true, true);
+		
+		jawrConfig.setDebugModeOn(true);
+		
+		// Test regular link creation
+	    bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, false, false);
+	    
+	    String result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+	    // Reusing the set, we test that no repeats are allowed. 
+	    String repeated = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
+	    
+	    assertNotSame("No script tag written ", "", result.trim());
+
+	    Pattern comment = Pattern.compile("<script type=\"text/javascript\">/.*/</script>");
+	   
+		StringTokenizer tk = new StringTokenizer(result,"\n");
+		
+		// First item should be a comment		
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		
+	    String regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/prototype/protoype.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/protoype.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/lib2.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/lib2.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/lib/scriptaculous/scriptaculous.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /lib/scriptaculous/scriptaculous.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/global/global2.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /global/global2.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/global/global.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /global/global.js", Pattern.matches(regX, tk.nextToken()));
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+		// Even though we set dbug to off, the handler was initialized in non-debug mode, thus we still get the debugoff.js file. 
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/debug/on/debugOn.js\\?d=\\d*" + JS_POST_TAG;
+		assertTrue("No match for /debug/on/debugOn.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/one.js\\?d=\\d*" + JS_WITH_ASYNC_AND_DEFER_POST_TAG;
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertTrue("No match for /js/one/one.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/one2.js\\?d=\\d*" + JS_WITH_ASYNC_AND_DEFER_POST_TAG;
+		assertTrue("No match for /js/one/one2.js", Pattern.matches(regX, tk.nextToken()));
+		
+		regX = JS_PRE_TAG + "/ctxPathJs/srvMapping/js/one/sub/one3.js\\?d=\\d*" + JS_WITH_ASYNC_AND_DEFER_POST_TAG;
+		assertTrue("No match for /js/one/sub/one3.js", Pattern.matches(regX, tk.nextToken()));
+		
+		assertTrue("comment expected",comment.matcher(tk.nextToken()).matches());
+		assertFalse("Repeated already included tag ", Pattern.matches(regX, repeated));
+		
+	}
+	
 	@Test
 	public void testWriteJSBundleLinksWithHttpCdn()
 	{

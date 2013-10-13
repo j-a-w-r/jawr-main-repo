@@ -208,6 +208,9 @@ public class JawrConstant {
 	/** The name of the src attribute */
 	public static final String SRC_ATTR = "src";
 
+	/** The name of the async attribute */
+	public static final String ASYNC_ATTR = "async";
+	
 	/** The name of the defer attribute */
 	public static final String DEFER_ATTR = "defer";
 	
