@@ -5,7 +5,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" 
   version="2.0">  
 	<display-name>JSP jawr Library</display-name>
-	<tlib-version>3.3</tlib-version>
+	<tlib-version>3.5</tlib-version>
 	<short-name>Jawr</short-name>
 	<uri>http://jawr.net/tags/jsp_2x</uri>
 
@@ -16,6 +16,16 @@
 		<attribute>
 			<name>src</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>async</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>defer</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

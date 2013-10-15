@@ -3,7 +3,7 @@
 <!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 
 <taglib>
-	<tlib-version>3.1</tlib-version>
+	<tlib-version>3.5</tlib-version>
 	<jsp-version>1.2</jsp-version>
 	<short-name>Jawr</short-name>
 	<uri>http://jawr.net/tags-el</uri>
@@ -16,6 +16,16 @@
 		<attribute>
 			<name>src</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>async</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>defer</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
