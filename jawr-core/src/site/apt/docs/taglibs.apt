@@ -99,7 +99,7 @@ Jawr JSP tag libraries
 	<script type="text/javascript" src="/myWarContext/foo01/bundles/fooBundle.js" ></script>
 +------------------------------------------+
 
-	This might be unexpected: a link to the global bundle was writen first, even though no specific tag invoked it. That is precisely what global bundles 
+	This might be unexpected: a link to the global bundle was written first, even though no specific tag invoked it. That is precisely what global bundles 
 	are about: they will always be included whenever you use a Jawr tag in a page, before any other bundle. This way, commonly used libraries are 
 	implicitly availabe everywhere. \ 
 	
@@ -108,7 +108,23 @@ Jawr JSP tag libraries
 	
 	The link itself, as you can see, is composed of the application context path, the prefix we specified for the bundle, and the bundle id.  \ 
 	
+
+	Here is the list of the Javascript tag attributes:
 	
+*---------------+---------+--------------+----------------+
+| <<Attribute name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+----------------+
+| src | String | The bundle path.  |  | 
+*---------------*---------*--------------+----------------+
+*---------------*---------*--------------+----------------+
+| useRandomParam | Boolean | The flag indicating if we must use random parameter in debug mode.  | true | 
+*---------------*---------*--------------+----------------+
+| async | Boolean | The async flag.  | false | 
+*---------------*---------*--------------+----------------+
+| defer | String | The defer lag.  | false | 
+*---------------*---------*--------------+----------------+
+
+		
 
 
 * The style tag

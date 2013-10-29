@@ -171,7 +171,7 @@
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
-      	  <li> <strong>08/15/2010</strong>: Version 3.5 released:<br/>
+      	  <li> <strong>11/01/2013</strong>: Version 3.5 released:<br/>
 	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
 	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <strong>New features: </strong>
@@ -230,6 +230,13 @@
       			Jawr allows the user to define custom implementation of built in Resolvers (LocaleResolver, BrowserTypeResolver, ConnectionTypeResolver, SkinVariantResolver, ) using configuration properties 
       			<strong>jawr.locale.resolver</strong>, <strong>jawr.browser.resolver</strong>, <strong>jawr.url.connection.type.resolver</strong>, <strong>jawr.css.skin.resolver</strong>
       			Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr now uses <a href="http://www.slf4j.org/">slf4j</a> as logging framework.
+      			For those who are using log4j as loging framework, you must add <i>slf4j-log4j12-xxx.jar</i> in your classpath. Please check the slf4j <a href="http://www.slf4j.org/manual.html">documentation</a> for more detail.
+      			</li>
+      			<li>
+      			The Jawr javascript tag now support the aysnc and defer attributes. Please check the <a href="./docs/taglibs.html">taglib doc</a> for more detail.
       			</li>
         	</ul>
       		<ul>   
@@ -366,7 +373,7 @@
      	  </li>
      	  <li>
      	  	Thanks to julienw, kgo, ghillert, henrik242, sfrancois99, gregkatz, EddiBosh, brienwheeler, omega_ula, dtabuenc, dtrunk90, D_mitar, TimDGSL, jfasrc, smalbegui, bai.ben, deleted_user, pakmans for reporting the issues.
-     	  	Thanks to das2k_117, sankar_netsoft, ZikFat, Musikolo, tduffey, nik9000, wwwpol, hay_dave, tgilles, glin, Stephane Landelle, oxc, Chris Kulinski for reporting the issues and also providing patches.
+     	  	Thanks to das2k_117, sankar_netsoft, ZikFat, nbourdeau, Musikolo, tduffey, nik9000, wwwpol, hay_dave, tgilles, glin, Stephane Landelle, oxc, Chris Kulinski for reporting the issues and also providing patches.
      	  </li>
       </ul>
       
