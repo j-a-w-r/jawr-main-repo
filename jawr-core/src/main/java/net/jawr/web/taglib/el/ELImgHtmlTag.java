@@ -1090,168 +1090,168 @@ public class ELImgHtmlTag extends ImgHtmlTag {
         throws JspException {
         String string = null;
         Boolean bool = null;
-		if ((bool =
+		if (getBase64Expr() != null && (bool =
 	            EvalHelper.evalBoolean("base64", getBase64Expr(), this,
 	                pageContext)) != null) {
 	        setBase64(bool.booleanValue());
 	    }
 		
-        if ((string =
+        if (getAlignExpr() != null && (string =
                 EvalHelper.evalString("align", getAlignExpr(), this, pageContext)) != null) {
             setAlign(string);
         }
 
-        if ((string =
+        if (getAltExpr() != null && (string =
                 EvalHelper.evalString("alt", getAltExpr(), this, pageContext)) != null) {
             setAlt(string);
         }
 
-        if ((string =
+        if (getBorderExpr() != null && (string =
                 EvalHelper.evalString("border", getBorderExpr(), this,
                     pageContext)) != null) {
             setBorder(string);
         }
 
-        if ((string =
+        if (getDirExpr() != null && (string =
         		EvalHelper.evalString("dir", getDirExpr(), this,
         			pageContext)) != null) {
         	setDir(string);
         }
         
-        if ((string =
+        if (getHeightExpr() != null && (string =
                 EvalHelper.evalString("height", getHeightExpr(), this,
                     pageContext)) != null) {
             setHeight(string);
         }
 
-        if ((string =
+        if (getHspaceExpr() != null && (string =
                 EvalHelper.evalString("hspace", getHspaceExpr(), this,
                     pageContext)) != null) {
             setHspace(string);
         }
 
-        if ((string =
+        if (getNameExpr() != null && (string =
                 EvalHelper.evalString("name", getNameExpr(), this,
                     pageContext)) != null) {
             setName(string);
         }
 
-        if ((string =
+        if (getIsmapExpr() != null && (string =
                 EvalHelper.evalString("ismap", getIsmapExpr(), this, pageContext)) != null) {
             setIsmap(string);
         }
 
-        if ((string =
+        if (getLangExpr() != null && (string =
             	EvalHelper.evalString("lang", getLangExpr(), this,
             		pageContext)) != null) {
         	setLang(string);
         }
 
-        if ((string =
+        if (getNameExpr() != null && (string =
                 EvalHelper.evalString("name", getNameExpr(), this, pageContext)) != null) {
             setName(string);
         }
 
-        if ((string =
+        if (getOnclickExpr() != null && (string =
                 EvalHelper.evalString("onclick", getOnclickExpr(), this,
                     pageContext)) != null) {
             setOnclick(string);
         }
 
-        if ((string =
+        if (getOndblclickExpr() != null && (string =
                 EvalHelper.evalString("ondblclick", getOndblclickExpr(), this,
                     pageContext)) != null) {
             setOndblclick(string);
         }
 
-        if ((string =
+        if (getOnkeydownExpr() != null && (string =
                 EvalHelper.evalString("onkeydown", getOnkeydownExpr(), this,
                     pageContext)) != null) {
             setOnkeydown(string);
         }
 
-        if ((string =
+        if (getOnkeypressExpr() != null && (string =
                 EvalHelper.evalString("onkeypress", getOnkeypressExpr(), this,
                     pageContext)) != null) {
             setOnkeypress(string);
         }
 
-        if ((string =
+        if (getOnkeyupExpr() != null && (string =
                 EvalHelper.evalString("onkeyup", getOnkeyupExpr(), this,
                     pageContext)) != null) {
             setOnkeyup(string);
         }
 
-        if ((string =
+        if (getOnmousedownExpr() != null && (string =
                 EvalHelper.evalString("onmousedown", getOnmousedownExpr(),
                     this, pageContext)) != null) {
             setOnmousedown(string);
         }
 
-        if ((string =
+        if (getOnmousemoveExpr() != null && (string =
                 EvalHelper.evalString("onmousemove", getOnmousemoveExpr(),
                     this, pageContext)) != null) {
             setOnmousemove(string);
         }
 
-        if ((string =
+        if (getOnmouseoutExpr() != null && (string =
                 EvalHelper.evalString("onmouseout", getOnmouseoutExpr(), this,
                     pageContext)) != null) {
             setOnmouseout(string);
         }
 
-        if ((string =
+        if (getOnmouseoverExpr() != null && (string =
                 EvalHelper.evalString("onmouseover", getOnmouseoverExpr(),
                     this, pageContext)) != null) {
             setOnmouseover(string);
         }
 
-        if ((string =
+        if (getOnmouseupExpr() != null && (string =
                 EvalHelper.evalString("onmouseup", getOnmouseupExpr(), this,
                     pageContext)) != null) {
             setOnmouseup(string);
         }
 
-        if ((string =
+        if (getSrcExpr() != null && (string =
                 EvalHelper.evalString("src", getSrcExpr(), this, pageContext)) != null) {
             setSrc(string);
         }
 
-        if ((string =
+        if (getStyleExpr() != null && (string =
                 EvalHelper.evalString("style", getStyleExpr(), this, pageContext)) != null) {
             setStyle(string);
         }
 
-        if ((string =
+        if (getStyleClassExpr() != null && (string =
                 EvalHelper.evalString("styleClass", getStyleClassExpr(), this,
                     pageContext)) != null) {
             setStyleClass(string);
         }
 
-        if ((string =
+        if (getStyleIdExpr() != null && (string =
                 EvalHelper.evalString("styleId", getStyleIdExpr(), this,
                     pageContext)) != null) {
             setStyleId(string);
         }
 
-        if ((string =
+        if (getTitleExpr() != null && (string =
                 EvalHelper.evalString("title", getTitleExpr(), this, pageContext)) != null) {
             setTitle(string);
         }
 
-        if ((string =
+        if (getUsemapExpr() != null && (string =
                 EvalHelper.evalString("usemap", getUsemapExpr(), this,
                     pageContext)) != null) {
             setUsemap(string);
         }
 
-        if ((string =
+        if (getVspaceExpr() != null && (string =
                 EvalHelper.evalString("vspace", getVspaceExpr(), this,
                     pageContext)) != null) {
             setVspace(string);
         }
 
-        if ((string =
+        if (getWidthExpr() != null && (string =
                 EvalHelper.evalString("width", getWidthExpr(), this, pageContext)) != null) {
             setWidth(string);
         }

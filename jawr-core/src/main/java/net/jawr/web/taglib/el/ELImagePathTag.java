@@ -84,13 +84,13 @@ public class ELImagePathTag extends ImagePathTag {
 
 		String string = null;
 		Boolean bool = null;
-		if ((bool =
+		if (getBase64Expr() != null && (bool =
 	            EvalHelper.evalBoolean("base64", getBase64Expr(), this,
 	                pageContext)) != null) {
 	        setBase64(bool.booleanValue());
 	    }
     
-		if ((string = EvalHelper.evalString("srcExpr",
+		if (getSrcExpr() != null && (string = EvalHelper.evalString("srcExpr",
 					getSrcExpr(), this, pageContext)) != null){
 			
 			setSrc(string);
