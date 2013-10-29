@@ -38,13 +38,28 @@ public class ELJavascriptBundleTagBeanInfo extends SimpleBeanInfo {
 		List<PropertyDescriptor> proplist = new ArrayList<PropertyDescriptor>();
 
 		try {
-			proplist.add(new PropertyDescriptor("src", ELCSSBundleTag.class,
+			proplist.add(new PropertyDescriptor("src", ELJavascriptBundleTag.class,
+					null, "setSrcExpr"));
+		} catch (IntrospectionException ex) {
+		}
+		try {
+			proplist.add(new PropertyDescriptor("async", ELJavascriptBundleTag.class,
+					null, "setAsync"));
+		} catch (IntrospectionException ex) {
+		}
+		try {
+			proplist.add(new PropertyDescriptor("defer", ELJavascriptBundleTag.class,
+					null, "setDefer"));
+		} catch (IntrospectionException ex) {
+		}
+		try {
+			proplist.add(new PropertyDescriptor("src", ELJavascriptBundleTag.class,
 					null, "setSrcExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
 			proplist.add(new PropertyDescriptor("useRandomParam",
-					ELCSSBundleTag.class, null, "setUseRandomParamExpr"));
+					ELJavascriptBundleTag.class, null, "setUseRandomParamExpr"));
 		} catch (IntrospectionException ex) {
 		}
 

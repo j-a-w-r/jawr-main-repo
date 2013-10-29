@@ -34,6 +34,12 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 	/** The source expression */
 	private String srcExpr;
 
+	/** The async expression */
+	private String asyncExpr;
+
+	/** The defer expression */
+	private String deferExpr;
+
 	/** The use random parameter expression */
 	private String useRandomParamExpr;
 
@@ -75,6 +81,42 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 		this.srcExpr = srcExpr;
 	}
 
+	/**
+	 * Returns the async expression
+	 * @return the async expression
+	 */
+	public String getAsyncExpr() {
+		return asyncExpr;
+	}
+
+	/**
+	 * Sets the asyncExpr
+	 * 
+	 * @param asyncExpr
+	 *            the asyncExpr to set
+	 */
+	public void setAsyncExpr(String asyncExpr) {
+		this.asyncExpr = asyncExpr;
+	}
+
+	/**
+	 * Returns the defer expression
+	 * @return the defer expression
+	 */
+	public String getDeferExpr() {
+		return deferExpr;
+	}
+
+	/**
+	 * Sets the deferExpr
+	 * 
+	 * @param deferExpr
+	 *            the deferExpr to set
+	 */
+	public void setDeferExpr(String deferExpr) {
+		this.deferExpr = deferExpr;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -88,6 +130,18 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 			string = (String) ExpressionEvaluatorManager.evaluate("srcExpr",
 					srcExpr, String.class, this, pageContext);
 			setSrc(string);
+		}
+		
+		if (asyncExpr != null) {
+			string = (String) ExpressionEvaluatorManager.evaluate("asyncExpr",
+					asyncExpr, String.class, this, pageContext);
+			setAsync(string);
+		}
+		
+		if (deferExpr != null) {
+			string = (String) ExpressionEvaluatorManager.evaluate("deferExpr",
+					deferExpr, String.class, this, pageContext);
+			setDefer(string);
 		}
 
 		if (useRandomParamExpr != null) {
@@ -109,5 +163,7 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 		super.release();
 		setSrcExpr(null);
 		setUseRandomParamExpr(null);
+		setAsync(null);
+		setDefer(null);
 	}
 }
