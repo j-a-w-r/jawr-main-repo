@@ -189,7 +189,7 @@
       			Jawr adds new <strong>jawr.locale.generator.fallbackToSystemLocale</strong> property for i18n message resource generator, to use System locale if no locale is found. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
       			</li>
       			<li>
-      			Jawr allows the user to define the use of random paramater in debug mode at application level using <strong>jawr.debug.use.random.parameter</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			Jawr allows the user to define the use of random parameter in debug mode at application level using <strong>jawr.debug.use.random.parameter</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
       			</li>
       			<li>
       			Jawr adds support for custom generator resolver. Before the 3.5 version, the generator were only available with a mapping prefix (for ex: ""jar:" for classpath generator). Now the user are able to define their own generator resolver.
