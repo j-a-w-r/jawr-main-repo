@@ -4,7 +4,7 @@
   "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
   "facelet-taglib_1_0.dtd">
 <facelet-taglib>
-      <namespace>https://jawr.dev.java.net/jsf/facelets</namespace>
+      <namespace>https://jawr.java.net/jsf/facelets</namespace>
    <tag>
       <tag-name>script</tag-name>
       <component>
