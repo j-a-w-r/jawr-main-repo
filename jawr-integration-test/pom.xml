@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.jawr</groupId>
-			<artifactId>jawr</artifactId>
+			<artifactId>jawr-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

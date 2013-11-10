@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.LocaleAwareResourceGenerator;
-import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver;
+import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.locale.LocaleUtils;
 import net.jawr.web.resource.bundle.locale.message.MessageBundleScriptCreator;
@@ -52,7 +52,7 @@ public class SampleLocaleAwareResourceGenerator extends AbstractJavascriptGenera
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getResolver()
 	 */
 	public ResourceGeneratorResolver getResolver() {
-		return new PrefixedPathResourceGeneratorResolver(XML_MESSAGES_GENERATOR_PREFIX);
+		return new PrefixedPathResolver(XML_MESSAGES_GENERATOR_PREFIX);
 	}
 
 }

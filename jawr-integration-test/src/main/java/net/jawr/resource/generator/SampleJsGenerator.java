@@ -8,7 +8,7 @@ import java.io.StringReader;
 
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
-import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver;
+import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 
 /**
@@ -31,7 +31,7 @@ public class SampleJsGenerator extends AbstractJavascriptGenerator {
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getResolver()
 	 */
 	public ResourceGeneratorResolver getResolver() {
-		return new PrefixedPathResourceGeneratorResolver("testJs");
+		return new PrefixedPathResolver("testJs");
 	}
 
 }

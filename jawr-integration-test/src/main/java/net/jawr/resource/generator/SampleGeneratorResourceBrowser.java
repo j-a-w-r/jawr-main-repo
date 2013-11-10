@@ -12,7 +12,7 @@ import java.util.TreeSet;
 
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
-import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver;
+import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
 
@@ -90,7 +90,7 @@ public class SampleGeneratorResourceBrowser extends AbstractJavascriptGenerator 
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getResolver()
 	 */
 	public ResourceGeneratorResolver getResolver() {
-		return new PrefixedPathResourceGeneratorResolver("browse");
+		return new PrefixedPathResolver("browse");
 	}
 
 }
