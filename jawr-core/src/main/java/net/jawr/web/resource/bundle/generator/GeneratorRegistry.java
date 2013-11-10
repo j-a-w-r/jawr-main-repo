@@ -37,10 +37,10 @@ import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
-import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver;
+import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverWrapper;
-import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResourceGeneratorResolver;
+import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver;
 import net.jawr.web.resource.bundle.generator.validator.CommonsValidatorGenerator;
 import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.generator.variant.css.CssSkinGenerator;
@@ -147,7 +147,7 @@ public class GeneratorRegistry implements Serializable {
 	public GeneratorRegistry(String resourceType) {
 		this.resourceType = resourceType;
 
-		commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+		commonGenerators.put(new PrefixedPathResolver(
 				MESSAGE_BUNDLE_PREFIX), ResourceBundleMessagesGenerator.class);
 		Class<?> generatorClass = null;
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
@@ -158,31 +158,31 @@ public class GeneratorRegistry implements Serializable {
 			generatorClass = ClassPathImgResourceGenerator.class;
 		}
 
-		commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+		commonGenerators.put(new PrefixedPathResolver(
 				CLASSPATH_RESOURCE_BUNDLE_PREFIX), generatorClass);
 
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
-			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+			commonGenerators.put(new PrefixedPathResolver(
 					COMMONS_VALIDATOR_PREFIX), CommonsValidatorGenerator.class);
-			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+			commonGenerators.put(new PrefixedPathResolver(
 					SKIN_SWTICHER_GENERATOR_PREFIX),
 					SkinSwitcherJsGenerator.class);
-			commonGenerators.put(new SuffixedPathResourceGeneratorResolver(
+			commonGenerators.put(new SuffixedPathResolver(
 					COFEESCRIPT_GENERATOR_SUFFIX), CoffeeScriptGenerator.class);
 		}
 
 		if (resourceType.equals(JawrConstant.CSS_TYPE)) {
-			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+			commonGenerators.put(new PrefixedPathResolver(
 					IE_CSS_GENERATOR_PREFIX), IECssBundleGenerator.class);
-			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+			commonGenerators.put(new PrefixedPathResolver(
 					SKIN_GENERATOR_PREFIX), CssSkinGenerator.class);
-			commonGenerators.put(new SuffixedPathResourceGeneratorResolver(
+			commonGenerators.put(new SuffixedPathResolver(
 					LESS_GENERATOR_SUFFIX), LessCssGenerator.class);
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
 				.equals(JawrConstant.IMG_TYPE))) {
-			commonGenerators.put(new PrefixedPathResourceGeneratorResolver(
+			commonGenerators.put(new PrefixedPathResolver(
 					SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
 		}
 	}

@@ -27,7 +27,7 @@ public class ResourceGeneratorResolverFactory {
 	 * @return the prefix generator resolver
 	 */
 	public static ResourceGeneratorResolver createPrefixResolver(String prefix){
-		return new PrefixedPathResourceGeneratorResolver(prefix);
+		return new PrefixedPathResolver(prefix);
 	}
 	
 	/**
@@ -36,6 +36,6 @@ public class ResourceGeneratorResolverFactory {
 	 * @return the suffix generator resolver
 	 */
 	public static ResourceGeneratorResolver createSuffixResolver(String suffix){
-		return new SuffixedPathResourceGeneratorResolver(suffix);
+		return new SuffixedPathResolver(suffix);
 	}
 }

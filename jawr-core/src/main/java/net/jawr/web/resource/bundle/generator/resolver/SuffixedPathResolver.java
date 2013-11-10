@@ -1,5 +1,5 @@
 /**
- * Copyright 2012  Ibrahim Chaehoi
+ * Copyright 2012-2013  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import net.jawr.web.util.StringUtils;
  * 
  * @author ibrahim Chaehoi
  */
-public class SuffixedPathResourceGeneratorResolver implements ResourceGeneratorResolver {
+public class SuffixedPathResolver implements ResourceGeneratorResolver {
 
 	/** The generator suffix separator */
 	public static final String SUFFIX_SEPARATOR = ".";
@@ -37,7 +37,7 @@ public class SuffixedPathResourceGeneratorResolver implements ResourceGeneratorR
 	 * 
 	 * @param prefix the path prefix 
 	 */
-	public SuffixedPathResourceGeneratorResolver(String suffix) {
+	public SuffixedPathResolver(String suffix) {
 		this(suffix, SUFFIX_SEPARATOR, false);
 	}
 	
@@ -47,7 +47,7 @@ public class SuffixedPathResourceGeneratorResolver implements ResourceGeneratorR
 	 * @param prefix the path prefix
 	 * @param separator the suffix separator
 	 */
-	public SuffixedPathResourceGeneratorResolver(String suffix, String separator) {
+	public SuffixedPathResolver(String suffix, String separator) {
 		this(suffix, separator, false);
 	}
 	
@@ -60,7 +60,7 @@ public class SuffixedPathResourceGeneratorResolver implements ResourceGeneratorR
 	 * @param skipSuffix The flag which indicates that in order to retrieve 
 	 * the resource path the suffix should be removed or not
 	 */
-	public SuffixedPathResourceGeneratorResolver(String suffix, String separator, boolean skipSuffix) {
+	public SuffixedPathResolver(String suffix, String separator, boolean skipSuffix) {
 		this.suffix = separator+suffix;
 		this.skipSuffix = skipSuffix;
 	}
@@ -109,10 +109,10 @@ public class SuffixedPathResourceGeneratorResolver implements ResourceGeneratorR
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof SuffixedPathResourceGeneratorResolver)) {
+		if (!(obj instanceof SuffixedPathResolver)) {
 			return false;
 		}
-		SuffixedPathResourceGeneratorResolver other = (SuffixedPathResourceGeneratorResolver) obj;
+		SuffixedPathResolver other = (SuffixedPathResolver) obj;
 		if (suffix == null) {
 			if (other.suffix != null) {
 				return false;

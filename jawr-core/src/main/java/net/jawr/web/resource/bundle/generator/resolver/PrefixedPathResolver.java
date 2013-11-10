@@ -1,5 +1,5 @@
 /**
- * Copyright 2012  Ibrahim Chaehoi
+ * Copyright 2012-2013  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import net.jawr.web.util.StringUtils;
  * 
  * @author ibrahim Chaehoi
  */
-public class PrefixedPathResourceGeneratorResolver implements ResourceGeneratorResolver {
+public class PrefixedPathResolver implements ResourceGeneratorResolver {
 
 	/** The generator prefix separator */
 	public static final String PREFIX_SEPARATOR = ":";
@@ -36,7 +36,7 @@ public class PrefixedPathResourceGeneratorResolver implements ResourceGeneratorR
 	 * 
 	 * @param prefix the path prefix
 	 */
-	public PrefixedPathResourceGeneratorResolver(String prefix) {
+	public PrefixedPathResolver(String prefix) {
 		this(prefix, PREFIX_SEPARATOR, true);
 	}
 	
@@ -46,7 +46,7 @@ public class PrefixedPathResourceGeneratorResolver implements ResourceGeneratorR
 	 * @param prefix the path prefix
 	 * @param separator the prefix separator
 	 */
-	public PrefixedPathResourceGeneratorResolver(String prefix, String separator) {
+	public PrefixedPathResolver(String prefix, String separator) {
 		this(prefix, separator, true);
 	}
 	
@@ -58,7 +58,7 @@ public class PrefixedPathResourceGeneratorResolver implements ResourceGeneratorR
 	 * @param skipPrefix The flag which indicates that in order to retrieve 
 	 * the resource path the prefix should be removed or not
 	 */
-	public PrefixedPathResourceGeneratorResolver(String prefix, String separator, boolean skipPrefix) {
+	public PrefixedPathResolver(String prefix, String separator, boolean skipPrefix) {
 		this.prefix = prefix+separator;
 		this.skipPrefix = skipPrefix;
 	}
@@ -107,10 +107,10 @@ public class PrefixedPathResourceGeneratorResolver implements ResourceGeneratorR
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof PrefixedPathResourceGeneratorResolver)) {
+		if (!(obj instanceof PrefixedPathResolver)) {
 			return false;
 		}
-		PrefixedPathResourceGeneratorResolver other = (PrefixedPathResourceGeneratorResolver) obj;
+		PrefixedPathResolver other = (PrefixedPathResolver) obj;
 		if (prefix == null) {
 			if (other.prefix != null) {
 				return false;
