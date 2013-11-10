@@ -268,8 +268,10 @@ public class ClosureGlobalPostProcessor extends
 
 		// handle the other bundles
 		for (JoinableResourceBundle bundle : bundles) {
-			generateBundleModuleArgs(args, bundleMap, resultBundlePathMapping,
-					bundle, globalBundleDependencies);
+			if (!excludedBundles.contains(bundle.getName())) {
+				generateBundleModuleArgs(args, bundleMap, resultBundlePathMapping,
+						bundle, globalBundleDependencies);
+			}
 		}
 
 		// Add dependency modules args after to conform to dependency definition
