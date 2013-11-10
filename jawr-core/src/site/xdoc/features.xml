@@ -98,7 +98,7 @@
       		 
       		 <li> <strong>Library friendly</strong>: Open source javascript libraries can be used seamlessly with Jawr. Most of these are modular or have plugins: add the modules or 
 			plugins you need and bundle all together. And, even if you minify them (thus eliminating comments), you can still keep the mandatory licenses in
-			the bundle. The <a href="https://jawr.dev.java.net/tutorials/quickstart.html">libraries tutorial</a> will show you how to integrate popular js libraries such 
+			the bundle. The <a href="../tutorials/quickstart.html">libraries tutorial</a> will show you how to integrate popular js libraries such 
 			as Protoype, JQuery or YUI. </li>
 		</ul>
     </section>

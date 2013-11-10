@@ -70,6 +70,7 @@ jawr.css.bundle.factory.global.preprocessors=myGlobalPreprocessor
 	
 	
 =====================
+
 	Grails users will unfortunately need to pack their classes in a jar and add it to the lib folder of their application. The reason for this is a 
 	known flaw in the Grails classloading strategy that keeps plugins from accessing application classes.
 	 

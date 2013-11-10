@@ -6,12 +6,12 @@
 
 How to set up Jawr to generate base64 encoded images
 
-	* Overview
+* Overview
 	
 		The goal of this tutorial is to explain how to set up Jawr to generate base64 encoded images in the CSS bundles.\
 		As you know, one of the main rules to increase performance in your web application is to reduce the number of HTTP requests.\
 		One of the way to achieve this is to create image sprites, which combines multiple images in a single image. Jawr already provides a way
-		to handle this case. Please take a look at the {{{https://jawr.dev.java.net/tutorials/jawrSpriteImage.html} Jawr sprite documentation}}.\
+		to handle this case. Please take a look at the {{{https://jawr.java.net/tutorials/jawrSpriteImage.html} Jawr sprite documentation}}.\
 		So, with sprite all the reference of the images defined in your CSS will point to one or a few sprites, which will reduce the number of HTTP requests.\
 		There is another way to reduce the number of HTTP requests by encoding the content of the images in base64.\
 		It means that in you generated bundle, the URL references to the image will be replaced by the content of your images.\
@@ -43,7 +43,7 @@ How to set up Jawr to generate base64 encoded images
 		    
 		
 	
-	* MHTML to the rescue for IE6 and IE7
+* MHTML to the rescue for IE6 and IE7
 	
 	The base64 encoded resources is handled by all major browser except for IE6 and IE7,
 	but fortunately there is a workaround for this, which is the use of MHTML references.
@@ -111,7 +111,7 @@ iVBORw0KGgoAAAANSUhEUgAAA...AAElFTkSuQmCC
 				    
 				* <<jawr.url.contextpath.ssl.override>> : The context path of the application for HTTPS
 			
-			The values of these properties will be used to reference the absolute path of the CSS bundles.\
+			The values of these properties will be used to reference the absolute path of the CSS bundles.
 			
 			Otherwise Jawr will set the reference to the CSS bundles and will let a place holder for the web application URL.
 			

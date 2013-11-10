@@ -17,10 +17,7 @@ Introduction
 	
 * Requirements
 
-	Smartsprites requires at least the use of <<JRE 5>>. If you want to use the sprite generation feature in Jawr,
-	you must have a project which use at least JRE 5.0.
-		
-	Jawr requires at least the version <<0.2.5>> of smartsprites for this feature.
+	Jawr requires at least the version <<0.2.5>> of smartsprites for the sprite generation feature.
 
 * How it works ?
 	
@@ -40,26 +37,15 @@ Introduction
 	
 	* For maven project
 	
-	If you're using maven, you must add the smartsprites repository in your maven user or project settings.
-	
-+------------------------------------------+
-    <!-- Smartsprites maven repository -->
-    <repository>
-      <id>maven2-repository.smartsprites</id>
-      <name>Smartsprites Maven Repository</name>
-      <url>http://download.csssprites.org/maven2/</url>
-    </repository> 
-+------------------------------------------+
-	
-	And you must also add in your dependencies, the following section : 
+	If you're using maven, you must add in your dependencies, the following section : 
 		
 +------------------------------------------+
 
 	<dependency>
-		<groupId>org.carrot2</groupId>
+		<groupId>com.carrotsearch</groupId>
 		<artifactId>smartsprites</artifactId>
-		<version>0.2.5</version>
-	</dependency> 
+		<version>0.2.10</version>
+	</dependency>
 +------------------------------------------+
 
 * Configure instances of the Jawr Servlet

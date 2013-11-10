@@ -41,35 +41,35 @@
 	
 	<div id="jawrlinks">
 		<b>Latest version : 3.5</b><br/>
-		<a href="https://jawr.dev.java.net/servlets/ProjectDocumentList?folderID=8543">
+		<a href="https://java.net/projects/jawr/downloads/directory/release">
 			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr"  /></a> 
-		<a href="https://jawr.dev.java.net/tutorials/quickstart.html" >
+		<a href="https://jawr.java.net/tutorials/quickstart.html" >
 			<img src="./images/index/get-started.png" style="border:0 !important" title="Go to the quickstart tutorial and start using Jawr" /></a> 		
 	</div>
 	<div id="badges">
 		<!-- FURL -->
-	<a href="http://www.furl.net/storeIt.jsp?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.dev.java.net" target="_blank"><img border="0" src="/images/badges/furl.png" alt="add to furl"/></a>  
+	<a href="http://www.furl.net/storeIt.jsp?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.java.net" target="_blank"><img border="0" src="/images/badges/furl.png" alt="add to furl"/></a>  
 	
 	<!-- DEL.ICIO.US -->
-	<a href="http://del.icio.us/post?v=4&amp;noui&amp;jump=close&amp;url=https://jawr.dev.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/delicious.png" alt="add to del.icio.us"/></a>  
+	<a href="http://del.icio.us/post?v=4&amp;noui&amp;jump=close&amp;url=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/delicious.png" alt="add to del.icio.us"/></a>  
 	
 	<!-- TECHNORATI -->
-	<a href="http://technorati.com/faves?add=https://jawr.dev.java.net" target="_blank"><img border="0" src="/images/badges/technorati.png" alt="add to technorati"/></a>  
+	<a href="http://technorati.com/faves?add=https://jawr.java.net" target="_blank"><img border="0" src="/images/badges/technorati.png" alt="add to technorati"/></a>  
 	
 	<!-- BLINKLIST -->
-	<a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&amp;Url=https://jawr.dev.java.net&amp;Title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/blinklist.png" alt="add to blinklist"/></a>  
+	<a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&amp;Url=https://jawr.java.net&amp;Title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/blinklist.png" alt="add to blinklist"/></a>  
 	
 	<!-- DIGG -->
-	<a href="http://digg.com/submit?phase=2&amp;url=https://jawr.dev.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/digg.png" alt="add to digg"/></a>  
+	<a href="http://digg.com/submit?phase=2&amp;url=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/digg.png" alt="add to digg"/></a>  
 	
 	<!-- GOOGLE -->
-	<a href="http://www.google.com/bookmarks/mark?op=edit&amp;output=popup&amp;bkmk=https://jawr.dev.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/google.png" alt="add to google"/></a>  
+	<a href="http://www.google.com/bookmarks/mark?op=edit&amp;output=popup&amp;bkmk=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/google.png" alt="add to google"/></a>  
 	
 	<!-- STUMBLEUPON -->
-	<a href="http://www.stumbleupon.com/submit?url=https://jawr.dev.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/stumbleupon.png" alt="add to stumbleupon"/></a>  
+	<a href="http://www.stumbleupon.com/submit?url=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="/images/badges/stumbleupon.png" alt="add to stumbleupon"/></a>  
 	
 	<!-- YAHOO -->
-	<a href="http://myweb.yahoo.com/myresults/bookmarklet?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.dev.java.net&amp;ei=UTF" target="_blank"><img border="0" src="/images/badges/yahoo.png" alt="add to yahoo"/></a> 
+	<a href="http://myweb.yahoo.com/myresults/bookmarklet?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.java.net&amp;ei=UTF" target="_blank"><img border="0" src="/images/badges/yahoo.png" alt="add to yahoo"/></a> 
 
 	</div>
 		
@@ -123,7 +123,7 @@
 	</p>
 	<p>
 		You can download the latest release of Jawr 
-		<a href="https://jawr.dev.java.net/servlets/ProjectDocumentList?folderID=8543">here</a>. Also, check out the 
+		<a href="https://java.net/projects/jawr/downloads/directory/release">here</a>. Also, check out the 
 		<a href="./tutorials/quickstart.html">quick start tutorial</a> to see how easy it is to use Jawr in your project. 
 		<br/>And don't forget to check the <a href="./tutorials/faq_howto.html">FAQ - Howto page</a> for tips and troubleshooting. 
 	</p>
@@ -164,7 +164,7 @@
       <subsection name="Requirements">
       	<p>
       		You can use Jawr with any compliant Java Servlet 2.5 or higher container implementation (i.e. Tomcat, Jetty, BEA Weblogic etc.), as long as the 
-			virtual machine it runs on is 1.6 or higher. Jawr uses Apache log4j for logging messages, so it is a required library. There are no other requirements.  
+			virtual machine it runs on is 1.6 or higher. There are no other requirements.  
       	</p>
       </subsection>
       <subsection name="Announcements">
@@ -192,8 +192,8 @@
       			Jawr allows the user to define the use of random parameter in debug mode at application level using <strong>jawr.debug.use.random.parameter</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
       			</li>
       			<li>
-      			Jawr adds support for custom generator resolver. Before the 3.5 version, the generator were only available with a mapping prefix (for ex: ""jar:" for classpath generator). Now the user are able to define their own generator resolver.
-      			You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
+      			Jawr adds support for custom generator resolver. Before the 3.5 version, the generator were only available with a mapping prefix (for ex: ""jar:" for classpath generator). Now the users are able to define their own generator resolver.
+      			For those who had defines their custom generator, they will need to update their generator. Please check the  <a href="./migrationGuide.html">migration guide</a> for more info.
       			</li>
       			<li>
       			Jawr provides a built-in LESS Css generator.
@@ -238,6 +238,10 @@
       			<li>
       			The Jawr javascript tag now support the aysnc and defer attributes. Please check the <a href="./docs/taglibs.html">taglib doc</a> for more detail.
       			</li>
+      			<li>
+      			The URL of the Jawr facelet taglib has been updated from <b>https://jawr.dev.java.net/jsf/facelets</b> to <b>https://jawr.java.net/jsf/facelets</b>.
+      			</li>
+      			
         	</ul>
       		<ul>   
 	    	 	 <li>
@@ -545,7 +549,7 @@
 		    We also would like to apologize for the discontinuation of the plugin release.<br/>
 		    We are sorry for the inconvenience made to the Grails users, which where not able to use Jawr.
 		    We hope that you will enjoy this new version with all the latest features of Jawr.<br/>
-		    The Grails plugin 3.3.1 is available <a href="https://jawr.dev.java.net/servlets/ProjectDocumentList?folderID=8991">here</a>. <br/>
+		    The Grails plugin 3.3.1 is available <a href="https://java.net/projects/jawr/downloads/directory/release">here</a>. <br/>
 		    It will be soon available at the grails plugin repository. 
 		    <br/><br/>
 		    <strong>New feature: </strong>
@@ -580,7 +584,7 @@
       	  			<li>wicket sample</li>
       	  			<li>grails sample</li>
       	  		</ul>	 
-      	  	You can retrieve them from the SVN repository : <b>https://jawr.dev.java.net/svn/jawr/trunk jawr/samples/</b>  
+      	  	You can retrieve them from the different modules on the SVN repository : <b>https://svn.java.net/svn/jawr~svn</b>  
       	  	<br/>
       	  	<br/>
       	  	<strong>Important note :</strong><br/>

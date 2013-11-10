@@ -4,13 +4,16 @@
                                     ------
                                     ------
 
-License files
+
+Introduction
 
 	Most often you will use Jawr to minify the resources that get bundled onto a file. This means that all comments will be removed from the source and 
 	served to clients in that form. However, if you use open source libraries you are normally required to include some sort of license with them. Also, 
 	you may want to include your own copyright and license terms with your resources. This kind of licensing data always comes in the form of source 
 	comments, but if they are written in your resources, minification will delete them. To solve this problem, you can use the license files feature in 
 	Jawr. \ 
+
+* License files
 	
 	A license file is simply a file named <<.license>> that contains comments with licensing info, either yours or from of an open source library. Its 
 	content is copied verbatim to the top of the generated bundle file. Therefore you must be careful to have only well formed comments in this file or 

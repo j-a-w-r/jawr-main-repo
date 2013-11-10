@@ -9,10 +9,10 @@ Definition of custom bundles
 	Bundles are the core functionality of Jawr. A bundle is a group of resources joined together in a single file that has an associated logical name. 
 	
 =====================
+
 	<<Common misconception>>: Note that you are not required to add each and every resource you want compressed to a bundle. Standalone 
 	resources can also be referred by a tag library and they will be compressed/gzipped as well (see the orphan resources section below for 
 	more information). 
-	
 	
 =====================
 
@@ -93,7 +93,7 @@ Definition of custom bundles
 	[]
 	
 	<<Note :>> \
-	If you use a mapping like "/js/lib/" or "/js/lib/**", by default Jawr will sort the resources in the directory by alphabetical order.\
+	If you use a mapping like "/js/lib/" or "/js/lib/**", by default Jawr will sort the resources in the directory by alphabetical order.
 	
 	
 	You can add any combination of the three types of mapping to your bundles. for instance, let's add another bundle to the previous example. 
@@ -120,7 +120,7 @@ Definition of custom bundles
 	There are some alternative ways to get resources into bundles. These are meant to include resources that are not in the WAR file structure: some 
 	as resources that are available only through the classpath, and others as somehow generated content. This will be useful if your application uses a 
 	library that has its own javascript or CSS files. 
-	To add these a special syntax is used in the mapping definition, which consists in a prefix followed by a colon (:). 
+	To add these a special syntax is used in the mapping definition, which consists in using a specific pattern (for example : a prefix followed by a colon ':'). 
 	
 +------------------------------------------+
 	jawr.js.bundle.foo.id=/bundles/fooBundle.js
@@ -340,6 +340,7 @@ jawr.js.bundle.comp.child.names=foo, bar
 	a traditional (yet powerful) resources compressor. \ 
 	
 =====================
+
 	<<Warning:>> When working with Jawr, bear in mind that <<all>> bundles need to be referenced using the {{{./taglibs.html}tag library}} or the 
 	{{{./plain_html.html}javascript link generator for non-JSP pages}}. 
 	Something that usually fools unaware Jawr users is the fact that using regular \<script\> or \<link\> tags with orphans will work in debug 

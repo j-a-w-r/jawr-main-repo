@@ -18,7 +18,7 @@ Introduction
 
 [../images/bundleHashcodeGenerator/bundleHashcodeGenerator.jpg] Hashcode bundle generator class diagram
 
-	** 	BundleHashcodeGnerator : This interface defines the method which is used to determine the hashcode of a bundle.
+	** 	BundleHashcodeGenerator : This interface defines the method which is used to determine the hashcode of a bundle.
 		  
 	** 	BundleStringHashcodeGnerator : This class defines the hashcode generator which uses the String hashcode method as the hashcode of a bundle.
 

@@ -9,7 +9,7 @@ How to set up Jawr to serve images
 	The goal of this tutorial is to explain how to set up Jawr to serve images.
 	Since the version 3.0, Jawr is also able to handle images. The images can be reference from
 	the CSS stylesheets or directly in the JSP using specific tags. Look for the image tags at the 
-	{{{https://jawr.dev.java.net/docs/taglibs.html}tag library doc}} for extra info.
+	{{{https://jawr.java.net/docs/taglibs.html}tag library doc}} for extra info.
 	Jawr will set a long expiration date for the image, and will create a unique URL for the image,
 	which is dependent of the file content.
 

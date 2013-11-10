@@ -6,22 +6,30 @@
 
 Jawr Generators
 
-	TODO : Update documentation for new resolver
-
 	In some cases it is convenient to generate scripts, CSS or images dynamically. For instance, Jawr will create certain scripts to, say, copy i18n 
 	messages from a ResourceBundle over to a special script. You may need to retrieve some data from a database and create parameters that 
 	scripts will need, or simply grab parameters from a configuration file and pass them over to the scripting context. For any case where you 
 	may need to generate content you can implement a Resource Generator and register it in Jawr to suit your needs. \ 
 	
-	Note that a Resource Generator is <<not>> a <script servlet>: it will be only invoked once during application startup. The result of this 
+	Note that a Resource Generator is <<not>> a <script servlet>: it will be only invoked once during application startup to build the bundles in Production mode. The result of this 
 	invocation will be added to whichever bundle you decide and reused until the next redeployment. The point is to be able to generate some 
 	script dynamically but still to be able to minify it and add it to your bundles. A perfect example is the DWR generator: all DWR script 
 	interfaces are created from java classes once during startup but they can be  minified and bundled together.   
+	In debug mode, it will be called as any resource if needed.
 	
 *	Using a generator
 
-	Generators are mapped to bundles 
-	as if they were regular script or CSS files, only using a special syntax: 
+	Generators are mapped to bundles using a GeneratorResolver. 
+	This resolver is used to determine if a resource is a generated resource or not.
+	Prior to the 3.5 version, users were only able to use a prefix to map resources to a generator.
+	Since the 3.5 version, users can define their own resolver.
+	There are 2 built-in types of resolver :
+	
+		* net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver : For prefix path resolver
+		
+		* net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver : For suffix path resolver
+	
+	Example of prefixed path generator :
 	
 +------------------------------------------+
 	prefix:path(params)[params]
@@ -130,15 +138,15 @@ Jawr Generators
 	
 	Jawr provides properties to configure the Less CSS generator. 
 
-*---------------+---------+--------------+----------------+
-| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+
+| <<Property name>> | <<Purpose>>      | <<Default value>>  | 
 *---------------+---------+--------------+----------------+
 | jawr.css.less.generator.less.script.location  | The less script location  |  net/jawr/web/resource/bundle/generator/css/less/less.js    |
-*---------------*---------*--------------+----------------+
+*---------------*---------*--------------+
 | jawr.css.less.generator.engine.script.location  | The less engine script location  |  net/jawr/web/resource/bundle/generator/css/less/engine.js    |
-*---------------*---------*--------------+----------------+
+*---------------*---------*--------------+
 | jawr.css.less.generator.browser.script.location  | The less browser script location  |  net/jawr/web/resource/bundle/generator/css/less/browser.js    |
-*---------------*---------*--------------+----------------+	
+*---------------*---------*--------------+	
 	
 	 
 	[]
@@ -157,13 +165,13 @@ Jawr Generators
 	
 	Jawr provides properties to configure the CoffeeScript generator. 
 
-*---------------+---------+--------------+----------------+
-| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
-*---------------+---------+--------------+----------------+
+*---------------+---------+--------------+
+| <<Property name>> | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+
 | jawr.js.generator.coffee.script.options  | The coffee script compiler options (Please see : http://coffeescript.org/)  |  None    |
-*---------------*---------*--------------+----------------+
+*---------------*---------*--------------+
 | jawr.js.generator.coffee.script.location  | The coffee script location  |  net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js    |
-*---------------*---------*--------------+----------------+
+*---------------*---------*--------------+
 
 	 
 	[]
@@ -216,15 +224,21 @@ jawr.js.bundle.common.mappings=skinSwitcher:switcher.js
 
 	The root interface for resource generator is :
 	
-	** net.jawr.web.resource.bundle.generator.PrefixedResourceGenerator. All resource generator must implement a method,
+	** net.jawr.web.resource.bundle.generator.ResourceGenerator. All resource generator must implement a method,
 	which defines the mapping for this generator.	
 	
 +------------------------------------------+
-	public String getMappingPrefix();
+	/**
+	 * Returns the resource generator resolver
+	 * 
+	 * @return the resource generator resolver
+	 */
+	public ResourceGeneratorResolver getResolver();
 +------------------------------------------+
 
-	The getMappingPrefix() method returns a key you will use when mapping you generator to bundles. Jawr will recognize this key in the 
-	bundle mappings and use your generator when it applies. So, if you returned 'foo' in this method, you would map your generator like this: 
+	The getResolver() method returns the resolver, which will be used when mapping you generator to bundles. Jawr will recognize if a resource is handled by a Generator using the resolver,
+	and use your generator when it applies. 
+	So, if your resolver is a PrefixResolver, which handle all resources beginning with 'foo:', you would map your generator like this: 
 	
 +------------------------------------------+
 	jawr.js.bundle.one.mappings=foo:somePath
@@ -233,7 +247,7 @@ jawr.js.bundle.common.mappings=skinSwitcher:switcher.js
 	
 	There are 2 main types of generator:
 	
-	** net.jawr.web.resource.bundle.generator.ResourceGenerator, which is the generator for the text resources (JS and CSS).
+	** net.jawr.web.resource.bundle.generator.TextResourceGenerator, which is the generator for the text resources (JS and CSS).
 	
 	** net.jawr.web.resource.bundle.generator.StreamResourceGenerator, which is the generator for the image resources.
 	
@@ -241,7 +255,7 @@ jawr.js.bundle.common.mappings=skinSwitcher:switcher.js
 	
 	*	Implementing a CSS or a JS generator
 	
-		A JS or a CSS generator is an implementation of the interface net.jawr.web.resource.bundle.generator.ResourceGenerator. This is a simple interface which 
+		A JS or a CSS generator is an implementation of the interface net.jawr.web.resource.bundle.generator.TextResourceGenerator. This is a simple interface which 
 		exposes two methods: 
 	
 		* public Reader createResource(GeneratorContext context);
@@ -252,7 +266,7 @@ jawr.js.bundle.common.mappings=skinSwitcher:switcher.js
 	
 		The getDebugModeRequestPath	simply returns a path to be used in debug mode. This is simply a fake script or CSS name and it really has no 
 		importance unless you are mapping the Jawr servlet to a suffix different from *.css or .js. 99% of the use cases don't need to care about 
-		this so you can simply return one of two constants: ResourceGenerator.JAVASCRIPT_DEBUGPATH or ResourceGenerator.CSS_DEBUGPATH:  
+		this so you can simply return one of three constants: ResourceGenerator.JAVASCRIPT_DEBUGPATH, ResourceGenerator.CSS_DEBUGPATH or ResourceGenerator.IMG_DEBUGPATH:  
 	
 +------------------------------------------+
 public String getDebugModeRequestPath() {
@@ -312,15 +326,21 @@ public String getDebugModeRequestPath() {
 +------------------------------------------+
 package net.jawr.example;
 
-	public class TestGenerator implements ResourceGenerator {
+	public class TestGenerator implements TextResourceGenerator {
 
+	private ResourceGeneratorResolver resolver;
+	
+	public class TestGenerator(){
+		resolver = new PrefixedPathResolver("example");
+	}
+	
 	public Reader createResource(GeneratorContext context) {
 		
 		return new StringReader(";alert('Mapping contained:" + context.getPath() +  "');");
 	}
 
-	public String getMappingPrefix() {
-		return "example";
+	public ResourceGeneratorResolver getResolver() {
+		return resolver;
 	}
 	
 	public String getDebugModeRequestPath() {

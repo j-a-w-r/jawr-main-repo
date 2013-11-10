@@ -24,7 +24,7 @@ Jawr with wicket
     </dependency>
 +------------------------------------------+	
 	
-	 Note that this module support the version 6.x of wicket
+	 Note that this module supports the version 6.x of wicket
 
 ** 1. Configure the Jawr servlet
 

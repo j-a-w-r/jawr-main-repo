@@ -14,8 +14,13 @@ JMX support in JAWR
 	The user will also be able to set one session in debug mode, while the rest of the application will still be in production mode.
 
 	This is a really powerfull way to interact with Jawr at runtime.
-	To access to the Jawr MBeans, you will have to use a JMX console, like JConsole, which is provided in the JDK since Java 5.0
-	The Jawr MBeans are available accessible with the type <<net.jawr.web.jmx>>. 
+	To access to the Jawr MBeans, you will have to use a JMX console, like JConsole, which is provided in the JDK since Java 5.0. \
+	The Jawr MBeans are available accessible with the type <<net.jawr.web.jmx>>.
+	
+	When using Jawr in multiple applications on your application server, it can be useful to set the prefix of the Jawr MBean for applications which are deployed on different server using the same application context.
+	This will allows you to know which MBean is associated to which application. 
+	To do that, you have to use the <<jawr.jmx.mbean.prefix>> property in your Jawr configuration file. 
+
 	
 	<<Important note :>> This feature will allow you to modify some Jawr properties at runtime, but you should keep in mind that your changes are not persisted.
 	This means that if you made a modification at runtime, the next time you will restart your application, your latest modifications made at runtime, will not be taken into account.
@@ -30,8 +35,6 @@ JMX support in JAWR
 		
 		* {{http://java.sun.com/j2se/1.5.0/docs/guide/management/agent.html}}
 		
-		
-
 
 *	JMX Setup
 
@@ -42,46 +45,7 @@ JMX support in JAWR
 +------------------------------------------+
 	-Dcom.sun.management.jmxremote
 +------------------------------------------+
-	
-*	JMX Setup for Java 1.4
 
-	As JMX is not part of Java 1.4, you will have to import JMX jars in your application.
-	The 2 jars required are JMX-RI and JMX-remote.
-	
-	For those who are using maven, include the following dependencies in your pom.
-	
-+------------------------------------------+
-
-	<dependency>
-		<groupId>javax.management</groupId>
-		<artifactId>jmxri</artifactId>
-		<version>1.2.1</version>
-	</dependency>
-	<dependency>
-		<groupId>javax.management</groupId>
-		<artifactId>jmxremote</artifactId>
-		<version>1.0.1_04</version>
-	</dependency>
-
-+------------------------------------------+
-	
-	The JMX-RI and JMX-remote have not been deployed on maven, so when searching for dependencies, maven will only retrieve the pom files. 
-	You should download the Jars from Sun download center (http://www.sun.com/download/index.jsp). 
-	Please follow the next instructions, to retrieve those libraries : 
-		
-		* In the download center, launch a search on JMX
-		
-		* Select the Java Management Extensions Download Information.
-		
-		* Download the JMX 1.2.1 Reference Implementation, and the JMX Remote API 1.0.1_04 Reference Implementation.
-		 
-		* After the download, for the JMX 1.2.1 RI, you will have to rename the jars from jmx*.jar to jmx*-1.2.1.jar.
-		
-		* And for JMX Remote API, you will have to rename the jar file as jmxremote-1.0.1_04.jar.
-		
-		* Then you can register them with Maven or set it directly in your local repository under /javax/management/jmxri/1.2.1/ . 
-
-	For those, who are not using maven just download the jar files as described above, and put them in your application.
 
 * Secure access to JMX MBeans
 
@@ -93,7 +57,7 @@ JMX support in JAWR
 
 	We have defined two types of MBeans in JAWR. One which handles the configuration for a resource type (JS, CSS, Image).
 	And another one, which handles the configuration for an entire application.
-	
+
 	*  JawrConfigManagerMBean
 	
 	This MBean will handle the configuration for one type of resource.
@@ -218,30 +182,4 @@ JMX support in JAWR
 +------------------------------------------+	
 	
 
-
-* Multiple application using Jawr on the web application container
-
-	When you have multiple applications which are using Jawr, if you are using a servlet API, whose the version greater or equals to 2.5, 
-	Jawr will use the contextPath to identify the applications.
-	
-	But if you are using a version which is lesser than 2.5, then you will have to use a context parameter named 'contextPath' in your web.xml 
-	to define the context path of the application like below.
-	
-+------------------------------------------+	
-
-	<context-param>
-		<param-name>contextPath</param-name>
-		<param-value>myApplication</param-value>
-	</context-param>
-	
-+------------------------------------------+	
-	 	 	
-	
-	
-	
-	
-	
-	
-	
-	
 	

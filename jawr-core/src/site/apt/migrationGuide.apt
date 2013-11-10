@@ -23,7 +23,8 @@ while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
 	<jawr-core> : The jawr core module
 	<jawr-wicket-extension> : The jawr wicket integration module
 	<jawr-spring-2.0.x-extension> : The jawr spring 2.0.x integration module
-	<jawr-dwr2.x-extension> : The jawr wicket integration module
+	<jawr-dwr2.x-extension> : The jawr DWR 2.x integration module
+	<jawr-dwr3.x-extension> : The jawr DWR 3.x integration module
 	<jawr-grails-extension> : The jawr grails integration module
 	
 	<jawr-core> : The jawr core module
@@ -117,8 +118,8 @@ while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
 	In the version 3.3.x, the generator should implement the method "getMappingPrefix". This method has been replaced by "ResourceGeneratorResolver getResolver()" method.
 	Jawr defines built-in ResourceGeneratorResolvers :
 	
-		* net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResourceGeneratorResolver : For prefix path resolver
-		* net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResourceGeneratorResolver : For suffix path resolver
+		* net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver : For prefix path resolver
+		* net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver : For suffix path resolver
 
 	To replace the following your custom generator, you need to replace
 
@@ -147,7 +148,7 @@ while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
 
 							public SampleJsGenerator(){
 							
-								resolver = new PrefixedPathResourceGeneratorResolver("foo");
+								resolver = new PrefixedPathResolver("foo");
 							}
 							
 							/* (non-Javadoc)

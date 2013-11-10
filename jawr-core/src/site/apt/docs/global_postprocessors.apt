@@ -76,6 +76,7 @@ jawr.js.bundle.factory.global.postprocessors=myGlobalPostprocessor
 	
 	
 =====================
+
 	Grails users will unfortunately need to pack their classes in a jar and add it to the lib folder of their application. The reason for this is a 
 	known flaw in the Grails classloading strategy that keeps plugins from accessing application classes.
 	 
@@ -90,11 +91,13 @@ jawr.js.bundle.factory.global.postprocessors=myGlobalPostprocessor
 	[]
 	
 	The google closure global postprocessor will compress the JS bundles.  
-	You can pass arguments to the closure compiler to .
-	Unfortunately the full list of arguments are define in <com.google.javascript.jscomp.CommandLineRunner>,
+	You can pass arguments to the closure compiler using the prefix <jawr.js.closure.>
+	
+	For instance, you can pass the boolean "third_party" argument using <jawr.js.closure.third_party> in the jawr properties file.
+		
+	The full list of arguments are define in <com.google.javascript.jscomp.CommandLineRunner>,
 	so you can check it at the following link {{{http://closure-compiler.googlecode.com/svn/trunk/src/com/google/javascript/jscomp/CommandLineRunner.java}link}}
-	To 	
-	Here is the list of google closure global postprocessor :
-	*  
+	
+	Please check the {{{../tutorials/howToUseGoogleClosureCompiler.html} tutorial}} on how to use the Google Closure postprocessor. 
 
 		

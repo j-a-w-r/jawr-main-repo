@@ -152,9 +152,12 @@ Introduction
 	 
 	With this configuration, when you will start your application, Jawr will generate in Jawr working directory\
 	3 different bundles named respectively named :
-		- </css/skinnedBundle@defaultSkin.css>
-		- </css/skinnedBundle@blueSkin.css>
-		- </css/skinnedBundle@greenSkin.css>. 
+	
+		* </css/skinnedBundle@defaultSkin.css>
+		
+		* </css/skinnedBundle@blueSkin.css>
+		
+		* </css/skinnedBundle@greenSkin.css> 
 
 * Test the CSS skin generation
 

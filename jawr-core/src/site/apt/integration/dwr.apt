@@ -6,7 +6,7 @@
 
 Using DWR with Jawr
 
-	{{{http://getahead.org/dwr/}DWR}} (Direct Web Remoting) is a java library which allows Javascript in a browser to interact with Java on a 
+	{{{http://directwebremoting.org/dwr/index.html}DWR}} (Direct Web Remoting) is a java library which allows Javascript in a browser to interact with Java on a 
 	server and helps you manipulate	web pages with the results.  
 	
 	DWR works by setting up one or several servlets which serve javascript and also convert AJAX requests  to java class method invocations. The 
@@ -26,16 +26,50 @@ Using DWR with Jawr
 	Jawr supports DWR 2.x  using the <jawr-dwr2.x-extension> extension module.
 	Maven users can add a dependency as the following: 
 
-+------------------------------------------+		
++------------------------------------------+	
+	
     <dependency>
       <groupId>net.jawr.extensions</groupId>
       <artifactId>jawr-dwr2.x-extension</artifactId>
       <version>3.5</version>
     </dependency>
+    
 +------------------------------------------+	
 	
 	There is a sample application that you can download to chek out how integration with DWR works, which you can download from 
 	{{{https://svn.java.net/svn/jawr~svn/extensions/dwr2.x/trunk/jawr-dwr2.x-webapp-sample}this link}}. 
+	
+	Jawr supports also DWR 3.x  using the <jawr-dwr3.x-extension> extension module.
+	Maven users can add a dependency as the following: 
+
++------------------------------------------+		
+
+    <dependency>
+      <groupId>net.jawr.extensions</groupId>
+      <artifactId>jawr-dwr3.x-extension</artifactId>
+      <version>3.5-SNAPSHOT</version>
+    </dependency>
+    
++------------------------------------------+	
+	
+	As the DWR 3.x library is still in SNAPSHOT version, the <jawr-dwr3.x-extension> is also in SNAPSHOT version.
+	This module has been released on the Sonatype snapshot repository (https://oss.sonatype.org/).
+
+	Please use the snapshot repository by adding the following section in your pom :
+
++------------------------------------------+	
+
+<distributionManagement>
+  <snapshotRepository>
+    <id>sonatype-nexus-snapshots</id>
+    <name>Sonatype Nexus Snapshots</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+  </snapshotRepository>
+</distributionManagement>
+
++------------------------------------------+	
+	
+	
 	
 * Set up
 
@@ -43,6 +77,7 @@ Using DWR with Jawr
 	so that the value for the Jawr servlet is greater than the one for the DWR servlet: 
 		
 +------------------------------------------+	
+
 	<servlet>
 	   <servlet-name>dwr-invoker</servlet-name>
 	   <display-name>DWR Servlet</display-name>
@@ -58,12 +93,14 @@ Using DWR with Jawr
 	   ...
 	   <load-on-startup>2</load-on-startup> <-- Loads after DWR
 	</servlet>
+	
 +------------------------------------------+	
 
 	Jawr needs to know the sevlet mapping that points to DWR. Therefore, in the properties config you must set up the <<jawr.dwr.mapping>> 
 	parameter to the same value (without the wildcard) that you use for the DWR servlet: 
 	
 +------------------------------------------+	
+
   Web.xml: 
   <servlet-mapping>
     <servlet-name>dwr-invoker</servlet-name>
@@ -72,6 +109,7 @@ Using DWR with Jawr
   
   Jawr.properties:
   jawr.dwr.mapping=/dwr/
+  
 +------------------------------------------+	
 	
 ** Additional DWR servlet instances
@@ -81,6 +119,7 @@ Using DWR with Jawr
 	the wildcard. Note that this init-param is added to the DWR servlet config,	<<not>> the Jawr servlet config. 
 	
 +------------------------------------------+	
+
    <servlet>
     <servlet-name>additional-dwr-invoker</servlet-name>
     <display-name>DWR Servlet</display-name>
@@ -109,13 +148,26 @@ Using DWR with Jawr
 	Prior to the 3.5 version, this generator was a built-in generator, now users must declare it specifically in their jawr configuration file. 
 	To render the DWR bundles properly, the declaration of a specific DWR JS bundle link renderer is needed. 
 	
+	For dwr 2.x, users will need to use the following configuration :
+
 +------------------------------------------+  
+
 	# Configure DWR generator and DWR link renderer
 	jawr.custom.generators=net.jawr.web.resource.bundle.generator.dwr.DWRBeanGenerator
 	jawr.js.bundle.link.renderer.class=net.jawr.web.resource.bundle.renderer.DWRJsBundleLinkRenderer
+
 +------------------------------------------+  
 
-	
+	For dwr 3.x, users will need to use the following configuration :
+
++------------------------------------------+  
+
+	# Configure DWR generator and DWR link renderer
+	jawr.custom.generators=net.jawr.web.resource.bundle.generator.dwr.DWR3BeanGenerator
+	jawr.js.bundle.link.renderer.class=net.jawr.web.resource.bundle.renderer.DWRJsBundleLinkRenderer
+
++------------------------------------------+  
+
 * Maping DWR resources in bundles
 
 	Once you have performed setup, you can start using DWR beans in your bundle mappings. All DWR resources are mapped using the special prefix 
@@ -159,6 +211,7 @@ Using DWR with Jawr
 	For instance, the following mapping adds two of these beans to a bundle:
 
 +------------------------------------------+  
+
     dwr.xml: 
     <create creator="new" javascript="People" scope="script"> <-- Use the value of the 'javascript' attribute
       <param name="class" value="org.getahead.dwrdemo.people.People"/>
