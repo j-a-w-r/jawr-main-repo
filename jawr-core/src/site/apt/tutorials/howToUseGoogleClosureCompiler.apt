@@ -133,6 +133,6 @@ function add(c1, c2){
 +------------------------------------------+	
 
 	Deploy your application to a server and open the JSP you created.
-	You will notice that the add function has been removed from the generated bundle as it is considered as not used.    
+	You will notice that the <<add>> function has been removed from the generated bundle as it is considered as not used.    
 	 
 	
