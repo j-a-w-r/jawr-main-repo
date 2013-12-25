@@ -8,7 +8,7 @@
 	
     <section name="Announcementes and change log">
     <ul>
-      	  <li> <strong>11/01/2013</strong>: Version 3.5 released:<br/>
+      	  <li> <strong>12/26/2013</strong>: Version 3.5 released:<br/>
 	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
 	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <strong>New features: </strong>
@@ -77,6 +77,13 @@
       			</li>
         	</ul>
       		<ul>   
+	    	 	 <li>
+	      		 	<strong>Unfortunately, we weren't able to include the updated version of the grails plugin in this release. We will try to release it as soon as possible.
+	      		 	So grails users will have to wait to get the 3.5 release.
+	      		 	</strong>.     
+	      		 </li>      
+	      	</ul>
+	      	<ul>   
 	    	 	 <li>
 	      		 	<strong>jawr.css.image.classpath.use.servlet</strong>  properties removed. It is replaced by <strong>jawr.css.classpath.handle.image</strong>.     
 	      		 </li>      
