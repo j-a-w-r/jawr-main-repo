@@ -1,3 +1,0 @@
-	
-		alert('loaded from classpath!');
-		

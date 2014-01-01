@@ -1,1 +1,0 @@
-function isSsl() { return false; }
