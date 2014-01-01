@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faqs title="Frequently Asked Questions - Howto" toplink="true">
+
+  <part id="troubleshoot">
+    <title>Troubleshooting</title>
+
+    <faq id="jsp-crash">
+      <question>
+        <strong>When I open a JSP it crashes with a <em>java.lang.IllegalStateException</em></strong>
+      </question>
+      <answer>
+        <p>
+        Whenever there is some problem during the startup of Jawr, you will get an exception whe accessing a JSP that contains jawr tags. 
+        The trace will look as follows: 
+        </p>
+
+        <source>
+java.lang.IllegalStateException: ResourceBundlesHandler not present in servlet context. 
+Initialization of Jawr either failed or never occurred.</source>
+
+        <p>To fix this problem, you must carefully check the console while the server is starting up, since surely there will be some kind of 
+        problem in the initialization process. If you can't see anything, ry and set the log level to debug for jawr so you see all that is 
+        being done. The cause for failure can be anything, but most likely there is something wrong with your configuration. 
+        </p>
+        <p>
+        Make sure that you have correctly declared the servlet you are trying to access (for instance, if you only declare a javascript servlet and 
+        then you use a CSS tag, you will get this exception). 
+        </p>
+        <p>
+        Sometimes, the error will come from a failure in a minifier. See below for solutions for this problem. 
+        </p>
+      </answer>
+    </faq>
+
+    <faq id="jsmin-crash">
+      <question>
+        <strong>JSMin crashes on startup</strong>
+      </question>
+      <answer>
+        <p>Ocasionally you might get an exception at startup with a trace similar to this: </p>
+        
+        <source>FATAL net.jawr.web.servlet.JawrServlet  - Cause: java.lang.RuntimeException 
+[JSMin failed to minify the bundle with id: '[...]'.</source>
+        
+        <p>The problem here is that JSMin is trying to reduce the size of some of your scripts and encountered a problem with the code syntax. 
+        This problem appears especially with open source javascript libraries, which often contain tricky syntax that fools JSMin. To solve this, you 
+        need to either fix the syntax or to switch to a different minifier. 
+        </p>
+        <p>
+        To fix the syntax, check the full stacktrace of the exception, since an indication of where the error was encountered will be shown. Also, you 
+        can use <a href="http://www.jslint.com/">JSLint</a>, which is an online tool that checks the syntax of your scripts. 
+        </p>
+        <p>
+        You may want to switch to a different minifier. JSLint, while normally efficient enough, is more prone to fail on valid-yet-weird syntax than 
+        other alternatives such as the YUI compressor (which is also more efficient anyway). To switch to a different minifier, follow instructions at 
+        the <a href="../docs/postprocessors.html">postprocessors guide</a>. 
+        </p>
+
+      </answer>
+    </faq>
+    <faq id="jsmin-crash">
+      <question>
+        <strong>Can I use Jawr with a CDN?</strong>
+      </question>
+      <answer>
+      Yes, you can. Use the <em>jawr.url.contextpath.override</em> config param to make all generated URLs point to the CDN address. 
+      </answer>
+    </faq>
+  </part>
+
+  <part id="HOWTOs">
+
+    <title>HOWTOs</title>
+
+    <faq id="precompressed-libs">
+      <question>
+        <strong>How do I use a precompressed library?</strong>
+      </question>
+      <answer>
+        <p>Chances are you that are using an open source javascript library (Protoype.js, YUI, Ext, Dojo...) And while Jawr includes its own compressing 
+        features, often these libraries offer a super-compressed version which goes down to the bare minimum size possible, which Jawr can't match. 
+        Also, sometimes these libraries will fail to minify with JSMin, forcing you to switch to a different minifier. In either case, you might wish 
+        to use the pre-compressed library script instead of letting Jawr handle compression in this particular case.         
+        </p>
+        <p>
+        However, you might also want to use the uncompressed version of the library so that you can use it in your debugging sessions. Doing this with 
+        Jawr is actually pretty simple. All you need to do is to declare two bundles, one for debug mode and another for production mode, then 
+        combine both into a composite. The composite can also contain additional scripts which you may want to combine with the library, aiming for 
+        minimal HTTP request overhead in your pages. This is an example configuration in which the SoundManager2 and JQuery libraries are both used 
+        this way: 
+        </p>
+        <source>
+jawr.js.bundle.lib.id=/bundles/myLibAndSomeStuff.js
+jawr.js.bundle.lib.composite=true
+jawr.js.bundle.lib.child.names=uncompressedLibrary,compressedLibrary,additionalScripts
+
+# A bundle with your own scripts
+jawr.js.bundle.additionalScripts.mappings=/myScript.js, [...] 
+
+# The uncompressed library scripts
+jawr.js.bundle.uncompressedLibrary.mappings=/js/soundmanager2.js,/js/jquery.js
+jawr.js.bundle.uncompressedLibrary.debugonly=true  # Will show only in debug mode
+
+# The compressed library scripts
+jawr.js.bundle.compressedLibrary.mappings=/js/final/soundmanager2.min.js,/js/final/jquery.min.gz.js
+jawr.js.bundle.compressedLibrary.debugnever=true # Will show only in production mode
+jawr.js.bundle.compressedLibrary.bundlepostprocessors=none # This line avoids minification of these scripts
+        </source>
+        
+      </answer>
+    </faq>
+
+  </part>
+
+</faqs>

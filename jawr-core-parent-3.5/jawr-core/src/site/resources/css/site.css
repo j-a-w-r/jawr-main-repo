@@ -1,0 +1,37 @@
+body, h1, h2, h3, h4, h5, h6, p, td, table td, input, select {
+	font-family:"Lucida Grande",Verdana,Arial,Helvetica,sans-serif !important;
+}
+
+h2, h2 span, h2 a {
+	color:#000000 !important;
+	font-size:18px !important;
+	border:0 !important;
+	background-color:inherit !important;
+}
+
+h3, h4 {
+	border:0 !important;
+	color:#000000 !important;
+	font-weight:bold !important;
+	background-color:#669966 !important;
+	color:#FFFFFF !important;
+	margin-left:2px !important;
+	margin-right:2px !important;
+	padding:3px !important;
+}
+h3 {font-size:1.1em !important;}
+h4 {font-size:1em !important;}
+
+div.source {
+	background-color:#FEFEE6 !important;	
+	margin-bottom:1em !important;
+	padding:6px 11px 1em 6px !important;
+}
+div.source, #bodyColumn img {
+	border-color:#DDDDDD rgb(136, 136, 136) rgb(136, 136, 136) rgb(221, 221, 221) !important;
+	border-style:solid !important;
+	border-width:1px !important;
+}
+#bodyColumn ul li{margin:1.5em auto;}
+#bodyColumn ul ul li{margin:1em auto;}
+#navcolumn li {padding-top:4px !important;}

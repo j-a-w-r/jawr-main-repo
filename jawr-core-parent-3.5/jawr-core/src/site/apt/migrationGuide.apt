@@ -1,0 +1,164 @@
+																		------
+                                    Jawr Migration Guide
+                                    ------
+                                    ------
+                                    ------
+
+Introduction
+
+The version 3.3.x and 3.5 are not backward compatible.
+You will find below a migration guide to migrate from 3.3.x to 3.5.
+
+* Migration Guide from 3.3.x to 3.5
+
+It is important to note that the 3.5 version requires at least the use of java 6 and servlet API 2.5,
+while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
+
+	* Jawr Project modules
+	
+	For better maintanability, the jawr project has been divided in multiple modules.
+	
+	Since, the version 3.5, Jawr has the following modules :
+	
+	<jawr-core> : The jawr core module
+	<jawr-wicket-extension> : The jawr wicket integration module
+	<jawr-spring-2.0.x-extension> : The jawr spring 2.0.x integration module
+	<jawr-dwr2.x-extension> : The jawr DWR 2.x integration module
+	<jawr-dwr3.x-extension> : The jawr DWR 3.x integration module
+	<jawr-grails-extension> : The jawr grails integration module
+	
+	<jawr-core> : The jawr core module
+
+	Prior to the 3.5 version, the user used the jawr.jar (maven reference net.jawr:jawr-3.3.jar).
+	Now the pom reference has changed. To used the new version, you need to replace the old jawr dependency by the following one :
+	
++------------------------------------------+
+			
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-core</artifactId>
+				<version>3.5</version>
+			</dependency>
+			
++------------------------------------------+	
+	 
+	Now to use the extensions, you'll need to add them in your dependencies (See below for more detail)   
+	
+	<jawr-wicket-extensions> : The jawr wicket integration module
+	
+	This module allows the integration of Jawr with Wicket. Please check the {{{./integration/wicket.html}wicket integration documentation}} for more detail.
+	The wicket version supported is 6.x versions.
+	Here is the dependency to add to your pom to add this module.
+	 
++------------------------------------------+
+			
+			<dependency>
+				<groupId>net.jawr.extensions</groupId>
+				<artifactId>jawr-wicket-extension</artifactId>
+				<version>3.5</version>
+			</dependency>
+			
++------------------------------------------+	
+
+	<jawr-spring-2.0.x-extension> : The jawr spring 2.0.x integration module
+	
+	This module allows the integration of jawr with spring 2.0.x. Please check the {{{./integration/spring.html}spring integration documentation}} for more detail.
+	Unfortunately for the time being, there is no support for spring 2.5.x and spring 3.x.
+	This will probably be done in a future release. If someone wants to help, he is welcome.
+	Here is the dependency to add to your pom to add this module.
+	 
++------------------------------------------+
+			
+			<dependency>
+				<groupId>net.jawr.extensions</groupId>
+				<artifactId>jawr-spring-2.0.x-extension</artifactId>
+				<version>3.5</version>
+			</dependency>
+			
++------------------------------------------+	
+
+	<jawr-dwr-2.x-extension> : The jawr dwr 2.x integration module
+	
+	This module allows the integration of jawr with dwr 2.x. Please check the {{{./integration/dwr.html}dwr integration documentation}} for more detail. 
+	Unfortunately for the time being, there is no support for dwr 3.x.
+	This will probably be done in a future release. If someone wants to help, he is welcome.
+	Here is the dependency to add to your pom to add this module :
+	
++------------------------------------------+
+			
+			<dependency>
+				<groupId>net.jawr.extensions</groupId>
+				<artifactId>jawr-dwr-2.x-extension</artifactId>
+				<version>3.5</version>
+			</dependency>
+			
++------------------------------------------+	
+
+	<jawr-grails-extension> : The jawr grails integration module
+	
+	This module allows the integration of jawr with grails. Please check the {{{./integration/grails.html}grails integration documentation}} for more detail.
+	Here is the dependency to add to your pom to add this module :
+	
++------------------------------------------+
+			
+			<dependency>
+				<groupId>net.jawr.extensions</groupId>
+				<artifactId>jawr-grails-extension</artifactId>
+				<version>3.5</version>
+			</dependency>
+			
++------------------------------------------+	
+	
+	* Generators
+
+	Since the version 3.5, Jawr allows the users to define their custom GeneratorPathResolver. 
+	This means that the users can now define generators, wich will be triggered by prefix path 
+	(like built-in 'jar:' or 'message:' prefixes) or with for example a specific path suffix (like '*.less' resources).
+
+	In the version 3.3.x, the generator should implement the method "getMappingPrefix". This method has been replaced by "ResourceGeneratorResolver getResolver()" method.
+	Jawr defines built-in ResourceGeneratorResolvers :
+	
+		* net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver : For prefix path resolver
+		* net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver : For suffix path resolver
+
+	To replace the following your custom generator, you need to replace
+
++------------------------------------------+
+						public class SampleJsGenerator extends AbstractJavascriptGenerator {
+
+							/* (non-Javadoc)
+							 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#getResolver()
+							 */
+							public String getMappingPrefix() {
+								return "foo";
+							}
+
+						    ...
+						}
++------------------------------------------+
+
+	With the following :
+
++------------------------------------------+
+						public class SampleJsGenerator extends AbstractJavascriptGenerator {
+
+							/** The resolver */
+							private ResourceGeneratorResolver resolver;
+
+
+							public SampleJsGenerator(){
+							
+								resolver = new PrefixedPathResolver("foo");
+							}
+							
+							/* (non-Javadoc)
+							 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#getResolver()
+							 */
+							public ResourceGeneratorResolver getResolver() {
+								return resolver;
+							}
+
+						    ...
+						}
++------------------------------------------+
+
