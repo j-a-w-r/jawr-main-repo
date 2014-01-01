@@ -171,7 +171,7 @@
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
-      	  <li> <strong>12/26/2013</strong>: Version 3.5 released:<br/>
+      	  <li> <strong>01/01/2014</strong>: Version 3.5 released:<br/>
 	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
 	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <strong>New features: </strong>
