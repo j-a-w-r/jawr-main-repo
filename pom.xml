@@ -67,8 +67,8 @@
 		<java.version>1.6</java.version>
 		<mockito.version>1.9.5</mockito.version>
 		<junit.version>4.11</junit.version>
-		<sl4j-api.version>1.7.5</sl4j-api.version>
-		<log4j.version>1.2.9</log4j.version>
+		<slf4j-api.version>1.7.5</slf4j-api.version>
+		<log4j.version>1.2.17</log4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
 		<jsp-api.version>2.1</jsp-api.version>
 		<rhino.version>1.7R4</rhino.version>
@@ -128,12 +128,12 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>${sl4j-api.version}</version>
+				<version>${slf4j-api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>${sl4j-api.version}</version>
+				<version>${slf4j-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
