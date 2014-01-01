@@ -19,8 +19,6 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.mortbay.jetty.Server;
