@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>net.jawr</groupId>
 		<artifactId>jawr-core-parent</artifactId>
-		<version>3.5</version>
+		<version>3.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>jawr-integration-test</artifactId>
 	<packaging>war</packaging>
