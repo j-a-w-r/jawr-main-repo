@@ -14,13 +14,13 @@ div {
 .calendar {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("../../img/calendarIcons/calendar.png"); /** sprite-ref: mysprite; sprite-margin-bottom: 10px */ 
+	background-image: url("../../img/calendarIcons/calendar.png"); /** sprite-ref: mysprite; sprite-margin-bottom: 10px */
 }
 
 .clock {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("../../jar_cbDebug/net/jawr/img/clock.png"); /** sprite-ref: mysprite; */ 
+	background-image: url("../../jar_cbDebug/net/jawr/img/clock.png"); /** sprite-ref: mysprite; */
 	 
 }
 
@@ -28,11 +28,11 @@ div {
 .calendar_edit {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("../../img_cbDebug/calendarIcons/calendar_edit.png"); /** sprite-ref: mysprite; */ 
+	background-image: url("../../img_cbDebug/calendarIcons/calendar_edit.png"); /** sprite-ref: mysprite; */
 }
 
 .tools {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("../img/cog.png"); /** sprite-ref: mysprite; sprite-margin-top: 10px */ 
+	background-image: url("../../img/cog.png"); /** sprite-ref: mysprite; sprite-margin-top: 10px */
 }

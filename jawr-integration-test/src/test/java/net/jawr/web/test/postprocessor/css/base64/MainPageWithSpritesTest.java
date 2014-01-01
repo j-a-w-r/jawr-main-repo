@@ -75,7 +75,7 @@ public class MainPageWithSpritesTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N502145947.@/fwk/core/component.css",
+				getUrlPrefix()+"/407195491.@/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

@@ -97,7 +97,6 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 	}
 
 	@Test
-	@Ignore
 	public void checkGeneratedHtmlImageLinks() {
 		// Test generated HTML image link
 		final List<?> images = getHtmlImageTags();
@@ -109,7 +108,6 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 	}
 
 	@Test
-	@Ignore
 	public void checkGeneratedHtmlImageInputLinks() {
 		// Test generated HTML image link
 		final List<HtmlImageInput> images = getHtmlImageInputTags();
