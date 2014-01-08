@@ -9,7 +9,7 @@ Getting started with Jawr
 * Download and install
 	
 	{{{https://java.net/projects/jawr/downloads/directory/release}Download Jawr from the documents area}} and place it within the classpath of 
-	your application (typically, under WEB-INF/lib). Add log4j.jar to the path as well. 
+	your application (typically, under WEB-INF/lib). Add slf4j implementation jar to the path as well. 
 	
 	Alternatively, if you are using Maven 2, add a dependency to Jawr in your POM file: 
 	

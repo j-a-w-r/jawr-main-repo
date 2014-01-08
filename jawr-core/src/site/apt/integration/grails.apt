@@ -10,6 +10,7 @@ Jawr plugin for Grails
 	properties format used in the standard version, and add a couple of URL mapping statements.     
 	
 =====================
+
 	<<Warning:>>	If you are upgrading from a version prior to 2.51, be aware that Jawr now uses a servlet instead of a controller to serve its files. 
 	This has several advantages: it is faster, there is no need to fiddle with the grails.mime.file.extensions property, and no controller mappings 
 	need to be added. So if you are upgrading, you need to remove the controller mappings, reset the grails.mime.file.extensions property and then 
@@ -19,16 +20,22 @@ Jawr plugin for Grails
 
 * Installing the plugin
 
-	Just execute following from your application directory:
+	The Jawr plugin is deployed on the grails central repository.
 	
-	grails install-plugin Jawr
+	To use it just add it as a dependency to your BuildConfig.groovy as followed :
 	
-	If above method does not work for some reason you can download the plugin distribution from 
-	{{{https://java.net/projects/jawr/downloads/directory/release}this page}} and install it with:
++------------------------------------------+	
 	
-	grails install-plugin /path/to/downloaded/plugin.zip
-	
+	...
+	plugins {
+        
+        ...
+        compile ":jawr:3.5"
+        ...
+    }
 
++------------------------------------------+	
+	
 * Configuration
 
 	To configure Jawr you must add properties to the Config.groovy file located at the /conf folder of your application. The syntax you must use 

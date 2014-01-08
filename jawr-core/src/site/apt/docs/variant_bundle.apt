@@ -14,9 +14,9 @@ Variant bundle
 	So a variant bundle is a bundle which can have different content depending on the user request (cookie, parameter, browser type...).
 	Jawr provides 2 ways for the user to define variant bundles using the public Jawr API :
 	 
-		* Generators
+			* Generators
 		
-		* PostProcessors
+			* PostProcessors
 	
 * Bundle variant map
 

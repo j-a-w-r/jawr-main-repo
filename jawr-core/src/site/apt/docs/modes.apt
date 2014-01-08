@@ -16,6 +16,7 @@ Debug and production modes
 	To toggle debug mode, you can set the flag jawr.debug.on in the config file. 
 	
 =====================
+
 	While running in production mode, you may view your bundles in debug mode by using jawr.debug.overrideKey.  
 	This can be very helpfull when you need to debug issues in a production environment.
 	Simply append overrideKey=(jawr.debug.overrideKey value) to the end of the url.  Now your production bundles 
@@ -23,7 +24,8 @@ Debug and production modes
 	overrideKey to the end of the request.
 	
 =====================
-			You can also start the virtual machine setting the config 
+
+		You can also start the virtual machine setting the config 
 		key net.jawr.debug.on (-Dnet.jawr.debug.on=false, for instance). 
 		The JVM config param will always take precedence over the key in 
 		the config file, so it's a good idea to use it within the startup 

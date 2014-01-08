@@ -142,9 +142,9 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 
 * Jawr included postprocessors reference
 
-*	All-around postprocessors
+** Css and Js common postprocessors
 
-<<Licenses includer>>
+***<<Licenses includer>>
 	
 	* <<Type>>: Bundle
 	
@@ -156,13 +156,14 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	or any other comment to the top of your resources. Check the {{{./license_files.html}license files page}} for more info. 
 
 =====================
+
 	Note that licenses are themselves code comments, so you should be careful to always use this processor after any minification or compression 
 	processor has executed and not before. Otherwise, the license might be deleted from the bundle right after it was inserted. 
 
 =====================
 
 
-<<YUI compressor>>
+***<<YUI compressor>>
 	
 	* <<Type>>: Bundle
 	
@@ -193,9 +194,9 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	in mind that having another copy of Rhino.jar in your classpath might cause class loading issues. 
 	
 
-*	Javascript-specific postprocessors
+** Javascript-specific postprocessors
 
-<<JSMin>>
+***<<JSMin>>
 	
 	* <<Type>>: Bundle
 	
@@ -208,9 +209,9 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	This processor uses {{{http://www.crockford.com/javascript/jsmin.html}Douglas Crockford's JSMin}}  minificator. It will remove any comments in code and unnecesary whitespace in a very safe manner.  
 
 
-*	CSS-specific postprocessors
+** CSS-specific postprocessors
 
-<<CSS Minificator>>
+***<<CSS Minificator>>
 	
 	* <<Type>>: Bundle
 	
@@ -221,7 +222,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	This processor removes comments and unneeded whitespace using search and replace with regular expressions. It is on by default 
 	and is almost as efficient as the YUI compressor. 
 		  
-<<CSS combine Media>>
+***<<CSS combine Media>>
 	
 	* <<Type>>: Bundle
 	
@@ -251,7 +252,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 } 	 
 +-------------------------------+
 	
-<<CSS Path rewriter>>
+***<<CSS Path rewriter>>
 	
 	* <<Type>>: File
 	
@@ -262,7 +263,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	This processor rewrites relative paths in URLs for each file that is added to a bundle. A bundle will have a different URL to that of its contained 
 	resources, so in order for relative paths to image files and the like to keep working, URLs must be rewritten accordingly.  
 	
-<<CSS Import resolver>>
+***<<CSS Import resolver>>
 	
 	* <<Type>>: File
 	
@@ -273,7 +274,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	This processor imports the CSS resources referenced by <<@import url(...)>> statement. These resources are included in the generated CSS bundle.  
 
 	
-<<CSS base64 postprocessor>>
+***<<CSS base64 postprocessor>>
 	
 	* <<Type>>: Bundle
 	

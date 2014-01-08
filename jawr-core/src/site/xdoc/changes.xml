@@ -8,7 +8,11 @@
 	
     <section name="Announcementes and change log">
     <ul>
-      	  <li> <strong>01/01/2014</strong>: Version 3.5 released:<br/>
+      	  <li> <b>01/06/2014</b>: Grails plugin 3.5 released:<br />
+	      The grails plugin has been released in the grails central repository.<br />
+	      Please check the grails plugin <a href="./integration/grails.html">documentation</a> for more detail on how to use it.
+		  </li>
+		  <li> <strong>01/01/2014</strong>: Version 3.5 released:<br/>
 	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
 	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <strong>New features: </strong>
@@ -424,7 +428,14 @@
       	  			<li>wicket sample</li>
       	  			<li>grails sample</li>
       	  		</ul>	 
-      	  	You can retrieve them from the SVN repository : <b>https://jawr.dev.java.net/svn/jawr/trunk jawr/samples/</b>  
+      	  	You can retrieve them from the SVN repository respectiveley from :
+      	  	 <b></b>
+      	  	 <ul>
+      	  			<li>https://svn.java.net/svn/jawr~svn/core/tags/jawr-core-parent-&lt;version&gt;/basicwebapp</li>
+      	  			<li>https://svn.java.net/svn/jawr~svn/extenstions/spring-2.0.x/tags/jawr-spring-2.0.x-parent-&lt;version&gt;/jawr-spring-2.0.x-webapp-sample</li>
+      	  			<li>https://svn.java.net/svn/jawr~svn/extenstions/wicket/tags/wicket-parent-&lt;version&gt;/jawr-wicket-webapp-sample</li>
+      	  			<li>https://svn.java.net/svn/jawr~svn/extenstions/grails/tags/grails-parent-&lt;version&gt;/jawr-grails-sample</li>
+      	  		</ul>  
       	  	<br/>
       	  	<br/>
       	  	<strong>Important note :</strong><br/>
