@@ -12,7 +12,7 @@
 	<description>Javascript/CSS bundling and compressing tool for java web apps.
   	By using jawr resources are automatically bundled together and optionally minified and gzipped. 
   	Jawr provides tag libraries to reference a generated bundle either by id or by using the name of any of its members.</description>
-	<url>https://jawr.dev.java.net/</url>
+	<url>https://jawr.java.net/</url>
 	<developers>
 		<developer>
 			<id>icefox</id>
