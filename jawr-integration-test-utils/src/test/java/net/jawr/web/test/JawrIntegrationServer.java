@@ -49,6 +49,12 @@ public class JawrIntegrationServer {
 	/** The port */
 	protected static String DEFAULT_PORT = "8080";
 	
+	/** The property indicating if we must use the empty context path */
+	private static String USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME = "use-empty-context-path";
+	
+	/** The default value for the use of default context path */
+	private static String DONT_USE_DEFAULT_CONTEXT_PATH = "false";
+	
 	/** The application URL */
 	public static final String SERVER_URL = "http://localhost:"+DEFAULT_PORT;
 
@@ -69,9 +75,6 @@ public class JawrIntegrationServer {
 	
 	/** The web app dir */
 	private String webAppRootDir;
-	
-	/** The web app context path */
-	private String webAppCtx;
 	
 	/** The web application context */
 	private WebAppContext jettyWebAppContext;
@@ -98,7 +101,13 @@ public class JawrIntegrationServer {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		webAppCtx = "/"+webappName;
+		
+		boolean useEmptyContextPath = Boolean.parseBoolean(prop.getProperty(USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME, DONT_USE_DEFAULT_CONTEXT_PATH));
+		String webAppCtx = "";
+		if(!useEmptyContextPath){
+			webAppCtx = "/"+webappName;
+		}
+		
 		jettyWebAppContext = new WebAppContext(webAppRootDir, webAppCtx);
 		jettyWebAppContext.setConfigurationClasses(new String[] {
 				"org.mortbay.jetty.webapp.WebInfConfiguration",
@@ -107,6 +116,14 @@ public class JawrIntegrationServer {
 	
 	public static JawrIntegrationServer getInstance(){
 		return instance;
+	}
+	
+	/**
+	 * Returns the Jetty webapp context
+	 * @return the Jetty webapp context
+	 */
+	public WebAppContext getJettyWebAppContext(){
+		return jettyWebAppContext;
 	}
 	
 	/**
@@ -122,7 +139,7 @@ public class JawrIntegrationServer {
 	 * @return the webapp context path
 	 */
 	public String getContextPath() {
-		return webAppCtx;
+		return jettyWebAppContext.getContextPath();
 	}
 	
 	/**
