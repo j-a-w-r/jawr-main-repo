@@ -280,11 +280,11 @@ public abstract class AbstractResourceBundleHandler implements
 			if (is != null) {
 				((Properties) bundleMapping).load(is);
 			} else {
-				LOGGER.error("The jawr bundle mapping '" + mappingFileName
+				LOGGER.info("The jawr bundle mapping '" + mappingFileName
 						+ "' is not found");
 			}
 		} catch (IOException e) {
-			LOGGER.error("Error while loading the jawr bundle mapping '"
+			LOGGER.info("Error while loading the jawr bundle mapping '"
 					+ JawrConstant.JAWR_JS_MAPPING_PROPERTIES_FILENAME + "'");
 		} finally {
 			IOUtils.close(is);
