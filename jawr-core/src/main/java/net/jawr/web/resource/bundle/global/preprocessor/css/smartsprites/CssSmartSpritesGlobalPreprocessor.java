@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -31,7 +31,6 @@ import net.jawr.web.resource.bundle.global.processor.AbstractChainedGlobalProces
 import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
-import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters;
@@ -130,14 +129,14 @@ public class CssSmartSpritesGlobalPreprocessor extends
 			JawrConfig jawrConfig, Charset charset) {
 
 		MessageLevel msgLevel = MessageLevel.valueOf(ERROR_LEVEL);
-		Level sinkLevel = Level.WARN;
+		String sinkLevel = WARN_LEVEL;
 		if (LOGGER.isTraceEnabled() || LOGGER.isDebugEnabled()
 				|| LOGGER.isInfoEnabled()) { // logLevel.isGreaterOrEqual(Level.DEBUG)
 			msgLevel = MessageLevel.valueOf(INFO_LEVEL);
-			sinkLevel = Level.INFO;
+			sinkLevel = INFO_LEVEL;
 		} else if (LOGGER.isWarnEnabled() || LOGGER.isErrorEnabled()) { // logLevel.isGreaterOrEqual(Level.WARN)
 			msgLevel = MessageLevel.valueOf(WARN_LEVEL);
-			sinkLevel = Level.WARN;
+			sinkLevel = WARN_LEVEL;
 		}
 
 		MessageLog messageLog = new MessageLog(
@@ -211,7 +210,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		/**
 		 * The log level
 		 */
-		private final Level logLevel;
+		private final String logLevel;
 
 		/**
 		 * Constructor
@@ -219,8 +218,8 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		 * @param logLevel
 		 *            the log level
 		 */
-		public LogMessageSink(Level logLevel) {
-			this.logLevel = logLevel != null ? logLevel : Level.INFO;
+		public LogMessageSink(String logLevel) {
+			this.logLevel = logLevel != null ? logLevel : INFO_LEVEL;
 		}
 
 		/*
