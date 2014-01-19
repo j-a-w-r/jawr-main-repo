@@ -80,8 +80,8 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 			String path = resourceName;
 			if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
 				path = path.replace(':', '/');
+				path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
 			}
-			path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
 			rd = ((TextResourceReader) resourceReader).getResource(path, processingBundle);
 		}
 		
