@@ -11,6 +11,8 @@ import java.util.List;
 
 import net.jawr.web.test.utils.Utils;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +37,12 @@ public class MainPageTestWithEmptyContextPath extends  MainPageTest {
 
 		JawrIntegrationServer.getInstance().getJettyWebAppContext().setContextPath("");
 		super.setup();
+	}
+	
+	@After
+	public void teardown(){
+		JawrIntegrationServer.getInstance().getJettyWebAppContext().setContextPath("/jawr-integration-test");
+		super.teardown();
 	}
 	
 	@Test
