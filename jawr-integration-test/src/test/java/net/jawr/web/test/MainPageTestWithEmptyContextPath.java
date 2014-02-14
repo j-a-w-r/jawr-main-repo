@@ -14,6 +14,7 @@ import net.jawr.web.test.utils.Utils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.CollectingAlertHandler;
@@ -30,6 +31,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
  * @author ibrahim Chaehoi
  */
 @JawrTestConfigFiles(webXml = "net/jawr/web/standard/config/web.xml", jawrConfig = "net/jawr/web/standard/config/jawr.properties")
+@Ignore
 public class MainPageTestWithEmptyContextPath extends  MainPageTest {
 
 	@Before
