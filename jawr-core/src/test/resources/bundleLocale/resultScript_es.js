@@ -18,6 +18,6 @@ function p() {
 	return ret;
 }
 window.messages=(
-{ui:{msg:{hello:{world:p("¡Hola $ Mundo!")},salut:p("Mr.")}}}
+{ui:{msg:{hello:{world:p("Â¡Hola $ Mundo!")},salut:p("Mr.")}}}
 )
 })();

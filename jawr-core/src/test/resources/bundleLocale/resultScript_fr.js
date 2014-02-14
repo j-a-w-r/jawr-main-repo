@@ -18,6 +18,6 @@ function p() {
 	return ret;
 }
 window.messages=(
-{ui:{msg:{hello:{world:p("¡Bonjour $ tout le monde!")},salut:p("Mr.")}}}
+{ui:{msg:{hello:{world:p("Â¡Bonjour $ š tout le monde!")},salut:p("Mr.")}}}
 )
 })();

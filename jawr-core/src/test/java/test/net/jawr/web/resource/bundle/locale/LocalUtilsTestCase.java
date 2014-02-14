@@ -5,7 +5,7 @@ package test.net.jawr.web.resource.bundle.locale;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import net.jawr.web.resource.bundle.locale.LocaleUtils;
 

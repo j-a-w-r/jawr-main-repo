@@ -18,6 +18,6 @@ function p() {
 	return ret;
 }
 window.myMessages=(
-{ui:{error:{panel:{title:p("Erreur")}},msg:{hello:{world:p("¡Bonjour $ tout le monde!")},salut:p("Mr.")}},error:{login:p("Erreur lors de la connection")},warning:{password:{expired:p("Password expiré")}}}
+{ui:{error:{panel:{title:p("Erreur")}},msg:{hello:{world:p("Â¡Bonjour $ š tout le monde!")},salut:p("Mr.")}},error:{login:p("Erreur lors de la connection")},warning:{password:{expired:p("Password expiré")}}}
 )
 })();
