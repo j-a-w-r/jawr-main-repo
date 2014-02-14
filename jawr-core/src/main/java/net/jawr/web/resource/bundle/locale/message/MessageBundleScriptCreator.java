@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2011 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,11 +15,17 @@ package net.jawr.web.resource.bundle.locale.message;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -27,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
@@ -63,8 +70,8 @@ public class MessageBundleScriptCreator {
 
 	private static final String SCRIPT_TEMPLATE = "/net/jawr/web/resource/bundle/message/messages.js";
 
-	private static final String CHARSET_ISO_8859_1 = "ISO-8859-1";
-
+	private static final String DEFAULT_RESOURCE_BUNDLE_CHARSET = "ISO-8859-1";
+	
 	protected static StringBuffer template;
 	protected String configParam;
 	protected String namespace;
@@ -72,7 +79,8 @@ public class MessageBundleScriptCreator {
 	protected Locale locale;
 	private List<String> filterList;
 	protected ServletContext servletContext;
-	private boolean fallbackToSystemLocale = true;
+	protected boolean fallbackToSystemLocale = true;
+	protected Charset resourceBundleCharset;
 
 	public MessageBundleScriptCreator(GeneratorContext context) {
 		super();
@@ -105,6 +113,12 @@ public class MessageBundleScriptCreator {
 			this.fallbackToSystemLocale = Boolean
 					.valueOf(fallbackToSystemLocaleProperty);
 		}
+
+		String charsetName = context.getConfig()
+				.getProperty(JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET, 
+						DEFAULT_RESOURCE_BUNDLE_CHARSET);
+		
+		resourceBundleCharset = Charset.forName(charsetName);
 	}
 
 	/**
@@ -123,7 +137,8 @@ public class MessageBundleScriptCreator {
 			IOUtils.copy(is, sw);
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal, "a serious error occurred when initializing MessageBundleScriptCreator");
+			LOGGER.error(fatal,
+					"a serious error occurred when initializing MessageBundleScriptCreator");
 			throw new BundlingProcessException(
 					"Classloading issues prevent loading the message template to be loaded. ",
 					e);
@@ -157,20 +172,21 @@ public class MessageBundleScriptCreator {
 			}
 		}
 
+		MessageBundleControl control = new MessageBundleControl(fallbackToSystemLocale, resourceBundleCharset);
 		for (int x = 0; x < names.length; x++) {
 
 			ResourceBundle bundle;
 
 			try {
-				bundle = ResourceBundle.getBundle(names[x], currentLocale);
+				bundle = ResourceBundle.getBundle(names[x], currentLocale, control);
 			} catch (MissingResourceException ex) {
 				// Fixes problems with some servers, e.g. WLS 10
 				try {
 					bundle = ResourceBundle.getBundle(names[x], currentLocale,
-							getClass().getClassLoader());
+							getClass().getClassLoader(), control);
 				} catch (Exception e) {
 					bundle = ResourceBundle.getBundle(names[x], currentLocale,
-							Thread.currentThread().getContextClassLoader());
+							Thread.currentThread().getContextClassLoader(), control);
 				}
 			}
 
@@ -209,16 +225,8 @@ public class MessageBundleScriptCreator {
 			String key = keys.nextElement();
 
 			if (matchesFilter(key)) {
-				String value;
-				try {
-					// Use the property encoding of the file
-					value = new String(bundle.getString(key).getBytes(
-							CHARSET_ISO_8859_1), charset.displayName());
-					props.put(key, value);
-				} catch (UnsupportedEncodingException e) {
-					LOGGER.warn("Unable to convert value of message bundle associated to key '"
-							+ key + "' because the charset is unknown");
-				}
+				String value = bundle.getString(key);
+				props.put(key, value);
 			}
 		}
 	}
@@ -260,4 +268,114 @@ public class MessageBundleScriptCreator {
 
 	}
 
+	public class MessageBundleControl extends ResourceBundle.Control {
+
+		private boolean fallbackToSystemLocale = true;
+		private Charset charset;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param fallbackToSystemLocale the flag indicating if the fallback local is the System locale or not
+		 * @param charset the ResourceBundle charset
+		 */
+		public MessageBundleControl(boolean fallbackToSystemLocale, Charset charset) {
+
+			this.fallbackToSystemLocale = fallbackToSystemLocale;
+			this.charset = charset;
+		}
+
+		@Override
+		public Locale getFallbackLocale(String baseName, Locale locale) {
+			if (baseName == null) {
+				throw new NullPointerException();
+			}
+			Locale defaultLocale = Locale.getDefault();
+
+			if (fallbackToSystemLocale) {
+				defaultLocale = Locale.getDefault();
+			} else {
+				defaultLocale = new Locale("", "");
+			}
+
+			return locale.equals(defaultLocale) ? null : defaultLocale;
+		}
+
+		@Override
+		public ResourceBundle newBundle(String baseName, Locale locale,
+				String format, ClassLoader loader, boolean reload)
+				throws IllegalAccessException, InstantiationException,
+				IOException {
+
+			String bundleName = toBundleName(baseName, locale);
+			ResourceBundle bundle = null;
+			if (format.equals("java.class")) {
+				try {
+					@SuppressWarnings("unchecked")
+					Class<? extends ResourceBundle> bundleClass = (Class<? extends ResourceBundle>) loader
+							.loadClass(bundleName);
+
+					// If the class isn't a ResourceBundle subclass, throw a
+					// ClassCastException.
+					if (ResourceBundle.class.isAssignableFrom(bundleClass)) {
+						bundle = bundleClass.newInstance();
+					} else {
+						throw new ClassCastException(bundleClass.getName()
+								+ " cannot be cast to ResourceBundle");
+					}
+				} catch (ClassNotFoundException e) {
+				}
+			} else if (format.equals("java.properties")) {
+				final String resourceName = toResourceName(bundleName,
+						"properties");
+				final ClassLoader classLoader = loader;
+				final boolean reloadFlag = reload;
+				InputStream stream = null;
+				Reader rd = null;
+				try {
+					stream = AccessController
+							.doPrivileged(new PrivilegedExceptionAction<InputStream>() {
+								public InputStream run() throws IOException {
+									InputStream is = null;
+									if (reloadFlag) {
+										URL url = classLoader
+												.getResource(resourceName);
+										if (url != null) {
+											URLConnection connection = url
+													.openConnection();
+											if (connection != null) {
+												// Disable caches to get fresh
+												// data for
+												// reloading.
+												connection.setUseCaches(false);
+												is = connection
+														.getInputStream();
+											}
+										}
+									} else {
+										is = classLoader
+												.getResourceAsStream(resourceName);
+									}
+									return is;
+								}
+							});
+				} catch (PrivilegedActionException e) {
+					throw (IOException) e.getException();
+				}
+				if (stream != null) {
+					try {
+						rd = new InputStreamReader(stream, charset); 
+						bundle = new PropertyResourceBundle(rd);	
+					} finally {
+						IOUtils.close(rd);
+						IOUtils.close(stream);
+					}
+				}
+			} else {
+				throw new IllegalArgumentException("unknown format: " + format);
+			}
+			return bundle;
+		}
+
+	}
 }
