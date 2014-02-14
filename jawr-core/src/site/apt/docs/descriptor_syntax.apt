@@ -51,6 +51,8 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.locale.generator.fallbackToSystemLocale | Boolean | The flag indicatinf if Jawr must use the System locale if no locale is found for a request. | true |
 *---------------*---------*--------------+----------------+
+| jawr.locale.generator.resourceBundle.charset | String | The charset of the message ResourceBundle. | ISO-8859-1 |
+*---------------*---------*--------------+----------------+
 | jawr.url.contextpath.override | URL (absolute or fragment) [<<http://...>>],[<<//somepath>> protocol relative],[<</somepath >>] or [<</>>] or []. | Override the use of the application's contextpath to prefix every generated URL.  | none    | 
 | | | Using '<</>>' will cause Jawr to skip the context path altogether ('/001/bundles/mybundle.js').  |     | 
 | | | Using an empty value will cause Jawr to generate page relative urls ('001/bundles/mybundle.js').  |     | 
