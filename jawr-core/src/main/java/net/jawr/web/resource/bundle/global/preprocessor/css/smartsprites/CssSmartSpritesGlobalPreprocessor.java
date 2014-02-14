@@ -28,6 +28,7 @@ import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.global.preprocessor.GlobalPreprocessingContext;
 import net.jawr.web.resource.bundle.global.processor.AbstractChainedGlobalProcessor;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
@@ -194,7 +195,9 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		for (Iterator<JoinableResourceBundle> iterator = bundles.iterator(); iterator
 				.hasNext();) {
 			JoinableResourceBundle bundle = iterator.next();
-			resourcePaths.addAll(bundle.getItemPathList());
+			for(BundlePath bundlePath : bundle.getItemPathList()){
+				resourcePaths.add(bundlePath.getPath());
+			}
 		}
 
 		return resourcePaths;

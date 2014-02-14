@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.ChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.util.StringUtils;
@@ -127,12 +128,14 @@ public class JoinableResourceBundlePropertySerializer {
 			}
 		} 
 			
-		props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE, bundle
-					.getBundleDataHashCode(null));
+		String bundleHashcode = bundle.getBundleDataHashCode(null);
+		if(bundleHashcode != null){
+			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE, bundleHashcode);
+		}
 		
 
 		// mapping
-		List<String> itemPathList = null; 
+		List<BundlePath> itemPathList = null; 
 		if(!bundle.getInclusionPattern().isIncludeOnDebug()){
 			itemPathList = bundle.getItemPathList();
 		}else if(!bundle.getInclusionPattern().isExcludeOnDebug()){
@@ -142,7 +145,7 @@ public class JoinableResourceBundlePropertySerializer {
 		if (itemPathList != null && !itemPathList.isEmpty()) {
 			props
 					.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS,
-							getCommaSeparatedString(itemPathList));
+							getCommaSeparatedStringForBundlePath(itemPathList));
 		}
 		List<JoinableResourceBundle> dependencies = bundle.getDependencies();
 		if (dependencies != null && !dependencies.isEmpty()) {
@@ -204,6 +207,25 @@ public class JoinableResourceBundlePropertySerializer {
 		StringBuffer buffer = new StringBuffer();
 		for (Iterator<String> eltIterator = coll.iterator(); eltIterator.hasNext();) {
 			String elt = eltIterator.next();
+			buffer.append(elt);
+			if(eltIterator.hasNext()){
+				buffer.append(",");
+			}
+		}
+		return buffer.toString();
+	}
+	
+	/**
+	 * Returns the mapping list
+	 * 
+	 * @param itemPathList the item path list
+	 * @return the item path list
+	 */
+	private static String getCommaSeparatedStringForBundlePath(Collection<BundlePath> coll) {
+
+		StringBuffer buffer = new StringBuffer();
+		for (Iterator<BundlePath> eltIterator = coll.iterator(); eltIterator.hasNext();) {
+			String elt = eltIterator.next().getPath();
 			buffer.append(elt);
 			if(eltIterator.hasNext()){
 				buffer.append(",");

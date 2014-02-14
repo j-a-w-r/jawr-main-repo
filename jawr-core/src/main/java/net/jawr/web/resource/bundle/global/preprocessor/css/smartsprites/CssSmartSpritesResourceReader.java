@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -80,8 +80,8 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 			String path = resourceName;
 			if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
 				path = path.replace(':', '/');
-				path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
 			}
+			path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
 			rd = ((TextResourceReader) resourceReader).getResource(path, processingBundle);
 		}
 		
@@ -106,9 +106,10 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		GeneratorRegistry generatorRegistry = jawrConfig.getGeneratorRegistry();
 		if(generatorRegistry.isGeneratedImage(path)){
 			path = path.replace(':', '/');
-			path = JawrConstant.SPRITE_GENERATED_IMG_DIR+path;
+		}else{
+			path = GeneratorRegistry.SPRITE_GENERATOR_PREFIX+JawrConstant.URL_SEPARATOR+path;
 		}
-				
+		path = JawrConstant.SPRITE_GENERATED_IMG_DIR+path;
 		return ((StreamResourceReader) resourceReader).getResourceAsStream(path, processingBundle);
 	}
 

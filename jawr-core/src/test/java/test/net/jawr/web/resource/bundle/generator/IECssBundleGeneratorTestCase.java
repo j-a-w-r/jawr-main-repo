@@ -34,6 +34,7 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.IECssBundleGenerator;
 import net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.resource.bundle.variant.VariantSet;
@@ -172,16 +173,16 @@ public class IECssBundleGeneratorTestCase extends TestCase {
 						
 					}
 					
-					public String next() {
-						return it.next();
+					public BundlePath next() {
+						return new BundlePath(it.next());
 					}
 					
 					public boolean hasNext() {
 						return it.hasNext();
 					}
 					
-					public String nextPath() {
-						return (String) it.next();
+					public BundlePath nextPath() {
+						return new BundlePath(it.next());
 					}
 				};
 			}

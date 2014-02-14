@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,7 +33,7 @@ public class DebugModePathsIteratorImpl extends AbstractPathsIterator implements
 	private Iterator<JoinableResourceBundle> bundlesIterator;
 	
 	/** The path iterator */
-	private Iterator<String> pathsIterator;
+	private Iterator<BundlePath> pathsIterator;
 	
 	/** The current bundle */
 	private JoinableResourceBundle currentBundle;
@@ -54,9 +54,9 @@ public class DebugModePathsIteratorImpl extends AbstractPathsIterator implements
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
 	 */
-	public String nextPath() {
+	public BundlePath nextPath() {
 		
-		String path = null;
+		BundlePath path = null;
 		if(null == pathsIterator || !pathsIterator.hasNext()) {
 			currentBundle = (JoinableResourceBundle) bundlesIterator.next();
 			
@@ -68,7 +68,7 @@ public class DebugModePathsIteratorImpl extends AbstractPathsIterator implements
 		
 		
 		if(pathsIterator != null && pathsIterator.hasNext()){
-			path = pathsIterator.next().toString();
+			path = pathsIterator.next();
 		}
 		
 		return path;

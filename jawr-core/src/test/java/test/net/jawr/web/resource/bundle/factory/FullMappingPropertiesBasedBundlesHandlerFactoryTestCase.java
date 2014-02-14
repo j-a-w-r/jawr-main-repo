@@ -24,6 +24,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundlePropertySerializer;
 import net.jawr.web.resource.bundle.factory.FullMappingPropertiesBasedBundlesHandlerFactory;
 import net.jawr.web.resource.bundle.factory.postprocessor.PostProcessorChainFactory;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
@@ -58,8 +59,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		JoinableResourceBundle bundle = (JoinableResourceBundle) resourcesBundles.get(0);
 		
 		assertEquals("/bundle/myGlobalBundle.js", bundle.getId());
-		Set<String> expectedMappings = new HashSet<String>(Arrays.asList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
-		assertEquals(expectedMappings, new HashSet<String>(bundle.getItemPathList()));
+		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
+		assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 		
 		assertEquals(true, bundle.getInclusionPattern().isGlobal());
 		assertEquals(false, bundle.getInclusionPattern().isExcludeOnDebug());
@@ -95,11 +96,11 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		assertEquals("/bundle/myBundle.js", bundle.getId());
 				
 		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-		Set<String> expectedMappings = new HashSet<String>(Arrays.asList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
+		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
 		if(debugInclusion.equals(DebugInclusion.ONLY)){
-			assertEquals(expectedMappings, new HashSet<String>(bundle.getItemDebugPathList()));
+			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
 		}else{
-			assertEquals(expectedMappings, new HashSet<String>(bundle.getItemPathList()));
+			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 		}
 		
 		assertEquals(true, bundle.getInclusionPattern().isGlobal());
@@ -150,11 +151,11 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 			
 			assertEquals(inclusion, bundle.getInclusionPattern().getDebugInclusion());
 			
-			Set<String> expectedMappings = new HashSet<String>(Arrays.asList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
+			Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
 			if(inclusion.equals(DebugInclusion.ONLY)){
-				assertEquals(expectedMappings, new HashSet<String>(bundle.getItemDebugPathList()));
+				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
 			}else{
-				assertEquals(expectedMappings, new HashSet<String>(bundle.getItemPathList()));
+				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 			}
 			
 			assertEquals(true, bundle.getInclusionPattern().isGlobal());
@@ -200,8 +201,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 			
 		assertEquals("/bundle/myBundle.js", bundle.getId());
 				
-		Set<String> expectedMappings = new HashSet<String>(Arrays.asList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
-		assertEquals(expectedMappings, new HashSet<String>(bundle.getItemPathList()));
+		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
+		assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 		
 		assertEquals(true, bundle.getInclusionPattern().isGlobal());
 		assertEquals(3, bundle.getInclusionPattern().getInclusionOrder());
@@ -278,6 +279,15 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		bundle.setUnitaryPostProcessor(filePostProcessor);
 	
 		return bundle;
+	}
+	
+	private List<BundlePath> asBundlePathList(String... paths){
+		List<BundlePath> result = new ArrayList<BundlePath>();
+		for(String path : paths){
+			result.add(new BundlePath(path));
+		}
+		
+		return result;
 	}
 	
 	private List<JoinableResourceBundle> getBundleWithDependencies(DebugInclusion inclusion){

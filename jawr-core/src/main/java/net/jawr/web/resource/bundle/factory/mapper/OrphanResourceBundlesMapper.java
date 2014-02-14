@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,6 +27,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.JoinableResourceOrphanBundleImpl;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 import org.slf4j.Logger;
@@ -127,9 +128,9 @@ public class OrphanResourceBundlesMapper {
 		}
 
 		// Add resources
-		List<String> allPaths = tempBundle.getItemPathList();
-		for (Iterator<String> it = allPaths.iterator(); it.hasNext();) {
-			addFileIfNotMapped(it.next());
+		List<BundlePath> allPaths = tempBundle.getItemPathList();
+		for (Iterator<BundlePath> it = allPaths.iterator(); it.hasNext();) {
+			addFileIfNotMapped(it.next().getPath());
 		}
 		return this.bundleMapping;
 	}
@@ -147,13 +148,22 @@ public class OrphanResourceBundlesMapper {
 		for (Iterator<JoinableResourceBundle> it = currentBundles.iterator(); it
 				.hasNext();) {
 			JoinableResourceBundle bundle = it.next();
-			List<String> items = bundle.getItemPathList();
-			List<String> itemsDebug = bundle.getItemDebugPathList();
+			List<BundlePath> items = bundle.getItemPathList();
+			List<BundlePath> itemsDebug = bundle.getItemDebugPathList();
 			Set<String> licenses = bundle.getLicensesPathList();
 
-			if (items.contains(filePath) || itemsDebug.contains(filePath))
-				return;
-			else if (licenses.contains(filePath))
+			for (BundlePath path : items) {
+				if(path.getPath().equals(filePath)){
+					return;
+				}
+			}
+			for (BundlePath path : itemsDebug) {
+				if(path.getPath().equals(filePath)){
+					return;
+				}
+			}
+			
+			if (licenses.contains(filePath))
 				return;
 			else if (filePath.equals(bundle.getId())) {
 				Marker fatal = MarkerFactory.getMarker("FATAL");

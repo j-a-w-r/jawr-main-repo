@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Jordi Hernández Sellés
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,11 +21,12 @@ import java.util.Iterator;
  * a bundle is invoked on a page.  
  * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
-public interface ResourceBundlePathsIterator extends Iterator<String> {
+public interface ResourceBundlePathsIterator extends Iterator<BundlePath> {
 
 	/**
 	 * @return Next path belonging to the bundle. 
 	 */
-	public String nextPath();
+	public BundlePath nextPath();
 }

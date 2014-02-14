@@ -20,6 +20,7 @@ import java.util.Set;
 
 import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 
@@ -88,14 +89,14 @@ public class MockJoinableResourceBundle implements JoinableResourceBundle {
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList()
 	 */
-	public List<String> getItemPathList() {
+	public List<BundlePath> getItemPathList() {
 		return null;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList(java.util.Map)
 	 */
-	public List<String> getItemPathList(Map<String, String> variants) {
+	public List<BundlePath> getItemPathList(Map<String, String> variants) {
 		return null;
 	}
 
@@ -201,13 +202,13 @@ public class MockJoinableResourceBundle implements JoinableResourceBundle {
 	}
 
 	@Override
-	public List<String> getItemDebugPathList() {
-		return new ArrayList<String>();
+	public List<BundlePath> getItemDebugPathList() {
+		return new ArrayList<BundlePath>();
 	}
 
 	@Override
-	public List<String> getItemDebugPathList(Map<String, String> variants) {
-		return new ArrayList<String>();
+	public List<BundlePath> getItemDebugPathList(Map<String, String> variants) {
+		return new ArrayList<BundlePath>();
 	}
 
 }

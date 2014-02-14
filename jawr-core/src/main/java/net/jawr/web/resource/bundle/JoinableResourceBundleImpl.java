@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,6 +28,7 @@ import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.sorting.SortFileParser;
 import net.jawr.web.resource.bundle.variant.VariantSet;
@@ -70,13 +71,13 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * The final item path list containing all the resource linked to this
 	 * bundle
 	 */
-	protected List<String> itemPathList;
+	protected List<BundlePath> itemPathList;
 
 	/**
 	 * The final item path list containing all the resource linked to this
 	 * bundle for debug mode
 	 */
-	protected List<String> itemDebugPathList;
+	protected List<BundlePath> itemDebugPathList;
 
 	/** The resource reader handle */
 	private ResourceReaderHandler resourceReaderHandler;
@@ -148,8 +149,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		}
 		this.name = name;
 		this.resourceReaderHandler = resourceReaderHandler;
-		this.itemPathList = new CopyOnWriteArrayList<String>();
-		this.itemDebugPathList = new CopyOnWriteArrayList<String>();
+		this.itemPathList = new CopyOnWriteArrayList<BundlePath>();
+		this.itemDebugPathList = new CopyOnWriteArrayList<BundlePath>();
 		this.licensesPathList = new HashSet<String>();
 		if (fileExtension != null && fileExtension.length() > 0
 				&& fileExtension.charAt(0) != '.') {
@@ -244,11 +245,11 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 	private void addPathMapping(String pathMapping) {
 		if (!getInclusionPattern().isIncludeOnlyOnDebug()) {
-			itemPathList.add(pathMapping);
+			itemPathList.add(new BundlePath(pathMapping));
 		}
 
 		if (!getInclusionPattern().isExcludeOnDebug()) {
-			itemDebugPathList.add(pathMapping);
+			itemDebugPathList.add(new BundlePath(pathMapping));
 		}
 	}
 
@@ -538,8 +539,25 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * .lang.String)
 	 */
 	public boolean belongsToBundle(String itemPath) {
-		return itemPathList.contains(itemPath)
-				|| itemDebugPathList.contains(itemPath);
+		
+		boolean belongsToBundle = false;
+		
+		for (BundlePath path : itemPathList) {
+			if(path.getPath().equals(itemPath)){
+				belongsToBundle = true;
+				break;
+			}
+		}
+		if(!belongsToBundle){
+			for (BundlePath path : itemDebugPathList) {
+				if(path.getPath().equals(itemPath)){
+					belongsToBundle = true;
+					break;
+				}
+			}
+		}
+		
+		return belongsToBundle;
 	}
 
 	/*
@@ -571,7 +589,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList()
 	 */
-	public List<String> getItemPathList() {
+	public List<BundlePath> getItemPathList() {
 		return itemPathList;
 	}
 
@@ -582,7 +600,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemDebugPathList
 	 * ()
 	 */
-	public List<String> getItemDebugPathList() {
+	public List<BundlePath> getItemDebugPathList() {
 		return itemDebugPathList;
 	}
 
@@ -593,7 +611,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList(java
 	 * .lang.String)
 	 */
-	public List<String> getItemDebugPathList(Map<String, String> variants) {
+	public List<BundlePath> getItemDebugPathList(Map<String, String> variants) {
 		return getItemPathList(itemDebugPathList, variants);
 	}
 
@@ -604,32 +622,33 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList(java
 	 * .lang.String)
 	 */
-	public List<String> getItemPathList(Map<String, String> variants) {
+	public List<BundlePath> getItemPathList(Map<String, String> variants) {
 		return getItemPathList(itemPathList, variants);
 	}
 
-	private List<String> getItemPathList(List<String> itemList,
+	private List<BundlePath> getItemPathList(List<BundlePath> itemList,
 			Map<String, String> variants) {
 		if (variants == null || variants.isEmpty())
 			return itemList;
 
-		List<String> rets = new ArrayList<String>();
+		List<BundlePath> rets = new ArrayList<BundlePath>();
 
-		for (Iterator<String> it = itemList.iterator(); it.hasNext();) {
-			String path = (String) it.next();
+		for (Iterator<BundlePath> it = itemList.iterator(); it.hasNext();) {
+			BundlePath bundlePath = it.next();
+			String path = bundlePath.getPath();
 			if (generatorRegistry.isPathGenerated(path)) {
 				Set<String> variantTypes = generatorRegistry
 						.getGeneratedResourceVariantTypes(path);
 				String variantKey = VariantUtils.getVariantKey(variants,
 						variantTypes);
 				if (StringUtils.isNotEmpty(variantKey)) {
-					rets.add(VariantUtils
-							.getVariantBundleName(path, variantKey));
+					rets.add(new BundlePath(VariantUtils
+							.getVariantBundleName(path, variantKey)));
 				} else {
-					rets.add(path);
+					rets.add(bundlePath);
 				}
 			} else {
-				rets.add(path);
+				rets.add(bundlePath);
 			}
 		}
 		return rets;

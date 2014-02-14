@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,17 +20,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.jawr.web.DebugMode;
 import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.servlet.RendererRequestUtils;
 import net.jawr.web.util.StringUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for implementations of a link renderer.
@@ -106,14 +107,6 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 		// again.
 		if (!ctx.isGlobalBundleAdded()) {
 			renderGlobalBundleLinks(ctx, out, debugOn);
-		}
-
-		// If there is a fixed URL for production mode it is rendered and method
-		// returns.
-		if (!debugOn && null != bundle.getAlternateProductionURL()) {
-			if (ctx.getIncludedBundles().add(bundle.getId()))
-				out.write(renderLink(bundle.getAlternateProductionURL()));
-			return;
 		}
 
 		renderBundleLinks(bundle, requestedPath, ctx, out, debugOn, true);
@@ -322,33 +315,42 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 		// Add resources to the page as links.
 		Random randomSeed = new Random();
 		while (it.hasNext()) {
-			String resourceName = it.nextPath();
+			BundlePath bundlePath = it.nextPath();
+			if (bundlePath != null) {
 
-			if (resourceName != null) {
-				// In debug mode, all the resources are included separately and
-				// use a random parameter to avoid caching.
-				// If useRandomParam is set to false, the links are created
-				// without the random parameter.
-				int random = -1;
-				if (debugOn && useRandomParam) {
-					random = randomSeed.nextInt();
-					if (random < 0) {
-						random *= -1;
+				String resourceName = bundlePath.getPath();
+				if (resourceName != null) {
+
+					// In debug mode, all the resources are included separately
+					// and
+					// use a random parameter to avoid caching.
+					// If useRandomParam is set to false, the links are created
+					// without the random parameter.
+					int random = -1;
+					if (debugOn && useRandomParam) {
+						random = randomSeed.nextInt();
+						if (random < 0) {
+							random *= -1;
+						}
+
+						out.write(createBundleLink(resourceName, "d=" + random,
+								contextPath, isSslRequest));
+					} else if (!debugOn && bundlePath.isProductionURL()) {
+						out.write(renderLink(resourceName));
+
+					} else if (!debugOn && useGzip) {
+						out.write(createGzipBundleLink(resourceName,
+								contextPath, isSslRequest));
+					} else {
+						out.write(createBundleLink(resourceName, null,
+								contextPath, isSslRequest));
 					}
 
-					out.write(createBundleLink(resourceName, "d=" + random,
-							contextPath, isSslRequest));
-				} else if (!debugOn && useGzip) {
-					out.write(createGzipBundleLink(resourceName, contextPath,
-							isSslRequest));
-				} else {
-					out.write(createBundleLink(resourceName, null, contextPath,
-							isSslRequest));
-				}
-
-				if (debugOn && !ctx.getIncludedResources().add(resourceName)) {
-					addComment("The resource '" + resourceName
-							+ "' is already included in the page.", out);
+					if (debugOn
+							&& !ctx.getIncludedResources().add(resourceName)) {
+						addComment("The resource '" + resourceName
+								+ "' is already included in the page.", out);
+					}
 				}
 			}
 		}

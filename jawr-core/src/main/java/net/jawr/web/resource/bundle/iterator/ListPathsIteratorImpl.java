@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,13 +28,13 @@ public class ListPathsIteratorImpl implements ResourceBundlePathsIterator {
 	/**
 	 * The path iterator 
 	 */
-	private Iterator<String> pathIterator;
+	private Iterator<BundlePath> pathIterator;
 	
 	/**
 	 * Constructor
 	 * @param paths the list of path
 	 */
-	public ListPathsIteratorImpl(List<String> paths) {
+	public ListPathsIteratorImpl(List<BundlePath> paths) {
 		pathIterator = paths.iterator();
 	}
 	
@@ -42,7 +42,7 @@ public class ListPathsIteratorImpl implements ResourceBundlePathsIterator {
 	 * Constructor
 	 * @param paths the array of path
 	 */
-	public ListPathsIteratorImpl(String[] paths) {
+	public ListPathsIteratorImpl(BundlePath[] paths) {
 		pathIterator = Arrays.asList(paths).iterator();
 	}
 	
@@ -50,14 +50,14 @@ public class ListPathsIteratorImpl implements ResourceBundlePathsIterator {
 	 * Constructor
 	 * @param path the path
 	 */
-	public ListPathsIteratorImpl(String path) {
-		this(new String[]{path});
+	public ListPathsIteratorImpl(BundlePath path) {
+		this(new BundlePath[]{path});
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
 	 */
-	public String nextPath() {
+	public BundlePath nextPath() {
 		return pathIterator.next();
 	}
 
@@ -71,7 +71,7 @@ public class ListPathsIteratorImpl implements ResourceBundlePathsIterator {
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
-	public String next() {
+	public BundlePath next() {
 		return pathIterator.next();
 	}
 

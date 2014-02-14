@@ -75,27 +75,27 @@ public class ResourceBundlesHandlerImplTest  extends  ResourceHandlerBasedTest {
 	public void testGetSingleFilePath() {
 		
 		assertTrue("The collection path was not initialized properly", 
-					defaultHandler.getBundlePaths("/script.js",null,null).next().toString().endsWith("/script.js"));
+					defaultHandler.getBundlePaths("/script.js",null,null).next().getPath().endsWith("/script.js"));
 		
 	}
 	public void testGetNormalCollectionPaths() {
 		
 		ResourceBundlePathsIterator globalSimplePaths = simpleHandler.getGlobalResourceBundlePaths(null,null);
-		assertTrue("Path ordering does not match expected. ", globalSimplePaths.next().toString().endsWith("/library.js"));
-		assertTrue("Path ordering does not match expected. ", globalSimplePaths.next().toString().endsWith("/global.js"));
-		assertTrue("Path ordering does not match expected. ", globalSimplePaths.next().toString().endsWith("/debugOff.js"));
+		assertTrue("Path ordering does not match expected. ", globalSimplePaths.next().getPath().endsWith("/library.js"));
+		assertTrue("Path ordering does not match expected. ", globalSimplePaths.next().getPath().endsWith("/global.js"));
+		assertTrue("Path ordering does not match expected. ", globalSimplePaths.next().getPath().endsWith("/debugOff.js"));
 		
 		ResourceBundlePathsIterator simplePaths = simpleHandler.getBundlePaths("/js/one.js",null,null);
 		//assertEquals("Invalid number of paths returned",new Integer(4), new Integer(simplePaths.size()));
-		assertTrue("Path ordering does not match expected. ", simplePaths.next().toString().endsWith("js/one.js"));
+		assertTrue("Path ordering does not match expected. ", simplePaths.next().getPath().endsWith("js/one.js"));
 		
 	}
 	public void testGetDebugCollectionPaths() {
 		
 		ResourceBundlePathsIterator simplePaths = defaultDebugCollection.getGlobalResourceBundlePaths(null,null);
-		assertEquals("Path ordering does not match expected. ","/js/lib/prototype/protoype.js", simplePaths.next());
-		assertEquals("Path ordering does not match expected. ","/js/lib/lib2.js", simplePaths.next());
-		assertEquals("Path ordering does not match expected. ","/js/lib/scriptaculous/scriptaculous.js", simplePaths.next());
+		assertEquals("Path ordering does not match expected. ","/js/lib/prototype/protoype.js", simplePaths.next().getPath());
+		assertEquals("Path ordering does not match expected. ","/js/lib/lib2.js", simplePaths.next().getPath());
+		assertEquals("Path ordering does not match expected. ","/js/lib/scriptaculous/scriptaculous.js", simplePaths.next().getPath());
 		
 	}
 

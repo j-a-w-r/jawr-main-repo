@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -55,7 +55,7 @@ public abstract class AbstractPathsIterator implements
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
-	public String next() {
+	public BundlePath next() {
 		return nextPath();
 	}
 

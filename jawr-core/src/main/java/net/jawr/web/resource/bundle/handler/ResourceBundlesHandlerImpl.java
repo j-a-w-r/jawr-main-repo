@@ -53,6 +53,7 @@ import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.global.processor.GlobalProcessor;
 import net.jawr.web.resource.bundle.hashcode.BundleHashcodeGenerator;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.DebugModePathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.IECssDebugPathsIteratorImpl;
@@ -736,17 +737,15 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				JoinableResourceBundle childbundle = (JoinableResourceBundle) it
 						.next();
 
-				if(!childbundle.getInclusionPattern().isIncludeOnlyOnDebug()){
-					JoinableResourceBundleContent childContent = joinAndPostprocessBundle(
-							childbundle, variants, status, processBundle);
-					// Do unitary postprocessing.
-					status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
-					StringBuffer content = executeUnitaryPostProcessing(composite,
-							status, childContent.getContent(),
-							this.unitaryCompositePostProcessor);
-					childContent.setContent(content);
-					store.append(childContent);
-				}
+				JoinableResourceBundleContent childContent = joinAndPostprocessBundle(
+						childbundle, variants, status, processBundle);
+				// Do unitary postprocessing.
+				status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
+				StringBuffer content = executeUnitaryPostProcessing(composite,
+						status, childContent.getContent(),
+						this.unitaryCompositePostProcessor);
+				childContent.setContent(content);
+				store.append(childContent);
 			}
 
 			// Post process composite bundle as needed
@@ -994,20 +993,20 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 			boolean firstPath = true;
 			// Run through all the files belonging to the bundle
-			Iterator<String> pathIterator = null;
+			Iterator<BundlePath> pathIterator = null;
 			if (bundle.getInclusionPattern().isIncludeOnlyOnDebug()) {
 				pathIterator = bundle.getItemDebugPathList(variants).iterator();
 			} else {
 				pathIterator = bundle.getItemPathList(variants).iterator();
 			}
 
-			for (Iterator<String> it = pathIterator; it.hasNext();) {
+			for (Iterator<BundlePath> it = pathIterator; it.hasNext();) {
 
 				// File is first created in memory using a stringwriter.
 				StringWriter writer = new StringWriter();
 				BufferedWriter bwriter = new BufferedWriter(writer);
 
-				String path = (String) it.next();
+				String path = (String) it.next().getPath();
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Adding file [" + path + "] to bundle "
 							+ bundle.getId());

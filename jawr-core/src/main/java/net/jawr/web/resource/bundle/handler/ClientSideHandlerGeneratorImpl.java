@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -30,6 +30,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.JavascriptStringUtil;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.impl.JSMinPostProcessor;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.servlet.RendererRequestUtils;
@@ -304,9 +305,9 @@ public class ClientSideHandlerGeneratorImpl implements
 
 		if (!skipItems) {
 			buf.append(",[");
-			for (Iterator<String> it = bundle.getItemPathList(variants)
+			for (Iterator<BundlePath> it = bundle.getItemPathList(variants)
 					.iterator(); it.hasNext();) {
-				path = it.next();
+				path = it.next().getPath();
 				if (this.config.getGeneratorRegistry().isPathGenerated(path)) {
 					path = PathNormalizer.createGenerationPath(path,
 							this.config.getGeneratorRegistry(), null);

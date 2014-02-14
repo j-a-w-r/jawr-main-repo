@@ -13,6 +13,7 @@ import java.util.Set;
 import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.mapper.OrphanResourceBundlesMapper;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
 import test.net.jawr.web.resource.bundle.handler.ResourceHandlerBasedTest;
@@ -100,8 +101,12 @@ public class OrphanResourceBundlesMapperTest extends  ResourceHandlerBasedTest {
 				return avoidedPaths.contains(itemPath);
 			}
 
-			public List<String> getItemPathList() {
-				return avoidedPaths;
+			public List<BundlePath> getItemPathList() {
+				List<BundlePath> bundlePaths = new ArrayList<BundlePath>();
+				for(String path : avoidedPaths){
+					bundlePaths.add(new BundlePath(path));
+				}
+				return bundlePaths;
 			}
 
 			public Set<String> getLicensesPathList() {

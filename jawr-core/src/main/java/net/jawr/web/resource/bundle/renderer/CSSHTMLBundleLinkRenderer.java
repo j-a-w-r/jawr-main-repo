@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,6 +27,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.servlet.RendererRequestUtils;
@@ -200,7 +201,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 							new ConditionalCommentRenderer(out),
 							ctx.getVariants());
 			while (resourceBundleIterator.hasNext()) {
-				String globalBundlePath = resourceBundleIterator.nextPath();
+				BundlePath globalBundlePath = resourceBundleIterator.nextPath();
 				renderIeCssBundleLink(ctx, out, globalBundlePath);
 			}
 		} else {
@@ -242,7 +243,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 					DebugMode.FORCE_NON_DEBUG_IN_IE, bundle.getId(),
 					new ConditionalCommentRenderer(out), variant);
 			while (it.hasNext()) {
-				String bundlePath = it.nextPath();
+				BundlePath bundlePath = it.nextPath();
 				renderIeCssBundleLink(ctx, out, bundlePath);
 			}
 		} else {
@@ -362,13 +363,13 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 *             if an IOException occurs
 	 */
 	private void renderIeCssBundleLink(BundleRendererContext ctx, Writer out,
-			String bundlePath) throws IOException {
+			BundlePath bundlePath) throws IOException {
 		Random randomSeed = new Random();
 		int random = randomSeed.nextInt();
 		if (random < 0)
 			random *= -1;
 		String path = GeneratorRegistry.IE_CSS_GENERATOR_PREFIX
-				+ GeneratorRegistry.PREFIX_SEPARATOR + bundlePath;
+				+ GeneratorRegistry.PREFIX_SEPARATOR + bundlePath.getPath();
 		path = PathNormalizer.createGenerationPath(path, bundler.getConfig()
 				.getGeneratorRegistry(), "d=" + random);
 		out.write(createBundleLink(path, null, ctx.getContextPath(),

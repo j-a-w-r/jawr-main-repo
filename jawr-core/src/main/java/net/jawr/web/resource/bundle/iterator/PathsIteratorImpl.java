@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
+import net.jawr.web.util.StringUtils;
 
 /**
  * Standard implementation of ResourceBundlePathsIterator. Uses a ConditionalCommentCallbackHandler
@@ -78,7 +79,7 @@ public class PathsIteratorImpl extends AbstractPathsIterator implements Resource
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
 	 */
-	public String nextPath() {
+	public BundlePath nextPath() {
 		
 		currentBundle = bundlesIterator.next();
 		
@@ -87,51 +88,18 @@ public class PathsIteratorImpl extends AbstractPathsIterator implements Resource
 		
 		String name = currentBundle.getId();
 	
-		return PathNormalizer.joinPaths(currentBundle.getURLPrefix(variants),name);
+		BundlePath bundlePath = null;
+		
+		String productionURL = currentBundle.getAlternateProductionURL();
+		if(StringUtils.isEmpty(productionURL)){
+			bundlePath = new BundlePath(PathNormalizer.joinPaths(currentBundle.getURLPrefix(variants),name), false);
+		}else{
+			bundlePath = new BundlePath(productionURL, true);
+		}
+		
+		return bundlePath;
 	}
 
-//	/* (non-Javadoc)
-//	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
-//	 */
-//	public String nextPath() {
-//		
-//		String path = null;
-//		if(null == pathsIterator || !pathsIterator.hasNext()) {
-//			currentBundle = (JoinableResourceBundle) bundlesIterator.next();
-//			
-//			if(null != currentBundle.getExplorerConditionalExpression())
-//				commentCallbackHandler.openConditionalComment(currentBundle.getExplorerConditionalExpression());
-//
-//			pathsIterator = currentBundle.getItemDebugPathList(variants).iterator();
-//		}
-//		
-//		
-//		if(pathsIterator != null && pathsIterator.hasNext()){
-//			path = pathsIterator.next().toString();
-//		}
-//		
-//		return path;
-//	}
-
-
-//	/* (non-Javadoc)
-//	 * @see java.util.Iterator#hasNext()
-//	 */
-//	public boolean hasNext() {
-//		if(null != pathsIterator && !pathsIterator.hasNext()) {
-//			if(null != currentBundle && null != currentBundle.getExplorerConditionalExpression())
-//				commentCallbackHandler.closeConditionalComment();
-//		}
-//		boolean rets = false;
-//		if(null != pathsIterator) {
-//			rets = pathsIterator.hasNext() || bundlesIterator.hasNext();
-//		}
-//		else{
-//			rets = bundlesIterator.hasNext();
-//		}
-//			
-//		return rets;
-//	}
 
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#hasNext()

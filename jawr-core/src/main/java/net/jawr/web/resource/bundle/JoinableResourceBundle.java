@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 
@@ -72,13 +73,13 @@ public interface JoinableResourceBundle {
 	 * Returns an ordered list with all the items pertaining to this bundle. 
 	 * @return an ordered list with all the items pertaining to this bundle. 
 	 */
-	public List<String> getItemPathList();
+	public List<BundlePath> getItemPathList();
 	
 	/**
 	 * Returns an ordered list with all the items pertaining to this bundle. 
 	 * @return an ordered list with all the items pertaining to this bundle. 
 	 */
-	public List<String> getItemDebugPathList();
+	public List<BundlePath> getItemDebugPathList();
 	
 	/**
 	 * Returns a set with the license files to include with this bundle. 
@@ -163,7 +164,7 @@ public interface JoinableResourceBundle {
      * @param variants the variant map
      * @return an ordered list with all the items pertaining to this bundle
      */
-    public List<String> getItemPathList(Map<String, String> variants);
+    public List<BundlePath> getItemPathList(Map<String, String> variants);
     
     /**
      * Returns for the debug mode an ordered list with all the items pertaining to this bundle, with the variations 
@@ -171,7 +172,7 @@ public interface JoinableResourceBundle {
      * @param variants the variant map
      * @return an ordered list with all the items pertaining to this bundle
      */
-    public List<String> getItemDebugPathList(Map<String, String> variants);
+    public List<BundlePath> getItemDebugPathList(Map<String, String> variants);
     
     /**
 	 * Returns the bundle dependencies

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -32,6 +32,7 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ListPathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
@@ -152,7 +153,7 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 		ConditionalCommentCallbackHandler callbackHandler = new ConditionalCommentRenderer(
 				resultWriter);
 		if (bundlesHandler.isGlobalResourceBundle(bundlePath)) {
-			it = new ListPathsIteratorImpl(bundlePath);
+			it = new ListPathsIteratorImpl(new BundlePath(bundlePath));
 			it = bundlesHandler.getGlobalResourceBundlePaths(bundlePath,
 					callbackHandler, variants);
 		} else {
@@ -161,18 +162,18 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 		}
 
 		while (it.hasNext()) {
-			String resourcePath = it.nextPath();
+			BundlePath resourcePath = it.nextPath();
 			if (resourcePath != null) {
 
-				tempStatus.setLastPathAdded(resourcePath);
+				tempStatus.setLastPathAdded(resourcePath.getPath());
 				try {
 					Reader cssReader = context.getResourceReaderHandler()
-							.getResource(resourcePath, true);
+							.getResource(resourcePath.getPath(), true);
 					StringWriter writer = new StringWriter();
 					IOUtils.copy(cssReader, writer, true);
 					StringBuffer resourceData = postProcessor
 							.postProcessBundle(tempStatus, writer.getBuffer());
-					result.append("/** CSS resource : " + resourcePath
+					result.append("/** CSS resource : " + resourcePath.getPath()
 							+ " **/\n");
 					result.append(resourceData);
 					if (it.hasNext()) {
@@ -180,7 +181,7 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 					}
 
 				} catch (ResourceNotFoundException e) {
-					LOGGER.debug("The resource '" + resourcePath
+					LOGGER.debug("The resource '" + resourcePath.getPath()
 							+ "' was not found");
 				} catch (IOException e) {
 					throw new BundlingProcessException(e);

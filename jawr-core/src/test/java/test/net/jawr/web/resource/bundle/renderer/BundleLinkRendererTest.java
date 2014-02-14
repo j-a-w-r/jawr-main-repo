@@ -68,7 +68,7 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 	    jawrConfig.setContext(servletCtx);
 	    
 	    try {
-	    	jsHandler = PredefinedBundlesHandlerUtil.buildSimpleBundles(rsHandler,rsBundleHandler,JS_BASEDIR,"js", jawrConfig);
+	    	jsHandler = PredefinedBundlesHandlerUtil.buildSimpleBundlesWithDependencies(rsHandler,rsBundleHandler,JS_BASEDIR,"js", jawrConfig);
 	    } catch (DuplicateBundlePathException e) {
 			// 
 			throw new RuntimeException(e);
@@ -149,9 +149,54 @@ public class BundleLinkRendererTest  extends ResourceHandlerBasedTest{
 		// Reusing the set, we test that no repeats are allowed. 
 		result = renderToString(jsRenderer,"/js/one/one2.js", bundleRendererCtx);
 		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
-		
 	}
 	
+	@Test
+	public void testWriteJSBundleLinksWithDependencies()
+	{
+		jawrConfig.setDebugModeOn(false);
+		
+		// Test regular link creation
+	    bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, false, false);
+	    String result = renderToString(jsRenderer,"/depOne.js", bundleRendererCtx);
+		
+		assertNotSame("No script tag written ", "", result.trim());
+			
+		String libTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/libPfx/library.js" + JS_POST_TAG;
+		String globalTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/globalPfx/global.js" + JS_POST_TAG;
+		String debOffTag = JS_PRE_TAG + "/ctxPathJs/srvMapping/pfx/debugOff.js" + JS_POST_TAG;
+		String oneTag = JS_PRE_TAG + "http://mycompany.com/one.js" + JS_POST_TAG;
+		StringTokenizer tk = new StringTokenizer(result,"\n");
+		
+		
+		assertEquals("Invalid number of tags written. ",4, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0", assertStartEndSimmilarity(libTag,"libPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 1", assertStartEndSimmilarity(globalTag,"globalPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",assertStartEndSimmilarity(debOffTag,"pfx",tk.nextToken()) );
+		assertEquals("Unexpected tag added at position 3", oneTag, tk.nextToken());
+		
+		// Test gzipped link creation
+		String libZTag = JS_PRE_TAG+ "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "libPfx/library.js" + JS_POST_TAG;
+		String globalZTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "globalPfx/global.js" + JS_POST_TAG;
+		String debOffZTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "pfx/debugOff.js" + JS_POST_TAG;
+		String debOffoneTag = JS_PRE_TAG + "/ctxPathJs/srvMapping" + BundleRenderer.GZIP_PATH_PREFIX + "pfx/js/one.js" + JS_POST_TAG;
+		oneTag = JS_PRE_TAG + "http://mycompany.com/one.js" + JS_POST_TAG;
+		String twoTag = JS_PRE_TAG + "http://mycompany.com/two.js" + JS_POST_TAG;
+		String threeTag = JS_PRE_TAG + "http://mycompany.com/three.js" + JS_POST_TAG;
+		bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, true, false);
+	    
+		result = renderToString(jsRenderer,"/depThree.js", bundleRendererCtx);
+		assertNotSame("No gzip script tags written ", "", result.trim());
+		tk = new StringTokenizer(result,"\n");
+		assertEquals("Invalid number of gzip script tags written. ",6, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0", assertStartEndSimmilarity(libZTag,"libPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 1",assertStartEndSimmilarity(globalZTag,"globalPfx",tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",assertStartEndSimmilarity(debOffZTag,"pfx",tk.nextToken()) );
+		assertEquals("Unexpected tag added at position 3",oneTag,tk.nextToken());
+		assertEquals("Unexpected tag added at position 4",twoTag,tk.nextToken());
+		assertEquals("Unexpected tag added at position 5",threeTag,tk.nextToken());
+		
+	}
 	
 	@Test
 	public void testWriteJSBundleLinksWithDeferAttributes()
