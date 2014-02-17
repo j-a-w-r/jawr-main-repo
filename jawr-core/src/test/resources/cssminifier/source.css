@@ -34,6 +34,9 @@ anotherRule
 	
 }
 
+a[href]:after { content: " (" attr(href) ")"; }
+abbr[title]:after { content: " (" attr(title) ")"; }
+
 /** CSS3 selectors */
 E[foo] { background : white }
 E[foo="bar"] { background : white }

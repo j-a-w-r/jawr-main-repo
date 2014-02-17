@@ -35,7 +35,7 @@ public class CSSMinifier {
 	// Captures CSS strings
 	// private static final String QUOTED_CONTENT_REGEX =
 	// "('(\\\\'|[^'])*?')|(\"(\\\\\"|[^\"])*?\")";
-	private static final String QUOTED_CONTENT_REGEX = "(([\"'])(?!data:|(\\s*\\)))(?:\\\\?+.)*?\\2)";
+	private static final String QUOTED_CONTENT_REGEX = "([\"']).*?\\1"; 
 
 	// A placeholder string to replace and restore CSS strings
 	private static final String STRING_PLACEHOLDER = "______'JAWR_STRING'______";
