@@ -192,8 +192,7 @@ public class ClientSideHandlerGeneratorImpl implements
 	/**
 	 * Returns the header section for the client side handler
 	 * 
-	 * @param request
-	 *            the HTTP request
+	 * @param request the HTTP request
 	 * @return the header section for the client side handler
 	 */
 	protected StringBuffer getHeaderSection(HttpServletRequest request) {
@@ -226,14 +225,21 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * context path override if present, or using the context path and possibly
 	 * the jawr mapping.
 	 * 
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return the path prefix
 	 */
 	private String getPathPrefix(HttpServletRequest request, JawrConfig config) {
-		if (null != config.getContextPathOverride()) {
-			return config.getContextPathOverride();
+
+		if (request.isSecure()) {
+			if (null != config.getContextPathSslOverride()) {
+				return config.getContextPathSslOverride();
+			}
+		} else {
+			if (null != config.getContextPathOverride()) {
+				return config.getContextPathOverride();
+			}
 		}
+
 		String mapping = null == config.getServletMapping() ? "" : config
 				.getServletMapping();
 		String path = PathNormalizer.joinPaths(request.getContextPath(),
@@ -246,14 +252,10 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * Adds a javascript Resourcebundle representation for each member of a List
 	 * containing JoinableResourceBundles
 	 * 
-	 * @param bundles
-	 *            the bundles
-	 * @param variants
-	 *            the variant map
-	 * @param buf
-	 *            the buffer
-	 * @param useGzip
-	 *            the flag indicating if we use gzip compression or not.
+	 * @param bundles the bundles
+	 * @param variants the variant map
+	 * @param buf the buffer
+	 * @param useGzip the flag indicating if we use gzip compression or not.
 	 */
 	private void addAllBundles(List<JoinableResourceBundle> bundles,
 			Map<String, String> variants, StringBuffer buf, boolean useGzip) {
@@ -270,14 +272,10 @@ public class ClientSideHandlerGeneratorImpl implements
 	/**
 	 * Creates a javascript objet that represents a bundle
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param variants
-	 *            the variant map
-	 * @param buf
-	 *            the buffer
-	 * @param useGzip
-	 *            the flag indicating if we use gzip compression or not.
+	 * @param bundle the bundle
+	 * @param variants the variant map
+	 * @param buf the buffer
+	 * @param useGzip the flag indicating if we use gzip compression or not.
 	 */
 	private void appendBundle(JoinableResourceBundle bundle,
 			Map<String, String> variants, StringBuffer buf, boolean useGzip) {
@@ -362,7 +360,8 @@ public class ClientSideHandlerGeneratorImpl implements
 
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal, "a serious error occurred when initializing ClientSideHandlerGeneratorImpl");
+			LOGGER.error(fatal,
+					"a serious error occurred when initializing ClientSideHandlerGeneratorImpl");
 			throw new BundlingProcessException(
 					"Classloading issues prevent loading the loader template to be loaded. ",
 					e);
