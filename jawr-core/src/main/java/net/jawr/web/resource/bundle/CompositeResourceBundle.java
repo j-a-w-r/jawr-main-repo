@@ -41,6 +41,7 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
      * @param childBundles the childBundles
 	 * @param inclusionPattern  Strategy for including this bundle.
      * @param resourceHandler Used to access the files and folders.
+     * @param bundlePrefix the bundle prefix.
      * @param fileExtension File extensions for this bundle.
      * @param config the jawr configuration
      */
@@ -48,37 +49,31 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 									List<JoinableResourceBundle> childBundles,
 									InclusionPattern inclusionPattern,
 									ResourceReaderHandler resourceHandler,
-									String fileExtension, 
+									String bundlePrefix, String fileExtension, 
 									JawrConfig config) {
 		
-		super(id, name, fileExtension, inclusionPattern, resourceHandler, config.getGeneratorRegistry());
-		this.childBundles = childBundles;
-		
-		boolean debugModeOn = config.isDebugModeOn();
-		for(Iterator<JoinableResourceBundle> it = this.childBundles.iterator();it.hasNext();) {
-			JoinableResourceBundle child = it.next();
-			
-			// Skip the child as needed
-			if( (debugModeOn && child.getInclusionPattern().isExcludeOnDebug()) || 
-				(!debugModeOn && child.getInclusionPattern().isIncludeOnlyOnDebug()) )
-				continue;
-			
-			this.itemPathList.addAll(child.getItemPathList());
-			if(child.getInclusionPattern().isIncludeOnDebug()){
-				this.itemDebugPathList.addAll(child.getItemDebugPathList());
-			}
-			
-			this.licensesPathList.addAll(child.getLicensesPathList());
-			
-			// If the child has no postprocessors, apply the composite's if any
-			if(null == child.getBundlePostProcessor() ) {
-				child.setBundlePostProcessor(this.getBundlePostProcessor());
-			}
-			if(null == child.getUnitaryPostProcessor() ) {
-				child.setUnitaryPostProcessor(this.getUnitaryPostProcessor());
-			}
-			
-		}
+    	 super(id, name, bundlePrefix, fileExtension, inclusionPattern, resourceHandler, config.getGeneratorRegistry());
+    	 
+         this.childBundles = childBundles;
+         for (Iterator<JoinableResourceBundle> it = this.childBundles.iterator(); it.hasNext();) {
+             JoinableResourceBundle child = it.next();
+             if (!child.getInclusionPattern().isIncludeOnlyOnDebug()) {
+                 this.itemPathList.addAll(child.getItemPathList());
+             }
+
+             if (!child.getInclusionPattern().isExcludeOnDebug()) {
+                 this.itemDebugPathList.addAll(child.getItemDebugPathList());
+             }
+             this.licensesPathList.addAll(child.getLicensesPathList());
+
+             // If the child has no postprocessors, apply the composite's if any
+             if (null == child.getBundlePostProcessor()) {
+                 child.setBundlePostProcessor(this.getBundlePostProcessor());
+             }
+             if (null == child.getUnitaryPostProcessor()) {
+                 child.setUnitaryPostProcessor(this.getUnitaryPostProcessor());
+             }
+         }
 	}
 	
      /* (non-Javadoc)

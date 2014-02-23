@@ -13,6 +13,7 @@ import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import test.net.jawr.web.resource.bundle.handler.ResourceHandlerBasedTest;
 
@@ -42,8 +43,8 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 		InclusionPattern onDebug = new InclusionPattern(false,0,DebugInclusion.ONLY);
 		InclusionPattern excludedOnDebug = new InclusionPattern(false,0,DebugInclusion.NEVER);
 		
-		JoinableResourceBundleImpl bundleA = new JoinableResourceBundleImpl(COMPOSITE_ID,"composite", "js", onDebug,mappingA,rsHandler,  config.getGeneratorRegistry());
-		JoinableResourceBundleImpl bundleB = new JoinableResourceBundleImpl(COMPOSITE_ID,"composite", "js", excludedOnDebug,mappingB,rsHandler, config.getGeneratorRegistry());
+		JoinableResourceBundleImpl bundleA = new JoinableResourceBundleImpl("/bundles/compositeChildA.js","compositeChildA", null, "js", onDebug,mappingA,rsHandler,  config.getGeneratorRegistry());
+		JoinableResourceBundleImpl bundleB = new JoinableResourceBundleImpl("/bundles/compositeChildB.js","compositeChildB", null, "js", excludedOnDebug,mappingB,rsHandler, config.getGeneratorRegistry());
 		List<JoinableResourceBundle> bundles = new ArrayList<JoinableResourceBundle>();
 		bundles.add(bundleA);
 		bundles.add(bundleB);
@@ -52,49 +53,72 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 		JawrConfig config = new JawrConfig("js", props);
 		config.setDebugModeOn(false);
 		config.setGeneratorRegistry(new GeneratorRegistry());
-		compositeCollectionNoDebug = new CompositeResourceBundle(COMPOSITE_ID,"composite",bundles,new InclusionPattern(false, 0, DebugInclusion.NEVER),rsHandler, "js",config);
+		compositeCollectionNoDebug = new CompositeResourceBundle("/bundles/compositeNoDebug.js","compositeNoDebug",bundles,new InclusionPattern(false, 0, DebugInclusion.NEVER),rsHandler, null, "js",config);
 		config.setDebugModeOn(true);
-		compositeCollectionDebugOnly = new CompositeResourceBundle(COMPOSITE_ID,"composite",bundles,new InclusionPattern(false, 0, DebugInclusion.ONLY),rsHandler, "js",config);
+		compositeCollectionDebugOnly = new CompositeResourceBundle("/bundles/compositeDebugOnly.js","compositeDebugOnly",bundles,new InclusionPattern(false, 0, DebugInclusion.ONLY),rsHandler, null, "js",config);
 
-		compositeCollectionDebugAlways = new CompositeResourceBundle(COMPOSITE_ID,"composite",bundles,new InclusionPattern(false, 0, DebugInclusion.ALWAYS),rsHandler, "js",config);
+		compositeCollectionDebugAlways = new CompositeResourceBundle("/bundles/compositeDebugAlways.js","compositeDebugAlways",bundles,new InclusionPattern(false, 0, DebugInclusion.ALWAYS),rsHandler, null, "js",config);
 
 	}
 	
 	public void testDebugModeInclusion_debug() {
 		
 		assertTrue("/outsider.js should be added in debug mode",
-				compositeCollectionDebugOnly.belongsToBundle("/outsider.js"));
+				belongsToItemDebugPathList(compositeCollectionDebugOnly,"/outsider.js"));
 		
 		assertTrue("/js/subfolder/subfolderscript.js should be added in debug mode",
-				compositeCollectionDebugOnly.belongsToBundle("/js/subfolder/subfolderscript.js"));
+				belongsToItemDebugPathList(compositeCollectionDebugOnly, "/js/subfolder/subfolderscript.js"));
 		
 		assertFalse("/js/subfolder2/subfolderscript2.js should not be added in debug mode",
-				compositeCollectionDebugOnly.belongsToBundle("/js/subfolder2/subfolderscript2.js"));
+				belongsToItemDebugPathList(compositeCollectionDebugOnly, "/js/subfolder2/subfolderscript2.js"));
 		
 	}
 
+	public boolean belongsToItemPathList(JoinableResourceBundle bundle, String path){
+		
+		return belongsToPathList(bundle.getItemPathList(), path);
+	}
+	
+	public boolean belongsToItemDebugPathList(JoinableResourceBundle bundle, String path){
+		
+		return belongsToPathList(bundle.getItemDebugPathList(), path);
+	}
+	
+	public boolean belongsToPathList(List<BundlePath> bundlePaths, String path){
+		
+		boolean result = false;
+		for(BundlePath bundlePath : bundlePaths){
+			if(bundlePath.getPath().equals(path)){
+				result = true;
+				break;
+			}
+		}
+		
+		return result;
+	}
+	
 	public void testDebugModeInclusion_nodebug() {
 		
 		assertFalse("/outsider.js should not be added in production mode",
-				compositeCollectionNoDebug.belongsToBundle("/outsider.js"));
+				belongsToItemPathList(compositeCollectionNoDebug, "/outsider.js"));
 		
 		assertFalse("/js/subfolder/subfolderscript.js should not be added in production mode",
-				compositeCollectionNoDebug.belongsToBundle("/js/subfolder/subfolderscript.js"));
+				belongsToItemPathList(compositeCollectionNoDebug, "/js/subfolder/subfolderscript.js"));
 		
 		assertTrue("/js/subfolder2/subfolderscript2.js should be added in production mode",
-				compositeCollectionNoDebug.belongsToBundle("/js/subfolder2/subfolderscript2.js"));
+				belongsToItemPathList(compositeCollectionNoDebug, "/js/subfolder2/subfolderscript2.js"));
 	}
 	
 	public void testDebugModeInclusion_always() {
 		
 		assertTrue("/outsider.js should be added in debug mode",
-				compositeCollectionDebugAlways.belongsToBundle("/outsider.js"));
+				belongsToItemDebugPathList(compositeCollectionDebugAlways, "/outsider.js"));
 		
 		assertTrue("/js/subfolder/subfolderscript.js should be added in debug mode",
-				compositeCollectionDebugAlways.belongsToBundle("/js/subfolder/subfolderscript.js"));
+				belongsToItemDebugPathList(compositeCollectionDebugAlways, "/js/subfolder/subfolderscript.js"));
 		
 		assertFalse("/js/subfolder2/subfolderscript2.js should not be added in debug mode",
-				compositeCollectionDebugAlways.belongsToBundle("/js/subfolder2/subfolderscript2.js"));
+				belongsToItemDebugPathList(compositeCollectionDebugAlways, "/js/subfolder2/subfolderscript2.js"));
 	}
 	
 	// Test: debugonly is not added on prod. mode, and is added in debug mode. 
