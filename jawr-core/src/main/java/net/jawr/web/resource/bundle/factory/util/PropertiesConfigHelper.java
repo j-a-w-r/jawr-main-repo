@@ -15,21 +15,33 @@
  */
 package net.jawr.web.resource.bundle.factory.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.jawr.web.JawrConstant;
+import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.factory.PropertiesBasedBundlesHandlerFactory;
 import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.util.StringUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class to make properties access less verbose.
@@ -40,6 +52,13 @@ import net.jawr.web.util.StringUtils;
  */
 public class PropertiesConfigHelper {
 	
+	/** The logger */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(PropertiesBasedBundlesHandlerFactory.class);
+
+	/** The Jawr provider properties location */
+	private static final String JAWR_PROVIDER_PROPERTIES_LOCATION = "META-INF/jawr-provider.properties";
+
 	/** The properties */
 	private Properties props;
 	
@@ -70,7 +89,7 @@ public class PropertiesConfigHelper {
 	 */
 	public PropertiesConfigHelper(Properties props, String resourceType) {
 		super();
-		this.props = props;
+		this.props = mergeWithJawrProviderProperties(props);
 		this.prefix = PropertiesBundleConstant.PROPS_PREFIX + resourceType + ".";
 		String bundle = prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY;
 		String pattern = "(" + bundle.replaceAll("\\.", "\\\\.")
@@ -78,6 +97,71 @@ public class PropertiesConfigHelper {
 		this.bundleNamePattern = Pattern.compile(pattern);
 	}
 
+	/**
+	 * Merges the properties given in parameter with the jawr-provider properties
+	 * @param srcProperties the properties to merge
+	 * @return
+	 */
+	private Properties mergeWithJawrProviderProperties(Properties srcProperties) {
+		
+		Enumeration<URL> urls = ClassLoaderResourceUtils.getResources(
+				JAWR_PROVIDER_PROPERTIES_LOCATION, this);
+		Properties jawrProps = new Properties();
+		if (urls != null) {
+			try {
+				while (urls.hasMoreElements()) {
+					URL url = urls.nextElement();
+					InputStream is = null;
+					try {
+						URLConnection con = url.openConnection();
+						con.setUseCaches(false);
+						is = con.getInputStream();
+						Properties currentProp = new Properties();
+						currentProp.load(is);
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug("Loaded Jawr Provider properties from "+url+": [" + currentProp + "]");
+						}
+						mergeProperties(currentProp, jawrProps);
+					} finally {
+						IOUtils.close(is);
+					}
+				}
+
+			} catch (IOException ex) {
+				throw new IllegalStateException(
+						"Unable to load jawr providers. Root cause: " + ex);
+			}
+			
+		}
+		
+		// Override the properties with the default properties
+		jawrProps.putAll(srcProperties);
+		
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Loaded Jawr properties [" + jawrProps + "]");
+		}
+		
+		return jawrProps;
+	}
+
+	/**
+	 * Merges the source property to the destination one
+	 * @param srcProp the source properties
+	 * @param destProp the destination properties
+	 */
+	private void mergeProperties(Properties srcProp, Properties destProp) {
+		
+		Set<Entry<Object, Object>> propEntry = srcProp.entrySet();
+		for (Entry<Object, Object> entry : propEntry) {
+			String value = destProp.getProperty((String) entry.getKey());
+			if(StringUtils.isEmpty(value)){
+				destProp.put(entry.getKey(), entry.getValue());
+			}else{
+				destProp.put(entry.getKey(), value+","+entry.getValue());
+			}
+		}
+	}
+	
 	/**
 	 * Returns the value of the common property, or the default value if no value is defined
 	 * instead.
@@ -266,7 +350,29 @@ public class PropertiesConfigHelper {
 	 * @return the set of post processor name based on the class definition
 	 */
 	public Map<String,String> getCustomPostProcessorMap() {
-		return getCustomMap(postProcessorClassPattern);
+		Map<String,String> customPostprocessors = new HashMap<String, String>();
+		
+		// Check if we should use the custom postprocessor names property or
+		// find the postprocessor name using the postprocessor class declaration :
+		// jawr.custom.postprocessors.<name>.class
+		if (null != props.getProperty(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS
+				+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_NAMES)) {
+			StringTokenizer tk = new StringTokenizer(props
+					.getProperty(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS
+							+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_NAMES), JawrConstant.COMMA_SEPARATOR);
+
+			while (tk.hasMoreTokens()) {
+				String processorKey = tk.nextToken();
+				String processorClass = props
+						.getProperty(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS + "." + processorKey
+								+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_CLASS);
+				if (null != processorClass)
+					customPostprocessors.put(processorKey, processorClass);
+			}
+		}else{
+			customPostprocessors = getCustomMap(postProcessorClassPattern);
+		}
+		return customPostprocessors;
 	}
 	
 	/**
@@ -317,4 +423,15 @@ public class PropertiesConfigHelper {
 		return props.getProperty(prefix + key);
 	}
 
+	/**
+	 * Returns the boolean value of a property
+	 * @param prop the properties
+	 * @param name the name of the property
+	 * @param defaultValue the default value
+	 * @return false;
+	 */
+	public static boolean getBooleanValue(Properties prop, String name, boolean defaultValue){
+		String strProp = prop.getProperty(name, Boolean.toString(defaultValue));
+		return Boolean.valueOf(strProp);
+	}
 }

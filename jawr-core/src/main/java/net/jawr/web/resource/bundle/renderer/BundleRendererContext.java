@@ -74,16 +74,13 @@ public class BundleRendererContext {
 
 	/**
 	 * Constructor
-	 * @param contextPath the context path
-	 * @param variantKey the variant key
-	 * @param useGzip the flag indicating if we are using Gzip or not
-	 * @param isSslRequest the flag indicating if it's an SSL request or not
+	 * @param request the HTTP request
+	 * @param jawrConfig the Jawr config
 	 */
 	public BundleRendererContext(HttpServletRequest request, JawrConfig jawrConfig) {
 		super();
 		this.request = request;
 		this.contextPath = request.getContextPath();
-		
 		this.variants = jawrConfig.getGeneratorRegistry().resolveVariants(request);
 		this.useGzip = RendererRequestUtils.isRequestGzippable(request,jawrConfig);
 		this.isSslRequest = RendererRequestUtils.isSslRequest(request);
@@ -97,6 +94,7 @@ public class BundleRendererContext {
 	 * @return the contextPath
 	 */
 	public String getContextPath() {
+		
 		return contextPath;
 	}
 

@@ -830,15 +830,18 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		String[] pathInfos = PathNormalizer
 				.extractBundleInfoFromPath(requestedPath);
-		String bundleId = pathInfos[0];
-		String variantKey = pathInfos[1];
-		String hashcode = pathInfos[2];
+		String bundlePrefix = pathInfos[0];
+		String bundleId = pathInfos[1];
+		String variantKey = pathInfos[2];
+		String hashcode = pathInfos[3];
 
 		JoinableResourceBundle bundle = resolveBundleForPath(bundleId);
 		if (bundle != null) {
 			String bundleHashcode = bundle.getBundleDataHashCode(variantKey);
 			if (hashcode == null && bundleHashcode == null || hashcode != null
-					&& hashcode.equals(bundleHashcode)) {
+					&& hashcode.equals(bundleHashcode)
+					&& ((bundlePrefix == null && bundle.getBundlePrefix() == null)
+							|| (bundlePrefix != null && bundlePrefix.equals(bundle.getBundlePrefix())))) {
 				validHashcode = true;
 			}
 		}

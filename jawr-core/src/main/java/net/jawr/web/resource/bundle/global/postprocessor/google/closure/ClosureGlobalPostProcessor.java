@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
@@ -84,6 +86,12 @@ public class ClosureGlobalPostProcessor extends
 
 	/** The module argument for the closure command line runner */
 	private static final String MODULE_ARG = "--module";
+
+	/** The module argument pattern */
+	private static final Pattern MODULE_ARG_PATTERN = Pattern.compile("[^:]+:\\d+:(.*)");
+	
+	/** The module dependencies separator */
+	private static final String MODULE_DEPENDENCIES_SEPARATOR = ",";
 
 	/** The js argument for the closure command line runner */
 	private static final String JS_ARG = "--js";
@@ -246,7 +254,7 @@ public class ClosureGlobalPostProcessor extends
 		String excludedBundlesProp = config.getProperty(
 				JAWR_JS_CLOSURE_BUNDLES_EXCLUDED, "");
 		List<String> excludedBundles = Arrays.asList(excludedBundlesProp
-				.replaceAll(" ", "").split(","));
+				.replaceAll(" ", "").split(MODULE_DEPENDENCIES_SEPARATOR));
 
 		// handle user specified modules
 		Map<String, JoinableResourceBundle> bundleMap = new HashMap<String, JoinableResourceBundle>();
@@ -404,7 +412,7 @@ public class ClosureGlobalPostProcessor extends
 				checkBundleName(bundleName, bundleMap);
 				JoinableResourceBundle bundle = bundleMap.get(bundleName);
 				List<String> dependencies = Arrays.asList(moduleSpec.substring(
-						moduleNameSeparatorIdx + 1).split(","));
+						moduleNameSeparatorIdx + 1).split(MODULE_DEPENDENCIES_SEPARATOR));
 				dependencies.addAll(0, globalBundleDependencies);
 				generateBundleModuleArgs(depModulesArgs, bundleMap,
 						resultBundlePathMapping, bundle, dependencies);
@@ -507,10 +515,6 @@ public class ClosureGlobalPostProcessor extends
 
 			resultBundleMapping.put(moduleName, jsFile);
 
-			args.add(JS_ARG);
-			args.add(jsFile);
-
-			args.add(MODULE_ARG);
 			StringBuilder moduleArg = new StringBuilder();
 			moduleArg.append(moduleName + ":1:");
 			for (String dep : bundleDependencies) {
@@ -530,12 +534,55 @@ public class ClosureGlobalPostProcessor extends
 					String depBundleName = VariantUtils.getVariantBundleName(
 							dep, depVariantKey);
 					moduleArg.append(depBundleName);
-					moduleArg.append(",");
+					moduleArg.append(MODULE_DEPENDENCIES_SEPARATOR);
 				}
 			}
 			moduleArg.append(JAWR_ROOT_MODULE_NAME);
-			args.add(moduleArg.toString());
+
+			addModuleArg(jsFile, moduleName, args, moduleArg);
 		}
+	}
+
+	/**
+	 * Adds the module argument taking in account the module dependencies 
+	 * @param jsFile the bundle js file
+	 * @param moduleName the module name
+	 * @param args the list of arguments to update
+	 * @param moduleArg the module argument to add
+	 */
+	protected void addModuleArg(String jsFile, String moduleName,
+			List<String> args, StringBuilder moduleArg) {
+		int argIdx = 0;
+		for (Iterator<String> iterArg = args.iterator(); iterArg.hasNext(); argIdx++) {
+			String arg = iterArg.next();
+			if(arg.equals(JS_ARG)){
+				iterArg.next();
+				arg = iterArg.next();
+				argIdx += 2;
+			}
+			if(arg.equals(MODULE_ARG)){
+				arg = iterArg.next();
+				argIdx++;
+				Matcher matcher = MODULE_ARG_PATTERN.matcher(arg);
+				if(matcher.find()){
+					String dep = matcher.group(1);
+					if(dep != null){
+						List<String> moduleDepdendencies = Arrays.asList(dep.split(MODULE_DEPENDENCIES_SEPARATOR));
+						if(moduleDepdendencies.contains(moduleName)){
+							break;
+						}
+					}
+				}else{
+					throw new BundlingProcessException(
+							"There were an error in the generation of the module dependencies.");
+				}
+			}
+		}
+		
+		args.add(argIdx++, JS_ARG);
+		args.add(argIdx++, jsFile);
+		args.add(argIdx++, MODULE_ARG);
+		args.add(argIdx++, moduleArg.toString());
 	}
 
 	/**
@@ -557,8 +604,13 @@ public class ClosureGlobalPostProcessor extends
 				bundleDependencies.add(depBundle.getName());
 			}
 		}
+		
 		for (String depBundleName : dependencies) {
-			bundleDependencies.add(depBundleName);
+			if(bundle.getInclusionPattern().isGlobal() && depBundleName.equals(bundle.getName())){
+				break;
+			}else{
+				bundleDependencies.add(depBundleName);
+			}
 		}
 		return bundleDependencies;
 	}

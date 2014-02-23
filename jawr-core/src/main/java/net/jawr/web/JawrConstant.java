@@ -251,6 +251,9 @@ public class JawrConstant {
 	/** The Jawr config property to set if the locale generator should fallback to the systemn locale or not */
 	public static final String JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE = "jawr.locale.generator.fallbackToSystemLocale";
 	
+	/** The Jawr config property to set if the locale generator should add quote to the message key or noy */
+	public static final String JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY = "jawr.locale.generator.quoteMsgKey";
+
 	/** The ResourceBundle charset. The default one is "ISO-8859-1" */
 	public static final String JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET = "jawr.locale.generator.resourceBundle.charset";
 	

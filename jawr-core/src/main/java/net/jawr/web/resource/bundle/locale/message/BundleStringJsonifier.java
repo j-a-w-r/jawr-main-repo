@@ -31,13 +31,20 @@ public class BundleStringJsonifier {
 	
 	private Map<String, Object> keyMap;
 	private Properties bundleValues;
+	private boolean addQuoteToKey;
 	
 	private static final String FUNC = "p(";
 	
 	
 
-	public BundleStringJsonifier(Properties bundleValues) {
+	/**
+	 * Constructor
+	 * @param bundleValues bundle values
+	 * @param addQuoteToKey the flag inidcating if quote should be added to the key
+	 */
+	public BundleStringJsonifier(Properties bundleValues, boolean addQuoteToKey) {
 		super();
+		this.addQuoteToKey = addQuoteToKey;
 		this.bundleValues = bundleValues;
 		this.keyMap = new HashMap<String, Object>();
 		Enumeration<Object> keys = this.bundleValues.keys();
@@ -143,7 +150,12 @@ public class BundleStringJsonifier {
 	 * @param fullKey
 	 */
 	private void addValuedKey(final StringBuffer sb, String key, String fullKey) {
-		sb	.append(key)
+		
+		String jsonKey = key;
+		if(addQuoteToKey){
+			jsonKey = JavascriptStringUtil.quote(key);
+		}
+		sb.append(jsonKey)
 		.append(":")
 		.append(FUNC)
 		.append(JavascriptStringUtil.quote(bundleValues.get(fullKey).toString()));

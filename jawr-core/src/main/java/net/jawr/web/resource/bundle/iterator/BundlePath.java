@@ -21,6 +21,9 @@ package net.jawr.web.resource.bundle.iterator;
  */
 public class BundlePath {
 
+	/** The bundle prefix */
+	private String bundlePrefix;
+	
 	/** The bundle path */
 	private String path;
 	
@@ -29,21 +32,40 @@ public class BundlePath {
 
 	/**
 	 * Constructor
+	 * @param bundlePrefix the bundle prefix
 	 * @param path the bundle path, which is not a production URL 
 	 */
-	public BundlePath(String path) {
-		this( path, false);
+	public BundlePath(String bundlePrefix, String path) {
+		this(bundlePrefix, path, false);
 	}
 	
 	/**
 	 * Constructor
+	 * @param bundlePrefix the bundle prefix
 	 * @param path the bundle path 
 	 * @param isProductionURL flag indicating if it's a production URL or not
 	 */
-	public BundlePath(String path, boolean isProductionURL) {
+	public BundlePath(String prefix, String path, boolean isProductionURL) {
 		super();
+		this.bundlePrefix = prefix;
 		this.path = path;
 		this.productionURL = isProductionURL;
+	}
+
+	/**
+	 * Returns the bundle prefix
+	 * @return the bundle prefix
+	 */
+	public String getBundlePrefix() {
+		return bundlePrefix;
+	}
+
+	/**
+	 * Sets the bundle prefix
+	 * @param bundlePrefix the bundle prefix to set
+	 */
+	public void setBundlePrefix(String bundlePrefix) {
+		this.bundlePrefix = bundlePrefix;
 	}
 
 	/**
@@ -74,6 +96,16 @@ public class BundlePath {
 		this.productionURL = productionURL;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Bundle Path : ["+bundlePrefix+"; "+path+" ; "+(productionURL? "alternale production URL" : "No alternate production URL")+"]";
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -81,6 +113,8 @@ public class BundlePath {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((bundlePrefix == null) ? 0 : bundlePrefix.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + (productionURL ? 1231 : 1237);
 		return result;
@@ -98,6 +132,11 @@ public class BundlePath {
 		if (getClass() != obj.getClass())
 			return false;
 		BundlePath other = (BundlePath) obj;
+		if (bundlePrefix == null) {
+			if (other.bundlePrefix != null)
+				return false;
+		} else if (!bundlePrefix.equals(other.bundlePrefix))
+			return false;
 		if (path == null) {
 			if (other.path != null)
 				return false;
@@ -107,6 +146,6 @@ public class BundlePath {
 			return false;
 		return true;
 	}
-	
+
 	
 }

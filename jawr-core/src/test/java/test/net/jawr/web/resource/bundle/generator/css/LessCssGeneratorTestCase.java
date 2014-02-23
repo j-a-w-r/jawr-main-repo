@@ -185,7 +185,7 @@ public class LessCssGeneratorTestCase {
 					}
 					
 					public BundlePath next() {
-						return new BundlePath(it.next());
+						return new BundlePath(null, it.next());
 					}
 					
 					public boolean hasNext() {
@@ -193,7 +193,7 @@ public class LessCssGeneratorTestCase {
 					}
 					
 					public BundlePath nextPath() {
-						return new BundlePath(it.next());
+						return new BundlePath(null, it.next());
 					}
 				};
 			}

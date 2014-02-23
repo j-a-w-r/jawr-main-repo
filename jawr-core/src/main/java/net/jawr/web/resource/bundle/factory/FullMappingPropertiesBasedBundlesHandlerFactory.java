@@ -179,9 +179,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 		String bundleId = props.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID);
 
+		String bundlePrefix = props.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX);
+
 		InclusionPattern inclusionPattern = getInclusionPattern(props, bundleName);
 		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl(
-				bundleId, bundleName, fileExtension, inclusionPattern,
+				bundleId, bundleName, bundlePrefix, fileExtension, inclusionPattern,
 				rsHandler, generatorRegistry);
 		
 		// Override bundle postprocessor

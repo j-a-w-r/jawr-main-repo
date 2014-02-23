@@ -21,6 +21,8 @@ import javax.servlet.ServletContext;
 
 import org.mockito.Mockito;
 
+import test.net.jawr.web.resource.bundle.handler.MockResourceReaderHandler;
+
 import junit.framework.TestCase;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundleDependencyException;
@@ -172,8 +174,9 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 		};
 		generatorRegistry.setConfig(config);
 		config.setGeneratorRegistry(generatorRegistry);
-		
-		PropertiesBasedBundlesHandlerFactory propsBundlesHandlerFactory = new PropertiesBasedBundlesHandlerFactory(props, resourceType, getResourceReaderHandler(), getResourceBundleHandler(resourceType), config);
+		ResourceReaderHandler resourceReaderHandler = getResourceReaderHandler();
+		generatorRegistry.setResourceReaderHandler(resourceReaderHandler);
+		PropertiesBasedBundlesHandlerFactory propsBundlesHandlerFactory = new PropertiesBasedBundlesHandlerFactory(props, resourceType, resourceReaderHandler, getResourceBundleHandler(resourceType), config);
 		ResourceBundlesHandler handler = propsBundlesHandlerFactory.buildResourceBundlesHandler();
 		
 		List<JoinableResourceBundle> bundles = handler.getContextBundles();

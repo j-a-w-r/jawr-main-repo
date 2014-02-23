@@ -104,7 +104,7 @@ public class OrphanResourceBundlesMapperTest extends  ResourceHandlerBasedTest {
 			public List<BundlePath> getItemPathList() {
 				List<BundlePath> bundlePaths = new ArrayList<BundlePath>();
 				for(String path : avoidedPaths){
-					bundlePaths.add(new BundlePath(path));
+					bundlePaths.add(new BundlePath(null, path));
 				}
 				return bundlePaths;
 			}

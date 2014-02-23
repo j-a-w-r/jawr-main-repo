@@ -54,7 +54,7 @@ public class LicensesIncluderPostProcessorTest  extends  ResourceHandlerBasedTes
 		
 		List<String> c = Collections.singletonList("js/**");
 		resourcebundle = new JoinableResourceBundleImpl("script.js","script",
-										"js",
+										null, "js",
 										new InclusionPattern(true,0),
 										c,
 										rsHandler, generatorRegistry);

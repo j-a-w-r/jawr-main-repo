@@ -1,6 +1,5 @@
 package test.net.jawr.web.resource.bundle.locale;
 
-import java.io.FileWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -12,8 +11,8 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
 
-import org.junit.Assert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,7 +42,9 @@ public class ResourceBundleMessageGeneratorTestCase {
 		// Force default locale
 		Locale.setDefault(Locale.FRENCH);
 
-		JawrConfig config = new JawrConfig("js", new Properties());
+		Properties prop = new Properties();
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
+		JawrConfig config = new JawrConfig("js", prop);
 		GeneratorContext ctx = new GeneratorContext(config,
 				"bundleLocale.messages");
 		ctx.setLocale(null);
@@ -125,7 +126,8 @@ public class ResourceBundleMessageGeneratorTestCase {
 		Locale.setDefault(Locale.FRENCH);
 
 		Properties prop = new Properties();
-		prop.put("jawr.locale.generator.fallbackToSystemLocale", "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
 		GeneratorContext ctx = new GeneratorContext(config,
@@ -137,7 +139,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		Assert.assertEquals(readFile("bundleLocale/resultScript.js"),
 				FileUtils.removeCarriageReturn(swr.toString()));
 
-		prop.put("jawr.locale.generator.fallbackToSystemLocale", "true");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, "true");
 		ctx.setLocale(null);
 		rd = generator.createResource(ctx);
 		swr = new StringWriter();
@@ -146,6 +148,27 @@ public class ResourceBundleMessageGeneratorTestCase {
 				FileUtils.removeCarriageReturn(swr.toString()));
 
 	}
+	
+	@Test
+	public void testGenerateMessageBundleAddQuoteToKey() throws Exception {
+
+		// Force default locale
+		Locale.setDefault(Locale.FRENCH);
+
+		Properties prop = new Properties();
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "true");
+		JawrConfig config = new JawrConfig("js", prop);
+
+		GeneratorContext ctx = new GeneratorContext(config,
+				"bundleLocale.messages");
+		ctx.setLocale(null);
+		Reader rd = generator.createResource(ctx);
+		StringWriter swr = new StringWriter();
+		IOUtils.copy(rd, swr);
+		Assert.assertEquals(readFile("bundleLocale/resultScriptWithQuoteForKeys.js"),
+				FileUtils.removeCarriageReturn(swr.toString()));
+	}
 
 	@Test
 	public void testBundleWithFilter() throws Exception {
@@ -153,7 +176,8 @@ public class ResourceBundleMessageGeneratorTestCase {
 		Locale.setDefault(Locale.FRENCH);
 
 		Properties prop = new Properties();
-		prop.put("jawr.locale.generator.fallbackToSystemLocale", "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
 		GeneratorContext ctx = new GeneratorContext(config,
@@ -188,7 +212,8 @@ public class ResourceBundleMessageGeneratorTestCase {
 		Locale.setDefault(Locale.FRENCH);
 
 		Properties prop = new Properties();
-		prop.put("jawr.locale.generator.fallbackToSystemLocale", "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, "false");
+		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
 		GeneratorContext ctx = new GeneratorContext(config,

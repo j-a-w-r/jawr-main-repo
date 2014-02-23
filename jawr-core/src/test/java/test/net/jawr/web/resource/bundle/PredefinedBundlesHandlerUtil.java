@@ -154,6 +154,13 @@ public class PredefinedBundlesHandlerUtil {
 		customBundles.add(def);
 		
 		def = new ResourceBundleDefinition();
+		def.setMappings(Collections.singletonList(baseDir + "/prefixedBundle/**"));
+		def.setBundleName("prefixedBundle");
+		def.setBundleId("/prefixedBundle." + type);
+		def.setBundlePrefix("/pub/");
+		customBundles.add(def);
+		
+		def = new ResourceBundleDefinition();
 		def.setMappings(Collections.singletonList(baseDir + "/dep/one/**"));
 		def.setBundleName("depOne");
 		def.setBundleId("/depOne." + type);
@@ -183,6 +190,7 @@ public class PredefinedBundlesHandlerUtil {
 		excludedPaths.add(baseDir + "/global");
 		excludedPaths.add(baseDir + "/debug");
 		excludedPaths.add(baseDir + "/dep");
+		excludedPaths.add(baseDir + "/prefixedBundle");
 		factory.setExludedDirMapperDirs(excludedPaths);
 		return factory.buildResourceBundlesHandler();
 	}

@@ -87,22 +87,40 @@ public class CSSURLPathRewriterPostProcessor extends
 		String fullBundlePath = null;
 		String bundleName = status.getCurrentBundle().getId();
 		
-		// Generation the bundle prefix
-		String bundlePrefix = "";
-		if(!bundleName.equals(ResourceGenerator.CSS_DEBUGPATH)){
-			bundlePrefix = FAKE_BUNDLE_PREFIX;
-		}
-		
-		// Add path reference for the servlet mapping if it exists 
-		if(! "".equals(jawrConfig.getServletMapping())){
-			bundlePrefix = PathNormalizer.asPath(jawrConfig.getServletMapping()+bundlePrefix)+"/";
-			
-		}  
+		String bundlePrefix = getBundlePrefix(status, jawrConfig, bundleName);  
 		
 		// Concatenate the bundle prefix and the bundle name
 		fullBundlePath = PathNormalizer.concatWebPath(bundlePrefix, bundleName);
 		
 		return fullBundlePath;
+	}
+
+	/**
+	 * Returns the bundle prefix
+	 * @param status the bundle processing status
+	 * @param jawrConfig the jawr config
+	 * @param bundleName the bundle name
+	 * @return the bundle prefix
+	 */
+	protected String getBundlePrefix(BundleProcessingStatus status,
+			JawrConfig jawrConfig, String bundleName) {
+		
+		// Generation the bundle prefix
+		String bundlePrefix = status.getCurrentBundle().getBundlePrefix();
+		if(bundlePrefix == null){
+			bundlePrefix = "";
+		}else{
+			bundlePrefix = PathNormalizer.asPath(bundlePrefix);
+		}
+		if(!bundleName.equals(ResourceGenerator.CSS_DEBUGPATH)){
+			bundlePrefix += FAKE_BUNDLE_PREFIX;
+		}
+		
+		// Add path reference for the servlet mapping if it exists 
+		if(! "".equals(jawrConfig.getServletMapping())){
+			bundlePrefix = PathNormalizer.asPath(jawrConfig.getServletMapping()+bundlePrefix)+"/";
+		}
+		return bundlePrefix;
 	}
 
 }

@@ -45,8 +45,8 @@ public class JoinableResourceBundleImplTest extends  ResourceHandlerBasedTest  {
 			System.out.println("Error in test constructor");
 			e.printStackTrace();
 		}
-		fullCollection = new JoinableResourceBundleImpl("full.js","full", "js",pattern,fullMapping,rsHandler, config.getGeneratorRegistry());
-		partialCollection = new JoinableResourceBundleImpl("partial.js","partial", "js",pattern,partialMapping,rsHandler, config.getGeneratorRegistry());
+		fullCollection = new JoinableResourceBundleImpl("full.js","full", null, "js",pattern,fullMapping,rsHandler, config.getGeneratorRegistry());
+		partialCollection = new JoinableResourceBundleImpl("partial.js","partial", null, "js",pattern,partialMapping,rsHandler, config.getGeneratorRegistry());
 	}
  
 	/**
@@ -75,16 +75,16 @@ public class JoinableResourceBundleImplTest extends  ResourceHandlerBasedTest  {
 	public void testGetItemPathList() {
 		// Full collection
 		List<BundlePath> expectedInFullCol = new ArrayList<BundlePath>();
-		expectedInFullCol.add(new BundlePath("/js/script2.js"));
-		expectedInFullCol.add(new BundlePath("/js/subfolder/subfolderscript.js"));
-		expectedInFullCol.add(new BundlePath("/js/subfolder2/subfolderscript2.js"));
-		expectedInFullCol.add(new BundlePath("/js/script1.js"));
+		expectedInFullCol.add(new BundlePath(null, "/js/script2.js"));
+		expectedInFullCol.add(new BundlePath(null, "/js/subfolder/subfolderscript.js"));
+		expectedInFullCol.add(new BundlePath(null, "/js/subfolder2/subfolderscript2.js"));
+		expectedInFullCol.add(new BundlePath(null, "/js/script1.js"));
 		assertEquals("Order of inclusion does not match the expected. ",expectedInFullCol, fullCollection.getItemPathList());
 
 		// Partial collection
 		List<BundlePath> expectedInPartCol = new ArrayList<BundlePath>();
-		expectedInPartCol.add(new BundlePath("/js/subfolder/subfolderscript.js"));
-		expectedInPartCol.add(new BundlePath("/outsider.js"));
+		expectedInPartCol.add(new BundlePath(null, "/js/subfolder/subfolderscript.js"));
+		expectedInPartCol.add(new BundlePath(null, "/outsider.js"));
 		assertEquals("[partialMapping] Order of inclusion does not match the expected. ",expectedInPartCol, partialCollection.getItemPathList());
 	}
 

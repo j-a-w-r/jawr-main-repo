@@ -88,6 +88,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	/** The licence path list */
 	protected Set<String> licensesPathList;
 
+	/** The bundle prefix */
+	private String bundlePrefix;
+
 	/** The file extensions allowed in the bundle */
 	private String fileExtension;
 
@@ -124,18 +127,21 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param id
 	 *            the ID for this bundle.
 	 * @param name
-	 *            String Unique name for this bundle.
+	 *            The unique name for this bundle.
+	 * @param bundlePrefix
+	 *            The bundle prefix
 	 * @param fileExtension
-	 *            String File extensions for this bundle.
+	 *            The File extensions for this bundle.
 	 * @param inclusionPattern
-	 *            InclusionPattern Strategy for including this bundle.
+	 *            The Strategy for including this bundle.
 	 * @param resourceReaderHandler
 	 *            ResourceHandler Used to access the files and folders.
 	 * @param generatorRegistry
 	 *            The generator registry.
 	 */
 	public JoinableResourceBundleImpl(String id, String name,
-			String fileExtension, InclusionPattern inclusionPattern,
+			String bundlePrefix, String fileExtension,
+			InclusionPattern inclusionPattern,
 			ResourceReaderHandler resourceReaderHandler,
 			GeneratorRegistry generatorRegistry) {
 		super();
@@ -152,6 +158,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		this.itemPathList = new CopyOnWriteArrayList<BundlePath>();
 		this.itemDebugPathList = new CopyOnWriteArrayList<BundlePath>();
 		this.licensesPathList = new HashSet<String>();
+
+		this.bundlePrefix = bundlePrefix;
 		if (fileExtension != null && fileExtension.length() > 0
 				&& fileExtension.charAt(0) != '.') {
 			this.fileExtension = "." + fileExtension;
@@ -169,6 +177,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 *            the ID of this bundle
 	 * @param name
 	 *            Unique name for this bundle.
+	 * @param bundlePrefix
+	 *            The bundle prefix
 	 * @param fileExtension
 	 *            File extensions for this bundle.
 	 * @param inclusionPattern
@@ -182,12 +192,12 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 *            the generator registry
 	 */
 	public JoinableResourceBundleImpl(String id, String name,
-			String fileExtension, InclusionPattern inclusionPattern,
-			List<String> pathMappings,
+			String bundlePrefix, String fileExtension,
+			InclusionPattern inclusionPattern, List<String> pathMappings,
 			ResourceReaderHandler resourceReaderHandler,
 			GeneratorRegistry generatorRegistry) {
-		this(id, name, fileExtension, inclusionPattern, resourceReaderHandler,
-				generatorRegistry);
+		this(id, name, bundlePrefix, fileExtension, inclusionPattern,
+				resourceReaderHandler, generatorRegistry);
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Adding mapped files for bundle " + id);
@@ -245,11 +255,11 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 	private void addPathMapping(String pathMapping) {
 		if (!getInclusionPattern().isIncludeOnlyOnDebug()) {
-			itemPathList.add(new BundlePath(pathMapping));
+			itemPathList.add(new BundlePath(bundlePrefix, pathMapping));
 		}
 
 		if (!getInclusionPattern().isExcludeOnDebug()) {
-			itemDebugPathList.add(new BundlePath(pathMapping));
+			itemDebugPathList.add(new BundlePath(bundlePrefix, pathMapping));
 		}
 	}
 
@@ -402,6 +412,13 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		return name;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getBundlePrefix()
+	 */
+	public String getBundlePrefix() {
+		return bundlePrefix;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -539,24 +556,24 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * .lang.String)
 	 */
 	public boolean belongsToBundle(String itemPath) {
-		
+
 		boolean belongsToBundle = false;
-		
+
 		for (BundlePath path : itemPathList) {
-			if(path.getPath().equals(itemPath)){
+			if (path.getPath().equals(itemPath)) {
 				belongsToBundle = true;
 				break;
 			}
 		}
-		if(!belongsToBundle){
+		if (!belongsToBundle) {
 			for (BundlePath path : itemDebugPathList) {
-				if(path.getPath().equals(itemPath)){
+				if (path.getPath().equals(itemPath)) {
 					belongsToBundle = true;
 					break;
 				}
 			}
 		}
-		
+
 		return belongsToBundle;
 	}
 
@@ -642,8 +659,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 				String variantKey = VariantUtils.getVariantKey(variants,
 						variantTypes);
 				if (StringUtils.isNotEmpty(variantKey)) {
-					rets.add(new BundlePath(VariantUtils
-							.getVariantBundleName(path, variantKey)));
+					rets.add(new BundlePath(bundlePath.getBundlePrefix(), VariantUtils.getVariantBundleName(
+							path, variantKey)));
 				} else {
 					rets.add(bundlePath);
 				}

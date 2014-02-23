@@ -137,7 +137,7 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 				ResourceGenerator.CSS_DEBUGPATH);
 
 		JoinableResourceBundle tempBundle = new JoinableResourceBundleImpl(
-				cssGeneratorBundlePath, null, "css", null, null, context
+				cssGeneratorBundlePath, null, null, "css", null, null, context
 						.getConfig().getGeneratorRegistry());
 
 		BundleProcessingStatus tempStatus = new BundleProcessingStatus(
@@ -153,7 +153,7 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 		ConditionalCommentCallbackHandler callbackHandler = new ConditionalCommentRenderer(
 				resultWriter);
 		if (bundlesHandler.isGlobalResourceBundle(bundlePath)) {
-			it = new ListPathsIteratorImpl(new BundlePath(bundlePath));
+			it = new ListPathsIteratorImpl(new BundlePath(null, bundlePath));
 			it = bundlesHandler.getGlobalResourceBundlePaths(bundlePath,
 					callbackHandler, variants);
 		} else {

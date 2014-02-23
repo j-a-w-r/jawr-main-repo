@@ -34,6 +34,9 @@ public class ResourceBundleDefinition {
 	/** The bundle name, which is used to define the bundle in the properties ( for ex : jawr.js.bundle.<bundleName>.mapping ) */
 	private String bundleName;
 	
+	/** The bundle prefix, which will be added to the URL */
+	private String bundlePrefix;
+	
 	/** The mappings */
 	private List<String> mappings;
 	
@@ -140,6 +143,22 @@ public class ResourceBundleDefinition {
 		this.bundleName = bundleName;
 	}
 
+	/**
+	 * Sets the bundle prefix
+	 * @param the bundle prefix to set
+	 */
+	public void setBundlePrefix(String bundlePrefix) {
+		this.bundlePrefix = bundlePrefix;
+	}
+	
+	/**
+	 * Returns the bundle prefix
+	 * @return the bundle prefix
+	 */
+	public String getBundlePrefix() {
+		return bundlePrefix;
+	}
+	
 	/**
 	 * Returns the path mappings for the bundle
 	 * @return the path mappings for the bundle

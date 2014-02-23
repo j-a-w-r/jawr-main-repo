@@ -92,9 +92,9 @@ public class PathsIteratorImpl extends AbstractPathsIterator implements Resource
 		
 		String productionURL = currentBundle.getAlternateProductionURL();
 		if(StringUtils.isEmpty(productionURL)){
-			bundlePath = new BundlePath(PathNormalizer.joinPaths(currentBundle.getURLPrefix(variants),name), false);
+			bundlePath = new BundlePath(currentBundle.getBundlePrefix(), PathNormalizer.joinPaths(currentBundle.getURLPrefix(variants),name), false);
 		}else{
-			bundlePath = new BundlePath(productionURL, true);
+			bundlePath = new BundlePath(currentBundle.getBundlePrefix(), productionURL, true);
 		}
 		
 		return bundlePath;

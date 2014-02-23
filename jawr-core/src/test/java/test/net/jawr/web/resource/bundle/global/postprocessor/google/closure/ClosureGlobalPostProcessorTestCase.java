@@ -21,6 +21,7 @@ import net.jawr.web.DebugMode;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.global.postprocessor.GlobalPostProcessingContext;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
@@ -55,22 +56,26 @@ public class ClosureGlobalPostProcessorTestCase {
 	
 	@Before
 	public void setUp() throws Exception {
+		InclusionPattern inclusionPattern = new InclusionPattern(false, 0);
 		
 		// Bundle path (full url would be: /servletMapping/prefix/css/bundle.css
 		bundle01 = mock(JoinableResourceBundle.class);
 		when(bundle01.getVariants()).thenReturn(new HashMap<String, VariantSet>());
 		when(bundle01.getId()).thenReturn("/myBundle/bundle01.js");
 		when(bundle01.getName()).thenReturn("bundle01");
+		when(bundle01.getInclusionPattern()).thenReturn(inclusionPattern);
 		
 		bundle02 = mock(JoinableResourceBundle.class);
 		when(bundle02.getVariants()).thenReturn(new HashMap<String, VariantSet>());
 		when(bundle02.getId()).thenReturn("/myBundle/bundle02.js");
 		when(bundle02.getName()).thenReturn("bundle02");
-		
+		when(bundle02.getInclusionPattern()).thenReturn(inclusionPattern);
+			
 		bundle03 = mock(JoinableResourceBundle.class);
 		when(bundle03.getVariants()).thenReturn(new HashMap<String, VariantSet>());
 		when(bundle03.getId()).thenReturn("/myBundle/bundle03.js");
 		when(bundle03.getName()).thenReturn("bundle03");
+		when(bundle03.getInclusionPattern()).thenReturn(inclusionPattern);
 		
 		msgBundle = mock(JoinableResourceBundle.class);
 		Map<String, VariantSet> variantMap = new HashMap<String, VariantSet>();
@@ -79,6 +84,7 @@ public class ClosureGlobalPostProcessorTestCase {
 		when(msgBundle.getVariants()).thenReturn(variantMap);
 		when(msgBundle.getId()).thenReturn("/myBundle/msgBundle.js");
 		when(msgBundle.getName()).thenReturn("msgBundle");
+		when(msgBundle.getInclusionPattern()).thenReturn(inclusionPattern);
 		
 		variantBundle = mock(JoinableResourceBundle.class);
 		variantMap = new HashMap<String, VariantSet>();
@@ -89,6 +95,7 @@ public class ClosureGlobalPostProcessorTestCase {
 		when(variantBundle.getVariants()).thenReturn(variantMap);
 		when(variantBundle.getId()).thenReturn("/myBundle/variantBundle.js");
 		when(variantBundle.getName()).thenReturn("variantBundle");
+		when(variantBundle.getInclusionPattern()).thenReturn(inclusionPattern);
 		
 		srcDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/";
 		tempDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/temp/";

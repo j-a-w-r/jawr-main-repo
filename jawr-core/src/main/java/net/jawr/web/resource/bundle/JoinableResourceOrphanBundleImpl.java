@@ -43,7 +43,7 @@ public class JoinableResourceOrphanBundleImpl extends
 			List<String> pathMappings,
 			ResourceReaderHandler resourceReaderHandler,
 			GeneratorRegistry generatorRegistry) {
-		super(id, name, fileExtension, inclusionPattern, pathMappings,
+		super(id, name, null, fileExtension, inclusionPattern, pathMappings,
 				resourceReaderHandler, generatorRegistry);
 	}
 

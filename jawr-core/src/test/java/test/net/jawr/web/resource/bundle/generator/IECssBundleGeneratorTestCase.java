@@ -174,7 +174,7 @@ public class IECssBundleGeneratorTestCase extends TestCase {
 					}
 					
 					public BundlePath next() {
-						return new BundlePath(it.next());
+						return new BundlePath(null, it.next());
 					}
 					
 					public boolean hasNext() {
@@ -182,7 +182,7 @@ public class IECssBundleGeneratorTestCase extends TestCase {
 					}
 					
 					public BundlePath nextPath() {
-						return new BundlePath(it.next());
+						return new BundlePath(null, it.next());
 					}
 				};
 			}

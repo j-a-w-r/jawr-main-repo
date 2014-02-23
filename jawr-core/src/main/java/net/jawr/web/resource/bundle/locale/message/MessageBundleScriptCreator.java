@@ -43,9 +43,9 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
+import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
-import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class MessageBundleScriptCreator {
 	private static final String SCRIPT_TEMPLATE = "/net/jawr/web/resource/bundle/message/messages.js";
 
 	private static final String DEFAULT_RESOURCE_BUNDLE_CHARSET = "ISO-8859-1";
-	
+
 	protected static StringBuffer template;
 	protected String configParam;
 	protected String namespace;
@@ -80,6 +80,7 @@ public class MessageBundleScriptCreator {
 	private List<String> filterList;
 	protected ServletContext servletContext;
 	protected boolean fallbackToSystemLocale = true;
+	protected boolean addQuoteToMessageKey = true;
 	protected Charset resourceBundleCharset;
 
 	public MessageBundleScriptCreator(GeneratorContext context) {
@@ -105,19 +106,21 @@ public class MessageBundleScriptCreator {
 
 		this.configParam = context.getPath();
 
-		String fallbackToSystemLocaleProperty = context
-				.getConfig()
-				.getProperty(
-						JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE);
-		if (StringUtils.isNotEmpty(fallbackToSystemLocaleProperty)) {
-			this.fallbackToSystemLocale = Boolean
-					.valueOf(fallbackToSystemLocaleProperty);
-		}
+		Properties configProperties = context.getConfig().getConfigProperties();
+		this.fallbackToSystemLocale = PropertiesConfigHelper.getBooleanValue(
+				configProperties,
+				JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
+				true);
 
-		String charsetName = context.getConfig()
-				.getProperty(JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET, 
-						DEFAULT_RESOURCE_BUNDLE_CHARSET);
-		
+		this.addQuoteToMessageKey = PropertiesConfigHelper.getBooleanValue(
+				configProperties,
+				JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY,
+				true);
+
+		String charsetName = context.getConfig().getProperty(
+				JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
+				DEFAULT_RESOURCE_BUNDLE_CHARSET);
+
 		resourceBundleCharset = Charset.forName(charsetName);
 	}
 
@@ -160,25 +163,17 @@ public class MessageBundleScriptCreator {
 		String[] names = configParam.split("\\|");
 		Properties props = new Properties();
 
-		Locale currentLocale = locale;
+		Locale currentLocale = getLocaleToApply();
 
-		// TODO Use ResourceBundle.Control to handle fallbackToSystemLocale when
-		// upgrading to Java 6
-		if (currentLocale == null) {
-			if (fallbackToSystemLocale) {
-				currentLocale = Locale.getDefault();
-			} else {
-				currentLocale = new Locale("", "");
-			}
-		}
-
-		MessageBundleControl control = new MessageBundleControl(fallbackToSystemLocale, resourceBundleCharset);
+		MessageBundleControl control = new MessageBundleControl(
+				fallbackToSystemLocale, resourceBundleCharset);
 		for (int x = 0; x < names.length; x++) {
 
 			ResourceBundle bundle;
 
 			try {
-				bundle = ResourceBundle.getBundle(names[x], currentLocale, control);
+				bundle = ResourceBundle.getBundle(names[x], currentLocale,
+						control);
 			} catch (MissingResourceException ex) {
 				// Fixes problems with some servers, e.g. WLS 10
 				try {
@@ -186,13 +181,32 @@ public class MessageBundleScriptCreator {
 							getClass().getClassLoader(), control);
 				} catch (Exception e) {
 					bundle = ResourceBundle.getBundle(names[x], currentLocale,
-							Thread.currentThread().getContextClassLoader(), control);
+							Thread.currentThread().getContextClassLoader(),
+							control);
 				}
 			}
 
 			updateProperties(bundle, props, charset);
 		}
 		return doCreateScript(props);
+	}
+
+	/**
+	 * Returns the locale to use to retrieve the ResourceBundle
+	 * 
+	 * @return the locale to use to retrieve the ResourceBundle
+	 */
+	protected Locale getLocaleToApply() {
+		Locale currentLocale = locale;
+
+		if (currentLocale == null) {
+			if (fallbackToSystemLocale) {
+				currentLocale = Locale.getDefault();
+			} else {
+				currentLocale = new Locale("", "");
+			}
+		}
+		return currentLocale;
 	}
 
 	/**
@@ -239,7 +253,7 @@ public class MessageBundleScriptCreator {
 	 * @return the JS script from the message properties
 	 */
 	protected Reader doCreateScript(Properties props) {
-		BundleStringJsonifier bsj = new BundleStringJsonifier(props);
+		BundleStringJsonifier bsj = new BundleStringJsonifier(props, addQuoteToMessageKey);
 		String script = template.toString();
 		String messages = bsj.serializeBundles().toString();
 		script = script.replaceFirst("@namespace",
@@ -276,10 +290,14 @@ public class MessageBundleScriptCreator {
 		/**
 		 * Constructor
 		 * 
-		 * @param fallbackToSystemLocale the flag indicating if the fallback local is the System locale or not
-		 * @param charset the ResourceBundle charset
+		 * @param fallbackToSystemLocale
+		 *            the flag indicating if the fallback local is the System
+		 *            locale or not
+		 * @param charset
+		 *            the ResourceBundle charset
 		 */
-		public MessageBundleControl(boolean fallbackToSystemLocale, Charset charset) {
+		public MessageBundleControl(boolean fallbackToSystemLocale,
+				Charset charset) {
 
 			this.fallbackToSystemLocale = fallbackToSystemLocale;
 			this.charset = charset;
@@ -364,8 +382,8 @@ public class MessageBundleScriptCreator {
 				}
 				if (stream != null) {
 					try {
-						rd = new InputStreamReader(stream, charset); 
-						bundle = new PropertyResourceBundle(rd);	
+						rd = new InputStreamReader(stream, charset);
+						bundle = new PropertyResourceBundle(rd);
 					} finally {
 						IOUtils.close(rd);
 						IOUtils.close(stream);

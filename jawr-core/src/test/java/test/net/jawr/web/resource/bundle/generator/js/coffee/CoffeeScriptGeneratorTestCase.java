@@ -174,7 +174,7 @@ public class CoffeeScriptGeneratorTestCase {
 					}
 
 					public BundlePath next() {
-						return new BundlePath(it.next());
+						return new BundlePath(null, it.next());
 					}
 
 					public boolean hasNext() {
@@ -182,7 +182,7 @@ public class CoffeeScriptGeneratorTestCase {
 					}
 
 					public BundlePath nextPath() {
-						return new BundlePath(it.next());
+						return new BundlePath(null, it.next());
 					}
 				};
 			}

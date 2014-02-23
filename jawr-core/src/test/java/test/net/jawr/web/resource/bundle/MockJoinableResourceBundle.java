@@ -211,4 +211,9 @@ public class MockJoinableResourceBundle implements JoinableResourceBundle {
 		return new ArrayList<BundlePath>();
 	}
 
+	@Override
+	public String getBundlePrefix() {
+		return null;
+	}
+
 }

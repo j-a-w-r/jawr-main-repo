@@ -333,16 +333,16 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 							random *= -1;
 						}
 
-						out.write(createBundleLink(resourceName, "d=" + random,
+						out.write(createBundleLink(resourceName, bundlePath.getBundlePrefix(), "d=" + random,
 								contextPath, isSslRequest));
 					} else if (!debugOn && bundlePath.isProductionURL()) {
 						out.write(renderLink(resourceName));
 
 					} else if (!debugOn && useGzip) {
 						out.write(createGzipBundleLink(resourceName,
-								contextPath, isSslRequest));
+								bundlePath.getBundlePrefix(), contextPath, isSslRequest));
 					} else {
-						out.write(createBundleLink(resourceName, null,
+						out.write(createBundleLink(resourceName, bundlePath.getBundlePrefix(), null,
 								contextPath, isSslRequest));
 					}
 
@@ -385,29 +385,29 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @return the link to the gzip bundle in the page
 	 */
 	protected String createGzipBundleLink(String resourceName,
-			String contextPath, boolean isSslRequest) {
+			String bundlePrefix, String contextPath, boolean isSslRequest) {
 		// remove '/' from start of name
 		String resource = resourceName.substring(1, resourceName.length());
 		return createBundleLink(BundleRenderer.GZIP_PATH_PREFIX + resource,
-				null, contextPath, isSslRequest);
+				bundlePrefix, null, contextPath, isSslRequest);
 	}
 
 	/**
 	 * Creates a link to a bundle in the page.
-	 * 
-	 * @param bundleId
-	 *            the bundle ID
-	 * @param contextPath
-	 *            the context path
+	 * @param bundleId the bundle ID
+	 * @param bundlePrefix the bundle prefix
+	 * @param randomParam the flag indicating if we should use randomParam
+	 * @param contextPath the context path
+	 * @param isSslRequest the flag indicating if it's an SSL request
 	 * @return the link to a bundle in the page
 	 */
-	protected String createBundleLink(String bundleId, String randomParam,
+	protected String createBundleLink(String bundleId, String bundlePrefix, String randomParam,
 			String contextPath, boolean isSslRequest) {
 
 		// When debug mode is on and the resource is generated the path must
 		// include a parameter
 		String path = bundleId;
-
+		String fullPath = null;
 		if (bundler.getConfig().isDebugModeOn()) {
 			if (bundler.getConfig().getGeneratorRegistry()
 					.isPathGenerated(bundleId)) {
@@ -418,10 +418,20 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 					path = bundleId + "?" + randomParam;
 				}
 			}
+			
+			fullPath = PathNormalizer.joinPaths(bundler.getConfig()
+					.getServletMapping(), path);
+		}else{
+			
+			if(StringUtils.isNotEmpty(bundlePrefix)){
+				fullPath = PathNormalizer.joinPaths(bundler.getConfig()
+						.getServletMapping(), PathNormalizer.joinPaths(bundlePrefix, path));
+			}else{
+				fullPath = PathNormalizer.joinPaths(bundler.getConfig()
+						.getServletMapping(), path);
+			}
 		}
-		String fullPath = PathNormalizer.joinPaths(bundler.getConfig()
-				.getServletMapping(), path);
-
+		
 		fullPath = RendererRequestUtils.getRenderedUrl(fullPath,
 				bundler.getConfig(), contextPath, isSslRequest);
 

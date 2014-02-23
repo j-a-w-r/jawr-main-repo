@@ -19,11 +19,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Enumeration;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import net.jawr.web.JawrConstant;
 import net.jawr.web.config.jmx.JmxUtils;
 import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.BundlingProcessException;
@@ -77,32 +77,27 @@ public class ClassLoaderResourceUtils {
 
 		if (null == is) {
 
-			// Check if we are using JMX
-			if (System
-					.getProperty(JawrConstant.JMX_ENABLE_FLAG_SYSTEL_PROPERTY) != null) {
+			// Try to use the classloader of the current Jawr Config Manager
+			// MBean
+			// This will be used when a refresh is done in the configuration
+			// using the JMX MBean
+			MBeanServer mbs = JmxUtils.getMBeanServer();
+			if (mbs != null) {
 
-				// Try to use the classloader of the current Jawr Config Manager
-				// MBean
-				// This will be used when a refresh is done in the configuration
-				// using the JMX MBean
-				MBeanServer mbs = JmxUtils.getMBeanServer();
-				if (mbs != null) {
+				ObjectName name = ThreadLocalJawrContext
+						.getJawrConfigMgrObjectName();
+				if (name != null) {
+					try {
 
-					ObjectName name = ThreadLocalJawrContext
-							.getJawrConfigMgrObjectName();
-					if (name != null) {
-						try {
-
-							ClassLoader cl = mbs.getClassLoaderFor(name);
-							is = cl.getResourceAsStream(resourcePath);
-						} catch (Exception e) {
-							LOGGER.error(
-									"Unable to instanciate the Jawr MBean '"
-											+ name.getCanonicalName() + "'", e);
-						}
+						ClassLoader cl = mbs.getClassLoaderFor(name);
+						is = cl.getResourceAsStream(resourcePath);
+					} catch (Exception e) {
+						LOGGER.error("Unable to instanciate the Jawr MBean '"
+								+ name.getCanonicalName() + "'", e);
 					}
 				}
 			}
+
 		}
 
 		// Try to retrieve by URL
@@ -151,13 +146,6 @@ public class ClassLoaderResourceUtils {
 		// If current classloader failed, try with the Threads context
 		// classloader. If that fails ott, the resource is either not on the
 		// classpath or inaccessible from the current context.
-
-		if (null == url) {
-			url = Thread.currentThread().getContextClassLoader()
-					.getResource(resourcePath);
-		}
-
-		// Try to retrieve by URL
 		if (null == url) {
 			url = Thread.currentThread().getContextClassLoader()
 					.getResource(resourcePath);
@@ -186,6 +174,61 @@ public class ClassLoaderResourceUtils {
 		}
 
 		return url;
+	}
+
+	/**
+	 * Attempts to find the URLs of a resource from the classpath, either using
+	 * the caller's class loader or the current thread's context classloader.
+	 * 
+	 * @param resourcePath
+	 *            the resource path
+	 * @param source
+	 *            the object
+	 * @return the URL or null if not found
+	 */
+	public static Enumeration<URL> getResources(String resourcePath,
+			Object source) {
+
+		// Try the current classloader
+		Enumeration<URL> urls = null;
+
+		ClassLoader cl = source.getClass().getClassLoader();
+		try {
+			if (null != cl) {
+				urls = cl.getResources(resourcePath);
+			}
+
+			// If current classloader failed, try with the Threads context
+			// classloader. If that fails ott, the resource is either not on the
+			// classpath or inaccessible from the current context.
+
+			if (null == urls) {
+				urls = Thread.currentThread().getContextClassLoader()
+						.getResources(resourcePath);
+			}
+
+			// Last chance, hack in the classloader
+			if (null == urls) {
+				ClassLoader threadClassLoader = Thread.currentThread()
+						.getContextClassLoader();
+				try {
+					Thread.currentThread().setContextClassLoader(
+							source.getClass().getClassLoader());
+					if (Thread.currentThread().getContextClassLoader() != null) {
+
+						urls = Thread.currentThread().getContextClassLoader()
+								.getResources(resourcePath);
+					}
+				} finally {
+					Thread.currentThread().setContextClassLoader(
+							threadClassLoader);
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.warn("Unable to load " + resourcePath, e);
+		}
+
+		return urls;
 	}
 
 	/**

@@ -87,17 +87,17 @@ public class PathNormalizerTestCase extends TestCase {
 	public void testExtractBundleInfoFromPath(){
 		
 		String[] pathInfos = PathNormalizer.extractBundleInfoFromPath("/1542603560.en_US/js/bundle/msg.js");
-		assertEquals(Arrays.asList("/js/bundle/msg.js","en_US", "1542603560"), Arrays.asList(pathInfos));
+		assertEquals(Arrays.asList(null, "/js/bundle/msg.js","en_US", "1542603560"), Arrays.asList(pathInfos));
 		pathInfos = PathNormalizer.extractBundleInfoFromPath("/1576054120.en_US@summer/fwk/core/component.css");
-		assertEquals(Arrays.asList("/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
+		assertEquals(Arrays.asList(null, "/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
 		pathInfos = PathNormalizer.extractBundleInfoFromPath("/1542603560/js/bundle/msg.js");
-		assertEquals(Arrays.asList("/js/bundle/msg.js",null, "1542603560"), Arrays.asList(pathInfos));
+		assertEquals(Arrays.asList(null, "/js/bundle/msg.js",null, "1542603560"), Arrays.asList(pathInfos));
 		
 		pathInfos = PathNormalizer.extractBundleInfoFromPath(BundleRenderer.GZIP_PATH_PREFIX+"1542603560/js/bundle/msg.js");
-		assertEquals(Arrays.asList("/js/bundle/msg.js",null, "1542603560"), Arrays.asList(pathInfos));
+		assertEquals(Arrays.asList(null, "/js/bundle/msg.js",null, "1542603560"), Arrays.asList(pathInfos));
 		
 		pathInfos = PathNormalizer.extractBundleInfoFromPath(BundleRenderer.GZIP_PATH_PREFIX+"1576054120.en_US@summer/fwk/core/component.css");
-		assertEquals(Arrays.asList("/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
+		assertEquals(Arrays.asList(null, "/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
 		
 	}
 	

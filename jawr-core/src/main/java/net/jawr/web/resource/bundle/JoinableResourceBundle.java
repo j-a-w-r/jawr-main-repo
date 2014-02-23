@@ -94,6 +94,13 @@ public interface JoinableResourceBundle {
 	 */
 	public boolean belongsToBundle(String itemPath);
         
+	/**
+	 * Returns the bundle prefix
+	 * 
+	 * @return the bundle prefix
+	 */
+	public String getBundlePrefix();
+	
     /**
      * Get the URL prefix for this Bundle. It is used to force redownloading
      * when needed. 

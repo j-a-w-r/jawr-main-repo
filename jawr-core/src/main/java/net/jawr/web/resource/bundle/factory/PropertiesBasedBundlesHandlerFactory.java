@@ -16,7 +16,6 @@
 package net.jawr.web.resource.bundle.factory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -166,33 +165,12 @@ public class PropertiesBasedBundlesHandlerFactory {
 		// Set global bundle postprocessor
 		factory.setCustomGlobalPostprocessors(props.getCustomGlobalPostprocessorMap());
 		
-		// Check if we should use the custom postprocessor names property or
-		// find the postprocessor name using the postprocessor class declaration :
-		// jawr.custom.postprocessors.<name>.class
-		Map<String, String> customPostprocessors = new HashMap<String, String>();
-		if (null != properties.getProperty(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS
-				+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_NAMES)) {
-			StringTokenizer tk = new StringTokenizer(properties
-					.getProperty(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS
-							+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_NAMES), JawrConstant.COMMA_SEPARATOR);
-
-			while (tk.hasMoreTokens()) {
-				String processorKey = tk.nextToken();
-				String processorClass = properties
-						.getProperty(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS + "." + processorKey
-								+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_CLASS);
-				if (null != processorClass)
-					customPostprocessors.put(processorKey, processorClass);
-			}
-		}else{
-			
-			customPostprocessors = props.getCustomPostProcessorMap();
-		}
-		
-		factory.setCustomPostprocessors(customPostprocessors);
+		// Set custom postprocessor
+		factory.setCustomPostprocessors(props.getCustomPostProcessorMap());
 		
 	}
 
+	
 	
 
 	/**
@@ -235,6 +213,8 @@ public class PropertiesBasedBundlesHandlerFactory {
 		ResourceBundleDefinition bundle = new ResourceBundleDefinition();
 		bundle.setBundleId(bundleId);
 		bundle.setBundleName(bundleName);
+		bundle.setBundlePrefix(props.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX));
 		
 		// Wether it's global or not
 		Boolean isGlobal = Boolean.valueOf(props.getCustomBundleProperty(

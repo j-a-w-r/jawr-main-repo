@@ -99,13 +99,18 @@ public final class PathNormalizer {
 	 */
 	public static String[] extractBundleInfoFromPath(String path) {
 		
-		String[] result = new String[3];
-		
+		String[] result = new String[4];
+		String bundlePrefix = null;
 		String resultPath = null;
-		if(path.startsWith(BundleRenderer.GZIP_PATH_PREFIX)){
-			// Remove the gzip prefix
-			resultPath = path.substring(BundleRenderer.GZIP_PATH_PREFIX.length());
-		}else{
+		int idxGzip = path.indexOf(BundleRenderer.GZIP_PATH_PREFIX);
+		if(idxGzip != -1){
+			if(idxGzip != 0){
+				bundlePrefix = path.substring(1, idxGzip);
+			}
+			
+			resultPath = path.substring(idxGzip + BundleRenderer.GZIP_PATH_PREFIX.length());
+		}
+		else{
 			// Remove first slash
 			resultPath = path.substring(1);
 		}
@@ -135,9 +140,10 @@ public final class PathNormalizer {
 			resultPath = resultPath.substring(1);
 		}
 		
-		result[0] = resultPath;
-		result[1] = variantPrefix;
-		result[2] = hashcode;
+		result[0] = bundlePrefix;
+		result[1] = resultPath;
+		result[2] = variantPrefix;
+		result[3] = hashcode;
 		
 		return result;
 	}

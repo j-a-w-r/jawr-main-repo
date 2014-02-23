@@ -372,7 +372,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 				+ GeneratorRegistry.PREFIX_SEPARATOR + bundlePath.getPath();
 		path = PathNormalizer.createGenerationPath(path, bundler.getConfig()
 				.getGeneratorRegistry(), "d=" + random);
-		out.write(createBundleLink(path, null, ctx.getContextPath(),
+		out.write(createBundleLink(path, null, null, ctx.getContextPath(),
 				ctx.isSslRequest()));
 	}
 }

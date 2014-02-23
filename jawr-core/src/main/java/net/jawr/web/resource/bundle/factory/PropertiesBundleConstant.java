@@ -88,6 +88,9 @@ public class PropertiesBundleConstant {
 	/** The suffix for the property defining the id of the bundle  */
 	public static final String BUNDLE_FACTORY_CUSTOM_ID = ".id";
 	
+	/** The suffix for the property defining the URL bundle prefix of the bundle  */
+	public static final String BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX = ".bundle.prefix";
+
 	/** The suffix for the property defining the mappings of the bundle  */
 	public static final String BUNDLE_FACTORY_CUSTOM_MAPPINGS = ".mappings";
 	
@@ -136,5 +139,6 @@ public class PropertiesBundleConstant {
 	
 	/** The suffix for the property defining the licence path list for a bundle */
 	public static final String BUNDLE_FACTORY_CUSTOM_LICENCE_PATH_LIST = ".licencePathList";
+
 	
 }

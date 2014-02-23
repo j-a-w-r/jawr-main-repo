@@ -195,10 +195,7 @@ public class BundlesHandlerFactory {
 			throw new IllegalStateException(
 					"Must set the singleFileBundleName when useSingleResourceFactory is set to true. Please check the documentation. ");
 
-		// Initialize custom postprocessors before using the factory to build
-		// the postprocessing chains
-		if (null != customPostprocessors)
-			chainFactory.setCustomPostprocessors(customPostprocessors);
+		initCustomPostProcessors();
 
 		// List of bundles
 		List<JoinableResourceBundle> resourceBundles = new ArrayList<JoinableResourceBundle>();
@@ -295,6 +292,17 @@ public class BundlesHandlerFactory {
 		collector.initAllBundles();
 
 		return collector;
+	}
+
+	/**
+	 * Initialize custom postprocessors before using the factory to build the
+	 * postprocessing chains
+	 */
+	protected void initCustomPostProcessors() {
+
+		if (null != customPostprocessors) {
+			chainFactory.setCustomPostprocessors(customPostprocessors);
+		}
 	}
 
 	/**
@@ -474,7 +482,7 @@ public class BundlesHandlerFactory {
 
 		CompositeResourceBundle composite = new CompositeResourceBundle(
 				definition.getBundleId(), definition.getBundleName(),
-				childBundles, include, resourceReaderHandler, fileExtension,
+				childBundles, include, resourceReaderHandler, definition.getBundlePrefix(), fileExtension,
 				jawrConfig);
 		if (null != definition.getBundlePostProcessorKeys())
 			composite.setBundlePostProcessor(chainFactory
@@ -533,7 +541,7 @@ public class BundlesHandlerFactory {
 
 		JoinableResourceBundleImpl newBundle = new JoinableResourceBundleImpl(
 				definition.getBundleId(), definition.getBundleName(),
-				fileExtension, include, definition.getMappings(),
+				definition.getBundlePrefix(), fileExtension, include, definition.getMappings(),
 				resourceReaderHandler, jawrConfig.getGeneratorRegistry());
 		if (null != definition.getBundlePostProcessorKeys())
 			newBundle.setBundlePostProcessor(chainFactory
@@ -753,7 +761,7 @@ public class BundlesHandlerFactory {
 		List<String> path = Collections.singletonList(pathMapping);
 		JoinableResourceBundle newBundle = new JoinableResourceBundleImpl(
 				bundleId, generateBundleNameFromBundleId(bundleId),
-				fileExtension, new InclusionPattern(), path,
+				null, fileExtension, new InclusionPattern(), path,
 				resourceReaderHandler, jawrConfig.getGeneratorRegistry());
 		return newBundle;
 	}
@@ -792,7 +800,7 @@ public class BundlesHandlerFactory {
 			List<String> orphanPaths) {
 		JoinableResourceBundle newBundle = new JoinableResourceBundleImpl(
 				bundleId, generateBundleNameFromBundleId(bundleId),
-				fileExtension, new InclusionPattern(), orphanPaths,
+				null, fileExtension, new InclusionPattern(), orphanPaths,
 				resourceReaderHandler, jawrConfig.getGeneratorRegistry());
 		return newBundle;
 	}
@@ -810,7 +818,7 @@ public class BundlesHandlerFactory {
 		List<String> paths = Collections.singletonList(mapping);
 		JoinableResourceBundle newBundle = new JoinableResourceBundleImpl(
 				orphanPath, generateBundleNameFromBundleId(orphanPath),
-				fileExtension, new InclusionPattern(), paths,
+				null, fileExtension, new InclusionPattern(), paths,
 				resourceReaderHandler, jawrConfig.getGeneratorRegistry());
 		return newBundle;
 	}

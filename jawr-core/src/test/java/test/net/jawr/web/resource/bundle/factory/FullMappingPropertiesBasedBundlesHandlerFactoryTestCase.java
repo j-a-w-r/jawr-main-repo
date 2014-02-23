@@ -231,7 +231,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		ResourceReaderHandler handler = new TestResourceReaderHandler();
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 0);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
-		JoinableResourceBundle bundle = new JoinableResourceBundleImpl("/bundle/myGlobalBundle.js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundle bundle = new JoinableResourceBundleImpl("/bundle/myGlobalBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setBundleDataHashCode(null, "123456");
 		
@@ -245,7 +245,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 3, inclusion);
 				
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/"+bundleName+".js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/"+bundleName+".js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/"+bundleName+".js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
@@ -284,7 +284,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 	private List<BundlePath> asBundlePathList(String... paths){
 		List<BundlePath> result = new ArrayList<BundlePath>();
 		for(String path : paths){
-			result.add(new BundlePath(path));
+			result.add(new BundlePath(null, path));
 		}
 		
 		return result;
@@ -312,7 +312,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		ResourceReaderHandler handler = new TestResourceReaderHandler();
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 3, inclusion);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");

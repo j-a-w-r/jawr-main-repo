@@ -47,7 +47,7 @@ public class JoinableResourceBundleSerializerTestCase extends TestCase {
 		ResourceReaderHandler handler = new TestResourceHandler();
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 0);
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setBundleDataHashCode(null, "123456");
 		
@@ -77,7 +77,7 @@ public class JoinableResourceBundleSerializerTestCase extends TestCase {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		
 		InclusionPattern inclusionPattern = new InclusionPattern(false, 3, DebugInclusion.ALWAYS);
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
@@ -149,7 +149,7 @@ public class JoinableResourceBundleSerializerTestCase extends TestCase {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		
 		InclusionPattern inclusionPattern = new InclusionPattern(false, 3, DebugInclusion.ONLY);
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
@@ -221,7 +221,7 @@ public class JoinableResourceBundleSerializerTestCase extends TestCase {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		
 		InclusionPattern inclusionPattern = new InclusionPattern(false, 3, DebugInclusion.NEVER);
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");

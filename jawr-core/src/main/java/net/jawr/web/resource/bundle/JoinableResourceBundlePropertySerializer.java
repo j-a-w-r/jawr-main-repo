@@ -68,7 +68,12 @@ public class JoinableResourceBundlePropertySerializer {
 
 		// Set the ID
 		props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID, bundle.getId());
-
+		
+		if(StringUtils.isNotEmpty(bundle.getBundlePrefix())){
+			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX, bundle.getBundlePrefix());
+		}
+		props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID, bundle.getId());
+		
 		if (inclusion.isGlobal()) {
 			props
 					.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, Boolean.toString(inclusion
