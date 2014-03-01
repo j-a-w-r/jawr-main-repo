@@ -903,11 +903,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			throws IOException, ResourceNotFoundException {
 
 		// Send gzipped resource if user agent supports it.
-		if (requestedPath.startsWith(BundleRenderer.GZIP_PATH_PREFIX)) {
-
+		int idx = requestedPath.indexOf(BundleRenderer.GZIP_PATH_PREFIX);
+		if (idx != -1) {
+			
 			requestedPath = "/"
 					+ requestedPath.substring(
-							BundleRenderer.GZIP_PATH_PREFIX.length(),
+							idx+BundleRenderer.GZIP_PATH_PREFIX.length(),
 							requestedPath.length());
 			if (isValidRequestedPath(requestedPath)) {
 				response.setHeader("Content-Encoding", "gzip");

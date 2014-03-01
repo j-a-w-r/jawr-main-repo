@@ -105,7 +105,7 @@ public final class PathNormalizer {
 		int idxGzip = path.indexOf(BundleRenderer.GZIP_PATH_PREFIX);
 		if(idxGzip != -1){
 			if(idxGzip != 0){
-				bundlePrefix = path.substring(1, idxGzip);
+				bundlePrefix = PathNormalizer.asDirPath(path.substring(1, idxGzip));
 			}
 			
 			resultPath = path.substring(idxGzip + BundleRenderer.GZIP_PATH_PREFIX.length());
