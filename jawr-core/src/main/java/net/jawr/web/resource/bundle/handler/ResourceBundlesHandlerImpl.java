@@ -144,12 +144,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Build a ResourceBundlesHandler.
 	 * 
-	 * @param bundles
-	 *            List The JoinableResourceBundles to use for this handler.
-	 * @param resourceHandler
-	 *            The file system access handler.
-	 * @param config
-	 *            Configuration for this handler.
+	 * @param bundles List The JoinableResourceBundles to use for this handler.
+	 * @param resourceHandler The file system access handler.
+	 * @param config Configuration for this handler.
 	 */
 	public ResourceBundlesHandlerImpl(List<JoinableResourceBundle> bundles,
 			ResourceReaderHandler resourceHandler,
@@ -162,12 +159,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * Build a ResourceBundlesHandler which will use the specified
 	 * postprocessor.
 	 * 
-	 * @param bundles
-	 *            List The JoinableResourceBundles to use for this handler.
-	 * @param resourceHandler
-	 *            The file system access handler.
-	 * @param config
-	 *            Configuration for this handler.
+	 * @param bundles List The JoinableResourceBundles to use for this handler.
+	 * @param resourceHandler The file system access handler.
+	 * @param config Configuration for this handler.
 	 * @param postProcessor
 	 */
 	public ResourceBundlesHandlerImpl(
@@ -405,12 +399,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Returns the bundle iterator
 	 * 
-	 * @param debugMode
-	 *            the flag indicating if we are in debug mode or not
-	 * @param commentCallbackHandler
-	 *            the comment callback handler
-	 * @param variants
-	 *            the variant map
+	 * @param debugMode the flag indicating if we are in debug mode or not
+	 * @param commentCallbackHandler the comment callback handler
+	 * @param variants the variant map
 	 * @return the bundle iterator
 	 */
 	private ResourceBundlePathsIterator getBundleIterator(DebugMode debugMode,
@@ -472,11 +463,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Process the bundle content in live
 	 * 
-	 * @param reader
-	 *            the reader
+	 * @param reader the reader
 	 * @return the processed bundle content
-	 * @throws IOException
-	 *             if an IOException occured
+	 * @throws IOException if an IOException occured
 	 */
 	private StringReader processInLive(Reader reader) throws IOException {
 
@@ -664,10 +653,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * Joins the members of a composite bundle in all its variants, storing in a
 	 * separate file for each variant.
 	 * 
-	 * @param composite
-	 *            the composite resource bundle
-	 * @param processBundle
-	 *            the flag indicating if we should process the bundle or not
+	 * @param composite the composite resource bundle
+	 * @param processBundle the flag indicating if we should process the bundle
+	 *            or not
 	 */
 	private void joinAndStoreCompositeResourcebundle(
 			CompositeResourceBundle composite, boolean processBundle) {
@@ -708,14 +696,11 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Joins and post process the variant composite bundle
 	 * 
-	 * @param composite
-	 *            the composite bundle
-	 * @param status
-	 *            the status
-	 * @param compositeBundleVariants
-	 *            the variants
-	 * @param processBundle
-	 *            the flag indicating if we must process the bundle or not.
+	 * @param composite the composite bundle
+	 * @param status the status
+	 * @param compositeBundleVariants the variants
+	 * @param processBundle the flag indicating if we must process the bundle or
+	 *            not.
 	 */
 	private void joinAndPostProcessBundle(CompositeResourceBundle composite,
 			BundleProcessingStatus status, boolean processBundle) {
@@ -767,12 +752,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * Postprocess the composite bundle only if a composite bundle post
 	 * processor is defined
 	 * 
-	 * @param composite
-	 *            the composite bundle
-	 * @param content
-	 *            the content
-	 * @param status
-	 *            the status
+	 * @param composite the composite bundle
+	 * @param content the content
+	 * @param status the status
 	 * @return the content
 	 */
 	private JoinableResourceBundleContent postProcessJoinedCompositeBundle(
@@ -805,10 +787,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * Initialize the bundle data hashcode and initialize the bundle mapping if
 	 * needed
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param store
-	 *            the data to store
+	 * @param bundle the bundle
+	 * @param store the data to store
 	 */
 	private void initBundleDataHashcode(JoinableResourceBundle bundle,
 			JoinableResourceBundleContent store, String variant) {
@@ -830,19 +810,26 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		String[] pathInfos = PathNormalizer
 				.extractBundleInfoFromPath(requestedPath);
-		String bundlePrefix = pathInfos[0];
-		String bundleId = pathInfos[1];
-		String variantKey = pathInfos[2];
-		String hashcode = pathInfos[3];
 
-		JoinableResourceBundle bundle = resolveBundleForPath(bundleId);
-		if (bundle != null) {
-			String bundleHashcode = bundle.getBundleDataHashCode(variantKey);
-			if (hashcode == null && bundleHashcode == null || hashcode != null
-					&& hashcode.equals(bundleHashcode)
-					&& ((bundlePrefix == null && bundle.getBundlePrefix() == null)
-							|| (bundlePrefix != null && bundlePrefix.equals(bundle.getBundlePrefix())))) {
-				validHashcode = true;
+		if (pathInfos != null) {
+			String bundlePrefix = pathInfos[0];
+
+			String bundleId = pathInfos[1];
+			String variantKey = pathInfos[2];
+			String hashcode = pathInfos[3];
+
+			JoinableResourceBundle bundle = resolveBundleForPath(bundleId);
+			if (bundle != null) {
+				String bundleHashcode = bundle
+						.getBundleDataHashCode(variantKey);
+				if (hashcode == null
+						&& bundleHashcode == null
+						|| hashcode != null
+						&& hashcode.equals(bundleHashcode)
+						&& ((bundlePrefix == null && bundle.getBundlePrefix() == null) || (bundlePrefix != null && bundlePrefix
+								.equals(bundle.getBundlePrefix())))) {
+					validHashcode = true;
+				}
 			}
 		}
 		return validHashcode;
@@ -851,10 +838,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Joins the members of a bundle and stores it
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param the
-	 *            flag indicating if we should process the bundle or not
+	 * @param bundle the bundle
+	 * @param the flag indicating if we should process the bundle or not
 	 */
 	private void joinAndStoreBundle(JoinableResourceBundle bundle,
 			boolean processBundle) {
@@ -901,10 +886,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Store the bundle
 	 * 
-	 * @param bundleId
-	 *            the bundle Id to store
-	 * @param store
-	 *            the bundle
+	 * @param bundleId the bundle Id to store
+	 * @param store the bundle
 	 */
 	private void storeBundle(String bundleId,
 			JoinableResourceBundleContent store) {
@@ -918,8 +901,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Checks if the bundle must be processed in live
 	 * 
-	 * @param the
-	 *            bundle content
+	 * @param the bundle content
 	 * @return true if the bundle must be processed in live
 	 */
 	private boolean bundleMustBeProcessedInLive(String content) {
@@ -929,12 +911,10 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Join and post process the bundle taking in account all its variants.
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param status
-	 *            the bundle processing status
-	 * @param processBundle
-	 *            the flag indicating if we must process the bundle or not
+	 * @param bundle the bundle
+	 * @param status the bundle processing status
+	 * @param processBundle the flag indicating if we must process the bundle or
+	 *            not
 	 */
 	private void joinAndPostProcessBundle(JoinableResourceBundle bundle,
 			BundleProcessingStatus status, boolean processBundle) {
@@ -963,14 +943,10 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * Reads all the members of a bundle and executes all associated
 	 * postprocessors.
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param variants
-	 *            the variant map
-	 * @param the
-	 *            bundling processing status
-	 * @param the
-	 *            flag indicating if we should process the bundle or not
+	 * @param bundle the bundle
+	 * @param variants the variant map
+	 * @param the bundling processing status
+	 * @param the flag indicating if we should process the bundle or not
 	 * @return the resource bundle content, where all postprocessors have been
 	 *         executed
 	 */
@@ -1068,12 +1044,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Executes the unitary resource post processing
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param status
-	 *            the bundle processing status
-	 * @param content
-	 *            the content to process
+	 * @param bundle the bundle
+	 * @param status the bundle processing status
+	 * @param content the content to process
 	 * @return the processed content
 	 */
 	private StringBuffer executeUnitaryPostProcessing(
@@ -1104,12 +1077,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/**
 	 * Execute the bundle post processing
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @param status
-	 *            the status
-	 * @param bundleData
-	 *            the bundle data
+	 * @param bundle the bundle
+	 * @param status the status
+	 * @param bundleData the bundle data
 	 * @return the processed content
 	 */
 	private StringBuffer executeBundlePostProcessing(
