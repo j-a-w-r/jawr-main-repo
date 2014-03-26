@@ -49,7 +49,9 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.locale.resolver | String | Name of a class implementing net.jawr.web.resource.bundle.locale.LocaleResolver. An instance of this class will be created and used to determine the Locale to use for a given request when using an {{{./messages_gen.html}i18n messages generator}}.   | none|
 *---------------*---------*--------------+----------------+
-| jawr.locale.generator.fallbackToSystemLocale | Boolean | The flag indicatinf if Jawr must use the System locale if no locale is found for a request. | true |
+| jawr.locale.generator.fallbackToSystemLocale | Boolean | The flag indicating if Jawr must use the System locale if no locale is found for a request. | true |
+*---------------*---------*--------------+----------------+
+| jawr.locale.generator.quoteMsgKey | Boolean | The flag indicating if Jawr must use quote character for the messages keys in the generated javascript bundle. | true |
 *---------------*---------*--------------+----------------+
 | jawr.locale.generator.resourceBundle.charset | String | The charset of the message ResourceBundle. | ISO-8859-1 |
 *---------------*---------*--------------+----------------+
@@ -162,6 +164,8 @@ Descriptor file syntax
 | jawr.[type].bundle.[name].composite  | Boolean  | Set wether a bundle is a composite or not. If it is, the mappings attribute must not be set and instead, the child.names property will be used.  | false    | 
 *---------------+---------+--------------+----------------+
 | jawr.[type].bundle.[name].child.names  |  Comma separated list.   | For a composite bundle, this property sets the names of bundles that must be defined in further properties. For each name in this list you must specify properties for a child bundle that must have no id and cannot be global.   | None    | 
+*---------------+---------+--------------+----------------+
+| jawr.[type].bundle.[name].bundle.prefix  |  String   | Defines the prefix for the bundle, which will be preprend before the bundle hashcode. The generated bundle URL would look like /<app ctx>/pub/gzip_xxxxxxxxxx/path_to_bundle if <<pub>> is defined as bundle prefox. This can be helpful to define security filters to access bundles  | None    | 
 *---------------+---------+--------------+----------------+
 | jawr.[type].bundle.[name].productionURL  |  URL string   | Defines a URL to use when this bundle is invoked under production mode. This is helpful when using publicly served libraries such as YUI.    | None    | 
 *---------------+---------+--------------+----------------+
