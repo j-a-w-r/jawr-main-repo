@@ -267,7 +267,7 @@ public class BundlesHandlerFactory {
 		// Initialize custom postprocessors before using the factory to build
 		// the postprocessing chains
 		if (null != customGlobalPostprocessors)
-			resourceTypePreprocessorChainFactory
+			resourceTypePostprocessorChainFactory
 					.setCustomGlobalProcessors(customGlobalPostprocessors);
 
 		GlobalProcessor<GlobalPostProcessingContext> resourceTypePostprocessor = null;
