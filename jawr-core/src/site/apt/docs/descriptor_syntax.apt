@@ -51,7 +51,7 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.locale.generator.fallbackToSystemLocale | Boolean | The flag indicating if Jawr must use the System locale if no locale is found for a request. | true |
 *---------------*---------*--------------+----------------+
-| jawr.locale.generator.quoteMsgKey | Boolean | The flag indicating if Jawr must use quote character for the messages keys in the generated javascript bundle. | true |
+| jawr.locale.generator.quoteMsgKey | Boolean | The flag indicating if Jawr must use quote character for the messages keys in the generated javascript bundle. | false |
 *---------------*---------*--------------+----------------+
 | jawr.locale.generator.resourceBundle.charset | String | The charset of the message ResourceBundle. | ISO-8859-1 |
 *---------------*---------*--------------+----------------+

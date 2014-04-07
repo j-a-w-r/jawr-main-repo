@@ -80,7 +80,7 @@ public class MessageBundleScriptCreator {
 	private List<String> filterList;
 	protected ServletContext servletContext;
 	protected boolean fallbackToSystemLocale = true;
-	protected boolean addQuoteToMessageKey = true;
+	protected boolean addQuoteToMessageKey = false;
 	protected Charset resourceBundleCharset;
 
 	public MessageBundleScriptCreator(GeneratorContext context) {
@@ -115,7 +115,7 @@ public class MessageBundleScriptCreator {
 		this.addQuoteToMessageKey = PropertiesConfigHelper.getBooleanValue(
 				configProperties,
 				JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY,
-				true);
+				false);
 
 		String charsetName = context.getConfig().getProperty(
 				JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
