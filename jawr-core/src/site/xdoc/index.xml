@@ -232,8 +232,18 @@
 	      		 <li>
 	      		 	<strong>Issue #275 fixed:</strong> Exceptions not properly handle in PathNormalizer.extractBundleInfoFromPath(requestedPath)
 	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #276 fixed:</strong> Custom global post processors not properly registered
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #277 fixed:</strong> LessException not properly handled in LessGenerator (cast issue & nullPointerException)
+	      		 </li>
 	    	</ul>
 	  	  </li>
+	  	  <li>
+     	  	Thanks to Monomachus, dr.piefel, sessert, LightningMan, mzz6wh, hweic for reporting the issues.
+     	  	Thanks to dmurat, webguy, sbaruzza, diorcety  for reporting the issues and also providing patches.
+     	  </li>
 	  </ul>
 	  <ul>
       	  <li> <b>01/06/2014</b>: Grails plugin 3.5 released:<br />
