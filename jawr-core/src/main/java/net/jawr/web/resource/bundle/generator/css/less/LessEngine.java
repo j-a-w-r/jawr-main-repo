@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim Chaehoi
+ * Copyright 2012-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,8 +18,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mozilla.javascript.ConsString;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -27,6 +26,8 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.tools.shell.Global;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the less engine
@@ -40,7 +41,7 @@ import org.mozilla.javascript.tools.shell.Global;
 public class LessEngine {
 
 	/** The logger */
-	private final Log logger = LogFactory.getLog(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/** The scope */
 	private Scriptable scope;
@@ -148,15 +149,15 @@ public class LessEngine {
 					}
 				}
 
-				String message = (String) ScriptableObject.getProperty(value,
-						"message");
+				String message = ScriptableObject.getProperty(value,
+						"message").toString();
 
 				String filename = "";
-				if (ScriptableObject.hasProperty(value, "filename")) {
-					filename = (String) ScriptableObject.getProperty(value,
-							"filename");
+				
+				if (ScriptableObject.getProperty(value, "filename") != null) { 
+					filename = ScriptableObject.getProperty(value, "filename").toString(); 
 				}
-
+				
 				int line = -1;
 				if (ScriptableObject.hasProperty(value, "line")) {
 					line = ((Double) ScriptableObject
@@ -181,7 +182,7 @@ public class LessEngine {
 					}
 				}
 
-				throw new LessException(message, errorType, filename, line,
+				throw new LessException(message.toString(), errorType, filename, line,
 						column, extractList);
 			}
 		}
