@@ -73,7 +73,7 @@
 	      		 	<strong>Issue #276 fixed:</strong> Custom global post processors not properly registered
 	      		 </li>
 	      		 <li>
-	      		 	<strong>Issue #277 fixed:</strong> LessException not properly handled in LessGenerator (cast issue & nullPointerException)
+	      		 	<strong>Issue #277 fixed:</strong> LessException not properly handled in LessGenerator (cast issue &amp; nullPointerException)
 	      		 </li>
 	    	</ul>
 	  	  </li>
