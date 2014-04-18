@@ -8,7 +8,7 @@
 	
     <section name="Announcementes and change log">
     <ul>
-      	  <li> <b>03/XX/2014</b>: Grails plugin 3.5.1 released:<br />
+      	  <li> <b>04/19/2014</b>: Grails plugin 3.5.1 released:<br />
 	      The grails plugin has been released in the grails central repository.<br />
 	      It 
 	      Please check the grails plugin <a href="./integration/grails.html">documentation</a> for more detail on how to use it.
@@ -19,7 +19,7 @@
 	      		 </li>
 	      	</ul>
 	      </li>
-		  <li> <strong>03/XX/2014</strong>: Version 3.5.1 released:<br/>
+		  <li> <strong>04/19/2014</strong>: Version 3.5.1 released:<br/>
 	      This version is a minor version containing mainly bug fixes.
 	  	  <strong>New features: </strong>
 	  	  	<ul>
