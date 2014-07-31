@@ -722,15 +722,17 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				JoinableResourceBundle childbundle = (JoinableResourceBundle) it
 						.next();
 
-				JoinableResourceBundleContent childContent = joinAndPostprocessBundle(
-						childbundle, variants, status, processBundle);
-				// Do unitary postprocessing.
-				status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
-				StringBuffer content = executeUnitaryPostProcessing(composite,
-						status, childContent.getContent(),
-						this.unitaryCompositePostProcessor);
-				childContent.setContent(content);
-				store.append(childContent);
+				if(!childbundle.getInclusionPattern().isIncludeOnlyOnDebug()){
+					JoinableResourceBundleContent childContent = joinAndPostprocessBundle(
+							childbundle, variants, status, processBundle);
+					// Do unitary postprocessing.
+					status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
+					StringBuffer content = executeUnitaryPostProcessing(composite,
+							status, childContent.getContent(),
+							this.unitaryCompositePostProcessor);
+					childContent.setContent(content);
+					store.append(childContent);
+				}
 			}
 
 			// Post process composite bundle as needed
