@@ -32,8 +32,7 @@ import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters.PngDepth;
 import org.carrot2.labs.smartsprites.SpriteBuilder;
@@ -41,6 +40,8 @@ import org.carrot2.labs.smartsprites.message.Message;
 import org.carrot2.labs.smartsprites.message.Message.MessageLevel;
 import org.carrot2.labs.smartsprites.message.MessageLog;
 import org.carrot2.labs.smartsprites.message.MessageSink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the global preprocessor which will process all CSS files
@@ -156,10 +157,19 @@ public class CssSmartSpritesGlobalPreprocessor extends
 
 		// Create temp directories
 		File tmpDir = new File(outDir);
+		
 		if (!tmpDir.exists()) {
 			if (!tmpDir.mkdirs()) {
 				throw new BundlingProcessException(
 						"Impossible to create temporary directory : " + outDir);
+			}
+		}else{
+			// Clean temp directories
+			try {
+				FileUtils.cleanDirectory(tmpDir);
+			} catch (IOException e) {
+				throw new BundlingProcessException(
+						"Impossible to clean temporary directory : " + outDir, e);
 			}
 		}
 
