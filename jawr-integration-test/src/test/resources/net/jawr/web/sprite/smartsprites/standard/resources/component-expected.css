@@ -31,7 +31,7 @@
 
 
 .header {
-  background-image: url('../../../cb4e204bd45def37379b77f9b9090d953a/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
   background-position: left -0px;
 	background-repeat: no-repeat;
 	height : 74px;
@@ -45,14 +45,14 @@ div {
 .calendar {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb4e204bd45def37379b77f9b9090d953a/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
   background-position: left -82px;
 }
 
 .clock {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb4e204bd45def37379b77f9b9090d953a/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
   background-position: left -108px;
 	 
 }
@@ -61,13 +61,14 @@ div {
 .calendar_edit {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb4e204bd45def37379b77f9b9090d953a/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
   background-position: left -124px;
 }
 
 .tools {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("../../../css/img/cog.png"); /** sprite-ref: mysprite; sprite-margin-top: 10px */ 
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
+  background-position: left -140px;
 }
 

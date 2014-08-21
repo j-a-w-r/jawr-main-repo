@@ -8,11 +8,24 @@
 	
     <section name="Announcementes and change log">
     <ul>
+      	  <li> <strong>05/08/2014</strong>: Version 3.5.2 released:<br/>
+	      This version is a minor version containing only a bug fix about sprite generation.<br/>
+	  	  <strong>Fixed issue : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #279 fixed:</strong> Sprite generation doesn't work properly       
+	      		 </li>
+	      	</ul>
+	      </li>
+	      <li>
+     	  	Thanks to shoot_the_moon for reporting the issues.
+     	  </li>
+	</ul>
+	<ul>
       	  <li> <b>04/18/2014</b>: Grails plugin 3.5.1 released:<br />
 	      The grails plugin has been released in the grails central repository.<br />
-	      It 
-	      Please check the grails plugin <a href="./integration/grails.html">documentation</a> for more detail on how to use it.
-		  <strong>Fixed issue : </strong>
+	      Please check the grails plugin <a href="./integration/grails.html">documentation</a> for more detail on how to use it.<br/>
+	      <strong>Fixed issue : </strong>
 	    	<ul>   
 	    	 	 <li>
 	      		 	<strong>Issue #265 fixed:</strong> Grails plugin can't be loaded     
@@ -39,6 +52,12 @@
 	      		 	<strong>Issue #225 fixed:</strong> Bundling Bootstrap CSS file with CSSMinifier causing java.lang.StackOverflowError     
 	      		 </li>
 	      		 <li>
+	      		 	<b>Issue #239 fixed:</b> Issue with productionURL and dependencies
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #241 fixed:</strong> Issue when using jawr.use.bundle.mapping option with a bundle using a production URL
+	      		 </li>
+				 <li>
 	      		 	<strong>Issue #254 fixed:</strong> /jawr_loader.js not serving bundles correct path prefix override when request is secure
 	      		 </li>
 	      		 <li>
@@ -47,7 +66,16 @@
 	      		 <li>
 	      		 	<strong>Issue #258 fixed:</strong> Jawr.use.bundle.mapping and productionURL do not work together
 	      		 </li>
+				 <li>
+	      		 	<strong>Issue #259 fixed:</strong> Exception during startup when contextPath is empty
+	      		 </li>
 	      		 <li>
+	      		 	<strong>Issue #260 fixed:</strong> Remove log4j dependency in smartsprites global preprocessor
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #261 fixed:</strong> In Production mode, the debugnever bundle property is not properly handled for composite bundle	      		 
+	      		 </li>
+				 <li>
 	      		 	<strong>Issue #262 fixed:</strong> Sprite generation doesn't work for not generated css content
 	      		 </li>
 	      		 <li>
@@ -78,8 +106,8 @@
 	    	</ul>
 	  	  </li>
 	  	  <li>
-     	  	Thanks to Monomachus, dr.piefel, sessert, LightningMan, mzz6wh, hweic for reporting the issues.
-     	  	Thanks to dmurat, webguy, sbaruzza, diorcety  for reporting the issues and also providing patches.
+     	  	Thanks to Monomachus, dr.piefel, pbusque, sessert, LightningMan, mzz6wh, hweic for reporting the issues.
+     	  	Thanks to paranoiabla, dmurat, webguy, sbaruzza, diorcety  for reporting the issues and also providing patches.
      	  </li>
 	  </ul>
 	  <ul>

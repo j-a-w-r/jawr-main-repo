@@ -76,7 +76,7 @@
 			<item name="Project home" href="/servlets/ProjectHome" />
 			<item name="Membership" href="/team.html" />
 			<!--  item name="Announcements" href="/servlets/ProjectNewsList" / -->
-			<item name="Discussion forums" href="http://java.net/projects/jawr/forums" />
+			<item name="Discussion forums" href="http://java.net/projects/jawr/forums/discussion-forum" />
 			<item name="Mailing lists" href="http://java.net/projects/jawr/lists" />
 			<item name="Documents &amp; files" href="http://java.net/projects/jawr/downloads/directory/release" />
 			<item name="Subversion" href="http://java.net/projects/jawr/sources" />

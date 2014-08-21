@@ -45,14 +45,12 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 	}
 
 	@Test
-	@Ignore
 	public void testPageLoad() throws Exception {
 		
 		assertContentEquals("/net/jawr/web/sprite/smartsprites/standard/resources/index-jsp-result-expected.txt", page);
 	}
 
 	@Test
-	@Ignore
 	public void checkGeneratedJsLinks() {
 		// Test generated Script link
 		final List<HtmlScript> scripts = getJsScriptTags();
@@ -64,7 +62,6 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 	}
 
 	@Test
-	@Ignore
 	public void testJsBundleContent() throws Exception {
 
 		final List<HtmlScript> scripts = getJsScriptTags();
@@ -74,20 +71,18 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 	}
 
 	@Test
-	@Ignore
 	public void checkGeneratedCssLinks() {
 		// Test generated Css link
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/1613056033/fwk/core/component.css",
+				getUrlPrefix()+"/1086720098/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
 
 	@Test
-	@Ignore
 	public void testCssBundleContent() throws Exception {
 
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
