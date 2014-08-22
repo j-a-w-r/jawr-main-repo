@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,6 +26,7 @@ import net.jawr.web.resource.bundle.generator.JavascriptStringUtil;
  * Creates a Json like structure (an object literal) from a set of message resource properties. 
  * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
 public class BundleStringJsonifier {
 	
@@ -130,7 +131,7 @@ public class BundleStringJsonifier {
 			}
 		}
 		else if(!newLeaf.isEmpty()) {
-			sb.append(currentKey)
+			sb.append(getJsonKey(currentKey))
 			  .append(":{");
 			for(Iterator<String> it = newLeaf.keySet().iterator(); it.hasNext();) {
 				String newKey = it.next();
@@ -144,6 +145,19 @@ public class BundleStringJsonifier {
 	}
 	
 	/**
+	 * Returns the json key for messages taking in account the addQuoteToKey attribute.
+	 * @param key the key
+	 * @return the json key
+	 */
+	private String getJsonKey(String key){
+		String jsonKey = key;
+		if(addQuoteToKey){
+			jsonKey = JavascriptStringUtil.quote(key);
+		}
+		return jsonKey;
+	}
+	
+	/**
 	 * Add a key and its value to the object literal. 
 	 * @param sb
 	 * @param key
@@ -151,11 +165,7 @@ public class BundleStringJsonifier {
 	 */
 	private void addValuedKey(final StringBuffer sb, String key, String fullKey) {
 		
-		String jsonKey = key;
-		if(addQuoteToKey){
-			jsonKey = JavascriptStringUtil.quote(key);
-		}
-		sb.append(jsonKey)
+		sb.append(getJsonKey(key))
 		.append(":")
 		.append(FUNC)
 		.append(JavascriptStringUtil.quote(bundleValues.get(fullKey).toString()));
