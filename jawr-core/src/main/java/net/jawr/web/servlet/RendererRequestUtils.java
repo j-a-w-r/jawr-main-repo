@@ -245,8 +245,10 @@ public class RendererRequestUtils {
 			
 				String override = contextPathOverride;
 				// Blank override, create url relative to path
-				if ("".equals(override)) {
-					renderedUrl = renderedUrl.substring(1);
+				if ("".equals(override)){
+					if(url.startsWith("/")) {
+						renderedUrl = renderedUrl.substring(1);
+					}
 				} else{
 					renderedUrl = PathNormalizer.joinPaths(override, renderedUrl);
 				}
@@ -260,7 +262,7 @@ public class RendererRequestUtils {
 	/**
 	 * Returns the context path depending on the request mode (SSL or not)
 	 * 
-	 * @param isSslRequest teh flag indicating that the request is an SSL request
+	 * @param isSslRequest the flag indicating that the request is an SSL request
 	 * @return the context path depending on the request mode
 	 */
 	private static String getContextPathOverride(boolean isSslRequest, JawrConfig config) {

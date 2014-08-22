@@ -44,7 +44,7 @@ public class ImageTagUtilsTest extends TestCase {
 	
 	public void testImageUrl() {
 
-		testImageUrlWithContextPathOverride("http://mycomp.com/basicwebapp", config, "/basicwebapp");
+		testImageUrlWithContextPathOverride("http://mycomp.com/basicwebapp", config, "/basicwebapp/");
 	}
 	
 	public void testImageUrlWithServletMapping() {
@@ -55,17 +55,26 @@ public class ImageTagUtilsTest extends TestCase {
 
 	public void testImageUrlWithContextPathOverride() {
 
-		String contextPathOverride = "http://mycdn";
-		config.setContextPathOverride(contextPathOverride+"/");
+		String contextPathOverride = "http://mycdn/";
+		config.setContextPathOverride(contextPathOverride);
 		config.setContextPathSslOverride("https://mycdn/");
+		testImageUrlWithContextPathOverride("http://mycomp.com/basicwebapp", config, contextPathOverride);
+
+	}
+	
+	public void testImageUrlWithEmptyContextPathOverrideAndEmptyImgServletMapping() {
+
+		String contextPathOverride = "";
+		config.setServletMapping("");
+		config.setContextPathOverride(contextPathOverride);
 		testImageUrlWithContextPathOverride("http://mycomp.com/basicwebapp", config, contextPathOverride);
 
 	}
 
 	public void testImageUrlWithContextPathSslOverride() {
 
-		String contextPathOverride = "https://mycdn";
-		config.setContextPathSslOverride(contextPathOverride+"/");
+		String contextPathOverride = "https://mycdn/";
+		config.setContextPathSslOverride(contextPathOverride);
 		config.setContextPathOverride("http://mycdn/");
 		testImageUrlWithContextPathOverride("https://mycomp.com/basicwebapp", config, contextPathOverride);
 
@@ -89,7 +98,7 @@ public class ImageTagUtilsTest extends TestCase {
 		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(config, rsHandler, null);
 		String servletMapping = null;
 		if(config.getServletMapping() != null && config.getServletMapping().trim().length() > 0){
-			servletMapping = "/"+config.getServletMapping();
+			servletMapping = "/"+config.getServletMapping()+"/";
 		}else{
 			servletMapping = "";
 		}
@@ -103,7 +112,7 @@ public class ImageTagUtilsTest extends TestCase {
 		
 		String result = ImageTagUtils.getImageUrl("/img/logo/myLogo.png",
 				imgRsHandler, request, response);
-		String expectedResult = contextPath+servletMapping+"/cb90c55a38064627dca337dfa5fc5be120/img/logo/myLogo.png";
+		String expectedResult = contextPath+servletMapping+"cb90c55a38064627dca337dfa5fc5be120/img/logo/myLogo.png";
 		assertEquals(expectedResult, result);
 
 		try {
@@ -115,7 +124,7 @@ public class ImageTagUtilsTest extends TestCase {
 		
 		result = ImageTagUtils.getImageUrl("../img/logo/myLogo.png",
 				imgRsHandler, request, response);
-		expectedResult = contextPath+servletMapping+"/cb90c55a38064627dca337dfa5fc5be120/img/logo/myLogo.png";
+		expectedResult = contextPath+servletMapping+"cb90c55a38064627dca337dfa5fc5be120/img/logo/myLogo.png";
 		assertEquals(expectedResult, result);
 
 		try {
@@ -127,7 +136,7 @@ public class ImageTagUtilsTest extends TestCase {
 		
 		result = ImageTagUtils.getImageUrl("./img/logo/myLogo.png",
 				imgRsHandler, request, response);
-		expectedResult = contextPath+servletMapping+"/cb90c55a38064627dca337dfa5fc5be120/content/img/logo/myLogo.png";
+		expectedResult = contextPath+servletMapping+"cb90c55a38064627dca337dfa5fc5be120/content/img/logo/myLogo.png";
 		assertEquals(expectedResult, result);
 
 		try {
@@ -139,7 +148,7 @@ public class ImageTagUtilsTest extends TestCase {
 		
 		result = ImageTagUtils.getImageUrl("img/logo/myLogo.png", imgRsHandler,
 				request, response);
-		expectedResult = contextPath+servletMapping+"/cb90c55a38064627dca337dfa5fc5be120/content/img/logo/myLogo.png";
+		expectedResult = contextPath+servletMapping+"cb90c55a38064627dca337dfa5fc5be120/content/img/logo/myLogo.png";
 		assertEquals(expectedResult, result);
 	}
 
