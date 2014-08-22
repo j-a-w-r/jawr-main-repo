@@ -147,7 +147,7 @@ public final class ImageTagUtils {
 		newUrl = RendererRequestUtils.getRenderedUrl(newUrl, jawrConfig,
 				contextPath, sslRequest);
 
-		return response.encodeURL(newUrl);
+		return newUrl;
 	}
 
 	/**
