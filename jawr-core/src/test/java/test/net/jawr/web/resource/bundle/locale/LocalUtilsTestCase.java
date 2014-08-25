@@ -53,5 +53,15 @@ public class LocalUtilsTestCase extends TestCase {
 		Assert.assertTrue(result.contains("fr"));
 	}
 	
+	public void testGetLocaleAvailablePrefixesWithMultipleBundle(){
+		
+		List<String> result = LocaleUtils.getAvailableLocaleSuffixesForBundle("bundleLocale.messages|bundleLocale.errorsMsg");
+		Assert.assertEquals(4, result.size());
+		Assert.assertTrue(result.contains(""));
+		Assert.assertTrue(result.contains("es"));
+		Assert.assertTrue(result.contains("fr"));
+		Assert.assertTrue(result.contains("it"));
+	}
+
 	// TODO test for Grails with servlet context
 }
