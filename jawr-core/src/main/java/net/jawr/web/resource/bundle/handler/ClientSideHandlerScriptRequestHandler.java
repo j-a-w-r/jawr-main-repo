@@ -64,6 +64,9 @@ public class ClientSideHandlerScriptRequestHandler implements Serializable {
      */
     public static final String HEADER_IF_MODIFIED = "If-Modified-Since";
 
+    /** The javascript content type */
+    private static final String JAVASCRIPT_CONTENT_TYPE = "text/javascript";
+
     /**
      * The name of the user agent HTTP header
      */
@@ -138,6 +141,7 @@ public class ClientSideHandlerScriptRequestHandler implements Serializable {
 		}
 		response.setHeader(HEADER_ETAG, handler.hash);
 		response.setDateHeader(HEADER_LAST_MODIFIED,START_TIME);
+		response.setContentType(JAVASCRIPT_CONTENT_TYPE);
 		
 		if(RendererRequestUtils.isRequestGzippable(request, this.config)) {			
 			try {
