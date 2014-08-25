@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -85,7 +85,7 @@ public class ClientSideHandlerScriptRequestHandler implements Serializable {
 	 * Placeholder for a script stringbuffer and its hashcode, meant to 
 	 * avoid constant recalculation of the hash value. 
 	 * 
-	 * @author Jordi Hern�ndez Sell�s
+	 * @author Jordi Hernández Sellés
 	 */
 	private static class Handler {
 		String hash;
