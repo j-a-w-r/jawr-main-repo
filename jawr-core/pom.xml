@@ -42,11 +42,6 @@
 			<url>license.txt</url>
 		</license>
 	</licenses>
-	<scm>
-		<connection>scm:svn:https://svn.java.net/svn/jawr~svn/core/trunk</connection>
-		<developerConnection>scm:svn:https://svn.java.net/svn/jawr~svn/core/trunk</developerConnection>
-		<url>https://java.net/projects/jawr/sources</url>
-	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
