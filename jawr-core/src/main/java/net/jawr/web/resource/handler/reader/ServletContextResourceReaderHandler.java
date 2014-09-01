@@ -279,9 +279,12 @@ public class ServletContextResourceReaderHandler implements
 					if (!(rsReader instanceof ResourceGenerator)
 							|| ((ResourceGenerator) rsReader).getResolver()
 									.matchPath(resourceName)) {
-
-						rd = rsReader.getResource(resourceName,
-								processingBundle);
+						try {
+							rd = rsReader.getResource(resourceName,
+									processingBundle);
+						} catch (Exception e) {
+							throw new ResourceNotFoundException(resourceName, e);
+						}
 						if (rd != null) {
 							break;
 						}

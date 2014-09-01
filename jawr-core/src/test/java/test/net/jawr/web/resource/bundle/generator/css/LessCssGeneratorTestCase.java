@@ -1,56 +1,60 @@
 package test.net.jawr.web.resource.bundle.generator.css;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import net.jawr.web.DebugMode;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
-import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
-import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
-import net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
-import net.jawr.web.resource.bundle.iterator.BundlePath;
-import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
-import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
-import net.jawr.web.resource.bundle.variant.VariantSet;
-import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import test.net.jawr.web.FileUtils;
-import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LessCssGeneratorTestCase {
 
 	private JawrConfig config;
 	private GeneratorContext ctx;
 	private LessCssGenerator generator;
 
+	@Mock
+	private ResourceReaderHandler rsReaderHandler;
+	
+	@Mock
+	private ResourceReaderHandler imgRsReaderHandler;
+	
+	@Mock
+	private ResourceBundlesHandler cssBundleHandler;
+	
+	@Mock
+	private GeneratorRegistry generatorRegistry;
+	
 	@Before
 	public void setUp() throws Exception {
 		
@@ -60,24 +64,25 @@ public class LessCssGeneratorTestCase {
 		config = new JawrConfig("css", new Properties());
 		ServletContext servletContext = new MockServletContext();
 		
-		String[] paths = new String[]{"/temp.less", "jar:/style.less"};
-		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, getMockBundlesHandler(config, paths));
+		//String[] paths = new String[]{"/temp.less", "jar:/style.less"};
+		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, cssBundleHandler);
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
-		GeneratorRegistry generatorRegistry = addGeneratorRegistryToConfig(config, JawrConstant.CSS_TYPE);
+		config.setGeneratorRegistry(generatorRegistry);
+		//GeneratorRegistry generatorRegistry = addGeneratorRegistryToConfig(config, JawrConstant.CSS_TYPE);
 		generator = new LessCssGenerator();
 		ctx = new GeneratorContext(config, bundlePath);
-		ctx.setResourceReaderHandler(getResourceReaderHandler());
-		generatorRegistry.setResourceReaderHandler(ctx.getResourceReaderHandler());
+		ctx.setResourceReaderHandler(rsReaderHandler);
+		//generatorRegistry.setResourceReaderHandler(rsReaderHandler);
 		
 		// Set up the Image servlet Jawr config
 		JawrConfig imgServletJawrConfig = new JawrConfig("img", new Properties());
-		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
-		ResourceReaderHandler imgHandler = getResourceReaderHandler();
-		generatorRegistry.setResourceReaderHandler(imgHandler);
-		//imgServletJawrConfig.setServletMapping("/cssImg/");
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, imgHandler, null);
+		imgServletJawrConfig.setGeneratorRegistry(generatorRegistry);
+		// addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
+		when(imgRsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
+		//generatorRegistry.setResourceReaderHandler(imgRsReaderHandler);
+		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, imgRsReaderHandler, null);
 		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		generator.setConfig(config);
@@ -85,7 +90,12 @@ public class LessCssGeneratorTestCase {
 	}
 	
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testLessCssBundleGeneratorInProductionMode() throws Exception{
+		
+		String tempLessContent = FileUtils.readClassPathFile("generator/css/less/temp.less");
+		when(rsReaderHandler.getResource(Matchers.eq("/temp.less"), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		when(rsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
 		
 		ctx.setProcessingBundle(true);
 		Reader rd = generator.createResource(ctx);
@@ -95,7 +105,12 @@ public class LessCssGeneratorTestCase {
 	}
 	
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testLessCssBundleGeneratorInDebugMode() throws Exception{
+		
+		String tempLessContent = FileUtils.readClassPathFile("generator/css/less/temp.less");
+		when(rsReaderHandler.getResource(Matchers.eq("/temp.less"), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		when(rsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
 		
 		ctx.setProcessingBundle(false);
 		Reader rd = generator.createResource(ctx);
@@ -104,210 +119,69 @@ public class LessCssGeneratorTestCase {
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_debug.css"), writer.getBuffer().toString());
 	}
 	
-	private GeneratorRegistry addGeneratorRegistryToConfig(JawrConfig config, String type) {
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry(type){
-
-			
-			public boolean isGeneratedImage(String imgResourcePath) {
-				return imgResourcePath.startsWith("jar:");
-			}
-
-			public boolean isHandlingCssImage(String cssResourcePath) {
-				return cssResourcePath.startsWith("jar:");
-			}
-		};
-		generatorRegistry.setConfig(config);
-		config.setGeneratorRegistry(generatorRegistry);
-		return generatorRegistry;
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testLessCssBundleGeneratorInProductionModeWithImport() throws Exception{
+		
+		ctx = new GeneratorContext(config, "/import.less");
+		ctx.setResourceReaderHandler(rsReaderHandler);
+		
+		String tempLessContent = FileUtils.readClassPathFile("generator/css/less/import.less");
+		when(rsReaderHandler.getResource(Matchers.eq("/import.less"), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		when(rsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
+		
+		initRsReaderHandler("/import1.less", "generator/css/less/import1.less");
+		initRsReaderHandler("/import1/import1a.less", "generator/css/less/import1/import1a.less");
+		initRsReaderHandler("/import1/import1b.less", "generator/css/less/import1/import1b.less");
+		initRsReaderHandler("/import1/import1c.less", "generator/css/less/import1/import1c.less");
+		
+		initRsReaderHandler("/import4.less", "generator/css/less/import4.less");
+		initRsReaderHandler("/import5.less", "generator/css/less/import5.less");
+		
+		ctx.setProcessingBundle(true);
+		Reader rd = generator.createResource(ctx);
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(rd, writer);
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_import.css"), writer.getBuffer().toString());
 	}
 	
-	private ResourceBundlesHandler getMockBundlesHandler(final JawrConfig config, final String[] paths) {
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testLessCssBundleGeneratorInProductionModeWithImportAndQuotes() throws Exception{
 		
-		ResourceBundlesHandler bundlesHandler = new ResourceBundlesHandler() {
-			
-			public void writeBundleTo(String bundlePath, Writer writer)
-					throws ResourceNotFoundException {
-				
-			}
-			
-			public void streamBundleTo(String bundlePath, OutputStream out)
-					throws ResourceNotFoundException {
-				
-			}
-			
-			public JoinableResourceBundle resolveBundleForPath(String path) {
-				
-				JoinableResourceBundle bundle = new MockJoinableResourceBundle(){
-
-					/* (non-Javadoc)
-					 * @see test.net.jawr.web.resource.bundle.MockJoinableResourceBundle#getVariants()
-					 */
-					@Override
-					public Map<String, VariantSet> getVariants() {
-						return new HashMap<String, VariantSet>();
-					}
-				};
-				
-				return bundle;
-			}
-			
-			public boolean isGlobalResourceBundle(String resourceBundleId) {
-				return false;
-			}
-			
-			public void initAllBundles() {
-				
-			}
-			
-			public List<JoinableResourceBundle> getContextBundles() {
-				return null;
-			}
-			
-			public JawrConfig getConfig() {
-				return config;
-			}
-			
-			public ClientSideHandlerGenerator getClientSideHandler() {
-				return null;
-			}
-			
-			public ResourceBundlePathsIterator getBundlePaths(String bundleId,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				
-				
-				return new ResourceBundlePathsIterator() {
-					
-					private Iterator<String> it = Arrays.asList(paths).iterator();
-					
-					public void remove() {
-						
-					}
-					
-					public BundlePath next() {
-						return new BundlePath(null, it.next());
-					}
-					
-					public boolean hasNext() {
-						return it.hasNext();
-					}
-					
-					public BundlePath nextPath() {
-						return new BundlePath(null, it.next());
-					}
-				};
-			}
-
-			public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-					DebugMode debugMode,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-					String bundlePath,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getBundlePaths(
-					DebugMode debugMode, String bundleId,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public boolean containsValidBundleHashcode(String requestedPath) {
-				return false;
-			}
-
-			public String getBundleTextDirPath() {
-				return null;
-			}
-			
-			public List<JoinableResourceBundle> getGlobalBundles() {
-				return new ArrayList<JoinableResourceBundle>();
-			}
-
-			public String getResourceType() {
-				return null;
-			}
-		};
-		return bundlesHandler;
+		ctx = new GeneratorContext(config, "/import_quotes.less");
+		ctx.setResourceReaderHandler(rsReaderHandler);
+		
+		String tempLessContent = FileUtils.readClassPathFile("generator/css/less/import_quotes.less");
+		when(rsReaderHandler.getResource(Matchers.eq("/import_quotes.less"), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		when(rsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
+		
+		initRsReaderHandler("/import1.less", "generator/css/less/import1.less");
+		initRsReaderHandler("/import1/import1a.less", "generator/css/less/import1/import1a.less");
+		initRsReaderHandler("/import1/import1b.less", "generator/css/less/import1/import1b.less");
+		initRsReaderHandler("/import1/import1c.less", "generator/css/less/import1/import1c.less");
+		
+		initRsReaderHandler("/import4.less", "generator/css/less/import4.less");
+		initRsReaderHandler("/import5.less", "generator/css/less/import5.less");
+		
+		ctx.setProcessingBundle(true);
+		Reader rd = generator.createResource(ctx);
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(rd, writer);
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_import.css"), writer.getBuffer().toString());
 	}
-
-	private ResourceReaderHandler getResourceReaderHandler() {
-		
-		return new ResourceReaderHandler() {
-			
-			public void setWorkingDirectory(String workingDir) {
-				
-			}
-			
-			public boolean isDirectory(String resourcePath) {
-				return false;
-			}
-			
-			public String getWorkingDirectory() {
-				return null;
-			}
-			
-			public Set<String> getResourceNames(String dirPath) {
-				return null;
-			}
-			
-			public Reader getResource(String resourceName)
-					throws ResourceNotFoundException {
-				
-				return getResource(resourceName, false);
-			}
-		
-			public Reader getResource(String resourceName,
-					boolean processingBundle) throws ResourceNotFoundException {
-				
-				StringBuffer content = new StringBuffer();
-				if(resourceName.equals("/temp.less")){
-					try {
-						content.append(FileUtils.readClassPathFile("generator/css/less/temp.less"));
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-				return new StringReader(content.toString());
-			}
-			
-			public InputStream getResourceAsStream(String resourceName,
-					boolean processingBundle) throws ResourceNotFoundException {
-				return new ByteArrayInputStream("fakeData".getBytes());
-			}
-			
-			public InputStream getResourceAsStream(String resourceName)
-					throws ResourceNotFoundException {
-				return new ByteArrayInputStream("fakeData".getBytes());
-			}
-			
-			public void addResourceReaderToStart(ResourceReader rd) {
-				
-			}
-			
-			public void addResourceReaderToEnd(ResourceReader rd) {
-				
-			}
+	
+	@SuppressWarnings("unchecked")
+	private void initRsReaderHandler(String resourceName, String resourcePath) throws Exception{
+		final String lessContent = FileUtils.readClassPathFile(resourcePath);
+		Mockito.doAnswer(new Answer<Reader>() {
 
 			@Override
-			public Reader getResource(String resourceName,
-					boolean processingBundle, List<Class<?>> excludedReader)
-					throws ResourceNotFoundException {
-				return getResource(resourceName);
+			public Reader answer(InvocationOnMock invocation) throws Throwable {
+				return new StringReader(lessContent);
 			}
-		};
+		}).when(rsReaderHandler).getResource(Matchers.eq(resourceName), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any());
+		//when(rsReaderHandler.getResource(Matchers.eq(resourceName), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(lessContent));
+		
 	}
 }

@@ -42,6 +42,11 @@
 			<artifactId>closure-compiler</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.asual.lesscss</groupId>
+			<artifactId>lesscss-engine</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>maven</groupId>
 			<artifactId>maven-jetty-plugin</artifactId>
 			<version>1.1</version>

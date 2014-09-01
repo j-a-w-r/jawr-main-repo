@@ -31,6 +31,15 @@ public class ResourceNotFoundException extends Exception {
 	 * Constructor
 	 * @param requestedPath the requested path
 	 */
+	public ResourceNotFoundException(String requestedPath, Exception parentException) {
+		super(parentException);
+		this.requestedPath = requestedPath;
+	}
+	
+	/**
+	 * Constructor
+	 * @param requestedPath the requested path
+	 */
 	public ResourceNotFoundException(String requestedPath) {
 		super();
 		this.requestedPath = requestedPath;
