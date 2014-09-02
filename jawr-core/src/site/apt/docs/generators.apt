@@ -128,7 +128,8 @@ Jawr Generators
 
 	* <<Suffix>>: .less
 	
-	This one will handle LESS CSS resources to compile them to plain CSS resources
+	This one will handle LESS CSS resources to compile them to plain CSS resources.
+	This generator is based on the Less CSS engine (https://github.com/Asual/lesscss-engine).
 	
 +------------------------------------------+
 	jawr.css.bundle.styles.mappings=/css/foo.less,/css/bar.less	
@@ -138,15 +139,13 @@ Jawr Generators
 	
 	Jawr provides properties to configure the Less CSS generator. 
 
-*---------------+---------+--------------+
-| <<Property name>> | <<Purpose>>      | <<Default value>>  | 
-*---------------+---------+--------------+----------------+
+*---------------+---------+--------------+--------------+
+| <<Property name>> | <<Purpose>>      | <<Default value>>   
+*---------------+---------+--------------+----------------+--------------+
 | jawr.css.less.generator.less.script.location  | The less script location  |  net/jawr/web/resource/bundle/generator/css/less/less.js    |
-*---------------*---------*--------------+
-| jawr.css.less.generator.engine.script.location  | The less engine script location  |  net/jawr/web/resource/bundle/generator/css/less/engine.js    |
-*---------------*---------*--------------+
-| jawr.css.less.generator.browser.script.location  | The less browser script location  |  net/jawr/web/resource/bundle/generator/css/less/browser.js    |
-*---------------*---------*--------------+	
+*---------------*---------*--------------+--------------+
+| jawr.css.less.generator.resource.loader.class  | The custom resource loader  |      |
+*---------------*---------*--------------+--------------+
 	
 	 
 	[]
