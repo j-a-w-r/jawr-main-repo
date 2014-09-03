@@ -292,7 +292,7 @@ The Jawr servlet
 * Using JSON configuration source
 	
 	By default, Jawr use properties file as configuration file.
-	It allows users to use JSON configuration source by using the <<configPropertiesSourceClass>> init param.
+	Jawr allows users to use JSON configuration source by using the <<configPropertiesSourceClass>> init param.
 	You can define the location of the configuration file by using the parameter <configLocation>.
 	This implementation requires the <Jackson> JSON library. So you'll have to add it to your classpath.
 	For maven users, you'll have to update your pom file to add the <jackson> dependencies.
