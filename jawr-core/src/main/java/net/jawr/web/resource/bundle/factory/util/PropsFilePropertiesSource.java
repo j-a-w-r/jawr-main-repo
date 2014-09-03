@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.IOUtils;
 
 import org.slf4j.Logger;
@@ -35,10 +36,10 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PropsFilePropertiesSource.class.getName());
 
-	private String configLocation;
+	protected String configLocation;
 	protected int propsHashCode;
 	protected static final String FILE_PREFIX = "file:";
-	private boolean checking;
+	protected boolean checking;
 
 	/*
 	 * (non-Javadoc)
@@ -73,8 +74,8 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	 * it will be read from the filesystem. Otherwise it will be loaded from the
 	 * classpath.
 	 * 
-	 * @param path
-	 * @return
+	 * @param path the configuration path
+	 * @return the configuration properties
 	 */
 	protected Properties readConfigFile(String path) {
 		Properties props = new Properties();
@@ -93,8 +94,7 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 							+ configLocation);
 				is = ClassLoaderResourceUtils.getResourceAsStream(path, this);
 			}
-			// load properties into a Properties object
-			props.load(is);
+			loadConfig(props, path, is);
 
 		} catch (IOException e) {
 			throw new IllegalArgumentException(
@@ -106,6 +106,23 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 		}
 
 		return props;
+	}
+
+	/**
+	 * Loads the configuration from the stream
+	 * @param props the properties to update
+	 * @param path The configuration path
+	 * @param is the input stream 
+	 */
+	protected void loadConfig(Properties props, String path, InputStream is) {
+		// load properties into a Properties object
+		try {
+			props.load(is);
+		} catch (IOException e) {
+			throw new BundlingProcessException(
+					"Unable to load jawr configuration at " + path
+							+ ".", e);
+		}
 	}
 
 	/**

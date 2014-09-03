@@ -44,7 +44,8 @@ The Jawr servlet
 	for the javascript servlet, since <js> is the default value. \ 
 	
 	* <<configPropertiesSourceClass>>: This optional parameter holds the qualified class name of you custom implementation of ConfigPropertiesSource, 
-	in case you want to customize the way configuration is loaded when Jawr starts up. More on this below. 
+	in case you want to customize the way configuration is loaded when Jawr starts up. More on this below.
+	By default, Jawr use a properties file as configuration file but it also allow users to use a JSON file for configuration using a <net.jawr.web.resource.bundle.factory.util.JsonPropertiesSource> class. You'll find more info below. 
 	
 	* <<configPropertyResolverClass>>: This optional parameter holds the qualified class name of your custom implementation of ConfigPropertyResolver, 
 	in case you want to customize the way configuration properties are resolved. More on this below. 
@@ -288,6 +289,45 @@ The Jawr servlet
 </web-app>
 +------------------------------------------+
 
+* Using JSON configuration source
+	
+	By default, Jawr use properties file as configuration file.
+	It allows users to use JSON configuration source by using the <<configPropertiesSourceClass>> init param.
+	You can define the location of the configuration file by using the parameter <configLocation>.
+	This implementation requires the <Jackson> JSON library. So you'll have to add it to your classpath.
+	For maven users, you'll have to update your pom file to add the <jackson> dependencies.
+	
+	Here is a sample of <jackson> dependency declaration in a pom.xml file :
+	
++------------------------------------------+
+	...
+	<dependency>
+		<groupId>com.fasterxml.jackson.datatype</groupId>
+		<artifactId>jackson-datatype-json-org</artifactId>
+		<version>2.4.2</version>
+	</dependency>
+	...
++------------------------------------------+
+
+	Here is an example of configuration :  
+	
++------------------------------------------+
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configPropertiesSourceClass</param-name>
+			<param-value>net.jawr.web.resource.bundle.factory.util.JsonPropertiesSource</param-value>
+		</init-param>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.json</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
++------------------------------------------+
+	
 
 * Defining a custom properties source
 

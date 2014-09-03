@@ -1,0 +1,61 @@
+{
+	jawr : { 
+		debug : {
+			on : false,
+			"ie.force.css.bundle" : true
+			},
+		"gzip.on" : true,
+		"charset.name" : "UTF-8",
+		"use.bundle.mapping" : false,
+		"factory.use.orphans.mapper" : false,
+		"strict.mode" : false,
+		"bundle.hashcode.generator" : "MD5",
+		custom : {
+			generators : [ "net.jawr.resource.generator.SampleImageGenerator" ],
+			postprocessors : {
+			 	"sample.class" : "net.jawr.resource.postprocessor.SamplePostProcessor",
+			 	"sample2.class" : "net.jawr.resource.postprocessor.SamplePostProcessor2"
+			}
+		},
+		js : {
+			"bundle.factory.global.postprocessors" : "closure",
+			"closure.compilation_level" : "SIMPLE_OPTIMIZATIONS",
+			bundle : {
+				basedir : "/js/",
+				one : {
+					id : "/js/bundle/main.js",
+					mappings : [ "/js/global/**" , "/js/index/" ]
+				},
+				two : {
+					id : "/js/bundle/msg.js",
+					mappings : "messages:net.jawr.messages|net.jawr.errors[ui|error]"
+				},
+				commons : {
+					id : "/js/common.js",
+					mappings : "/js/yui/yahoo-dom-event/yahoo-dom-event.js,/js/yui/element/element.js,/js/yui/tabview/tabview.js,/js/yui/container/container.js,skinSwitcher:switcher.js,/js/ace/src/ace.js,/js/ace/src/theme-monokai.js,/js/ace/src/mode-javascript.js,/js/ace/src/worker-javascript.js",
+					bundlepostprocessors : "none"
+				}
+			}
+		},
+		"csslinks.flavor" : "html",
+		css : {
+			"skin.default.root.dirs" : "/css/themes/oceanBlue/en_US",
+			"classpath.handle.image" : true,
+			bundle : {
+			 	"factory.global.preprocessors" : "smartsprites",
+			 	common : {
+					id : "/css/common.css",
+					mappings : "/js/yui/fonts/fonts-min.css,skin:/css/themes/oceanBlue/en_US/theme.css,skin:/css/themes/oceanBlue/en_US/tabview.css,skin:/css/themes/oceanBlue/en_US/container.css",
+					filepostprocessors : "csspathrewriter"
+				},
+				specific : {
+					id : "/css/specific.css",
+					mappings : "jar:fwk/css/temp.css,/css/one.css",
+					filepostprocessors : "base64ImageEncoder",
+					bundlepostprocessors : [ "cssminify", "base64ImageEncoder"]
+				}
+			}
+		},
+		"image.hash.algorithm" : "MD5"
+	}
+}

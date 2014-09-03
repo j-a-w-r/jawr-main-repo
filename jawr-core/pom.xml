@@ -152,7 +152,11 @@
 			<artifactId>closure-compiler</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-json-org</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
