@@ -86,6 +86,7 @@ public class LessCssGeneratorTestCase {
 		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		generator.setConfig(config);
+		generator.setResourceReaderHandler(rsReaderHandler);
 		generator.afterPropertiesSet();
 	}
 	

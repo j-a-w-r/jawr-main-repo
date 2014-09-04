@@ -31,6 +31,7 @@ import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
 import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
+import net.jawr.web.resource.bundle.generator.ResourceReaderHandlerAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -51,6 +52,7 @@ import com.asual.lesscss.loader.UnixNewlinesResourceLoader;
  */
 public class LessCssGenerator extends AbstractCSSGenerator implements
 		ILessCssResourceGenerator, ConfigurationAwareResourceGenerator,
+		ResourceReaderHandlerAwareResourceGenerator,
 		PostInitializationAwareResourceGenerator {
 
 	/** The less script location property name */
@@ -65,8 +67,11 @@ public class LessCssGenerator extends AbstractCSSGenerator implements
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 
+	/** The ResourceReaderHandler */
+	private ResourceReaderHandler rsHandler;
+
 	/** The Less engine */
-	private com.asual.lesscss.LessEngine engine;
+	private LessEngine engine;
 
 	/** The Jawr config */
 	private JawrConfig config;
@@ -109,40 +114,59 @@ public class LessCssGenerator extends AbstractCSSGenerator implements
 	 * (non-Javadoc)
 	 * 
 	 * @see net.jawr.web.resource.bundle.generator.
+	 * ResourceReaderHandlerAwareResourceGenerator
+	 * #setResourceReaderHandler(net.jawr
+	 * .web.resource.handler.reader.ResourceReaderHandler)
+	 */
+	@Override
+	public void setResourceReaderHandler(ResourceReaderHandler rsHandler) {
+		this.rsHandler = rsHandler;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.
 	 * PostInitializationAwareResourceGenerator#afterPropertiesSet()
 	 */
+	@Override
 	public void afterPropertiesSet() {
 
 		String lessScript = config
 				.getProperty(LESS_SCRIPT_LOCATION_PROPERTY_NAME);
-		if(lessScript != null){
+		if (lessScript != null) {
 			URL lessURL = getResourceURL(lessScript);
-			if(lessURL != null){
-				options.setLess(lessURL);	
-			}	
+			if (lessURL != null) {
+				options.setLess(lessURL);
+			}
 		}
+
+		engine = new LessEngine(options,
+				buildResourceLoader(options, rsHandler));
 	}
 
 	/**
 	 * Builds the resource loader
+	 * 
 	 * @param options
 	 * @param rsReaderHandler
 	 * @return
 	 */
 	private ResourceLoader buildResourceLoader(LessOptions options,
 			ResourceReaderHandler rsReaderHandler) {
-		
-		String resourceLoaderClass = config.getProperty(LESS_RESOURCE_LOADER_PROPERTY_NAME);
+
+		String resourceLoaderClass = config
+				.getProperty(LESS_RESOURCE_LOADER_PROPERTY_NAME);
 		ResourceLoader resourceLoader = null;
-		if(StringUtils.isNotEmpty(resourceLoaderClass)){
-			ResourceLoader customResourceLoader = (ResourceLoader) ClassLoaderResourceUtils.buildObjectInstance(resourceLoaderClass);
-			resourceLoader = new ChainedResourceLoader(
-					new JawrResourceLoader(rsReaderHandler),
-					customResourceLoader);
-		}else{
+		if (StringUtils.isNotEmpty(resourceLoaderClass)) {
+			ResourceLoader customResourceLoader = (ResourceLoader) ClassLoaderResourceUtils
+					.buildObjectInstance(resourceLoaderClass);
+			resourceLoader = new ChainedResourceLoader(new JawrResourceLoader(
+					rsReaderHandler), customResourceLoader);
+		} else {
 			resourceLoader = new JawrResourceLoader(rsReaderHandler);
 		}
-		
+
 		if (options.isCss()) {
 			return new CssProcessingResourceLoader(resourceLoader);
 		}
@@ -185,11 +209,6 @@ public class LessCssGenerator extends AbstractCSSGenerator implements
 	protected Reader generateResourceForBundle(GeneratorContext context) {
 
 		String path = context.getPath();
-
-		ResourceReaderHandler rsReaderHandler = context
-				.getResourceReaderHandler();
-		engine = new LessEngine(options, buildResourceLoader(options,
-				rsReaderHandler));
 
 		Reader rd = null;
 		try {

@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channel;
@@ -240,6 +241,31 @@ public class IOUtils {
 		}
 	}
 
-	
+	/**
+     * Get the contents of an <code>InputStream</code> as a String
+     * using the platform default character encoding.
+     * @param input  the <code>InputStream</code> to read from
+     * @return the requested String
+     * @throws NullPointerException if the input is null
+     * @throws IOException if an I/O error occurs
+     */
+    public static String toString(InputStream input) throws IOException {
+        StringWriter sw = new StringWriter();
+        copy(input, sw);
+        return sw.toString();
+    }
 
+    /**
+     * Get the contents of an <code>Reader</code> as a String
+     * using the platform default character encoding.
+     * @param rd  the <code>Reader</code> to read from
+     * @return the requested String
+     * @throws NullPointerException if the input is null
+     * @throws IOException if an I/O error occurs
+     */
+    public static String toString(Reader rd) throws IOException {
+		StringWriter sw = new StringWriter();
+        copy(rd, sw);
+        return sw.toString();
+	}
 }

@@ -15,7 +15,6 @@ package net.jawr.web.resource.bundle.generator.css.less;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,9 +73,7 @@ public class JawrResourceLoader implements ResourceLoader {
 		String resourcePath = PathNormalizer.concatWebPath(paths[0], resource);
 		try {
 			Reader rd = getResourceReader(resourcePath);
-			StringWriter swr = new StringWriter();
-			IOUtils.copy(rd, swr);
-			result = swr.toString();
+			result = IOUtils.toString(rd);
 		} catch (ResourceNotFoundException e) {
 			throw new IOException(e);
 		} 
