@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -138,7 +138,7 @@ public class JSMinPostProcessor extends
 			lastData[x] = bundleBytes[startPoint];
 			startPoint++;
 		}
-		errorMsg.append("The error happened at this point in your javascript: \n");
+		errorMsg.append("The error happened at this point in your javascript (line "+e.getLine()+"; col. "+e.getColumn()+") : \n");
 		errorMsg.append("_______________________________________________\n...");
 		try {
 			String data = byteArrayToString(status.getJawrConfig().getResourceCharset(),lastData).toString();
