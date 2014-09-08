@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2009 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +19,7 @@ import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CustomJsPostProcessorChainWrapper;
 import net.jawr.web.resource.bundle.postprocess.impl.JSMinPostProcessor;
+import net.jawr.web.resource.bundle.postprocess.impl.js.uglify.UglifyPostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.yui.YUIJSCompressor;
 
 /**
@@ -44,7 +45,7 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 	 * @see net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#buildDefaultProcessor()
 	 */
 	public ResourceBundlePostProcessor buildDefaultProcessorChain() {
-		JSMinPostProcessor processor = buildJSMinPostProcessor();
+		AbstractChainedResourceBundlePostProcessor processor = buildJSMinPostProcessor();
 		processor.addNextProcessor(buildLicensesProcessor());
 		return processor;
 	}
@@ -64,6 +65,8 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 			return buildJSMinPostProcessor();
 		else if (PostProcessFactoryConstant.LICENSE_INCLUDER.equals(procesorKey))
 			return buildLicensesProcessor();
+		else if (PostProcessFactoryConstant.UGLIFY_JS.equals(procesorKey))
+			return buildUglifyJSProcessor();
 		else if (PostProcessFactoryConstant.YUI_COMPRESSOR.equals(procesorKey))
 			return new YUIJSCompressor(false);
 		else if (PostProcessFactoryConstant.YUI_COMPRESSOR_OBFUSCATOR.equals(procesorKey))
@@ -71,7 +74,19 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 		else throw new IllegalArgumentException("The supplied key [" + procesorKey + "] is not bound to any ResourceBundlePostProcessor. Please check the documentation for valid keys. ");
 	}
 	
-	private JSMinPostProcessor buildJSMinPostProcessor() {
+	/**
+	 * Creates the Uglify postprocessor
+	 * @return the Uglify postprocessor
+	 */
+	private AbstractChainedResourceBundlePostProcessor buildUglifyJSProcessor() {
+		return new UglifyPostProcessor();
+	}
+
+	/**
+	 * Creates the JSMin postprocessor
+	 * @return the JSMin postprocessor
+	 */
+	private AbstractChainedResourceBundlePostProcessor buildJSMinPostProcessor() {
 		return new JSMinPostProcessor();
 	}
 	

@@ -79,6 +79,10 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.bundle.hashcode.generator | String | The class name of the hashcode bundle generator or MD5 if you want to use the MD5 algorithm for the hashcode.  | none| 
 *---------------*---------*--------------+----------------+
+| jawr.js.postprocessor.uglify.script.location | String | the location of uglify scripts (utils.js, ast.js, parse.js, ...) | /net/jawr/web/resource/bundle/postprocessor/js/uglify/ |
+*---------------*---------*--------------+----------------+
+| jawr.js.postprocessor.uglify.options | String | the JSON uglify compression options | the default Uglify options |
+*---------------*---------*--------------+----------------+
 | jawr.css.url.rewriter.context.path | String |The webapp context path. This property is used in the CSS URL rewriter to determine if an absolute path is in the web application or not.  | none| 
 *---------------*---------*--------------+----------------+
 | jawr.css.postprocessor.base64ImageEncoder.encode.by.default | Boolean | Enable/disable the base64 image encoding by default | true |	

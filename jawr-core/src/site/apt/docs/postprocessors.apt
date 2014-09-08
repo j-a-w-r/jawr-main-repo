@@ -208,7 +208,66 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	
 	This processor uses {{{http://www.crockford.com/javascript/jsmin.html}Douglas Crockford's JSMin}}  minificator. It will remove any comments in code and unnecesary whitespace in a very safe manner.  
 
+***<<Uglify>>
+	
+	* <<Type>>: Bundle
+	
+	* <<Properties Key>>: uglify
+	
+	[]
+	
+	This processor uses {{{https://github.com/mishoo/UglifyJS2}UglifyJS2}} compressor.
+	The built in version used is the version v2.4.15
+	The user is allowed to update the version used by specifying the directory where the Uglify JS sources will be find,
+	by defining the property <<jawr.js.postprocessor.uglify.script.location>>.
+	This postprocessor is based on the rhino javascript engine. So you'll have to add it to your project classpath to be able to us this postprocessor.
+	For maven user, you can add the following snipset configuration to your pom.xml :
+	
++-------------------------------+
 
+		<dependency>
+			<groupId>org.mozilla</groupId>
+			<artifactId>rhino</artifactId>
+			<version>1.7R4</version>
+		</dependency>
+			 
++-------------------------------+
+	
+	Here is the list of JS scripts that the processor will try to load from the web application or from the classpath.
+
+			* utils.js
+		
+			* ast.js
+		
+			* parse.js
+		
+			* transform.js
+		
+			* scope.js
+		
+			* output.js
+		
+			* compress.js
+		
+			* sourcemap.js	
+
+	The user can also define the compression options by using the <<jawr.js.postprocessor.uglify.options>> property.
+	This property is a JSON containing the different options for compression, output format, ...
+	For more information about uglify options, please check the following links : 
+	{{{http://lisperator.net/uglifyjs/}UglifyJS2 site}} and {{{https://github.com/mishoo/UglifyJS2}UglifyJS2 source repository}}
+	
+	Here is an sample configuration where the script will be loaded from /js/uglify/ directory and with custom options :
+
++-------------------------------+
+	
+	jawr.js.postprocessor.uglify.script.location=/js/uglify/
+	jawr.js.bundle.factory.bundlepostprocessors=uglify
+	# Use unsage compression options and preserve comments containing @preserve keyword
+	jawr.js.postprocessor.uglify.options={ compress : { unsafe : true}, output : { compress : /@preserve/ }}
+	
++-------------------------------+	  
+
+	
 ** CSS-specific postprocessors
 
 ***<<CSS Minificator>>

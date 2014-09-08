@@ -278,4 +278,13 @@ public class JawrConstant {
 	/** The default servlet context resource reader class */
 	public static final String DEFAULT_SERVLET_CTX_RESOURCE_READER_CLASS = BaseServletContextResourceReader.class.getName();
 
+	/** The property name for Uglify js scripts location */
+	public static final String UGLIFY_POSTPROCESSOR_SCRIPT_LOCATION = "jawr.js.postprocessor.uglify.script.location";
+
+	/** The Uglify scripts location */
+	public static final String UGLIFY_POSTPROCESSOR_DEFAULT_JS_BASE_LOCATION = "/net/jawr/web/resource/bundle/postprocessor/js/uglify/";
+
+	/** The Uglify scripts location */
+	public static final String UGLIFY_POSTPROCESSOR_OPTIONS = "jawr.js.postprocessor.uglify.options";
+
 }

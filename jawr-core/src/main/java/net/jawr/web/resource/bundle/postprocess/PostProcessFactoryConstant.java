@@ -47,6 +47,9 @@ public class PostProcessFactoryConstant {
 	/** The ID of the JSMin post processor */
 	public static final String JSMIN = "JSMin";
 	
+	/** The ID of the UglifyJS post processor */
+	public static final String UGLIFY_JS = "uglify";
+	
 	/** The ID of the YUI Compressor with obfuscator post processor */
 	public static final String YUI_COMPRESSOR_OBFUSCATOR = "YUIobf";
 	
