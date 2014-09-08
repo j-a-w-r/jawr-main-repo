@@ -72,9 +72,9 @@ public class JSMinPostProcessor extends
 		JSMin minifier = new JSMin(bIs,bOs);
 		try {
 			minifier.jsmin();
-		} catch (JSMinException e) {			
+		} catch (JSMinException e) {
 			formatAndThrowJSLintError(status, bundleBytes, e);				
-		} 
+			} 
 		byte[] minified = bOs.toByteArray();
 		return  byteArrayToString(charset, minified);
 	}
@@ -113,7 +113,7 @@ public class JSMinPostProcessor extends
         Reader rd = Channels.newReader(chan,charset.newDecoder(),-1);
         StringWriter writer = new StringWriter();
         IOUtils.copy(rd, writer, true);
-        return writer.getBuffer();
+        return new StringBuffer(writer.getBuffer().toString().trim());
 	}
 
 	/**

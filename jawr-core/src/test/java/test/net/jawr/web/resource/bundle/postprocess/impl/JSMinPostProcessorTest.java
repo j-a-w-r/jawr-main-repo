@@ -54,7 +54,7 @@ public class JSMinPostProcessorTest {
 		StringBuffer ret = processor.postProcessBundle(status, new StringBuffer(script));
 		
 		// Not really testing JSMin, that is supposed to work. 
-		assertEquals("\nalert('áéñí');", ret.toString());
+		assertEquals("alert('áéñí');", ret.toString());
 	}
     
 	@Test
@@ -99,7 +99,7 @@ public class JSMinPostProcessorTest {
 	
 	@Test
     public void testPostProcessStringWithTabCharacter() {
-		String script = "!function() { \tconsole.log(\"\tmy message\\\n\tmy message in multiline\"); }()";
+		String script = "!function() {		console.log(\"	my message\\\n	my message in multiline\"); }()";
 		Charset charset = Charset.forName("UTF-8");
 		JawrConfig config = new JawrConfig("js", new Properties());
 		config.setCharsetName("UTF-8");
@@ -116,4 +116,26 @@ public class JSMinPostProcessorTest {
 		// Not really testing JSMin, that is supposed to work. 
 		assertEquals("!function(){console.log(\"\tmy message\\\n\tmy message in multiline\");}();", ret.toString());
 	}
+	
+	@Test
+	public void testPostRegularExpression() throws Exception {
+		
+		String script ="function test(mStyle) { return /(url\\s*\\(.*?){3}/.test(mStyle.background);}";
+		Charset charset = Charset.forName("UTF-8");
+		JawrConfig config = new JawrConfig("js", new Properties());
+		config.setCharsetName("UTF-8");
+		JSMinPostProcessor processor = new JSMinPostProcessor();
+		StringBuffer sb = new StringBuffer();
+		try {
+			sb.append(script.getBytes(charset.name()));
+		} catch (UnsupportedEncodingException ignore) {
+			Assert.fail("UnsupportedEncodingException that will never be thrown");
+		}
+	    BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle,null,config);
+		StringBuffer ret = processor.postProcessBundle(status, new StringBuffer(script));
+		
+		// Not really testing JSMin, that is supposed to work. 
+		assertEquals("function test(mStyle){return/(url\\s*\\(.*?){3}/.test(mStyle.background);}", ret.toString());
+	}
+	
 }
