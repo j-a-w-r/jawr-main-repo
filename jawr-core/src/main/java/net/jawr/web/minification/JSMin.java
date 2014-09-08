@@ -48,8 +48,8 @@ import java.io.PushbackInputStream;
  * 
  * This work is a translation from C to Java of jsmin.c published by Douglas
  * Crockford. See www.inconspicuous.org and www.crockford.com for more
- * information.
- * Now available on Github : https://github.com/douglascrockford/JSMin
+ * information. Now available on Github :
+ * https://github.com/douglascrockford/JSMin
  * 
  * @author (Original) John Reilly - Douglas Crockford
  * @author Jordi Hernández Sellés
@@ -58,7 +58,10 @@ import java.io.PushbackInputStream;
 public class JSMin {
 	private static final int EOF = -1;
 
+	/** The input stream */
 	private PushbackInputStream in;
+	
+	/** The output stream */
 	private OutputStream out;
 
 	private int theA;
@@ -67,12 +70,18 @@ public class JSMin {
 	private int theX = EOF;
 	private int theY = EOF;
 
+	/** The current byte index */
 	private int currentByteIndex;
+	
+	/** The current line number */
 	private int line;
+	
+	/** The current column number */
 	private int column;
 
 	/**
 	 * Constructor
+	 * 
 	 * @param in
 	 * @param out
 	 */
@@ -82,7 +91,7 @@ public class JSMin {
 		line = 0;
 		column = 0;
 	}
-	
+
 	/*
 	 * isAlphanum -- return true if the character is a letter, digit,
 	 * underscore, dollar sign, or non-ASCII character.
@@ -99,10 +108,10 @@ public class JSMin {
 	 * linefeed.
 	 */
 	private int get() throws IOException {
-	
+
 		return get(false);
 	}
-	
+
 	/*
 	 * get -- return the next character from stdin. Watch out for lookahead. If
 	 * the character is a control character, translate it to a space or
@@ -121,10 +130,18 @@ public class JSMin {
 		} else {
 			column++;
 		}
-		if (c >= ' ' || c == '\n' || c == EOF || (inStringLiteral && c == '\t')) {
+		if (c >= ' ' || c == '\n' || c == EOF || (inStringLiteral && c == '\t')) { // Handle
+																					// the
+																					// case
+																					// of
+																					// tab
+																					// character
+																					// in
+																					// String
+																					// literal
 			return c;
 		}
-		
+
 		if (c == '\r') {
 			return '\n';
 		}
@@ -138,9 +155,9 @@ public class JSMin {
 	 * Get the next character without getting it.
 	 */
 	int peek() throws IOException {
-		
+
 		theLookahead = get();
-	    return theLookahead;
+		return theLookahead;
 	}
 
 	/*
@@ -346,35 +363,38 @@ public class JSMin {
 				}
 			}
 		}
-		
+
 		out.flush();
 	}
-	
+
 	/**
 	 * The abstract class for JSMin exceptions
 	 * 
 	 * @author ibrahim Chaehoi
 	 */
 	public abstract class JSMinException extends Exception {
-		
+
 		/** The serial version UID */
 		private static final long serialVersionUID = -9047848972645299111L;
-		
+
 		/** the byteIndex where the exception occured */
 		private final int byteIndex;
-		
+
 		/** the line where the exception occured */
 		private final int line;
-		
+
 		/** the column where the exception occured */
 		private final int column;
 
 		/**
 		 * Constructor
 		 * 
-		 * @param byteIndex the byteIndex where the exception occured
-		 * @param line the line where the exception occured
-		 * @param column the column where the exception occured
+		 * @param byteIndex
+		 *            the byteIndex where the exception occured
+		 * @param line
+		 *            the line where the exception occured
+		 * @param column
+		 *            the column where the exception occured
 		 */
 		public JSMinException(int byteIndex, int line, int column) {
 			super();
@@ -384,7 +404,8 @@ public class JSMin {
 		}
 
 		/**
-		 * Returns the byteIndex where the exception occured 
+		 * Returns the byteIndex where the exception occured
+		 * 
 		 * @return the byteIndex where the exception occured
 		 */
 		public int getByteIndex() {
@@ -392,7 +413,8 @@ public class JSMin {
 		}
 
 		/**
-		 * Returns the line where the exception occured 
+		 * Returns the line where the exception occured
+		 * 
 		 * @return the line where the exception occured
 		 */
 		public int getLine() {
@@ -400,7 +422,8 @@ public class JSMin {
 		}
 
 		/**
-		 * Returns the column where the exception occured 
+		 * Returns the column where the exception occured
+		 * 
 		 * @return the column where the exception occured
 		 */
 		public int getColumn() {
@@ -416,9 +439,12 @@ public class JSMin {
 		/**
 		 * Constructor
 		 * 
-		 * @param byteIndex the byteIndex where the exception occured
-		 * @param line the line where the exception occured
-		 * @param column the column where the exception occured
+		 * @param byteIndex
+		 *            the byteIndex where the exception occured
+		 * @param line
+		 *            the line where the exception occured
+		 * @param column
+		 *            the column where the exception occured
 		 */
 		public UnterminatedCommentException(int byteIndex, int line, int column) {
 			super(byteIndex, line, column);
@@ -434,11 +460,15 @@ public class JSMin {
 		/**
 		 * Constructor
 		 * 
-		 * @param byteIndex the byteIndex where the exception occured
-		 * @param line the line where the exception occured
-		 * @param column the column where the exception occured
+		 * @param byteIndex
+		 *            the byteIndex where the exception occured
+		 * @param line
+		 *            the line where the exception occured
+		 * @param column
+		 *            the column where the exception occured
 		 */
-		public UnterminatedStringLiteralException(int byteIndex, int line, int column) {
+		public UnterminatedStringLiteralException(int byteIndex, int line,
+				int column) {
 			super(byteIndex, line, column);
 		}
 
@@ -452,16 +482,20 @@ public class JSMin {
 		/**
 		 * Constructor
 		 * 
-		 * @param byteIndex the byteIndex where the exception occured
-		 * @param line the line where the exception occured
-		 * @param column the column where the exception occured
+		 * @param byteIndex
+		 *            the byteIndex where the exception occured
+		 * @param line
+		 *            the line where the exception occured
+		 * @param column
+		 *            the column where the exception occured
 		 */
-		public UnterminatedRegExpLiteralException(int byteIndex, int line, int column) {
+		public UnterminatedRegExpLiteralException(int byteIndex, int line,
+				int column) {
 			super(byteIndex, line, column);
 		}
 
 	}
-	
+
 	public class UnterminatedSetInRegExpLiteralException extends JSMinException {
 
 		/** The serial version UID */
@@ -470,11 +504,15 @@ public class JSMin {
 		/**
 		 * Constructor
 		 * 
-		 * @param byteIndex the byteIndex where the exception occured
-		 * @param line the line where the exception occured
-		 * @param column the column where the exception occured
+		 * @param byteIndex
+		 *            the byteIndex where the exception occured
+		 * @param line
+		 *            the line where the exception occured
+		 * @param column
+		 *            the column where the exception occured
 		 */
-		public UnterminatedSetInRegExpLiteralException(int byteIndex, int line, int column) {
+		public UnterminatedSetInRegExpLiteralException(int byteIndex, int line,
+				int column) {
 			super(byteIndex, line, column);
 		}
 
