@@ -534,6 +534,5 @@ public class JSMin {
 				int column) {
 			super(byteIndex, line, column);
 		}
-
 	}
 }

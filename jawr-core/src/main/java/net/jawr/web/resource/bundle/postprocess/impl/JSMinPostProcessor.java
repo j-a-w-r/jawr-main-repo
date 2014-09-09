@@ -151,5 +151,4 @@ public class JSMinPostProcessor extends
 		
 		throw new BundlingProcessException(errorMsg.toString(),e);
 	}
-
 }
