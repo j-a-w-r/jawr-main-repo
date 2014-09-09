@@ -70,6 +70,9 @@ public class JSMin {
 	private int theX = EOF;
 	private int theY = EOF;
 
+	/** The flag indicating if the first character has been written */
+	private boolean firstCharacterWritten;
+	
 	/** The current byte index */
 	private int currentByteIndex;
 	
@@ -210,23 +213,23 @@ public class JSMin {
 	private void action(int d) throws IOException, JSMinException {
 		switch (d) {
 		case 1:
-			out.write(theA);
+			write(theA);
 			if ((theY == '\n' || theY == ' ')
 					&& (theA == '+' || theA == '-' || theA == '*' || theA == '/')
 					&& (theB == '+' || theB == '-' || theB == '*' || theB == '/')) {
-				out.write(theY);
+				write(theY);
 			}
 		case 2:
 			theA = theB;
 			if (theA == '\'' || theA == '"' || theA == '`') {
 				for (;;) {
-					out.write(theA);
+					write(theA);
 					theA = get(true);
 					if (theA == theB) {
 						break;
 					}
 					if (theA == '\\') {
-						out.write(theA);
+						write(theA);
 						theA = get(true);
 					}
 					if (theA == EOF) {
@@ -243,22 +246,22 @@ public class JSMin {
 							|| theA == '&' || theA == '|' || theA == '?'
 							|| theA == '+' || theA == '-' || theA == '~'
 							|| theA == '*' || theA == '/' || theA == '{' || theA == '\n')) {
-				out.write(theA);
+				write(theA);
 				if (theA == '/' || theA == '*') {
-					out.write(' ');
+					write(' ');
 				}
-				out.write(theB);
+				write(theB);
 				for (;;) {
 					theA = get();
 					if (theA == '[') {
 						for (;;) {
-							out.write(theA);
+							write(theA);
 							theA = get();
 							if (theA == ']') {
 								break;
 							}
 							if (theA == '\\') {
-								out.write(theA);
+								write(theA);
 								theA = get();
 							}
 							if (theA == EOF) {
@@ -285,17 +288,33 @@ public class JSMin {
 						}
 						break;
 					} else if (theA == '\\') {
-						out.write(theA);
+						write(theA);
 						theA = get();
 					}
 					if (theA == EOF) {
 						throw new UnterminatedRegExpLiteralException(
 								currentByteIndex, line, column);
 					}
-					out.write(theA);
+					write(theA);
 				}
 				theB = next();
 			}
+		}
+	}
+
+	/**
+	 * Writes the character on the output stream
+	 * @param c the character to write
+	 * @throws IOException if an IOException occurs
+	 */
+	private void write(int c) throws IOException {
+		if(!firstCharacterWritten){
+			if(c != '\n'){
+				out.write(c);
+				firstCharacterWritten = true;
+			}
+		}else{
+			out.write(c);
 		}
 	}
 
@@ -311,7 +330,7 @@ public class JSMin {
 			get();
 			get();
 		}
-		theA = ' ';
+		theA = '\n';
 		action(3);
 		while (theA != EOF) {
 			switch (theA) {
