@@ -137,6 +137,7 @@ public abstract class AbstractResourceBundleHandler implements
 			Charset charset, final String resourceType,
 			final boolean createTempSubDir) {
 		super();
+		
 		this.resourceType = resourceType;
 		this.charset = charset;
 
@@ -147,6 +148,8 @@ public abstract class AbstractResourceBundleHandler implements
 			mappingFileName = JawrConstant.JAWR_CSS_MAPPING_PROPERTIES_FILENAME;
 		} else if (resourceType.equals(JawrConstant.IMG_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_IMG_MAPPING_PROPERTIES_FILENAME;
+		}else{
+			throw new BundlingProcessException("Unknown resource Type:" + resourceType); 
 		}
 
 		if (tempDirRoot.startsWith(JawrConstant.FILE_URI_PREFIX)) {
