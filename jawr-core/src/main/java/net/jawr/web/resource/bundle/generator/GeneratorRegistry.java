@@ -119,8 +119,8 @@ public class GeneratorRegistry implements Serializable {
 	/** The CSS image resource prefix registry */
 	private final List<ResourceGenerator> cssImageResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
 
-	/** The image resource prefix registry */
-	private final List<ResourceGenerator> imageResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
+	/** The binary resource prefix registry */
+	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
 
 	/** The resource type */
 	private String resourceType;
@@ -181,7 +181,8 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
-				.equals(JawrConstant.IMG_TYPE))) {
+				.equals(JawrConstant.IMG_TYPE) || resourceType
+				.equals(JawrConstant.BINARY_TYPE))) {
 			commonGenerators.put(new PrefixedPathResolver(
 					SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
 		}
@@ -268,7 +269,7 @@ public class GeneratorRegistry implements Serializable {
 				generator.getResolver()));
 
 		if (generator instanceof StreamResourceGenerator) {
-			imageResourceGeneratorRegistry.add(generator);
+			binaryResourceGeneratorRegistry.add(generator);
 		}
 		if (generator instanceof CssResourceGenerator) {
 			if (((CssResourceGenerator) generator).isHandlingCssImage()) {
@@ -625,21 +626,21 @@ public class GeneratorRegistry implements Serializable {
 	}
 
 	/**
-	 * Returns true if the generator associated to the image resource path is an
+	 * Returns true if the generator associated to the binary resource path is an
 	 * Image generator.
 	 * 
-	 * @param imgResourcePath
-	 *            the image resource path
-	 * @return true if the generator associated to the image resource path is an
+	 * @param resourcePath
+	 *            the binary resource path
+	 * @return true if the generator associated to the binary resource path is an
 	 *         Image generator.
 	 */
-	public boolean isGeneratedImage(String imgResourcePath) {
+	public boolean isGeneratedBinaryResource(String resourcePath) {
 
 		boolean isGeneratedImage = false;
 
-		ResourceGenerator generator = resolveResourceGenerator(imgResourcePath);
+		ResourceGenerator generator = resolveResourceGenerator(resourcePath);
 		if (generator != null
-				&& imageResourceGeneratorRegistry.contains(generator)) {
+				&& binaryResourceGeneratorRegistry.contains(generator)) {
 			isGeneratedImage = true;
 		}
 

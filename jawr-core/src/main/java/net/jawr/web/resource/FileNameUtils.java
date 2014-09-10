@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.jawr.web.servlet.util.ImageMIMETypesSupport;
+import net.jawr.web.servlet.util.MIMETypesSupport;
 
 /**
  * This utility class is a slightly modified copy of FilenameUtils of commons-io
@@ -44,7 +44,7 @@ import net.jawr.web.servlet.util.ImageMIMETypesSupport;
 public class FileNameUtils {
 
 	/** The image extensions */
-	private static Set<Object> IMG_EXTENSIONS = ImageMIMETypesSupport.getSupportedProperties(FileNameUtils.class).keySet();
+	private static Set<Object> IMG_EXTENSIONS = MIMETypesSupport.getSupportedProperties(FileNameUtils.class).keySet();
 	
 	/**
      * The extension separator character.

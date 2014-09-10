@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -57,8 +57,8 @@ public class CssImageUrlRewriter {
 	public static final Pattern URL_PATTERN = Pattern.compile(URL_REGEXP, // Any number of whitespaces, then ')'
 			Pattern.CASE_INSENSITIVE); // works with 'URL('
 
-	/** The image resource handler */
-	protected ImageResourcesHandler imgRsHandler;
+	/** The binary resource handler */
+	protected BinaryResourcesHandler binaryRsHandler;
 	
 	/** The context path */
 	protected String contextPath;
@@ -76,8 +76,8 @@ public class CssImageUrlRewriter {
 	 */
 	public CssImageUrlRewriter(JawrConfig config) {
 		setContextPath(config.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
-		// Retrieve the image servlet mapping
-		imgRsHandler = (ImageResourcesHandler) config.getContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
+		// Retrieve the binary resource handler
+		binaryRsHandler = (BinaryResourcesHandler) config.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 		
 	}
 
@@ -194,9 +194,9 @@ public class CssImageUrlRewriter {
 		
 		// Retrieve the current CSS file from which the CSS image is referenced
 		boolean generatedImg = false;
-		if(imgRsHandler != null){
-			GeneratorRegistry imgRsGeneratorRegistry = imgRsHandler.getConfig().getGeneratorRegistry();
-			generatedImg = imgRsGeneratorRegistry.isGeneratedImage(url);
+		if(binaryRsHandler != null){
+			GeneratorRegistry imgRsGeneratorRegistry = binaryRsHandler.getConfig().getGeneratorRegistry();
+			generatedImg = imgRsGeneratorRegistry.isGeneratedBinaryResource(url);
 		}
 		
 		String fullImgPath = PathNormalizer.concatWebPath(originalCssPath, url);

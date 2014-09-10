@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.context.ThreadLocalJawrContext;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 
 /**
  * This class defines the tag which generate the URL used by Jawr to reference
@@ -158,12 +158,12 @@ public class ImagePathTag extends TagSupport {
 	 */
 	protected String getImgSrcToRender() throws JspException {
 
-		ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) pageContext
+		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) pageContext
 				.getServletContext().getAttribute(
-						JawrConstant.IMG_CONTEXT_ATTRIBUTE);
-		if (null == imgRsHandler)
+						JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+		if (null == binaryRsHandler)
 			throw new JspException(
-					"You are using a Jawr image tag while the Jawr Image servlet has not been initialized. Initialization of Jawr Image servlet either failed or never occurred.");
+					"You are using a Jawr image tag while the Jawr Binary servlet has not been initialized. Initialization of Jawr Image servlet either failed or never occurred.");
 
 		HttpServletResponse response = (HttpServletResponse) pageContext
 				.getResponse();
@@ -171,7 +171,7 @@ public class ImagePathTag extends TagSupport {
 		HttpServletRequest request = (HttpServletRequest) pageContext
 				.getRequest();
 
-		return ImageTagUtils.getImageUrl(src, base64, imgRsHandler, request,
+		return ImageTagUtils.getImageUrl(src, base64, binaryRsHandler, request,
 				response);
 	}
 

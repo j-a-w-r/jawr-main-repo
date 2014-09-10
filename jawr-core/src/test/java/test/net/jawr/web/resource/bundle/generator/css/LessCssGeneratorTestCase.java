@@ -14,7 +14,7 @@ import javax.servlet.ServletContext;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -47,7 +47,7 @@ public class LessCssGeneratorTestCase {
 	private ResourceReaderHandler rsReaderHandler;
 	
 	@Mock
-	private ResourceReaderHandler imgRsReaderHandler;
+	private ResourceReaderHandler binaryRsReaderHandler;
 	
 	@Mock
 	private ResourceBundlesHandler cssBundleHandler;
@@ -77,13 +77,13 @@ public class LessCssGeneratorTestCase {
 		//generatorRegistry.setResourceReaderHandler(rsReaderHandler);
 		
 		// Set up the Image servlet Jawr config
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", new Properties());
-		imgServletJawrConfig.setGeneratorRegistry(generatorRegistry);
+		JawrConfig binaryServletJawrConfig = new JawrConfig("img", new Properties());
+		binaryServletJawrConfig.setGeneratorRegistry(generatorRegistry);
 		// addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
-		when(imgRsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
+		when(binaryRsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
 		//generatorRegistry.setResourceReaderHandler(imgRsReaderHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, imgRsReaderHandler, null);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(binaryServletJawrConfig, binaryRsReaderHandler, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 		
 		generator.setConfig(config);
 		generator.setResourceReaderHandler(rsReaderHandler);

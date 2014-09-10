@@ -84,18 +84,18 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 
 	/**
 	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getImageResourcesDefinition()
+	 * @see net.jawr.web.config.JawrConfig#getBinaryResourcesDefinition()
 	 */
 	public String getImageResourcesDefinition() {
-		return configProperties.getProperty(JawrConfig.JAWR_IMAGE_RESOURCES);
+		return configProperties.getProperty(JawrConfig.JAWR_BINARY_RESOURCES);
 	}
 
 	/**
 	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getImageHashAlgorithm()
+	 * @see net.jawr.web.config.JawrConfig#getBinaryHashAlgorithm()
 	 */
 	public String getImageHashAlgorithm() {
-		return configProperties.getProperty(JawrConfig.JAWR_IMAGE_HASH_ALGORITHM);
+		return configProperties.getProperty(JawrConfig.JAWR_BINARY_HASH_ALGORITHM);
 	}
 
 	/**
@@ -238,18 +238,18 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 
 	/**
 	 * @param imageResourcesDefinition
-	 * @see net.jawr.web.config.JawrConfig#setImageResourcesDefinition(java.lang.String)
+	 * @see net.jawr.web.config.JawrConfig#setBinaryResourcesDefinition(java.lang.String)
 	 */
 	public void setImageResourcesDefinition(String imageResourcesDefinition) {
-		configProperties.setProperty(JawrConfig.JAWR_IMAGE_RESOURCES, imageResourcesDefinition);
+		configProperties.setProperty(JawrConfig.JAWR_BINARY_RESOURCES, imageResourcesDefinition);
 	}
 
 	/**
 	 * @param imageHashAlgorithm
-	 * @see net.jawr.web.config.JawrConfig#setImageHashAlgorithm(java.lang.String)
+	 * @see net.jawr.web.config.JawrConfig#setBinaryHashAlgorithm(java.lang.String)
 	 */
 	public void setImageHashAlgorithm(String imageHashAlgorithm) {
-		configProperties.setProperty(JawrConfig.JAWR_IMAGE_HASH_ALGORITHM, imageHashAlgorithm);
+		configProperties.setProperty(JawrConfig.JAWR_BINARY_HASH_ALGORITHM, imageHashAlgorithm);
 	}
 
 	/**

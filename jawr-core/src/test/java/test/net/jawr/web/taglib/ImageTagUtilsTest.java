@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.taglib.ImageTagUtils;
@@ -36,7 +36,7 @@ public class ImageTagUtilsTest extends TestCase {
 	 */
 	public void setUp(){
 		config = new JawrConfig("img", new Properties());
-		config.setImageHashAlgorithm("MD5");
+		config.setBinaryHashAlgorithm("MD5");
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(JawrConstant.IMG_TYPE);
 		config.setGeneratorRegistry(generatorRegistry);
 		generatorRegistry.setConfig(config);
@@ -95,7 +95,7 @@ public class ImageTagUtilsTest extends TestCase {
 		when(response.encodeURL(Mockito.anyString())).then(AdditionalAnswers.returnsFirstArg());
 		ResourceReaderHandler rsHandler = Mockito.mock(ResourceReaderHandler.class);
 		
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(config, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(config, rsHandler, null);
 		String servletMapping = null;
 		if(config.getServletMapping() != null && config.getServletMapping().trim().length() > 0){
 			servletMapping = "/"+config.getServletMapping()+"/";

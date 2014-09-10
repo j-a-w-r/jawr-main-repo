@@ -45,8 +45,8 @@ import net.jawr.web.exception.BundleDependencyException;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.FileNameUtils;
-import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.factory.PropertiesBasedBundlesHandlerFactory;
 import net.jawr.web.resource.bundle.factory.PropsConfigPropertiesSource;
@@ -65,7 +65,6 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.bundle.ServletContextResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
-import net.jawr.web.servlet.util.ImageMIMETypesSupport;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -124,7 +123,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	public static final String CLIENTSIDE_HANDLER_REQ_PATH = "/jawr_loader.js";
 
 	/** The generated image pattern */
-	private static final Pattern GENERATED_IMG_PATTERN = Pattern
+	private static final Pattern GENERATED_BINARY_RESOURCE_PATTERN = Pattern
 			.compile("(url\\(([\"' ]*))(([a-zA-Z]+)(?! (http|data)):(/)?)([^\\)\"']*)([\"']?\\))");
 
 	/** The resource bundles handler */
@@ -168,9 +167,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 	/** The client-side script request handler */
 	protected ClientSideHandlerScriptRequestHandler clientSideScriptRequestHandler;
-
-	/** The image MIME map, associating the image extension to their MIME type */
-	protected Map<Object, Object> imgMimeMap;
 
 	/** The handler for the illegal bundle request */
 	protected IllegalBundleRequestHandler illegalBundleRequestHandler;
@@ -222,7 +218,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			Map<String, Object> initParams, Properties configProps)
 			throws ServletException {
 
-		this.imgMimeMap = ImageMIMETypesSupport.getSupportedProperties(this);
 		this.initParameters = initParams;
 		initRequestHandler(context, configProps);
 	}
@@ -245,7 +240,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			LOGGER.info("Initializing jawr config for request handler named "
 					+ getInitParameter("handlerName"));
 
-		this.imgMimeMap = ImageMIMETypesSupport.getSupportedProperties(this);
 		this.servletContext = context;
 		this.overrideProperties = configProps;
 		resourceType = getInitParameter("type");
@@ -483,11 +477,11 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		if (jawrConfig.isCssClasspathImageHandledByClasspathCss()
 				&& resourceType.equals("css")) {
-			ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) servletContext
-					.getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
-			if (imgRsHandler == null) {
-				LOGGER.error("You are using the CSS classpath image feature, but the JAWR Image servlet is yet initialized.\n"
-						+ "The JAWR Image servlet must be initialized before the JAWR CSS servlet.\n"
+			BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) servletContext
+					.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+			if (binaryRsHandler == null) {
+				LOGGER.error("You are using the CSS classpath image feature, but the JAWR Binary servlet is not yet initialized.\n"
+						+ "The JAWR Binary servlet must be initialized before the JAWR CSS servlet.\n"
 						+ "Please check you web application configuration.");
 			}
 		}
@@ -743,13 +737,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			// CSS images would be requested through this handler in case
 			// servletMapping is used
-			// if( this.jawrConfig.isDebugModeOn() &&
-			// !("".equals(this.jawrConfig.getServletMapping())) && null ==
-			// request.getParameter(GENERATION_PARAM)) {
 			if (JawrConstant.CSS_TYPE.equals(resourceType)
 					&& !JawrConstant.CSS_TYPE
 							.equals(getExtension(requestedPath))
-			// && this.imgMimeMap.containsKey(getExtension(requestedPath))
 			) {
 
 				if (null == bundlesHandler.resolveBundleForPath(requestedPath)) {
@@ -928,8 +918,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			// directly from the webapp
 			// and if the CSS contains generated images, we should rewrite the
 			// URL.
-			ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) servletContext
-					.getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
+			BinaryResourcesHandler imgRsHandler = (BinaryResourcesHandler) servletContext
+					.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 			if (imgRsHandler != null && this.jawrConfig.isDebugModeOn()
 					&& resourceType.equals(JawrConstant.CSS_TYPE)) {
 
@@ -956,7 +946,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 *            the request
 	 * @param response
 	 *            the response
-	 * @param imgRsHandler
+	 * @param binaryRsHandler
 	 *            the image resource handler
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
@@ -965,7 +955,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 */
 	private void handleGeneratedCssInDebugMode(String requestedPath,
 			HttpServletRequest request, HttpServletResponse response,
-			ImageResourcesHandler imgRsHandler)
+			BinaryResourcesHandler binaryRsHandler)
 			throws ResourceNotFoundException, IOException {
 
 		// Write the content of the CSS in the Stringwriter
@@ -978,7 +968,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		IOUtils.copy(rd, writer);
 		String content = writer.toString();
 
-		String imageServletMapping = imgRsHandler.getConfig()
+		String imageServletMapping = binaryRsHandler.getConfig()
 				.getServletMapping();
 
 		if (imageServletMapping == null) {
@@ -987,7 +977,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		String requestPath = getRequestPath(request);
 
-		// Define the replacement pattern for the generated image (like
+		// Define the replacement pattern for the generated binary resource (like
 		// jar:img/myImg.png)
 		String relativeRootUrlPath = PathNormalizer
 				.getRootRelativePath(requestPath);
@@ -995,7 +985,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				+ relativeRootUrlPath + imageServletMapping
 				+ "/$4_cbDebug/$7$8");
 
-		Matcher matcher = GENERATED_IMG_PATTERN.matcher(content);
+		Matcher matcher = GENERATED_BINARY_RESOURCE_PATTERN.matcher(content);
 
 		// Rewrite the images define in the classpath, to point to the image
 		// servlet

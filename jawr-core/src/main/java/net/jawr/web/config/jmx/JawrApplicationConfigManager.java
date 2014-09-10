@@ -383,7 +383,7 @@ public class JawrApplicationConfigManager implements
 			configMgr = jsMBean;
 		}else if(resourceType.equals(JawrConstant.CSS_TYPE)){
 			configMgr = cssMBean;
-		}else if(resourceType.equals(JawrConstant.IMG_TYPE)){
+		}else if(resourceType.equals(JawrConstant.IMG_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE)){
 			configMgr = imgMBean;
 		}
 		

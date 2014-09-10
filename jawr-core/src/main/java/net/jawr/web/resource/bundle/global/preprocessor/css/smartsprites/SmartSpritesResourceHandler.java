@@ -50,8 +50,8 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 	/** The Css generator registry */
 	private GeneratorRegistry cssGeneratorRegistry;
 	
-	/** The image generator registry */
-	private GeneratorRegistry imgGeneratorRegistry;
+	/** The binary resource generator registry */
+	private GeneratorRegistry binaryGeneratorRegistry;
 	
 	/** The charset */
 	private final String charset;
@@ -80,7 +80,7 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 		this.rsHandler = rsHandler;
 		this.imgRsHandler = imgRsHandler;
 		this.cssGeneratorRegistry = cssGeneratorRegistry;
-		this.imgGeneratorRegistry = imgGeneratorRegistry;
+		this.binaryGeneratorRegistry = imgGeneratorRegistry;
 		this.charset = charset;
 		this.workingDir = rsHandler.getWorkingDirectory()+JawrConstant.CSS_SMARTSPRITES_TMP_DIR;
 	}
@@ -135,7 +135,7 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 	public String getResourcePath(String basePath, String relativePath) {
 
 		String result = null;
-		if (imgGeneratorRegistry.isGeneratedImage(relativePath)) {
+		if (binaryGeneratorRegistry.isGeneratedBinaryResource(relativePath)) {
 			result = relativePath;
 		} else if(contextPath != null && relativePath.startsWith(contextPath)){
 			result = relativePath.substring(contextPath.length()-1);
@@ -155,7 +155,7 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 
 		// Create directories if needed
 		String generatedFilePath = resourceName.substring(workingDir.length());
-		if(!FileNameUtils.isExtension(generatedFilePath, JawrConstant.CSS_TYPE) && imgGeneratorRegistry.isGeneratedImage(generatedFilePath)){
+		if(!FileNameUtils.isExtension(generatedFilePath, JawrConstant.CSS_TYPE) && binaryGeneratorRegistry.isGeneratedBinaryResource(generatedFilePath)){
 			// for generated image put it  in the generated Image directory
 			generatedFilePath = workingDir+JawrConstant.SPRITE_GENERATED_IMG_DIR+generatedFilePath.replace(':','/');
 		}else if(cssGeneratorRegistry.isPathGenerated(generatedFilePath)) { // Rename resource for For generated CSS

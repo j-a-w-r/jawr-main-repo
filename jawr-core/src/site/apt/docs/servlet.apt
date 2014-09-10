@@ -6,7 +6,7 @@
 
 The Jawr servlet
 	
-	For each type of supported resource (CSS, image, Javascript), you need an instance of net.jawr.web.servlet.JawrServlet running. 
+	For each type of supported resource (CSS, Javascript, Binary [image, font, ...]), you need an instance of net.jawr.web.servlet.JawrServlet running. 
 	Of course, you may choose to use Jawr for only one of these types of resources. \ 
 	
 	By default, all bundles are created and postprocessed when this servlet starts up and stored at the application server's temporary directory. 
@@ -40,8 +40,9 @@ The Jawr servlet
 	example: file:C:\config\jawr.properties.  
 	 
 	
-	* <<type>>: Refers to the type of resource the servlet will manage. It can receive three possible values: <js> , <css> or <img>. You can omit this parameter 
-	for the javascript servlet, since <js> is the default value. \ 
+	* <<type>>: Refers to the type of resource the servlet will manage. It can receive three possible values: <js> , <css> or <binary>. You can omit this parameter 
+	for the javascript servlet, since <js> is the default value. \
+	The <img> value is deprecated and should be replaced by <binary>. \ 
 	
 	* <<configPropertiesSourceClass>>: This optional parameter holds the qualified class name of you custom implementation of ConfigPropertiesSource, 
 	in case you want to customize the way configuration is loaded when Jawr starts up. More on this below.
@@ -95,18 +96,18 @@ The Jawr servlet
 +------------------------------------------+
 
 
-* Jawr image handling
+* Jawr binary resource (image, font, ...) handling
 
-	Jawr supports images. To enable this feature, you will have to define the Jawr image servlet in your web.xml file. 
-	When the Jawr image servlet is defined in you application, all CSS images will be handled by this servlet.
+	Jawr supports binary web resources (images, fonts, ...). To enable this feature, you will have to define the Jawr binary servlet in your web.xml file. 
+	When the Jawr binary servlet is defined in you application, all CSS images or fonts will be handled by this servlet.
 	
-	In order for Jawr to properly handle the CSS images, the Jawr image servlet must start before the Jawr CSS servlet.
+	In order for Jawr to properly handle the CSS images and fonts, the Jawr Binary servlet must start before the Jawr CSS servlet.
 	This means that you will have to set properly the <<load.on.startup>> property in your web.xml like below :
 	 
 +------------------------------------------+
 	...
 	<servlet>
-		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
 		<init-param>
 			<param-name>configLocation</param-name>
@@ -114,9 +115,9 @@ The Jawr servlet
 		</init-param>
 		<init-param>
 			<param-name>type</param-name>
-			<param-value>img</param-value>
+			<param-value>binary</param-value>
 		</init-param>
-		<!-- The Jawr Image servlet must start before the Jawr CSS Servlet -->
+		<!-- The Jawr Binary servlet must start before the Jawr CSS Servlet -->
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 	<servlet>
@@ -134,27 +135,46 @@ The Jawr servlet
 	</servlet>
 	
 	...
-	
+	<!-- Images mapping -->
 	<servlet-mapping>
-		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.png</url-pattern>
 	</servlet-mapping> 
 	<servlet-mapping>
-		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.gif</url-pattern>
 	</servlet-mapping> 
+	<!-- Fonts mapping -->
 	<servlet-mapping>
-		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.woff</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.ttf</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.svg</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.eot</url-pattern>
+	</servlet-mapping> 
+	
+	<!-- CSS mapping -->
+	<servlet-mapping>
+		<servlet-name>JawrCSSServlet</servlet-name>
 		<url-pattern>*.css</url-pattern>
 	</servlet-mapping> 
 	
 	
 +------------------------------------------+
 	
-	Note : The declaration of your images in the <<jawr.image.resources>> property is not mandatory. 
+	Note : The declaration of your binary in the <<jawr.binary.resources>> property is not mandatory. 
 	This property is used to calculate the hashcode of the images at the image servlet startup. 
-	If an image is not defined in this property, the hashcode of the image will be calculated at runtime.
-	Look for <jawr.image.resources> at the {{{./descriptor_syntax.html}descriptor syntax doc}} for more information. 
+	If a binary resource is not defined in this property, the hashcode of this resource will be calculated at runtime.
+	Look for <jawr.binary.resources> at the {{{./descriptor_syntax.html}descriptor syntax doc}} for more information. 
 	
 	
 	[]
@@ -242,11 +262,11 @@ The Jawr servlet
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
 		<init-param>
 			<param-name>type</param-name>
-			<param-value>img</param-value>
+			<param-value>binary</param-value>
 		</init-param>
 		<init-param>
 			<param-name>configLocation</param-name>
@@ -278,11 +298,11 @@ The Jawr servlet
 		<url-pattern>*.css</url-pattern>
 	</servlet-mapping>	
  	<servlet-mapping>
-		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.png</url-pattern>
 	</servlet-mapping> 
 	<servlet-mapping>
-		<servlet-name>JawrImgServlet</servlet-name>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.gif</url-pattern>
 	</servlet-mapping> 
 	

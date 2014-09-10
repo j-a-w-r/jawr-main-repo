@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.css.CssImageUrlRewriter;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
@@ -111,10 +111,9 @@ public class CSSImportPostProcessor extends
 		StringWriter content = new StringWriter();
 		IOUtils.copy(reader, content, true);
 		
-		// Retrieve the image servlet mapping
-		ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) jawrConfig.getContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
-		if(imgRsHandler != null){
-			jawrConfig = imgRsHandler.getConfig();
+		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+		if(binaryRsHandler != null){
+			jawrConfig = binaryRsHandler.getConfig();
 		}
 		// Rewrite image URL
 		CssImportedUrlRewriter urlRewriter = new CssImportedUrlRewriter(jawrConfig);
@@ -160,7 +159,7 @@ public class CSSImportPostProcessor extends
 			String currentPath = originalCssPath;
 			
 			String imgPath = PathNormalizer.concatWebPath(currentPath, url);
-			if(!generatorRegistry.isGeneratedImage(imgPath) && !generatorRegistry.isHandlingCssImage(originalCssPath)){
+			if(!generatorRegistry.isGeneratedBinaryResource(imgPath) && !generatorRegistry.isHandlingCssImage(originalCssPath)){
 				imgPath = PathNormalizer.getRelativeWebPath(PathNormalizer
 						.getParentPath(newCssPath), imgPath);
 			}

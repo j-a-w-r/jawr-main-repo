@@ -26,7 +26,7 @@ import net.jawr.web.DebugMode;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
@@ -75,14 +75,13 @@ public class IECssBundleGeneratorTestCase extends TestCase {
 		generatorRegistry.setResourceReaderHandler(ctx.getResourceReaderHandler());
 		
 		// Set up the Image servlet Jawr config
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", new Properties());
-		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
-		ResourceReaderHandler imgHandler = getResourceReaderHandler();
-		generatorRegistry.setResourceReaderHandler(imgHandler);
-		//imgServletJawrConfig.setServletMapping("/cssImg/");
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, imgHandler, null);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		JawrConfig binaryServletJawrConfig = new JawrConfig("img", new Properties());
+		addGeneratorRegistryToConfig(binaryServletJawrConfig, "img");
+		ResourceReaderHandler binaryHandler = getResourceReaderHandler();
+		generatorRegistry.setResourceReaderHandler(binaryHandler);
 		
+		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(binaryServletJawrConfig, binaryHandler, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 	}
 	
 	public void testIeCssBundleGenerator() throws Exception{
@@ -97,7 +96,7 @@ public class IECssBundleGeneratorTestCase extends TestCase {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(type){
 
 			
-			public boolean isGeneratedImage(String imgResourcePath) {
+			public boolean isGeneratedBinaryResource(String imgResourcePath) {
 				return imgResourcePath.startsWith("jar:");
 			}
 

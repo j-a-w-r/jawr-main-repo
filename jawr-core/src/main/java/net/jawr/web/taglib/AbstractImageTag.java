@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import javax.servlet.jsp.JspException;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.context.ThreadLocalJawrContext;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
 import net.jawr.web.resource.bundle.renderer.image.ImgRenderer;
 
@@ -243,12 +243,12 @@ public abstract class AbstractImageTag extends ImagePathTag {
 
 		try {
 
-			ImageResourcesHandler rsHandler = null;
-			if ((rsHandler = (ImageResourcesHandler) pageContext
+			BinaryResourcesHandler rsHandler = null;
+			if ((rsHandler = (BinaryResourcesHandler) pageContext
 					.getServletContext().getAttribute(
-							JawrConstant.IMG_CONTEXT_ATTRIBUTE)) == null)
+							JawrConstant.BINARY_CONTEXT_ATTRIBUTE)) == null)
 				throw new IllegalStateException(
-						"ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
+						"Binary ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
 
 			JawrConfig jawrConfig = rsHandler.getConfig();
 			this.renderer = RendererFactory.getImgRenderer(jawrConfig,

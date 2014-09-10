@@ -59,14 +59,13 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 		try {
 			String type = getServletConfig().getInitParameter(
 					JawrConstant.TYPE_INIT_PARAMETER);
-			if (JawrConstant.IMG_TYPE.equals(type)) {
-				requestHandler = new JawrImageRequestHandler(
+			if (JawrConstant.IMG_TYPE.equals(type) || JawrConstant.BINARY_TYPE.equals(type)) {
+				requestHandler = new JawrBinaryResourceRequestHandler(
 						getServletContext(), getServletConfig());
 			} else {
 				requestHandler = new JawrRequestHandler(getServletContext(),
 						getServletConfig());
 			}
-			// getServletConfig().getServletContext().
 		} catch (ServletException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
 			LOGGER.error(fatal, "Jawr servlet with name "

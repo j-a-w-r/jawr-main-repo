@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -55,18 +55,18 @@ public final class CheckSumUtils {
 		String checksum = null;
 		InputStream is = null;
 		
-		boolean generatedImage = jawrConfig.getGeneratorRegistry().isGeneratedImage(url);
+		boolean generatedBinaryResource = jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(url);
 		
 		try {
 			
-			if(!generatedImage){
+			if(!generatedBinaryResource){
 				url = PathNormalizer.asPath(url);
 			}
 			
 			is = rsReader.getResourceAsStream(url);
 			
 			if(is != null){
-				checksum = CheckSumUtils.getChecksum(is, jawrConfig.getImageHashAlgorithm());
+				checksum = CheckSumUtils.getChecksum(is, jawrConfig.getBinaryHashAlgorithm());
 			}else{
 				throw new ResourceNotFoundException(url);
 			}
@@ -82,7 +82,7 @@ public final class CheckSumUtils {
 		
 		result = JawrConstant.CACHE_BUSTER_PREFIX;
 		
-		if(generatedImage){
+		if(generatedBinaryResource){
 			int idx = url.indexOf(GeneratorRegistry.PREFIX_SEPARATOR);
 			String generatorPrefix = url.substring(0, idx);
 			url = url.substring(idx+1);

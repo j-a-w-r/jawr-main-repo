@@ -189,9 +189,9 @@ Descriptor file syntax
 	Jawr is also able to manage image resources. A dedicated servlet is used to handle them.
 
 *---------------+---------+--------------+----------------+
-| jawr.image.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    | 
+| jawr.binary.resources | String | The comma separated list of binary web resources, whose the hashcode will be calculated at Jawr Binary servlet startup. If a binary resource is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    | 
 *---------------+---------+--------------+----------------+
-| jawr.image.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 | 
+| jawr.binary.hash.algorithm | String | The hash algorithm to use for the binary resource (images, font, ...). Two values are possible : CRC32 and MD5  | CRC32 | 
 *---------------*---------*--------------+----------------+
 | jawr.img.bundle.link.renderer.class | String | The image link render class, which must implements net.jawr.web.resource.bundle.renderer.image.ImgRenderer | net.jawr.web.resource.bundle.renderer.image.ImgHTMLRenderer | 
 *---------------*---------*--------------+----------------+
@@ -258,5 +258,9 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+----------------+
 | factory.use.orphans.mapper | Boolean | Enable/disable auto scanning of non explicitly mapped files to auto-compress and to generate a one-file bundle out of each.  | true| 3.2.1 |
 *---------------+---------+--------------+----------------+----------------+
+| jawr.image.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    |   Not supported since 3.6 (Please use <jawr.image.resources> instead)  |
+*---------------+---------+--------------+----------------+
+| jawr.image.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 |  Not supported since 3.6 (Please use <jawr.binary.hash.algorithm> instead)  |
+*---------------*---------*--------------+----------------+
 
 

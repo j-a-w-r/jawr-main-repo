@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
@@ -88,9 +88,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -130,9 +130,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -171,9 +171,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -213,9 +213,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -255,9 +255,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -297,9 +297,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -339,9 +339,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -381,9 +381,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -423,9 +423,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -465,9 +465,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -507,9 +507,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 
@@ -549,9 +549,9 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle, null, config);
 		Map<String, String> bundleVariants = new HashMap<String, String>();

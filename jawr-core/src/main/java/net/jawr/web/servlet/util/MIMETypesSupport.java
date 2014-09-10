@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -31,13 +31,13 @@ import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
  * @author Ibrahim Chaehoi
  *
  */
-public class ImageMIMETypesSupport {
+public class MIMETypesSupport {
 	
 	/** The properties of supported MIME types*/
 	private static Properties supportedMIMETypes;
 	
 	/** The mime type properties file location */
-	private static final String MIME_PROPS_LOCATION = "/net/jawr/web/resource/image/mimetypes.properties";
+	private static final String MIME_PROPS_LOCATION = "/net/jawr/web/resource/mimetypes.properties";
 	
 	/**
 	 * Returns a Map object containing all the supported media 
@@ -48,7 +48,7 @@ public class ImageMIMETypesSupport {
 	public static Map<Object, Object> getSupportedProperties(Object ref) {
 		
 		if(null == supportedMIMETypes) {
-			synchronized (ImageMIMETypesSupport.class) {
+			synchronized (MIMETypesSupport.class) {
 				if(null == supportedMIMETypes) {
 					// Load the supported MIME types out of a properties file
 					InputStream is = null;
@@ -58,10 +58,10 @@ public class ImageMIMETypesSupport {
 						supportedMIMETypes.load(is);
 					} catch (FileNotFoundException e) {
 						throw new BundlingProcessException("Error retrieving " + MIME_PROPS_LOCATION 
-													+ ".Please check your classloader settings");
+													+ ". Please check your classloader settings");
 					} catch (IOException e) {
 						throw new BundlingProcessException("Error retrieving " + MIME_PROPS_LOCATION 
-													+ ".Please check your classloader settings");
+													+ ". Please check your classloader settings");
 					}finally{
 						IOUtils.close(is);
 					}

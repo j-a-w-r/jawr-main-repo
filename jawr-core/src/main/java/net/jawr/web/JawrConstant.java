@@ -42,6 +42,9 @@ public class JawrConstant {
 	/** The init parameter servlet for the resource type */
 	public static final String TYPE_INIT_PARAMETER = "type";
 
+	/** The binary web resource type */
+	public static final String BINARY_TYPE = "binary";
+
 	/** The image type */
 	public static final String IMG_TYPE = "img";
 
@@ -67,7 +70,10 @@ public class JawrConstant {
 	public static final String CSS_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.CSS_CONTEXT_ATTRIBUTE";
 
 	/** The image servlet context attribute name */
-	public static final String IMG_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.IMG_CONTEXT_ATTRIBUTE";
+	//public static final String IMG_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.IMG_CONTEXT_ATTRIBUTE";
+
+	/** The binary servlet context attribute name */
+	public static final String BINARY_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.BINARY_CONTEXT_ATTRIBUTE";
 
 	/** The http scheme */
 	public static final String HTTP = "http";
@@ -90,8 +96,11 @@ public class JawrConstant {
 	/** The jawr bundle mapping properties file name for CSS resources */
 	public static final String JAWR_CSS_MAPPING_PROPERTIES_FILENAME = "jawr-css-mapping.properties";
 	
+	/** The jawr bundle mapping properties file name for binary resources */
+	public static final String JAWR_BINARY_MAPPING_PROPERTIES_FILENAME = "jawr-binary-mapping.properties";
+	
 	/** The jawr bundle mapping properties file name for image resources */
-	public static final String JAWR_IMG_MAPPING_PROPERTIES_FILENAME = "jawr-img-mapping.properties";
+	//public static final String JAWR_IMG_MAPPING_PROPERTIES_FILENAME = "jawr-img-mapping.properties";
 	
 	/** The servlet mapping property name */
 	public static final String SERVLET_MAPPING_PROPERTY_NAME = "mapping";
@@ -222,7 +231,7 @@ public class JawrConstant {
 	
 	public static final String BASE64_ENCODE_SPRITE = "jawr.css.postprocessor.base64ImageEncoder.encode.sprite";
 	
-	public static final String POST_PROCESSING_CTX_JAWR_IMAGE_MAPPING = "jawrImageMapping";
+	public static final String POST_PROCESSING_CTX_JAWR_BINARY_MAPPING = "jawrBinaryMapping";
 
 	public static final String BASE64_ENCODED_RESOURCES = "BASE64_ENCODED_RESOURCES";
 

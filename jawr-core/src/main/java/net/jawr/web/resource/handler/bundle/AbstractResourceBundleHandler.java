@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -146,8 +146,9 @@ public abstract class AbstractResourceBundleHandler implements
 			mappingFileName = JawrConstant.JAWR_JS_MAPPING_PROPERTIES_FILENAME;
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_CSS_MAPPING_PROPERTIES_FILENAME;
-		} else if (resourceType.equals(JawrConstant.IMG_TYPE)) {
-			mappingFileName = JawrConstant.JAWR_IMG_MAPPING_PROPERTIES_FILENAME;
+		} else if (resourceType.equals(JawrConstant.IMG_TYPE) || 
+				resourceType.equals(JawrConstant.BINARY_TYPE)) {
+			mappingFileName = JawrConstant.JAWR_BINARY_MAPPING_PROPERTIES_FILENAME;
 		}else{
 			throw new BundlingProcessException("Unknown resource Type:" + resourceType); 
 		}
@@ -187,8 +188,9 @@ public abstract class AbstractResourceBundleHandler implements
 			mappingFileName = JawrConstant.JAWR_JS_MAPPING_PROPERTIES_FILENAME;
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_CSS_MAPPING_PROPERTIES_FILENAME;
-		} else if (resourceType.equals(JawrConstant.IMG_TYPE)) {
-			mappingFileName = JawrConstant.JAWR_IMG_MAPPING_PROPERTIES_FILENAME;
+		} else if (resourceType.equals(JawrConstant.IMG_TYPE) || 
+				resourceType.equals(JawrConstant.BINARY_TYPE)) {
+			mappingFileName = JawrConstant.JAWR_BINARY_MAPPING_PROPERTIES_FILENAME;
 		}
 
 		try {

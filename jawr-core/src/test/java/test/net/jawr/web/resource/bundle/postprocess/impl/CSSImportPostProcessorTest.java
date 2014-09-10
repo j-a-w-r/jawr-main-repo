@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
@@ -57,8 +57,8 @@ public class CSSImportPostProcessorTest extends TestCase {
 		GeneratorRegistry imgGeneratorRegistry = new GeneratorRegistry(JawrConstant.IMG_TYPE);
 		generatorRegistry.setConfig(imgConfig);
 		imgConfig.setGeneratorRegistry(imgGeneratorRegistry);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgConfig, null, null);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgConfig, null, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		processor = new CSSImportPostProcessor();
 	}
@@ -190,7 +190,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		ResourceReaderHandler rsHandler = getResourceReaderHandler(expectedCssImportPath);
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
 		
-		ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) config.getContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
+		BinaryResourcesHandler imgRsHandler = (BinaryResourcesHandler) config.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 		imgRsHandler.getConfig().getGeneratorRegistry().setResourceReaderHandler(rsHandler);
 		imgRsHandler.getConfig().setContext(config.getContext());
 		BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,bundle, rsHandler, config);

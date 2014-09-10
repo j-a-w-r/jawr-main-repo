@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
@@ -307,9 +307,9 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle, null, config);
 
@@ -352,8 +352,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		generatorRegistry.setResourceReaderHandler(rsHandler);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle, null, config);
 
@@ -390,8 +390,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		props = new Properties();
 		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, null, null);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, null, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
 		status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle, null, config);
 
@@ -428,9 +428,9 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		// Set up the Image servlet Jawr config
 		props = new Properties();
 		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, null, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, null, null);
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		imgRsHandler.addMapping("/images/someImage.gif", "/cp653321354/images/someImage.gif");
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(../../../../images/someImage.gif);");
@@ -465,8 +465,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
 		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		
-		ImageResourcesHandler imgRsHandler = new ImageResourcesHandler(imgServletJawrConfig, rsHandler, null);
-		servletContext.setAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE, imgRsHandler);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(../../../../images/someImage.gif);");
 		// the image is at /images

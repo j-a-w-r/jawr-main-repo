@@ -23,14 +23,14 @@ import java.util.regex.Pattern;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.FileNameUtils;
-import net.jawr.web.resource.ImageResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.PostProcessorCssImageUrlRewriter;
-import net.jawr.web.servlet.util.ImageMIMETypesSupport;
+import net.jawr.web.servlet.util.MIMETypesSupport;
 import net.jawr.web.util.Base64Encoder;
 import net.jawr.web.util.StringUtils;
 
@@ -230,18 +230,13 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 		return sb;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seenet.jawr.web.resource.bundle.postprocess.impl.
-	 * PostProcessorCssImageUrlRewriter
-	 * #rewriteURL(net.jawr.web.resource.bundle.postprocess
-	 * .BundleProcessingStatus, java.lang.String, java.lang.String,
-	 * java.lang.String, net.jawr.web.resource.ImageResourcesHandler)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.postprocess.impl.PostProcessorCssImageUrlRewriter#rewriteURL(net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus, java.lang.String, java.lang.String, java.lang.String, net.jawr.web.resource.BinaryResourcesHandler)
 	 */
+	@Override
 	protected String rewriteURL(BundleProcessingStatus status, String url,
 			String imgServletPath, String newCssPath,
-			ImageResourcesHandler imgRsHandler) throws IOException {
+			BinaryResourcesHandler binaryRsHandler) throws IOException {
 
 		String imgUrl = url;
 		String browser = status.getVariant(JawrConstant.BROWSER_VARIANT_TYPE);
@@ -249,16 +244,16 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 		if (skipBase64Encoding) { // Skip base64 encoding if it has ben
 									// deactivated
 			imgUrl = super.rewriteURL(status, imgUrl, imgServletPath,
-					newCssPath, imgRsHandler);
+					newCssPath, binaryRsHandler);
 		} else {
 
 			LOGGER.info("Encoding resource: " + url);
 			try {
-				InputStream is = imgRsHandler.getRsReaderHandler()
+				InputStream is = binaryRsHandler.getRsReaderHandler()
 						.getResourceAsStream(url);
 
 				String fileExtension = FileNameUtils.getExtension(url);
-				String fileMimeType = (String) ImageMIMETypesSupport
+				String fileMimeType = (String) MIMETypesSupport
 						.getSupportedProperties(this).get(fileExtension);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				IOUtils.copy(is, out, true);

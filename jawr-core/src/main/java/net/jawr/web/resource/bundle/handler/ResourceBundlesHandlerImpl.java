@@ -41,7 +41,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
@@ -618,29 +618,29 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			if (resourceBundleHandler.getResourceType().equals(
 					JawrConstant.CSS_TYPE)) {
 				// Retrieve the image servlet mapping
-				ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) config
+				BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) config
 						.getContext().getAttribute(
-								JawrConstant.IMG_CONTEXT_ATTRIBUTE);
-				if (imgRsHandler != null) {
+								JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+				if (binaryRsHandler != null) {
 					// Here we update the image mapping if we are using the
 					// build time bundle processor
-					JawrConfig imgJawrConfig = imgRsHandler.getConfig();
+					JawrConfig binaryJawrConfig = binaryRsHandler.getConfig();
 
 					// If we use the full image bundle mapping and the jawr
 					// working directory is not located inside the web
 					// application
 					// We store the image bundle maping which now contains the
 					// mapping for CSS images
-					String jawrWorkingDirectory = imgJawrConfig
+					String jawrWorkingDirectory = binaryJawrConfig
 							.getJawrWorkingDirectory();
-					if (imgJawrConfig.getUseBundleMapping()
+					if (binaryJawrConfig.getUseBundleMapping()
 							&& (jawrWorkingDirectory == null || !jawrWorkingDirectory
 									.startsWith(JawrConstant.URL_SEPARATOR))) {
 
 						// Store the bundle mapping
 						Properties props = new Properties();
-						props.putAll(imgRsHandler.getImageMap());
-						imgRsHandler.getRsBundleHandler()
+						props.putAll(binaryRsHandler.getImageMap());
+						binaryRsHandler.getRsBundleHandler()
 								.storeJawrBundleMapping(props);
 
 					}

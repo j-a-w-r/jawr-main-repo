@@ -32,7 +32,7 @@ import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.servlet.util.ImageMIMETypesSupport;
+import net.jawr.web.servlet.util.MIMETypesSupport;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -106,8 +106,9 @@ public class ServletContextResourceReaderHandler implements
 		// add the default extension
 		allowedExtensions.addAll(JawrConstant.DEFAULT_RESOURCE_EXTENSIONS);
 
-		if (JawrConstant.IMG_TYPE.equals(jawrConfig.getResourceType())) {
-			for (Object key : ImageMIMETypesSupport.getSupportedProperties(
+		if (JawrConstant.IMG_TYPE.equals(jawrConfig.getResourceType())
+				|| JawrConstant.BINARY_TYPE.equals(jawrConfig.getResourceType())) {
+			for (Object key : MIMETypesSupport.getSupportedProperties(
 					JawrConfig.class).keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {
 					this.allowedExtensions.add((String) key);

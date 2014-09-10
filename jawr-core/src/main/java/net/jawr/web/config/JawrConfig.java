@@ -43,7 +43,7 @@ import net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer;
 import net.jawr.web.resource.bundle.variant.VariantResolver;
 import net.jawr.web.resource.bundle.variant.resolver.BrowserResolver;
 import net.jawr.web.resource.bundle.variant.resolver.ConnectionTypeResolver;
-import net.jawr.web.servlet.util.ImageMIMETypesSupport;
+import net.jawr.web.servlet.util.MIMETypesSupport;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -215,14 +215,14 @@ public class JawrConfig implements Serializable {
 	public static final String JAWR_CSS_SKIN_COOKIE = "jawr.css.skin.cookie";
 
 	/**
-	 * The property name for the image hash algorithm.
+	 * The property name for the binary hash algorithm.
 	 */
-	public static final String JAWR_IMAGE_HASH_ALGORITHM = "jawr.image.hash.algorithm";
+	public static final String JAWR_BINARY_HASH_ALGORITHM = "jawr.binary.hash.algorithm";
 
 	/**
-	 * The property name for the image resources.
+	 * The property name for the binary resources.
 	 */
-	public static final String JAWR_IMAGE_RESOURCES = "jawr.image.resources";
+	public static final String JAWR_BINARY_RESOURCES = "jawr.binary.resources";
 
 	/**
 	 * The property name for the Jawr strict mode.
@@ -369,13 +369,13 @@ public class JawrConfig implements Serializable {
 	/**
 	 * Defines the image resources definition.
 	 */
-	private String imageResourcesDefinition;
+	private String binaryResourcesDefinition;
 
 	/**
 	 * Defines the image hash algorithm. By default the value is CRC32. There
 	 * are only 2 algorithm available CRC32 and MD5.
 	 */
-	private String imageHashAlgorithm = "CRC32";
+	private String binaryHashAlgorithm = "CRC32";
 
 	/**
 	 * Used to check if a configuration has not been outdated by a new one.
@@ -490,9 +490,9 @@ public class JawrConfig implements Serializable {
 			}
 		}
 
-		if (resourceType.equals(JawrConstant.IMG_TYPE)) {
-			for (Object key : ImageMIMETypesSupport.getSupportedProperties(
-					JawrConfig.class).keySet()) {
+		if (resourceType.equals(JawrConstant.IMG_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE)) {
+			for (Object key : MIMETypesSupport.getSupportedProperties(
+					this).keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {
 					this.allowedExtensions.add((String) key);
 				}
@@ -580,6 +580,11 @@ public class JawrConfig implements Serializable {
 		this.classpathCssHandleImage = getBooleanProperty(
 				JAWR_CSS_CLASSPATH_HANDLE_IMAGE, false);
 
+		this.binaryHashAlgorithm = getProperty(JAWR_BINARY_HASH_ALGORITHM,
+				"CRC32");
+
+		this.binaryResourcesDefinition = getProperty(JAWR_BINARY_RESOURCES);
+		
 		// TODO : remove the below section in the next major release
 		if (StringUtils
 				.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
@@ -587,11 +592,28 @@ public class JawrConfig implements Serializable {
 					"The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"
 							+ JAWR_CSS_CLASSPATH_HANDLE_IMAGE + "' instead.");
 		}
+		
+		if (StringUtils
+				.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
+			throw new BundlingProcessException(
+					"The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"
+							+ JAWR_CSS_CLASSPATH_HANDLE_IMAGE + "' instead.");
+		}
+		
+		if (StringUtils
+				.isNotEmpty(getProperty("jawr.image.hash.algorithm"))) {
+			throw new BundlingProcessException(
+					"The property 'jawr.image.hash.algorithm' is not supported anymore, please use '"
+							+ JAWR_BINARY_HASH_ALGORITHM + "' instead.");
+		}
 
-		this.imageHashAlgorithm = getProperty(JAWR_IMAGE_HASH_ALGORITHM,
-				"CRC32");
-
-		this.imageResourcesDefinition = getProperty(JAWR_IMAGE_RESOURCES);
+		if (StringUtils
+				.isNotEmpty(getProperty("jawr.image.resources"))) {
+			throw new BundlingProcessException(
+					"The property 'jawr.image.resources' is not supported anymore, please use '"
+							+ JAWR_BINARY_RESOURCES + "' instead.");
+		}
+		
 
 	}
 
@@ -1048,41 +1070,41 @@ public class JawrConfig implements Serializable {
 	}
 
 	/**
-	 * Get the image hash algorithm
+	 * Get the binary hash algorithm
 	 * 
-	 * @return the image hash algorithm
+	 * @return the binary hash algorithm
 	 */
-	public String getImageHashAlgorithm() {
-		return imageHashAlgorithm;
+	public String getBinaryHashAlgorithm() {
+		return binaryHashAlgorithm;
 	}
 
 	/**
-	 * Sets the image hash algorithm
+	 * Sets the binary hash algorithm
 	 * 
-	 * @param imageHashAlgorithm
+	 * @param binaryHashAlgorithm
 	 *            , the hash algorithm to set
 	 */
-	public void setImageHashAlgorithm(String imageHashAlgorithm) {
-		this.imageHashAlgorithm = imageHashAlgorithm;
+	public void setBinaryHashAlgorithm(String binaryHashAlgorithm) {
+		this.binaryHashAlgorithm = binaryHashAlgorithm;
 	}
 
 	/**
-	 * Returns the image resources definition.
+	 * Returns the binary resources definition.
 	 * 
-	 * @return the image resources definition.
+	 * @return the binary resources definition.
 	 */
-	public String getImageResourcesDefinition() {
-		return imageResourcesDefinition;
+	public String getBinaryResourcesDefinition() {
+		return binaryResourcesDefinition;
 	}
 
 	/**
-	 * Sets the image resources definition.
+	 * Sets the binary resources definition.
 	 * 
-	 * @param imageResourcesDefinition
-	 *            the image resources definition to set
+	 * @param binaryResourcesDefinition
+	 *            the binary resources definition to set
 	 */
-	public void setImageResourcesDefinition(String imageResourcesDefinition) {
-		this.imageResourcesDefinition = imageResourcesDefinition;
+	public void setBinaryResourcesDefinition(String binaryResourcesDefinition) {
+		this.binaryResourcesDefinition = binaryResourcesDefinition;
 	}
 
 	/**

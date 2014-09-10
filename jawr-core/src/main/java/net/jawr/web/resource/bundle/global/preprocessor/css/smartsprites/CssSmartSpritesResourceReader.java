@@ -104,7 +104,7 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		
 		String path = resourceName;
 		GeneratorRegistry generatorRegistry = jawrConfig.getGeneratorRegistry();
-		if(generatorRegistry.isGeneratedImage(path)){
+		if(generatorRegistry.isGeneratedBinaryResource(path)){
 			path = path.replace(':', '/');
 			path = JawrConstant.SPRITE_GENERATED_IMG_DIR+path;
 		}

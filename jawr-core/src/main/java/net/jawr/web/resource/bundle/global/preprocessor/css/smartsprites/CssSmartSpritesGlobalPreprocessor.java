@@ -24,7 +24,7 @@ import java.util.Set;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
-import net.jawr.web.resource.ImageResourcesHandler;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.global.preprocessor.GlobalPreprocessingContext;
 import net.jawr.web.resource.bundle.global.processor.AbstractChainedGlobalProcessor;
@@ -90,12 +90,12 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		JawrConfig jawrConfig = ctx.getJawrConfig();
 		Charset charset = jawrConfig.getResourceCharset();
 
-		ImageResourcesHandler imgRsHandler = (ImageResourcesHandler) jawrConfig
-				.getContext().getAttribute(JawrConstant.IMG_CONTEXT_ATTRIBUTE);
+		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig
+				.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 
 		ResourceReader cssSpriteResourceReader = null;
 		if (ctx.hasBundleToBeProcessed()) {
-			generateSprites(rsHandler, imgRsHandler, resourcePaths, jawrConfig,
+			generateSprites(rsHandler, binaryRsHandler, resourcePaths, jawrConfig,
 					charset);
 		}
 
@@ -106,7 +106,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 				cssSpriteResourceReader);
 
 		// Update image resource handler
-		ResourceReaderHandler imgStreamRsHandler = imgRsHandler
+		ResourceReaderHandler imgStreamRsHandler = binaryRsHandler
 				.getRsReaderHandler();
 		imgStreamRsHandler.addResourceReaderToStart(cssSpriteResourceReader);
 	}
@@ -117,8 +117,8 @@ public class CssSmartSpritesGlobalPreprocessor extends
 	 * 
 	 * @param cssRsHandler
 	 *            the css resourceHandler
-	 * @param imgRsHandler
-	 *            the image resourceHandler
+	 * @param binaryRsHandler
+	 *            the binary resourceHandler
 	 * @param resourcePaths
 	 *            the set of CSS resource paths to handle
 	 * @param jawrConfig
@@ -127,7 +127,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 	 *            the charset
 	 */
 	private void generateSprites(ResourceReaderHandler cssRsHandler,
-			ImageResourcesHandler imgRsHandler, Set<String> resourcePaths,
+			BinaryResourcesHandler binaryRsHandler, Set<String> resourcePaths,
 			JawrConfig jawrConfig, Charset charset) {
 
 		MessageLevel msgLevel = MessageLevel.valueOf(ERROR_LEVEL);
@@ -145,8 +145,8 @@ public class CssSmartSpritesGlobalPreprocessor extends
 				new MessageSink[] { new LogMessageSink(sinkLevel) });
 
 		SmartSpritesResourceHandler smartSpriteRsHandler = new SmartSpritesResourceHandler(
-				cssRsHandler, imgRsHandler.getRsReaderHandler(),
-				jawrConfig.getGeneratorRegistry(), imgRsHandler.getConfig()
+				cssRsHandler, binaryRsHandler.getRsReaderHandler(),
+				jawrConfig.getGeneratorRegistry(), binaryRsHandler.getConfig()
 						.getGeneratorRegistry(), charset.toString(), messageLog);
 
 		smartSpriteRsHandler.setContextPath(jawrConfig
