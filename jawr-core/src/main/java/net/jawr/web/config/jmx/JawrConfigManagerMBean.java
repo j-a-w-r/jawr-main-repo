@@ -86,25 +86,25 @@ public interface JawrConfigManagerMBean {
 	 * @return
 	 * @see net.jawr.web.config.JawrConfig#getBinaryResourcesDefinition()
 	 */
-	String getImageResourcesDefinition();
+	String getBinaryResourcesDefinition();
 
 	/**
 	 * @param imgResourcesDef
 	 * @see net.jawr.web.config.JawrConfig#setBinaryResourcesDefinition(java.lang.String)
 	 */
-	void setImageResourcesDefinition(String imgResourcesDef);
+	void setBinaryResourcesDefinition(String imgResourcesDef);
 
 	/**
-	 * @return
+	 * @return the binary hash algorithm
 	 * @see net.jawr.web.config.JawrConfig#getBinaryHashAlgorithm()
 	 */
-	String getImageHashAlgorithm();
+	String getBinaryHashAlgorithm();
 
 	/**
-	 * @param imgHashAlgorithm
+	 * @param binaryHashAlgorithm the binary hash algorithm to set
 	 * @see net.jawr.web.config.JawrConfig#setBinaryHashAlgorithm(java.lang.String)
 	 */
-	void setImageHashAlgorithm(String imgHashAlgorithm);
+	void setBinaryHashAlgorithm(String binaryHashAlgorithm);
 
 	/**
 	 * @return

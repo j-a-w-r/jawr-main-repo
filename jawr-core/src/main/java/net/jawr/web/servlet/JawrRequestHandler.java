@@ -245,6 +245,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		resourceType = getInitParameter("type");
 		resourceType = null == resourceType ? "js" : resourceType;
 
+		// Check if the resource type is a valid one
+		if (!(resourceType.equals(JawrConstant.JS_TYPE)
+				|| resourceType.equals(JawrConstant.CSS_TYPE)
+				|| resourceType.equals(JawrConstant.IMG_TYPE) || resourceType
+					.equals(JawrConstant.BINARY_TYPE))) {
+			throw new BundlingProcessException("Unknown resource Type:"
+					+ resourceType);
+		}
+
 		// Initialize the config properties source that will provide with all
 		// configuration options.
 		ConfigPropertiesSource propsSrc = initConfigPropertiesSource(context,
@@ -348,7 +357,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			appConfigMgr.setCssMBean(configMgr);
 		} else {
-			appConfigMgr.setImgMBean(configMgr);
+			appConfigMgr.setBinaryMBean(configMgr);
 		}
 		return appConfigMgr;
 	}
@@ -739,8 +748,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			// servletMapping is used
 			if (JawrConstant.CSS_TYPE.equals(resourceType)
 					&& !JawrConstant.CSS_TYPE
-							.equals(getExtension(requestedPath))
-			) {
+							.equals(getExtension(requestedPath))) {
 
 				if (null == bundlesHandler.resolveBundleForPath(requestedPath)) {
 					if (LOGGER.isDebugEnabled())
@@ -895,10 +903,10 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Send gzipped resource if user agent supports it.
 		int idx = requestedPath.indexOf(BundleRenderer.GZIP_PATH_PREFIX);
 		if (idx != -1) {
-			
+
 			requestedPath = "/"
-					+ requestedPath.substring(
-							idx+BundleRenderer.GZIP_PATH_PREFIX.length(),
+					+ requestedPath.substring(idx
+							+ BundleRenderer.GZIP_PATH_PREFIX.length(),
 							requestedPath.length());
 			if (isValidRequestedPath(requestedPath)) {
 				response.setHeader("Content-Encoding", "gzip");
@@ -977,7 +985,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		String requestPath = getRequestPath(request);
 
-		// Define the replacement pattern for the generated binary resource (like
+		// Define the replacement pattern for the generated binary resource
+		// (like
 		// jar:img/myImg.png)
 		String relativeRootUrlPath = PathNormalizer
 				.getRootRelativePath(requestPath);

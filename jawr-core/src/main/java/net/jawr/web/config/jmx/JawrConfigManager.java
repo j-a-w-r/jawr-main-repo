@@ -86,7 +86,7 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	 * @return
 	 * @see net.jawr.web.config.JawrConfig#getBinaryResourcesDefinition()
 	 */
-	public String getImageResourcesDefinition() {
+	public String getBinaryResourcesDefinition() {
 		return configProperties.getProperty(JawrConfig.JAWR_BINARY_RESOURCES);
 	}
 
@@ -94,7 +94,7 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	 * @return
 	 * @see net.jawr.web.config.JawrConfig#getBinaryHashAlgorithm()
 	 */
-	public String getImageHashAlgorithm() {
+	public String getBinaryHashAlgorithm() {
 		return configProperties.getProperty(JawrConfig.JAWR_BINARY_HASH_ALGORITHM);
 	}
 
@@ -240,7 +240,7 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	 * @param imageResourcesDefinition
 	 * @see net.jawr.web.config.JawrConfig#setBinaryResourcesDefinition(java.lang.String)
 	 */
-	public void setImageResourcesDefinition(String imageResourcesDefinition) {
+	public void setBinaryResourcesDefinition(String imageResourcesDefinition) {
 		configProperties.setProperty(JawrConfig.JAWR_BINARY_RESOURCES, imageResourcesDefinition);
 	}
 
@@ -248,7 +248,7 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	 * @param imageHashAlgorithm
 	 * @see net.jawr.web.config.JawrConfig#setBinaryHashAlgorithm(java.lang.String)
 	 */
-	public void setImageHashAlgorithm(String imageHashAlgorithm) {
+	public void setBinaryHashAlgorithm(String imageHashAlgorithm) {
 		configProperties.setProperty(JawrConfig.JAWR_BINARY_HASH_ALGORITHM, imageHashAlgorithm);
 	}
 

@@ -639,7 +639,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 						// Store the bundle mapping
 						Properties props = new Properties();
-						props.putAll(binaryRsHandler.getImageMap());
+						props.putAll(binaryRsHandler.getBinaryPathMap());
 						binaryRsHandler.getRsBundleHandler()
 								.storeJawrBundleMapping(props);
 

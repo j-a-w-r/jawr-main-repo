@@ -54,7 +54,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		config.setGeneratorRegistry(generatorRegistry);
 		
 		JawrConfig imgConfig = new JawrConfig("img", new Properties());
-		GeneratorRegistry imgGeneratorRegistry = new GeneratorRegistry(JawrConstant.IMG_TYPE);
+		GeneratorRegistry imgGeneratorRegistry = new GeneratorRegistry(JawrConstant.BINARY_TYPE);
 		generatorRegistry.setConfig(imgConfig);
 		imgConfig.setGeneratorRegistry(imgGeneratorRegistry);
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgConfig, null, null);

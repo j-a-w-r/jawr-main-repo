@@ -69,7 +69,7 @@ public class ResourceBundlesHandlerImplTest  extends  ResourceHandlerBasedTest {
 	
 	public void testHashCodeGeneration(){
 		JoinableResourceBundle bundle = defaultHandler.resolveBundleForPath("/script.js");
-		assertEquals("107739304", bundle.getBundleDataHashCode(null));
+		assertEquals("N1266058766", bundle.getBundleDataHashCode(null));
 	}
 	
 	public void testGetSingleFilePath() {

@@ -52,20 +52,21 @@ public class MainPageInclusionTest extends AbstractPageTest {
 		final List<?> scripts = getJsScriptTags();
 		assertEquals(5, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
+		
 		assertEquals(
-				getUrlPrefix()+"/N850584001/bundles/globalBundle.js",
+				getUrlPrefix()+"/N578619511/bundles/globalBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(1);
 		assertEquals(
-				getUrlPrefix()+"/N1676582413/bundles/compositeBundle.js",
+				getUrlPrefix()+"/N473643075/bundles/compositeBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(2);
 		assertEquals(
-				getUrlPrefix()+"/885880596/bundles/stdBundle.js",
+				getUrlPrefix()+"/411147102/bundles/stdBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(3);
 		assertEquals(
-				getUrlPrefix()+"/N653009754/bundles/productionBundle.js",
+				getUrlPrefix()+"/1894355696/bundles/productionBundle.js",
 				script.getSrcAttribute());
 		script = (HtmlScript) scripts.get(4);
 		assertEquals(

@@ -149,8 +149,6 @@ public abstract class AbstractResourceBundleHandler implements
 		} else if (resourceType.equals(JawrConstant.IMG_TYPE) || 
 				resourceType.equals(JawrConstant.BINARY_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_BINARY_MAPPING_PROPERTIES_FILENAME;
-		}else{
-			throw new BundlingProcessException("Unknown resource Type:" + resourceType); 
 		}
 
 		if (tempDirRoot.startsWith(JawrConstant.FILE_URI_PREFIX)) {

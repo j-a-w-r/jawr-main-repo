@@ -29,7 +29,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 public class BinaryResourcesHandler {
 
 	/** The binary web resource map */
-	private final Map<String, String> binaryResourceMap = new ConcurrentHashMap<String, String>();
+	private final Map<String, String> binaryResourcePathMap = new ConcurrentHashMap<String, String>();
 	
 	/** The Jawr config */
 	private final JawrConfig jawrConfig;
@@ -76,37 +76,37 @@ public class BinaryResourcesHandler {
 	}
 	
 	/**
-	 * Returns the image map
-	 * @return the image Map
+	 * Returns the binary map
+	 * @return the binary Map
 	 */
-	public Map<String, String> getImageMap() {
-		return binaryResourceMap;
+	public Map<String, String> getBinaryPathMap() {
+		return binaryResourcePathMap;
 	}
 
 	/**
-	 * Add an image mapping
-	 * @param imgUrl the original url
+	 * Add a binary mapping
+	 * @param binaryUrl the original url
 	 * @param cacheUrl the cache url
 	 */
-	public void addMapping(String imgUrl, String cacheUrl){
-		binaryResourceMap.put(imgUrl, cacheUrl);
+	public void addMapping(String binaryUrl, String cacheUrl){
+		binaryResourcePathMap.put(binaryUrl, cacheUrl);
 	}
 	
 	/**
 	 * Return the cache image URL
-	 * @param imgUrl the image url
+	 * @param binaryUrl the binary url
 	 * @return the cache image URL
 	 */
-	public String getCacheUrl(String imgUrl){
-		return binaryResourceMap.get(imgUrl);
+	public String getCacheUrl(String binaryUrl){
+		return binaryResourcePathMap.get(binaryUrl);
 	}
 	
 	/**
-	 * Clears the image map 
+	 * Clears the binary map 
 	 */
 	public void clear(){
 	
-		binaryResourceMap.clear();
+		binaryResourcePathMap.clear();
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class BinaryResourcesHandler {
 	 * @return true if the requested image is a valid one or not
 	 */
 	public boolean containsValidBundleHashcode(String requestedPath) {
-		return binaryResourceMap.containsValue(requestedPath);
+		return binaryResourcePathMap.containsValue(requestedPath);
 	}
 	
 }

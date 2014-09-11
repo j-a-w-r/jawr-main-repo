@@ -94,8 +94,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	/** The bundle mapping */
 	private Properties bundleMapping;
 
-	/** The image MIME map, associating the image extension to their MIME type */
-	protected Map<Object, Object> imgMimeMap;
+	/** The binary resource MIME map, associating the resource extension to their MIME type */
+	protected Map<Object, Object> binaryMimeTypeMap;
 
 	/**
 	 * Reads the properties file and initializes all configuration using the
@@ -111,7 +111,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	public JawrBinaryResourceRequestHandler(ServletContext context, ServletConfig config)
 			throws ServletException {
 		super(context, config);
-		this.imgMimeMap = MIMETypesSupport.getSupportedProperties(this);
+		this.binaryMimeTypeMap = MIMETypesSupport.getSupportedProperties(this);
 		resourceType = JawrConstant.BINARY_TYPE;
 	}
 
@@ -230,17 +230,12 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			// Create a resource handler to read files from the WAR archive or
 			// exploded dir.
 			
-			// TODO : Handle this case
-			// TODO : Handle this case
-			// TODO : Handle this case
-			// TODO : Handle this case
-			// TODO : Handle this case
-			String imageResourcesDefinition = jawrConfig
+			String binaryResourcesDefinition = jawrConfig
 					.getBinaryResourcesDefinition();
-			if (imageResourcesDefinition != null) {
+			if (binaryResourcesDefinition != null) {
 
 				StringTokenizer tokenizer = new StringTokenizer(
-						imageResourcesDefinition, ",");
+						binaryResourcesDefinition, ",");
 				while (tokenizer.hasMoreTokens()) {
 					String pathMapping = tokenizer.nextToken();
 
@@ -321,7 +316,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		int extFileIdx = path.lastIndexOf(".");
 		if (extFileIdx != -1 && extFileIdx + 1 < path.length()) {
 			String extension = path.substring(extFileIdx + 1);
-			result = imgMimeMap.containsKey(extension);
+			result = binaryMimeTypeMap.containsKey(extension);
 		}
 
 		return result;
@@ -560,7 +555,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			return null;
 		}
 
-		String contentType = (String) imgMimeMap.get(extension);
+		String contentType = (String) binaryMimeTypeMap.get(extension);
 		if (contentType == null) {
 
 			LOGGER.error("No image extension match the extension '" + extension

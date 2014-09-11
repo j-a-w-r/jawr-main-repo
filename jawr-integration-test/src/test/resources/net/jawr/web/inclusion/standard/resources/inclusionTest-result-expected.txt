@@ -11,14 +11,14 @@
  <link rel="stylesheet" type="text/css" media="all" href="http://mycompany.com/css/production.css" >
 
 
- <script type="text/javascript" src="/jawr-integration-test/N850584001/bundles/globalBundle.js" ></script>
-<script type="text/javascript" src="/jawr-integration-test/N1676582413/bundles/compositeBundle.js" ></script>
+ <script type="text/javascript" src="/jawr-integration-test/N578619511/bundles/globalBundle.js" ></script>
+<script type="text/javascript" src="/jawr-integration-test/N473643075/bundles/compositeBundle.js" ></script>
 
  
- <script type="text/javascript" src="/jawr-integration-test/885880596/bundles/stdBundle.js" ></script>
+ <script type="text/javascript" src="/jawr-integration-test/411147102/bundles/stdBundle.js" ></script>
 
  
- <script type="text/javascript" src="/jawr-integration-test/N653009754/bundles/productionBundle.js" ></script>
+ <script type="text/javascript" src="/jawr-integration-test/1894355696/bundles/productionBundle.js" ></script>
 
  <script type="text/javascript" src="http://mycompany.com/js/production.js" ></script>
 

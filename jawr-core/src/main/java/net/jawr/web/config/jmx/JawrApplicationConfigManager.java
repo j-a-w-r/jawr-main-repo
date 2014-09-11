@@ -65,8 +65,8 @@ public class JawrApplicationConfigManager implements
 	/** The configuration manager for the CSS handler */
 	private JawrConfigManagerMBean cssMBean;
 
-	/** The configuration manager for the image handler */
-	private JawrConfigManagerMBean imgMBean;
+	/** The configuration manager for the binary resource handler (images, fonts, ...) */
+	private JawrConfigManagerMBean binaryMBean;
 
 	/** The set of session ID for which all requests will be executed in debug mode */
 	private Set<String> debugSessionIdSet = new HashSet<String>();
@@ -97,12 +97,12 @@ public class JawrApplicationConfigManager implements
 	}
 
 	/**
-	 * Sets the configuration manager for the image handler
+	 * Sets the configuration manager for the binary handler
 	 * 
-	 * @param imgMBean the configuration manager to set
+	 * @param binaryMBean the configuration manager to set
 	 */
-	public void setImgMBean(final JawrConfigManagerMBean imgMBean) {
-		this.imgMBean = imgMBean;
+	public void setBinaryMBean(final JawrConfigManagerMBean binaryMBean) {
+		this.binaryMBean = binaryMBean;
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class JawrApplicationConfigManager implements
 		if (cssMBean != null) {
 			mBeans.add(cssMBean);
 		}
-		if (imgMBean != null) {
-			mBeans.add(imgMBean);
+		if (binaryMBean != null) {
+			mBeans.add(binaryMBean);
 		}
 
 		return mBeans;
@@ -330,8 +330,8 @@ public class JawrApplicationConfigManager implements
 		if (cssMBean != null) {
 			cssMBean.refreshConfig();
 		}
-		if (imgMBean != null) {
-			imgMBean.refreshConfig();
+		if (binaryMBean != null) {
+			binaryMBean.refreshConfig();
 		}
 	}
 
@@ -384,7 +384,7 @@ public class JawrApplicationConfigManager implements
 		}else if(resourceType.equals(JawrConstant.CSS_TYPE)){
 			configMgr = cssMBean;
 		}else if(resourceType.equals(JawrConstant.IMG_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE)){
-			configMgr = imgMBean;
+			configMgr = binaryMBean;
 		}
 		
 		return configMgr;
@@ -404,7 +404,7 @@ public class JawrApplicationConfigManager implements
 			if (mBeans.size() == 3) {
 
 				if (areEquals(PropertyUtils.getProperty(jsMBean, property),
-						PropertyUtils.getProperty(cssMBean, property), PropertyUtils.getProperty(imgMBean, property))) {
+						PropertyUtils.getProperty(cssMBean, property), PropertyUtils.getProperty(binaryMBean, property))) {
 
 					return PropertyUtils.getProperty(jsMBean, property);
 				} else {
@@ -451,8 +451,8 @@ public class JawrApplicationConfigManager implements
 			if (cssMBean != null) {
 				PropertyUtils.setProperty(cssMBean, property, value);
 			}
-			if (imgMBean != null) {
-				PropertyUtils.setProperty(imgMBean, property, value);
+			if (binaryMBean != null) {
+				PropertyUtils.setProperty(binaryMBean, property, value);
 			}
 		} catch (IllegalAccessException e) {
 			throw new JmxConfigException("Exception while setting the string value", e);
@@ -477,8 +477,8 @@ public class JawrApplicationConfigManager implements
 			if (cssMBean != null) {
 				PropertyUtils.setProperty(cssMBean, property, Boolean.valueOf(value));
 			}
-			if (imgMBean != null) {
-				PropertyUtils.setProperty(imgMBean, property, Boolean.valueOf(value));
+			if (binaryMBean != null) {
+				PropertyUtils.setProperty(binaryMBean, property, Boolean.valueOf(value));
 			}
 		} catch (IllegalAccessException e) {
 			throw new JmxConfigException("Exception while setting the boolean value", e);
