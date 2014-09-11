@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import java.nio.channels.ReadableByteChannel;
 
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
+import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 
 /**
@@ -30,6 +31,23 @@ import net.jawr.web.resource.bundle.generator.GeneratorContext;
  * @author ibrahim Chaehoi
  */
 public class ClassPathGeneratorHelper {
+	
+	/** The prefix to preppend before searching resource in classpath */
+	private final String prefix;
+	
+	/**
+	 * Constructor
+	 */
+	public ClassPathGeneratorHelper() {
+		this("");
+	}
+	
+	/**
+	 * Constructor
+	 */
+	public ClassPathGeneratorHelper(String prefix) {
+		this.prefix = prefix;
+	}
 	
 	/**
 	 * Finds a resource from the classpath and returns a reader on it. 
@@ -50,7 +68,9 @@ public class ClassPathGeneratorHelper {
 	 */
 	public InputStream createStreamResource(GeneratorContext context) {
 		try {
-			return ClassLoaderResourceUtils.getResourceAsStream(context.getPath(), this);
+			
+			String path = PathNormalizer.normalizePath(prefix+context.getPath());
+			return ClassLoaderResourceUtils.getResourceAsStream(path, this);
 		} catch (FileNotFoundException e) {
 			throw new BundlingProcessException(e);
 		}

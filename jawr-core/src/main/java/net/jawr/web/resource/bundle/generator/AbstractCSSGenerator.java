@@ -33,9 +33,6 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
  */
 public abstract class AbstractCSSGenerator implements SpecificCDNDebugPathResourceGenerator, CssResourceGenerator {
 
-//	/** The generated image pattern */
-//	private static final Pattern GENERATED_IMG_PATTERN = Pattern.compile("(url\\(([\"' ]*))(([a-zA-Z]+)(?! (http|data)):(/)?)([^\\)\"']*)([\"']?\\))");
-
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getDebugModeRequestPath()
 	 */

@@ -31,20 +31,40 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  */
 public class ClasspathJSGenerator extends AbstractJavascriptGenerator {
 
+	/** the class path generator helper  */
+	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
+
 	/** The classpath generator helper */
-	private ClassPathGeneratorHelper helper;
+	protected ClassPathGeneratorHelper helper;
 	
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	protected ResourceGeneratorResolver resolver;
 	
 	/**
 	 * Constructor
 	 */
 	public ClasspathJSGenerator() {
-		helper = new ClassPathGeneratorHelper();
-		resolver = ResourceGeneratorResolverFactory.createPrefixResolver(GeneratorRegistry.CLASSPATH_RESOURCE_BUNDLE_PREFIX);
+		helper = new ClassPathGeneratorHelper(getClassPathGeneratorHelperPrefix());
+		resolver = ResourceGeneratorResolverFactory
+				.createPrefixResolver(getGeneratorPrefix());
+	}
+
+	/**
+	 * Returns the class path generator helper prefix
+	 * @return the class path generator helper prefix
+	 */
+	protected String getClassPathGeneratorHelperPrefix() {
+		return CLASSPATH_GENERATOR_HELPER_PREFIX;
 	}
 	
+	/**
+	 * Returns the generator prefix
+	 * @return the generator prefix
+	 */
+	protected String getGeneratorPrefix() {
+		return GeneratorRegistry.CLASSPATH_RESOURCE_BUNDLE_PREFIX;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher()
 	 */

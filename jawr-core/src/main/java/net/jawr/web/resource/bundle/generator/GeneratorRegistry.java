@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2013 Jordi Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -34,6 +34,9 @@ import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsBinaryResourceGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsCssGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
@@ -82,6 +85,9 @@ public class GeneratorRegistry implements Serializable {
 
 	/** The classpath resource bundle prefix */
 	public static final String CLASSPATH_RESOURCE_BUNDLE_PREFIX = "jar";
+
+	/** The webjars generator prefix */
+	public static final String WEBJARS_GENERATOR_PREFIX = "webjars";
 
 	/** The commons validator bundle prefix */
 	public static final String COMMONS_VALIDATOR_PREFIX = "acv";
@@ -134,6 +140,9 @@ public class GeneratorRegistry implements Serializable {
 	/** The map of variant resolvers */
 	private final Map<String, VariantResolver> variantResolvers = new ConcurrentHashMap<String, VariantResolver>();
 
+	/** the webjar class path generator helper */
+	public static final String WEBJARS_GENERATOR_HELPER_PREFIX = "/META-INF/resources/webjars/";
+
 	/**
 	 * Use only for testing purposes.
 	 */
@@ -149,18 +158,24 @@ public class GeneratorRegistry implements Serializable {
 
 		commonGenerators.put(new PrefixedPathResolver(
 				MESSAGE_BUNDLE_PREFIX), ResourceBundleMessagesGenerator.class);
-		Class<?> generatorClass = null;
+		Class<?> classPathGeneratorClass = null;
+		Class<?> webJarsGeneratorClass = null;
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
-			generatorClass = ClasspathJSGenerator.class;
+			classPathGeneratorClass = ClasspathJSGenerator.class;
+			webJarsGeneratorClass = WebJarsJSGenerator.class;
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
-			generatorClass = ClassPathCSSGenerator.class;
+			classPathGeneratorClass = ClassPathCSSGenerator.class;
+			webJarsGeneratorClass = WebJarsCssGenerator.class;
 		} else {
-			generatorClass = ClassPathImgResourceGenerator.class;
+			classPathGeneratorClass = ClassPathImgResourceGenerator.class;
+			webJarsGeneratorClass = WebJarsBinaryResourceGenerator.class;
 		}
 
 		commonGenerators.put(new PrefixedPathResolver(
-				CLASSPATH_RESOURCE_BUNDLE_PREFIX), generatorClass);
-
+				CLASSPATH_RESOURCE_BUNDLE_PREFIX), classPathGeneratorClass);
+		commonGenerators.put(new PrefixedPathResolver(
+				WEBJARS_GENERATOR_PREFIX), webJarsGeneratorClass);
+		
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
 			commonGenerators.put(new PrefixedPathResolver(
 					COMMONS_VALIDATOR_PREFIX), CommonsValidatorGenerator.class);

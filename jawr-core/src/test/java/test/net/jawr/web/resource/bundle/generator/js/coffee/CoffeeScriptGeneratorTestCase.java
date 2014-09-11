@@ -93,7 +93,7 @@ public class CoffeeScriptGeneratorTestCase {
 			String type) {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(type) {
 
-			public boolean isGeneratedImage(String imgResourcePath) {
+			public boolean isGeneratedBinaryResource(String imgResourcePath) {
 				return imgResourcePath.startsWith("jar:");
 			}
 

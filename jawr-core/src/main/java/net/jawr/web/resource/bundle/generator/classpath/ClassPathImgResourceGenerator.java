@@ -24,54 +24,89 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 
 /**
- * This class defines the resource generator which loads image resources from the classpath.
+ * This class defines the resource generator which loads image resources from
+ * the classpath.
  * 
  * @author Ibrahim Chaehoi
  *
  */
 public class ClassPathImgResourceGenerator implements StreamResourceGenerator {
 
+	/** the class path generator helper */
+	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
+
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
-	
+
 	/** The classpath generator helper */
 	private ClassPathGeneratorHelper helper;
-	
+
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 */
 	public ClassPathImgResourceGenerator() {
-		helper = new ClassPathGeneratorHelper();
-		resolver = ResourceGeneratorResolverFactory.createPrefixResolver(GeneratorRegistry.CLASSPATH_RESOURCE_BUNDLE_PREFIX);
+		helper = new ClassPathGeneratorHelper(
+				getClassPathGeneratorHelperPrefix());
+		resolver = ResourceGeneratorResolverFactory
+				.createPrefixResolver(getGeneratorPrefix());
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher()
+
+	/**
+	 * Returns the generator prefix
+	 * 
+	 * @return the generator prefix
+	 */
+	protected String getGeneratorPrefix() {
+		return GeneratorRegistry.CLASSPATH_RESOURCE_BUNDLE_PREFIX;
+	}
+
+	/**
+	 * Returns the class path generator helper prefix
+	 * 
+	 * @return the class path generator helper prefix
+	 */
+	protected String getClassPathGeneratorHelperPrefix() {
+		return CLASSPATH_GENERATOR_HELPER_PREFIX;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher
+	 * ()
 	 */
 	public ResourceGeneratorResolver getResolver() {
-		
+
 		return resolver;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getDebugModeRequestPath()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getDebugModeRequestPath()
 	 */
 	public String getDebugModeRequestPath() {
-		
+
 		return ResourceGenerator.IMG_DEBUGPATH;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.StreamResourceGenerator#createResourceAsStream(net.jawr.web.resource.bundle.generator.GeneratorContext)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.StreamResourceGenerator#
+	 * createResourceAsStream
+	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
 	public InputStream createResourceAsStream(GeneratorContext context) {
-		
+
 		InputStream is = null;
-		if(FileNameUtils.hasImageExtension(context.getPath())){
+		if (FileNameUtils.hasImageExtension(context.getPath())) {
 			is = helper.createStreamResource(context);
 		}
-		
+
 		return is;
 	}
-	
+
 }

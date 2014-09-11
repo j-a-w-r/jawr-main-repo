@@ -238,6 +238,9 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		return availableVariants;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#generateResourceForBundle(net.jawr.web.resource.bundle.generator.GeneratorContext)
+	 */
 	@Override
 	protected Reader generateResourceForBundle(GeneratorContext context) {
 		
