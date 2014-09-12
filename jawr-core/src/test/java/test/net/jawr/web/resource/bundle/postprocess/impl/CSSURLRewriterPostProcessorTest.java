@@ -80,6 +80,34 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	public void testURLRewritingWithQuestionMark() {
+		// basic test
+		StringBuffer data = new StringBuffer("background-image:url(../../../../../images/someImage.gif?#iefix);");
+		//StringBuffer data = new StringBuffer("background-image:url(../../../../images/someImage.gif);");
+		// the image is at /images
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		// Expected: goes 1 back for servlet mapping, 1 back for prefix, 1 back for the id having a subdir path. 
+		String expectedURL = "background-image:url(../../../images/someImage.gif?#iefix);";
+		status.setLastPathAdded(filePath);		
+		String result = processor.postProcessBundle(status, data).toString();		
+		assertEquals("URL was not rewritten properly",expectedURL, result);
+		
+	}
+	
+	public void testURLRewritingWithSvgReferenceElement() {
+		// basic test
+		StringBuffer data = new StringBuffer("background-image:url(../../../../../images/someImage.svg#gradient);");
+		//StringBuffer data = new StringBuffer("background-image:url(../../../../images/someImage.gif);");
+		// the image is at /images
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		// Expected: goes 1 back for servlet mapping, 1 back for prefix, 1 back for the id having a subdir path. 
+		String expectedURL = "background-image:url(../../../images/someImage.svg#gradient);";
+		status.setLastPathAdded(filePath);		
+		String result = processor.postProcessBundle(status, data).toString();		
+		assertEquals("URL was not rewritten properly",expectedURL, result);
+		
+	}
+	
 	public void testBasicURLWithAbsolutePathRewriting() {
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(/images/someImage.gif);");
@@ -93,6 +121,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly",expectedURL, result);
 		
 	}
+	
+	
 	
 	public void testBasicURLWithAbsolutePathInContextPathRewriting() {
 		// basic test

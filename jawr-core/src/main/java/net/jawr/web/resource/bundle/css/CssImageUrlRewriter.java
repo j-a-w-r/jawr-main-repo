@@ -148,6 +148,21 @@ public class CssImageUrlRewriter {
 			url = url.substring(1, url.length() - 1);
 		}
 
+		// Handle URL suffix like '/fonts/glyphicons-halflings-regular.eot?#iefix' or '../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular'
+		String urlSuffix = "";
+		int idxUrlSuffix = -1;
+		int idx1 = url.indexOf("?");
+		int idx2 = url.indexOf("#");
+		if(idx1 != -1 && idx2 == -1 || idx1 == -1 && idx2 != -1){
+			idxUrlSuffix = Math.max(idx1, idx2);
+		}else if(idx1 != -1 && idx2 != -1) {
+			idxUrlSuffix = Math.min(idx1, idx2);
+		}
+		
+		if(idxUrlSuffix != -1){
+			urlSuffix = url.substring(idxUrlSuffix);
+			url = url.substring(0, idxUrlSuffix);
+		}
 		// Check if the URL is absolute, but in the application itself
 		if(StringUtils.isNotEmpty(contextPath) && url.startsWith(contextPath)){
 			String rootRelativePath = PathNormalizer.getRootRelativePath(originalPath);
@@ -171,7 +186,7 @@ public class CssImageUrlRewriter {
 		String imgUrl = getRewrittenImagePath(originalPath, newCssPath, url);
 
 		// Start rendering the result, starting by the initial quote, if any.
-		String finalUrl = "url("+quoteStr+imgUrl+quoteStr+")";
+		String finalUrl = "url("+quoteStr+imgUrl+urlSuffix+quoteStr+")";
 		Matcher urlMatcher = URL_PATTERN.matcher(finalUrl);
 		if(urlMatcher.find()){ // Normalize only if a real URL
 			finalUrl = PathNormalizer.normalizePath(finalUrl);
