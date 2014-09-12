@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2011 Ibrahim Chaehoi
+ * Copyright 2010-2014 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,8 +13,10 @@
  */
 package net.jawr.web.resource.bundle.generator.variant.css;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,6 +28,8 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.FileNameUtils;
+import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.css.CssImageUrlRewriter;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
@@ -61,13 +65,16 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 
 	/** The resource generator resolver */
 	private ResourceGeneratorResolver resolver;
-	
+
 	/** The CSS skin resolver */
 	private AbstractCssSkinVariantResolver cssSkinResolver;
 
 	/** The jawr config */
 	private JawrConfig config;
-	
+
+	/** The CSS URL rewriter */
+	private CssImageUrlRewriter urlRewriter;
+
 	/**
 	 * This property defines the type of skin mapping. So it defines how the
 	 * resources are mapped in the directory. By default the value is
@@ -89,18 +96,21 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 	 * 
 	 */
 	public CssSkinGenerator() {
-		
-		resolver = ResourceGeneratorResolverFactory.createPrefixResolver(JawrConstant.SKIN_VARIANT_TYPE);
+
+		resolver = ResourceGeneratorResolverFactory
+				.createPrefixResolver(JawrConstant.SKIN_VARIANT_TYPE);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param rsBrowser the resource browser
-	 * @param config the config
+	 * @param rsBrowser
+	 *            the resource browser
+	 * @param config
+	 *            the config
 	 */
 	public CssSkinGenerator(ResourceBrowser rsBrowser, JawrConfig config) {
-		
+
 		this(rsBrowser, config, true);
 	}
 
@@ -160,19 +170,27 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		rsBrowser = rsHandler;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.JawrConfig)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator
+	 * #setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	public void setConfig(JawrConfig config) {
-		
+
 		this.config = config;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator#afterPropertiesSet()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * PostInitializationAwareResourceGenerator#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
-		
+
+		this.urlRewriter = new CssImageUrlRewriter(config);
 		cssSkinResolver = (AbstractCssSkinVariantResolver) config
 				.getGeneratorRegistry().getVariantResolver(
 						JawrConstant.SKIN_VARIANT_TYPE);
@@ -181,7 +199,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 			config.getGeneratorRegistry().registerVariantResolver(
 					cssSkinResolver);
 		}
-		
+
 		// Init skin mapping
 		String skinMappingType = config
 				.getProperty(JawrConstant.SKIN_TYPE_MAPPING_CONFIG_PARAM);
@@ -200,7 +218,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		}
 		this.skinMapping = getSkinMapping(rsBrowser, config);
 		resourceProviderStrategyClass = CssSkinVariantResourceProviderStrategy.class;
-	
+
 	}
 
 	/*
@@ -238,12 +256,16 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		return availableVariants;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#generateResourceForBundle(net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#
+	 * generateResourceForBundle
+	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
 	@Override
 	protected Reader generateResourceForBundle(GeneratorContext context) {
-		
+
 		Reader reader = null;
 		ResourceReaderHandler readerHandler = context
 				.getResourceReaderHandler();
@@ -261,46 +283,46 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		do {
 			variantMap = strategy.nextVariantMapConbination();
 			if (variantMap != null) {
-				reader = getResourceReader(readerHandler, skinRootDir, paths,
+				reader = getResourceReader(path, readerHandler, skinRootDir, paths,
 						variantMap);
 			}
 		} while (variantMap != null && reader == null);
-		
+
 		return reader;
 	}
-	
-//	/*
-//	 * (non-Javadoc)
-//	 * 
-//	 * @see
-//	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-//	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
-//	 */
-//	public Reader createResource(GeneratorContext context) {
-//
-//		
-//
-//		if (!context.isProcessingBundle() && reader != null) {
-//
-//			// Rewrite the image URL
-//			StringWriter writer = new StringWriter();
-//			try {
-//				IOUtils.copy(reader, writer);
-//				CssImageUrlRewriter rewriter = new CssImageUrlRewriter(
-//						context.getConfig());
-//				String bundlePath = PathNormalizer.concatWebPath(context
-//						.getConfig().getServletMapping(),
-//						ResourceGenerator.CSS_DEBUGPATH);
-//				StringBuffer result = rewriter.rewriteUrl(path, bundlePath,
-//						writer.toString());
-//				reader = new StringReader(result.toString());
-//			} catch (IOException e) {
-//				throw new BundlingProcessException(e);
-//			}
-//		}
-//
-//		return reader;
-//	}
+
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
+	// * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	// */
+	// public Reader createResource(GeneratorContext context) {
+	//
+	//
+	//
+	// if (!context.isProcessingBundle() && reader != null) {
+	//
+	// // Rewrite the image URL
+	// StringWriter writer = new StringWriter();
+	// try {
+	// IOUtils.copy(reader, writer);
+	// CssImageUrlRewriter rewriter = new CssImageUrlRewriter(
+	// context.getConfig());
+	// String bundlePath = PathNormalizer.concatWebPath(context
+	// .getConfig().getServletMapping(),
+	// ResourceGenerator.CSS_DEBUGPATH);
+	// StringBuffer result = rewriter.rewriteUrl(path, bundlePath,
+	// writer.toString());
+	// reader = new StringReader(result.toString());
+	// } catch (IOException e) {
+	// throw new BundlingProcessException(e);
+	// }
+	// }
+	//
+	// return reader;
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -743,6 +765,8 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 	/**
 	 * Returns the reader for the resource path define in parameter
 	 * 
+	 * @param originalPath
+	 *            the original path
 	 * @param skinRootDir
 	 *            the root directory
 	 * @param paths
@@ -751,8 +775,9 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 	 *            the variant map
 	 * @return the reader
 	 */
-	private Reader getResourceReader(ResourceReaderHandler readerHandler,
-			String skinRootDir, String[] paths, Map<String, String> variantMap) {
+	private Reader getResourceReader(String originalPath,
+			ResourceReaderHandler readerHandler, String skinRootDir,
+			String[] paths, Map<String, String> variantMap) {
 
 		Reader reader = null;
 		StringBuffer path = new StringBuffer(skinRootDir);
@@ -781,8 +806,18 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		}
 
 		try {
-			reader = readerHandler.getResource(path.toString());
+			String finalPath = path.toString();
+			reader = readerHandler.getResource(finalPath);
+			
+			// Rewrite URL if the final CSS path is not the original one
+			if(!originalPath.equals(finalPath)){
+				String content = IOUtils.toString(reader);
+				StringBuffer result = urlRewriter.rewriteUrl(finalPath, originalPath, content);
+				reader = new StringReader(result.toString());
+			}
 		} catch (ResourceNotFoundException e) {
+			// Nothing to do
+		} catch (IOException e) {
 			// Nothing to do
 		}
 
@@ -821,6 +856,17 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		}
 
 		return is;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#
+	 * isHandlingCssImage()
+	 */
+	@Override
+	public boolean isHandlingCssImage() {
+		return false;
 	}
 
 }
