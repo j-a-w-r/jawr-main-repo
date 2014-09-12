@@ -75,6 +75,18 @@
 		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.woff</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.ttf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.svg</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.eot</url-pattern>
+	</servlet-mapping>
 	
 	<!-- Using mapping-->
 	<!-- <servlet-mapping>

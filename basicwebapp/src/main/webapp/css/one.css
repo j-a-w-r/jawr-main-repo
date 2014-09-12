@@ -1,4 +1,9 @@
 /** sprite: myCpsprite; sprite-image: url('sprite:/img/myCpSprite.png'); sprite-layout: vertical */ 
+.intro{
+	
+	padding-top : 20px;
+	padding-bottom : 20px;
+}
 
 .calendar {
 	background-repeat: no-repeat;
@@ -19,4 +24,11 @@
 	padding-left : 20px;
 	background-image: url("jar:net/jawr/img/clock.png"); /** sprite-ref: myCpsprite; */ 
 	 
+}
+
+.ui-dialog .ui-dialog-buttonpane { 
+    text-align: center;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { 
+    float: none;
 }
