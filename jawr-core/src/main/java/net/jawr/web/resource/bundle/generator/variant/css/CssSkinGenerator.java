@@ -127,7 +127,9 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 	 */
 	public CssSkinGenerator(ResourceBrowser rsBrowser, JawrConfig config,
 			boolean initSkinMapping) {
+		
 		this.rsBrowser = rsBrowser;
+		this.config = config;
 		cssSkinResolver = (AbstractCssSkinVariantResolver) config
 				.getGeneratorRegistry().getVariantResolver(
 						JawrConstant.SKIN_VARIANT_TYPE);

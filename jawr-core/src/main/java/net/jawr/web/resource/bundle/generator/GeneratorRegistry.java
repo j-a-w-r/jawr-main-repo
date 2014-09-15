@@ -708,6 +708,11 @@ public class GeneratorRegistry implements Serializable {
 				if (resolver != null) {
 					variant = resolver.getAvailableVariant(variant,
 							variants.get(variantType));
+					if(variant == null){
+						variant = variants.get(variantType).getDefaultVariant();
+					}
+				}else {
+					throw new BundlingProcessException("Unable to find variant resolver for variant type '"+variantType+"'");
 				}
 
 				availableVariantMap.put(variantType, variant);

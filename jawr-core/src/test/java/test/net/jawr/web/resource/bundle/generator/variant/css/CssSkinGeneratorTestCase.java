@@ -58,7 +58,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		config.setGeneratorRegistry(generatorRegistry);
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ResourceBrowser rsBrowser = new FileSystemResourceReader(baseDir, config);
-		CssSkinGenerator generator = new CssSkinGenerator(rsBrowser, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsBrowser);
 		Map<String, VariantSet> variantMap = generator.getAvailableVariants("/css/panel/basic/default/temp1.css");
 		assertFalse(variantMap.isEmpty());
 		Set<String> skinVariants = variantMap.get(JawrConstant.SKIN_VARIANT_TYPE);
@@ -80,7 +80,8 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ResourceBrowser rsBrowser = new FileSystemResourceReader(baseDir, config);
-		CssSkinGenerator generator = new CssSkinGenerator(rsBrowser, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsBrowser);
+		
 		Map<String, VariantSet> variantMap = generator.getAvailableVariants("/css/panel/basic/default/border/squareBorder/borderSquare1.css");
 		assertFalse(variantMap.isEmpty());
 		Set<String> skinVariants = variantMap.get(JawrConstant.SKIN_VARIANT_TYPE);
@@ -102,7 +103,8 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ResourceBrowser rsBrowser = new FileSystemResourceReader(baseDir, config);
-		CssSkinGenerator generator = new CssSkinGenerator(rsBrowser, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsBrowser);
+		
 		Map<String, VariantSet> variantMap = generator.getAvailableVariants("/css/panel/skin_locale/default/en_US/temp1.css");
 		assertFalse(variantMap.isEmpty());
 		
@@ -136,7 +138,8 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ResourceBrowser rsBrowser = new FileSystemResourceReader(baseDir, config);
-		CssSkinGenerator generator = new CssSkinGenerator(rsBrowser, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsBrowser);
+		
 		Map<String, VariantSet> variantMap = generator.getAvailableVariants("/css/panel/locale_skin/en_US/default/temp1.css");
 		assertFalse(variantMap.isEmpty());
 		
@@ -207,7 +210,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/basic/default/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
@@ -236,7 +239,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/basic/default/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
@@ -251,6 +254,14 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		IOUtils.copy(rd, writer);
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/basic/winter/temp2.css")), writer.getBuffer().toString());
 	}
+
+	private CssSkinGenerator buildCssSkinGenerator(JawrConfig config,
+			ResourceBrowser rsHandler) {
+		config.setContext(new MockServletContext());
+		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		generator.afterPropertiesSet();
+		return generator;
+	}
 	
 	public void testCssSkinReaderProviderBasicSkinFileExistInDefault() throws Exception {
 		
@@ -264,7 +275,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/basic/default/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
@@ -293,7 +304,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
@@ -324,7 +335,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
@@ -355,7 +366,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
@@ -386,7 +397,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
@@ -417,7 +428,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		String baseDir = FileUtils.getClasspathRootDir()+"/generator/variant";
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
-		CssSkinGenerator generator = new CssSkinGenerator(rsHandler, config);
+		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
 		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();

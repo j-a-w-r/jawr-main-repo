@@ -85,7 +85,7 @@ public abstract class AbstractCssSkinVariantResolver implements VariantResolver 
 	 */
 	public String getAvailableVariant(String variant, VariantSet variantSet) {
 		
-		String result = null;
+		String result = variantSet.getDefaultVariant();
 		if(variantSet.contains(variant)){
 			result = variant;
 		}
