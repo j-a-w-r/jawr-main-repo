@@ -131,6 +131,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			throws ServletException {
 
 		super(context, initParams, configProps);
+		this.binaryMimeTypeMap = MIMETypesSupport.getSupportedProperties(this);
+		resourceType = JawrConstant.BINARY_TYPE;
 	}
 
 	/**
