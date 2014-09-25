@@ -509,9 +509,9 @@ public class ClosureGlobalPostProcessor extends
 			Map<String, String> variant = iterator.next();
 
 			String jsFile = VariantUtils.getVariantBundleName(bundle.getId(),
-					variant);
+					variant, false);
 			String moduleName = VariantUtils.getVariantBundleName(
-					bundle.getName(), variant);
+					bundle.getName(), variant, false);
 
 			resultBundleMapping.put(moduleName, jsFile);
 
@@ -532,7 +532,7 @@ public class ClosureGlobalPostProcessor extends
 						.iterator(); itDepVariantKey.hasNext();) {
 					String depVariantKey = itDepVariantKey.next();
 					String depBundleName = VariantUtils.getVariantBundleName(
-							dep, depVariantKey);
+							dep, depVariantKey, false);
 					moduleArg.append(depBundleName);
 					moduleArg.append(MODULE_DEPENDENCIES_SEPARATOR);
 				}

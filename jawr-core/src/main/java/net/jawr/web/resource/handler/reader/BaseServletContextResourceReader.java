@@ -87,10 +87,20 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 			boolean processingBundle) {
 		
 		InputStream is = null;
-		if(!resourceName.startsWith(JawrConstant.WEB_INF_DIR_PREFIX) && !resourceName.startsWith(JawrConstant.META_INF_DIR_PREFIX)){
+		if(isAccessPermitted(resourceName)){
 			is = context.getResourceAsStream(resourceName);
 		}
 		return is;  
+	}
+	
+	/**
+	 * Checks if the resource should be accessible
+	 * @param resourceName the resource name
+	 * @return true if the resource should be accessible
+	 */
+	protected boolean isAccessPermitted(String resourceName){
+	
+		return !resourceName.startsWith(JawrConstant.WEB_INF_DIR_PREFIX) && !resourceName.startsWith(JawrConstant.META_INF_DIR_PREFIX); 
 	}
 	
 	/* (non-Javadoc)

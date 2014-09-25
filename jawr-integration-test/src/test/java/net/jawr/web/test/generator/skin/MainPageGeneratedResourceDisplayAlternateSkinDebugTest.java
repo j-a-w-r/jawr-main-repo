@@ -76,11 +76,11 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugTest extends Main
 		
 		css = (HtmlLink) styleSheets.get(2);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme%40en_US%40summer.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme.css%40en_US%40summer",css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(3);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1%40en_US%40summer.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1.css%40en_US%40summer",css.getHrefAttribute());
 		
 		
 		css = (HtmlLink) styleSheets.get(4);
@@ -95,12 +95,12 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugTest extends Main
 		
 		css = (HtmlLink) styleSheets.get(6);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme%40en_US%40winter.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme.css%40en_US%40winter",css.getHrefAttribute());
 		checkAlternateStyle(css, "winter");
 		
 		css = (HtmlLink) styleSheets.get(7);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1%40en_US%40winter.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=skin%3A%2Fcss%2Fgenerator%2Fskin%2Fsummer%2Fen_US%2Ftheme1.css%40en_US%40winter",css.getHrefAttribute());
 		checkAlternateStyle(css, "winter");
 	}
 

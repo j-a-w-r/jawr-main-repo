@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
@@ -42,6 +43,9 @@ public class ResourceBundleMessagesGenerator extends
 
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
+
+	/** The cache for the list of available locale per resource */
+	private final Map<String, List<String>> cachedAvailableLocalePerResource = new ConcurrentHashMap<String, List<String>>();
 
 	/**
 	 * Constructor
@@ -105,7 +109,25 @@ public class ResourceBundleMessagesGenerator extends
 	 */
 	public List<String> getAvailableLocales(String resource) {
 
-		List<String> availableLocales = LocaleUtils
+		List<String> availableLocales = cachedAvailableLocalePerResource
+				.get(resource);
+		if (availableLocales != null) {
+			return availableLocales;
+		}
+		availableLocales = findAvailableLocales(resource);
+		cachedAvailableLocalePerResource.put(resource, availableLocales);
+		return availableLocales;
+
+	}
+
+	/**
+	 * Finds the available locales
+	 * @param resource the resource
+	 * @return the available locales for the resource
+	 */
+	protected List<String> findAvailableLocales(String resource) {
+		List<String> availableLocales;
+		availableLocales = LocaleUtils
 				.getAvailableLocaleSuffixesForBundle(resource);
 		return availableLocales;
 	}

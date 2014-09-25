@@ -407,27 +407,27 @@ public class CssBundleLinkRendererTestCase extends ResourceHandlerBasedTest {
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 3:" + next, next.startsWith(CSS_PRE_TAG + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 3:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Ftemp1%40winter.css" + CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 3:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Ftemp1.css%40winter" + CSS_POST_TAG));
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 4:" + next, next.startsWith(CSS_PRE_TAG + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 4:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Fborder%2Fborder1%40winter.css" + CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 4:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Fborder%2Fborder1.css%40winter" + CSS_POST_TAG));
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 5:" + next, next.startsWith(getCssAlternatePrefixTag("default") + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 5:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Ftemp1%40default.css"+ CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 5:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Ftemp1.css%40default"+ CSS_POST_TAG));
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 6:" + next, next.startsWith(getCssAlternatePrefixTag("default") + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 6:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Fborder%2Fborder1%40default.css"+ CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 6:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Fborder%2Fborder1.css%40default"+ CSS_POST_TAG));
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 7:" + next, next.startsWith(getCssAlternatePrefixTag("summer") + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 7:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Ftemp1%40summer.css" + CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 7:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Ftemp1.css%40summer" + CSS_POST_TAG));
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 8:" + next, next.startsWith(getCssAlternatePrefixTag("summer") + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 8:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Fborder%2Fborder1%40summer.css" + CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 8:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=skin%3A%2Fcss%2Fthemes%2Fdefault%2Fborder%2Fborder1.css%40summer" + CSS_POST_TAG));
 		
 		// Reusing the set, we test that no repeats are allowed. 
 		result = renderToString(renderer,"/theme.css", bundleRendererCtx);

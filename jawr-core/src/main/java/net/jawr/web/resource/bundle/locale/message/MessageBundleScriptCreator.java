@@ -77,7 +77,7 @@ public class MessageBundleScriptCreator {
 	protected String namespace;
 	private String filter;
 	protected Locale locale;
-	private List<String> filterList;
+	protected List<String> filterList;
 	protected ServletContext servletContext;
 	protected boolean fallbackToSystemLocale = true;
 	protected boolean addQuoteToMessageKey = false;

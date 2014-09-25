@@ -743,7 +743,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 				String variantKey = VariantUtils.getVariantKey(variants);
 				String name = VariantUtils.getVariantBundleName(
-						composite.getId(), variantKey);
+						composite.getId(), variantKey, false);
 				storeBundle(name, store);
 				initBundleDataHashcode(composite, store, variantKey);
 			}
@@ -933,7 +933,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			status.setBundleVariants(variantMap);
 			String variantKey = VariantUtils.getVariantKey(variantMap);
 			String name = VariantUtils.getVariantBundleName(bundle.getId(),
-					variantKey);
+					variantKey, false);
 			store = joinAndPostprocessBundle(bundle, variantMap, status,
 					processBundle);
 			storeBundle(name, store);

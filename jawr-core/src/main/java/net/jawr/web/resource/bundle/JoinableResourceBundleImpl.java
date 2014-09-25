@@ -662,7 +662,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 						variantTypes);
 				if (StringUtils.isNotEmpty(variantKey)) {
 					rets.add(new BundlePath(bundlePath.getBundlePrefix(), VariantUtils.getVariantBundleName(
-							path, variantKey)));
+							path, variantKey, true)));
 				} else {
 					rets.add(bundlePath);
 				}

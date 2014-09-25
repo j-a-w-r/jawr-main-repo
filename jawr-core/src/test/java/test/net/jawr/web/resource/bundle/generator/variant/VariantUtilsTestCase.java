@@ -226,33 +226,33 @@ public class VariantUtilsTestCase extends TestCase {
 	public void testGetVariantBundleNameFromVariantMap(){
 		
 		Map<String, String> variants = null;
-		String result = VariantUtils.getVariantBundleName("myBundle.js", variants);
+		String result = VariantUtils.getVariantBundleName("myBundle.js", variants, false);
 		String expected = "myBundle.js";
 		assertEquals(expected, result);
 		
 		variants = new HashMap<String, String>();
-		result = VariantUtils.getVariantBundleName("myBundle.js", variants);
+		result = VariantUtils.getVariantBundleName("myBundle.js", variants, false);
 		expected = "myBundle.js";
 		assertEquals(expected, result);
 		
 		variants = asMap(new String[]{"browser",JawrConstant.LOCALE_VARIANT_TYPE, JawrConstant.SKIN_VARIANT_TYPE},
 				new String[]{null, "", "winter"});
 		
-		result = VariantUtils.getVariantBundleName("myBundle.js", variants);
+		result = VariantUtils.getVariantBundleName("myBundle.js", variants, false);
 		expected = "myBundle@@@winter.js";
 		assertEquals(expected, result);
 		
 		variants = asMap(new String[]{"browser",JawrConstant.LOCALE_VARIANT_TYPE, JawrConstant.SKIN_VARIANT_TYPE},
 				new String[]{"", null, "summer"});
 		
-		result = VariantUtils.getVariantBundleName("myBundle.js", variants);
+		result = VariantUtils.getVariantBundleName("myBundle.js", variants, false);
 		expected = "myBundle@@@summer.js";
 		assertEquals(expected, result);
 		
 		variants = asMap(new String[]{"browser",JawrConstant.LOCALE_VARIANT_TYPE, JawrConstant.SKIN_VARIANT_TYPE},
 				new String[]{"ie", "fr_FR", "summer"});
 		
-		result = VariantUtils.getVariantBundleName("myBundle.js", variants);
+		result = VariantUtils.getVariantBundleName("myBundle.js", variants, false);
 		expected = "myBundle@ie@fr_FR@summer.js";
 		assertEquals(expected, result);
 		
@@ -260,27 +260,25 @@ public class VariantUtilsTestCase extends TestCase {
 	
 	public void testGetVariantBundleNameFromSuffix(){
 		
-		String result = VariantUtils.getVariantBundleName("myBundle.js", "@@");
+		String result = VariantUtils.getVariantBundleName("myBundle.js", "@@", false);
 		String expected = "myBundle@@@.js";
 		assertEquals(expected, result);
 		
-		result = VariantUtils.getVariantBundleName("myBundle.js", "@@summer");
+		result = VariantUtils.getVariantBundleName("myBundle.js", "@@summer", false);
 		expected = "myBundle@@@summer.js";
 		assertEquals(expected, result);
 		
-		result = VariantUtils.getVariantBundleName("myBundle.js", (String)null);
+		result = VariantUtils.getVariantBundleName("myBundle.js", (String)null, false);
 		expected = "myBundle.js";
 		assertEquals(expected, result);
 		
-		result = VariantUtils.getVariantBundleName("myBundle.js", "");
+		result = VariantUtils.getVariantBundleName("myBundle.js", "", false);
 		expected = "myBundle.js";
 		assertEquals(expected, result);
 		
-		result = VariantUtils.getVariantBundleName("message:message", "en_US");
+		result = VariantUtils.getVariantBundleName("message:message", "en_US", false);
 		expected = "message:message@en_US";
 		assertEquals(expected, result);
-		
-		
 	}
 	
 	public void testGetVariantKey(){

@@ -272,15 +272,16 @@ public class VariantUtils {
 	 *            the bundle name
 	 * @param variantKey
 	 *            the variant key
+	 * @param iGeneratedResource the flag indicating if it's a generated resource
 	 * @return the variant bundle name
 	 */
 	public static String getVariantBundleName(String bundleName,
-			String variantKey) {
+			String variantKey, boolean iGeneratedResource) {
 
 		String newName = bundleName;
 		if (StringUtils.isNotEmpty(variantKey)) {
 			int idxSeparator = bundleName.lastIndexOf('.');
-			if (idxSeparator != -1) {
+			if (!iGeneratedResource && idxSeparator != -1) {
 				newName = bundleName.substring(0, idxSeparator);
 				newName += JawrConstant.VARIANT_SEPARATOR_CHAR + variantKey;
 				newName += bundleName.substring(idxSeparator);
@@ -299,13 +300,15 @@ public class VariantUtils {
 	 *            the original bundle name
 	 * @param variants
 	 *            the map of variant
+	 * @param isGeneratedResource
+	 * 			  the flag indicating if it's a generated resource or not
 	 * @return the variant bundle name
 	 */
 	public static String getVariantBundleName(String bundleName,
-			Map<String, String> variants) {
+			Map<String, String> variants, boolean isGeneratedResource) {
 
 		String variantKey = getVariantKey(variants);
-		return getVariantBundleName(bundleName, variantKey);
+		return getVariantBundleName(bundleName, variantKey, isGeneratedResource);
 	}
 
 	/**

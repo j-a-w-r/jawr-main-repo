@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,6 +43,24 @@ public class LocaleUtils {
 
 	/** The available locale suffixes */
 	public static final Set<String> LOCALE_SUFFIXES = LocaleUtils.getAvailableLocaleSuffixes();
+	
+	/**
+	 * Determines wether a key matches any of the set filters.
+	 * 
+	 * @param key
+	 *            the property key
+	 * @return true if the key matches any of the set filters.
+	 */
+	public static boolean matchesFilter(String key, List<String> filters) {
+		boolean rets = (null == filters);
+		if (!rets) {
+			for (Iterator<String> it = filters.iterator(); it.hasNext()
+					&& !rets;)
+				rets = key.startsWith(it.next());
+		}
+		
+		return rets;
+	}
 	
 	/**
 	 * Returns the localized bundle name
