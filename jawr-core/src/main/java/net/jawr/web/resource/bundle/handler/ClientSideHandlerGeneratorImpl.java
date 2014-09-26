@@ -298,7 +298,7 @@ public class ClientSideHandlerGeneratorImpl implements
 		boolean skipItems = false;
 		if (bundle.getItemPathList().size() == 1
 				&& null == bundle.getExplorerConditionalExpression()) {
-			skipItems = bundle.getItemPathList().get(0).equals(bundle.getId());
+			skipItems = bundle.getItemPathList().get(0).getPath().equals(bundle.getId());
 		}
 
 		if (!skipItems) {

@@ -264,15 +264,16 @@ public class LocaleUtils {
 		String country = locale.getCountry();
 		String variant = locale.getVariant();
 
-		if (language == "" && country == "" && variant == "") {
+		if (StringUtils.isEmpty(language) && StringUtils.isEmpty(country) 
+				&& StringUtils.isEmpty(variant)) {
 			return baseName;
 		}
 
 		StringBuffer sb = new StringBuffer(baseName);
 		sb.append('_');
-		if (variant != "") {
+		if (StringUtils.isNotEmpty(variant)) {
 			sb.append(language).append('_').append(country).append('_').append(variant);
-		} else if (country != "") {
+		} else if (StringUtils.isNotEmpty(country)) {
 			sb.append(language).append('_').append(country);
 		} else {
 			sb.append(language);
@@ -298,9 +299,9 @@ public class LocaleUtils {
 				String country = locale.getCountry();
 				String variant = locale.getVariant();
 
-				if (variant != "") {
+				if (StringUtils.isNotEmpty(variant)) {
 					sb.append(language).append('_').append(country).append('_').append(variant);
-				} else if (country != "") {
+				} else if (StringUtils.isNotEmpty(country)) {
 					sb.append(language).append('_').append(country);
 				} else {
 					sb.append(language);

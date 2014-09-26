@@ -87,9 +87,15 @@ public class ClientSideHandlerScriptRequestHandler implements Serializable {
 	 * 
 	 * @author Jordi Hernández Sellés
 	 */
-	private static class Handler {
+	private static class Handler implements Serializable {
+		
+		/** The serial version UID */
+		private static final long serialVersionUID = -8016918532036667397L;
+		
 		String hash;
+		
 		StringBuffer data;
+		
 		Handler(StringBuffer data, String hash){
 			this.data = data;
 			this.hash = hash;

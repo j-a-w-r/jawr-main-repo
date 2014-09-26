@@ -50,7 +50,6 @@ public class UserAgentParser {
 		@SuppressWarnings("unused")
 		public String[] parse(String strUserAgent){
 			
-			String[] result = new String[0];
 			String family = null;
 			String v1 = null;
 			String v2 = null;
