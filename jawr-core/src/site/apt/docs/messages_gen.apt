@@ -131,12 +131,28 @@ Javascript i18n message generator
 	
 ** Grails usage. 
 
-	Grails users do not need to implement the LocaleResolver interface, since the default strategy used by Grails will be leveraged by Jawr. 
-	Keep in mind that the default cualified name for the Grails Resourcebundle is grails-app.i18n.messages, so map accordingly: 
+	Grails users do not need to implement the LocaleResolver interface, since the default strategy used by Grails will be leveraged by Jawr. \
+	The Jawr Grails plugin will override the default message generator to use the Jawr Grails one. \
+	Keep in mind that the default qualified name for the Grails Resourcebundle is grails-app.i18n.messages, so map accordingly: 
 	
 +------------------------------------------+
     jawr.js.bundle.lib.mappings=messages:grails-app.i18n.messages
 +------------------------------------------+
 	
+	Grails users can also use message from plugin using :
 	
+		* the name of the plugin (myPlugin)
+		
+		* the plugin path (my-plugin-1.4.6)
+		
+	For example : 
+	
++------------------------------------------+
+    jawr.js.bundle.lib.mappings=messages:messages:/plugins/my-plugin-1.4.6/grails-app/i18n/errors
++------------------------------------------+
+
+
++------------------------------------------+
+    jawr.js.bundle.lib.mappings=messages:messages:/plugins/myPlugin/grails-app/i18n/errors
++------------------------------------------+
 	 

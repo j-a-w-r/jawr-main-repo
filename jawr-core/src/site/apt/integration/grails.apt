@@ -30,7 +30,7 @@ Jawr plugin for Grails
 	plugins {
         
         ...
-        compile ":jawr:3.5"
+        compile ":jawr:3.6"
         ...
     }
 
@@ -58,18 +58,17 @@ Jawr plugin for Grails
 	Using this syntax, you will be able to define bundles as specified in the relevant documentation pages. Note that you are not forced to use 
 	Jawr for both js and css files. If you add none of the jawr.css.* parameters, for instance, Jawr will do no effort to serve CSS files. 
 	
-	Jawr uses log4j to log messages, so you can configure its tracing level along with the rest of your application. All jawr packages start 
+	Jawr uses sl4j to log messages, so you can configure its tracing level along with the rest of your application. All jawr packages start 
 	with net.jawr.*, so you can use that as a key for an appender.   
 
 	The configuration will indicate to the plugin which Jawr servlet to start.
 	
 	So if you configure only JS bundle, the plugin will start only the Jawr JS servlet.
 	So to enable the JS or the CSS servlet, you must at least define a bundle of the specified type.
-	To enable the Jawr Image servlet, you need to define one of the following property :
+	To enable the Jawr Binary servlet, which handle images and fonts, you need to define one of the following property :
 		* jawr.img.mapping
 		* jawr.css.classpath.handle.image
-		* jawr.img.* (Any property which starts with jawr.img)
-		* jawr.image.* (Any property which starts with jawr.image)
+		* jawr.binay.* (Any property which starts with jawr.binary)
 		
 ** URL mapping
 
@@ -99,14 +98,19 @@ jawr.css.mapping = '/style/'
 	 
 	* Image URL mapping
 	
-	By default, Jawr will handle the following image types : .png, .jpeg, .jpg, .gif, .ico.
+	By default, Jawr will handle the following image types : .png, .gif, .jpg, .jpeg, .ico, .ttf, .eot, .woff
 	
-	You can configure the image mapping by settings the <<jawr.img.mappings>>.
-	If you want to define a set of extension file to handle, you need to list the extension with a smi colon separator, like this :
+	You can configure the image mapping by settings the <<jawr.binary.mappings>>.
+	If you want to define a set of extension file to handle, you need to list the extension with a semi colon separator, like this :
 	
 +-----------------------------------------+
-jawr.img.mapping='*.png; *.jpg; *.gif'
+jawr.binary.mapping='*.png; *.jpg; *.gif'
 +-----------------------------------------+	
+
+* i18n message
+
+	Grails support in standard the internationalisation of message in the application using the grails-app/i18n/messages resource bundle. \
+	Please check the {{{../docs/messages_gen.html}message generator documentation}} for more information on the usage of grails i18n messages in Jawr.
 	
 * Using the tag library
 
@@ -114,7 +118,7 @@ jawr.img.mapping='*.png; *.jpg; *.gif'
 	{{{./taglibs.html}JSP taglib documentation page}}. 
 	
 	The only difference is that in GSP pages there is no need to import the tags at all. Also, keep in mind that the namespace for the 
-	Jawr taglib is 'jawr:'. 
+	Jawr taglib is <<jawr:>>. 
 	
 	This is how you would use the tags in a typical page:  
 	  
