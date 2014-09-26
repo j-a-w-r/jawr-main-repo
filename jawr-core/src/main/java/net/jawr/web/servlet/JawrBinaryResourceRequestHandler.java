@@ -430,7 +430,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			// Set the content type
 			response.setContentType(getContentType(requestedPath, request));
 
-			boolean writeResponseHeader = false;
+			boolean responseHeaderWritten = false;
 
 			// If debug mode is off, check for If-Modified-Since and
 			// If-none-match headers and set response caching headers.
@@ -450,10 +450,10 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 					setResponseHeaders(response);
 				} else {
 
-					writeResponseHeader = illegalBundleRequestHandler
+					responseHeaderWritten = illegalBundleRequestHandler
 							.writeResponseHeader(requestedPath, request,
 									response);
-					if (!writeResponseHeader) {
+					if (!responseHeaderWritten) {
 						// Add caching headers
 						setResponseHeaders(response);
 					}
@@ -469,7 +469,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 								.canWriteContent(requestedPath, request))) {
 					writeContent(response, filePath);
 				} else {
-					if (!writeResponseHeader) {
+					if (!responseHeaderWritten) {
 						LOGGER.error("Unable to load the image for the request URI : "
 								+ request.getRequestURI());
 						response.sendError(HttpServletResponse.SC_NOT_FOUND);
