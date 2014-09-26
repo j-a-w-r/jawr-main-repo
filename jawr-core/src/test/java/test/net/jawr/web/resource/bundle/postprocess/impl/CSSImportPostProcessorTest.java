@@ -3,14 +3,15 @@
  */
 package test.net.jawr.web.resource.bundle.postprocess.impl;
 
-import java.io.Reader;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import java.io.StringReader;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.TestCase;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -20,29 +21,45 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSImportPostProcessor;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
-import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
-import test.net.jawr.web.resource.bundle.handler.MockResourceReaderHandler;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
 /**
  * @author Ibrahim Chaehoi
  * 
  */
-public class CSSImportPostProcessorTest extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class CSSImportPostProcessorTest {
 
+	@Mock
 	JoinableResourceBundle bundle;
+	
+	@Mock
+	ResourceReaderHandler rsHandler;
+	
 	JawrConfig config;
 	BundleProcessingStatus status;
 	CSSImportPostProcessor processor;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	@SuppressWarnings("unchecked")
+	public void setUp() throws Exception {
+
 		// Bundle path (full url would be: /servletMapping/prefix/css/bundle.css
 		final String bundlePath = "/css/bundle.css";
 		// Bundle url prefix
 		final String urlPrefix = "/v00";
 
-		bundle = buildFakeBundle(bundlePath, urlPrefix);
+		when(bundle.getId()).thenReturn(bundlePath);
+		when(bundle.getURLPrefix(Matchers.anyMap())).thenReturn(urlPrefix);
+		
 		config = new JawrConfig("css", new Properties());
 		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
@@ -63,8 +80,52 @@ public class CSSImportPostProcessorTest extends TestCase {
 		processor = new CSSImportPostProcessor();
 	}
 
+	@Test
+	public void testImportWithHttpURL() {
+		// basic test
+		StringBuffer data = new StringBuffer("@import url(\"http://fonts.googleapis.com/css?family=Lobster|Cabin:400,700\");\n" +
+				".blue { color : #0000FF } ");
+		
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		String expectedContent = "\n" +
+				".blue { color : #0000FF } ";
+		
+		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
+		String result = processor.postProcessBundle(status, data).toString();		
+		assertEquals("Content was not rewritten properly",expectedContent, result);
+	}
 	
+	@Test
+	public void testImportWithHttpsURL() {
+		// basic test
+		StringBuffer data = new StringBuffer("@import url(\"https://fonts.googleapis.com/css?family=Lobster|Cabin:400,700\");\n" +
+				".blue { color : #0000FF } ");
+		
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		String expectedContent = "\n" +
+				".blue { color : #0000FF } ";
+		
+		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
+		String result = processor.postProcessBundle(status, data).toString();		
+		assertEquals("Content was not rewritten properly",expectedContent, result);
+	}
+	
+	@Test
+	public void testImportWithAbsoluteURL() {
+		// basic test
+		StringBuffer data = new StringBuffer("@import url(\"//fonts.googleapis.com/css?family=Lobster|Cabin:400,700\");\n" +
+				".blue { color : #0000FF } ");
+		
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		String expectedContent = "\n" +
+				".blue { color : #0000FF } ";
+		
+		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
+		String result = processor.postProcessBundle(status, data).toString();		
+		assertEquals("Content was not rewritten properly",expectedContent, result);
+	}
 
+	@Test
 	public void testBasicRelativeURLImport() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url(temp.css);\n" +
@@ -82,6 +143,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		assertEquals("Content was not rewritten properly",expectedContent, result);
 	}
 	
+	@Test
 	public void testRelativeURLImportWithSpaceAndSimpleQuote() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url( \n 'temp.css' \n );\n" +
@@ -99,6 +161,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		assertEquals("Content was not rewritten properly",expectedContent, result);
 	}
 	
+	@Test
 	public void testRelativeURLImportWithSpaceAndDoubleQuote() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url( \n \"temp.css\" \n );\n" +
@@ -116,6 +179,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		assertEquals("Content was not rewritten properly",expectedContent, result);
 	}
 	
+	@Test
 	public void testBasicAbsoluteURLImport() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url(/style/myStyle/temp.css);\n" +
@@ -133,6 +197,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		assertEquals("Content was not rewritten properly",expectedContent, result);
 	}
 
+	@Test
 	public void testClasspathCssRelativeURLImport() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url(../rainbow/temp.css);\n" +
@@ -150,6 +215,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		assertEquals("Content was not rewritten properly",expectedContent, result);
 	}
 	
+	@Test
 	public void testClasspathCssAbsoluteURLImport() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url(jar:cssimportprocessor/style/rainbow/temp.css);\n" +
@@ -167,6 +233,7 @@ public class CSSImportPostProcessorTest extends TestCase {
 		assertEquals("Content was not rewritten properly",expectedContent, result);
 	}
 
+	@Test
 	public void testBasicRelativeURLWithMediaImport() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url(temp.css) screen;\n" +
@@ -187,7 +254,21 @@ public class CSSImportPostProcessorTest extends TestCase {
 	}
 	
 	private BundleProcessingStatus getBundleProcessingStatus(String filePath, String expectedCssImportPath) {
-		ResourceReaderHandler rsHandler = getResourceReaderHandler(expectedCssImportPath);
+		//ResourceReaderHandler rsHandler = getResourceReaderHandler(expectedCssImportPath);
+		
+		try {
+			when(rsHandler.getResource(expectedCssImportPath)).thenReturn(new StringReader(".test { align : left; \n" +
+							"padding : 0 7px; \n" +
+							"background : url('../img/rainbow.png'); \n"+
+					"}"));
+			when(rsHandler.getResource(expectedCssImportPath, true)).thenReturn(new StringReader(".test { align : left; \n" +
+					"padding : 0 7px; \n" +
+					"background : url('../img/rainbow.png'); \n"+
+			"}"));
+			
+		} catch (ResourceNotFoundException e) {
+			fail("This should not happen");
+		}
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
 		
 		BinaryResourcesHandler imgRsHandler = (BinaryResourcesHandler) config.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
@@ -197,46 +278,5 @@ public class CSSImportPostProcessorTest extends TestCase {
 		status.setLastPathAdded(filePath);
 		return status;
 	}
-
-	private JoinableResourceBundle buildFakeBundle(final String id,
-			final String urlPrefix) {
-
-		return new MockJoinableResourceBundle() {
-			
-			public String getId() {
-				return id;
-			}
-
-			public String getURLPrefix(Map<String, String> variants) {
-				return urlPrefix;
-			}
-		};
-
-	}
 	
-	private ResourceReaderHandler getResourceReaderHandler(final String expectedResourcePath) {
-		
-		return new MockResourceReaderHandler() {
-			
-			public Reader getResource(String resourceName)
-					throws ResourceNotFoundException {
-				
-				if(!resourceName.equals(expectedResourcePath)){
-					fail("The expected resource path was : '"+expectedResourcePath+"'; but we get : '"+resourceName);
-				}
-				return new StringReader(".test { align : left; \n" +
-						"padding : 0 7px; \n" +
-						"background : url('../img/rainbow.png'); \n"+
-				"}");
-			}
-		
-			public Reader getResource(String resourceName,
-					boolean processingBundle) throws ResourceNotFoundException {
-				return new StringReader(".test { align : left; \n" +
-						"padding : 0 7px; \n" +
-						"background : url('../img/rainbow.png'); \n"+
-				"}");
-			}
-		};
-	}
 }

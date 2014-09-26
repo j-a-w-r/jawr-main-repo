@@ -19,6 +19,9 @@ import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -42,6 +45,9 @@ import net.jawr.web.util.StringUtils;
 public class CSSImportPostProcessor extends
 		AbstractChainedResourceBundlePostProcessor {
 
+	/**The Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(CSSImportPostProcessor.class);
+	
 	/** The url pattern */
 	private static final Pattern IMPORT_PATTERN = Pattern.compile(	"@import\\s*url\\(\\s*" // 'url(' and any number of whitespaces 
 																+ "[\"']?([^\"']*)[\"']?" // any sequence of characters, except an unescaped ')'
@@ -96,6 +102,12 @@ public class CSSImportPostProcessor extends
 		String path = cssPathToImport;
 
 		JawrConfig jawrConfig = status.getJawrConfig();
+		
+		if(cssPathToImport.startsWith("http://") || cssPathToImport.startsWith("https://") || cssPathToImport.startsWith("//")){
+			LOGGER.warn("In the CSS '"+currentCssPath+"', the HTTP URL '"+cssPathToImport+"' is not handled by Jawr.");
+			return "";
+		}
+		
 		if(!cssPathToImport.startsWith("/") && !jawrConfig.getGeneratorRegistry().isPathGenerated(path)){ // relative URL
 			path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 		}
