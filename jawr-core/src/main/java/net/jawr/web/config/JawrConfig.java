@@ -490,7 +490,7 @@ public class JawrConfig implements Serializable {
 			}
 		}
 
-		if (resourceType.equals(JawrConstant.IMG_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE)) {
+		if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
 			for (Object key : MIMETypesSupport.getSupportedProperties(
 					this).keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {

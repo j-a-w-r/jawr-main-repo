@@ -106,8 +106,7 @@ public class ServletContextResourceReaderHandler implements
 		// add the default extension
 		allowedExtensions.addAll(JawrConstant.DEFAULT_RESOURCE_EXTENSIONS);
 
-		if (JawrConstant.IMG_TYPE.equals(jawrConfig.getResourceType())
-				|| JawrConstant.BINARY_TYPE.equals(jawrConfig.getResourceType())) {
+		if (JawrConstant.BINARY_TYPE.equals(jawrConfig.getResourceType())) {
 			for (Object key : MIMETypesSupport.getSupportedProperties(
 					JawrConfig.class).keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {

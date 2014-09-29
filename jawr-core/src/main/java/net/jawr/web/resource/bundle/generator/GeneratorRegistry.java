@@ -196,7 +196,6 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
-				.equals(JawrConstant.IMG_TYPE) || resourceType
 				.equals(JawrConstant.BINARY_TYPE))) {
 			commonGenerators.put(new PrefixedPathResolver(
 					SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);

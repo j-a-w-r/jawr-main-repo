@@ -146,8 +146,7 @@ public abstract class AbstractResourceBundleHandler implements
 			mappingFileName = JawrConstant.JAWR_JS_MAPPING_PROPERTIES_FILENAME;
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_CSS_MAPPING_PROPERTIES_FILENAME;
-		} else if (resourceType.equals(JawrConstant.IMG_TYPE) || 
-				resourceType.equals(JawrConstant.BINARY_TYPE)) {
+		} else if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_BINARY_MAPPING_PROPERTIES_FILENAME;
 		}
 
@@ -186,8 +185,7 @@ public abstract class AbstractResourceBundleHandler implements
 			mappingFileName = JawrConstant.JAWR_JS_MAPPING_PROPERTIES_FILENAME;
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_CSS_MAPPING_PROPERTIES_FILENAME;
-		} else if (resourceType.equals(JawrConstant.IMG_TYPE) || 
-				resourceType.equals(JawrConstant.BINARY_TYPE)) {
+		} else if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
 			mappingFileName = JawrConstant.JAWR_BINARY_MAPPING_PROPERTIES_FILENAME;
 		}
 

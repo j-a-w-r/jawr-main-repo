@@ -45,9 +45,6 @@ public class JawrConstant {
 	/** The binary web resource type */
 	public static final String BINARY_TYPE = "binary";
 
-	/** The image type */
-	public static final String IMG_TYPE = "img";
-
 	/** The js type */
 	public static final String JS_TYPE = "js";
 

@@ -59,7 +59,7 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 		try {
 			String type = getServletConfig().getInitParameter(
 					JawrConstant.TYPE_INIT_PARAMETER);
-			if (JawrConstant.IMG_TYPE.equals(type) || JawrConstant.BINARY_TYPE.equals(type)) {
+			if (JawrConstant.BINARY_TYPE.equals(type)) {
 				requestHandler = new JawrBinaryResourceRequestHandler(
 						getServletContext(), getServletConfig());
 			} else {

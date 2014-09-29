@@ -245,10 +245,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		resourceType = getInitParameter("type");
 		resourceType = null == resourceType ? "js" : resourceType;
 
+		if(resourceType.equals("img")){
+			throw new BundlingProcessException("The resource type 'img' is not supported since the version 3.6. You should use the type 'binary' instead.");
+		}
+		
 		// Check if the resource type is a valid one
 		if (!(resourceType.equals(JawrConstant.JS_TYPE)
 				|| resourceType.equals(JawrConstant.CSS_TYPE)
-				|| resourceType.equals(JawrConstant.IMG_TYPE) || resourceType
+				|| resourceType
 					.equals(JawrConstant.BINARY_TYPE))) {
 			throw new BundlingProcessException("Unknown resource Type:"
 					+ resourceType);
