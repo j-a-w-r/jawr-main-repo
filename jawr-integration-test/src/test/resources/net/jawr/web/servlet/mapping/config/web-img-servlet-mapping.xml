@@ -50,7 +50,7 @@
 		</init-param>
 		<init-param>
 			<param-name>type</param-name>
-			<param-value>img</param-value>
+			<param-value>binary</param-value>
 		</init-param>
 		<!-- Start Jawr image servlet before Jawr CSS servlet -->
 		<load-on-startup>1</load-on-startup>
