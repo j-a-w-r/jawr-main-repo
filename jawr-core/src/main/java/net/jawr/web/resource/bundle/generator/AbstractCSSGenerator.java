@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -91,8 +91,9 @@ public abstract class AbstractCSSGenerator implements SpecificCDNDebugPathResour
 			JawrConfig jawrConfig = context.getConfig();
 			CssImageUrlRewriter rewriter = new CssImageUrlRewriter(
 					jawrConfig);
-			String bundlePath = PathNormalizer.concatWebPath(jawrConfig.getServletMapping(),
+			String bundlePath = PathNormalizer.joinPaths(jawrConfig.getServletMapping(),
 					ResourceGenerator.CSS_DEBUGPATH);
+			
 			StringBuffer result = rewriter.rewriteUrl(context.getPath(), bundlePath,
 					writer.toString());
 			

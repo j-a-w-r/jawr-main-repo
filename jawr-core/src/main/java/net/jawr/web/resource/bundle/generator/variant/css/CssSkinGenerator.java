@@ -293,39 +293,6 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		return reader;
 	}
 
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see
-	// * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-	// * (net.jawr.web.resource.bundle.generator.GeneratorContext)
-	// */
-	// public Reader createResource(GeneratorContext context) {
-	//
-	//
-	//
-	// if (!context.isProcessingBundle() && reader != null) {
-	//
-	// // Rewrite the image URL
-	// StringWriter writer = new StringWriter();
-	// try {
-	// IOUtils.copy(reader, writer);
-	// CssImageUrlRewriter rewriter = new CssImageUrlRewriter(
-	// context.getConfig());
-	// String bundlePath = PathNormalizer.concatWebPath(context
-	// .getConfig().getServletMapping(),
-	// ResourceGenerator.CSS_DEBUGPATH);
-	// StringBuffer result = rewriter.rewriteUrl(path, bundlePath,
-	// writer.toString());
-	// reader = new StringReader(result.toString());
-	// } catch (IOException e) {
-	// throw new BundlingProcessException(e);
-	// }
-	// }
-	//
-	// return reader;
-	// }
-
 	/*
 	 * (non-Javadoc)
 	 * 

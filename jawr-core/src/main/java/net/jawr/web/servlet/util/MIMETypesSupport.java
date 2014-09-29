@@ -37,7 +37,7 @@ public class MIMETypesSupport {
 	private static Properties supportedMIMETypes;
 	
 	/** The mime type properties file location */
-	private static final String MIME_PROPS_LOCATION = "/net/jawr/web/resource/mimetypes.properties";
+	private static final String MIME_PROPS_LOCATION = "net/jawr/web/resource/mimetypes.properties";
 	
 	/**
 	 * Returns a Map object containing all the supported media 

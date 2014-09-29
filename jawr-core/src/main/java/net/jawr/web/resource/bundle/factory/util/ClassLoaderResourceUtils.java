@@ -62,8 +62,9 @@ public class ClassLoaderResourceUtils {
 		// Weblogic 10 likes this one better..
 		if (null == is) {
 			ClassLoader cl = source.getClass().getClassLoader();
-			if (null != cl)
+			if (null != cl){
 				is = cl.getResourceAsStream(resourcePath);
+			}
 		}
 
 		// If current classloader failed, try with the Threads context

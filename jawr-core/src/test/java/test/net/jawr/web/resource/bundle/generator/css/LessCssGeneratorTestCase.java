@@ -69,19 +69,21 @@ public class LessCssGeneratorTestCase {
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
+		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:"))).thenReturn(true);
+		when(generatorRegistry.isHandlingCssImage(Matchers.startsWith("jar:")))
+			.thenReturn(true);
+		
 		config.setGeneratorRegistry(generatorRegistry);
+		
 		//GeneratorRegistry generatorRegistry = addGeneratorRegistryToConfig(config, JawrConstant.CSS_TYPE);
 		generator = new LessCssGenerator();
 		ctx = new GeneratorContext(config, bundlePath);
 		ctx.setResourceReaderHandler(rsReaderHandler);
-		//generatorRegistry.setResourceReaderHandler(rsReaderHandler);
 		
 		// Set up the Image servlet Jawr config
-		JawrConfig binaryServletJawrConfig = new JawrConfig("img", new Properties());
+		JawrConfig binaryServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
 		binaryServletJawrConfig.setGeneratorRegistry(generatorRegistry);
-		// addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
 		when(binaryRsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
-		//generatorRegistry.setResourceReaderHandler(imgRsReaderHandler);
 		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(binaryServletJawrConfig, binaryRsReaderHandler, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 		
@@ -182,7 +184,5 @@ public class LessCssGeneratorTestCase {
 				return new StringReader(lessContent);
 			}
 		}).when(rsReaderHandler).getResource(Matchers.eq(resourceName), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any());
-		//when(rsReaderHandler.getResource(Matchers.eq(resourceName), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(lessContent));
-		
 	}
 }

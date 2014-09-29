@@ -35,7 +35,7 @@ public class ImageTagUtilsTest extends TestCase {
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	public void setUp(){
-		config = new JawrConfig("img", new Properties());
+		config = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
 		config.setBinaryHashAlgorithm("MD5");
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(JawrConstant.BINARY_TYPE);
 		config.setGeneratorRegistry(generatorRegistry);

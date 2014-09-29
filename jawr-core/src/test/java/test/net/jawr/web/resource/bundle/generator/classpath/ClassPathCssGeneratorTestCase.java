@@ -1,4 +1,17 @@
-package test.net.jawr.web.resource.bundle.generator.classpath.webjars;
+/**
+ * Copyright 2014 Ibrahim Chaehoi
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
+package test.net.jawr.web.resource.bundle.generator.classpath;
 
 import static org.mockito.Mockito.when;
 
@@ -15,7 +28,7 @@ import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsCssGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
@@ -34,14 +47,18 @@ import org.mockito.stubbing.Answer;
 import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
+/**
+ *
+ * @author Ibrahim Chaehoi
+ */
 @RunWith(MockitoJUnitRunner.class)
-public class WebJarsCssGeneratorTestCase {
+public class ClassPathCssGeneratorTestCase {
 
-	private static final String WORK_DIR = "workDirWebJars";
+private static final String WORK_DIR = "workDirClasspathCss";
 	
 	private JawrConfig config;
 	private GeneratorContext ctx;
-	private WebJarsCssGenerator generator;
+	private ClassPathCSSGenerator generator;
 
 	@Mock
 	private ResourceReaderHandler rsReaderHandler;
@@ -61,9 +78,6 @@ public class WebJarsCssGeneratorTestCase {
 		FileUtils.clearDirectory(FileUtils.getClasspathRootDir()+"/"+WORK_DIR);
 		FileUtils.createDir(WORK_DIR);
 		
-		// Bundle path (full url would be: /servletMapping/prefix/css/bundle.css
-		final String bundlePath = "/bootstrap/3.2.0/css/bootstrap.css";
-		
 		Properties props = new Properties();
 		props.put("jawr.css.classpath.handle.image", "true");
 		config = new JawrConfig(JawrConstant.CSS_TYPE, props);
@@ -71,14 +85,12 @@ public class WebJarsCssGeneratorTestCase {
 		
 		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, cssBundleHandler);
 		config.setContext(servletContext);
-		config.setServletMapping("/css");
+		config.setServletMapping("/jawr/css");
 		config.setCharsetName("UTF-8");
 		
 		config.setGeneratorRegistry(generatorRegistry);
 		
-		generator = new WebJarsCssGenerator();
-		ctx = new GeneratorContext(config, bundlePath);
-		ctx.setResourceReaderHandler(rsReaderHandler);
+		generator = new ClassPathCSSGenerator();
 		
 		// Set up the Image servlet Jawr config
 		JawrConfig binaryServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
@@ -98,11 +110,8 @@ public class WebJarsCssGeneratorTestCase {
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 		generator.setConfig(config);
 		
-		when(generatorRegistry.isGeneratedBinaryResource("webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.eot")).thenReturn(true);
-		when(generatorRegistry.isGeneratedBinaryResource("webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.woff")).thenReturn(true);
-		when(generatorRegistry.isGeneratedBinaryResource("webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.ttf")).thenReturn(true);
-		when(generatorRegistry.isGeneratedBinaryResource("webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.svg")).thenReturn(true);
 		when(generatorRegistry.isHandlingCssImage(Matchers.anyString())).thenReturn(true);
+		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:"))).thenReturn(true);
 		
 		generator.setWorkingDirectory(FileUtils.getClasspathRootDir()+"/"+WORK_DIR);
 	}
@@ -113,20 +122,43 @@ public class WebJarsCssGeneratorTestCase {
 	}
 	
 	@Test
-	public void testWebJarsCssBundleGenerator() throws Exception{
+	public void testCssBundleGenerator() throws Exception{
+		
+		ctx = new GeneratorContext(config, "/generator/classpath/temp.css");
+		ctx.setResourceReaderHandler(rsReaderHandler);
 		
 		// Check result in Production mode
 		ctx.setProcessingBundle(true);
 		Reader rd = generator.createResource(ctx);
-		String result = IOUtils.toString(rd);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/webjars/bootstrap_prod_expected.css"), result);
+		String result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_expected.css"), result);
 		
 		// Check result in debug mode
 		ctx.setProcessingBundle(false);
 		rd = generator.createResource(ctx);
-		result = IOUtils.toString(rd);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/webjars/bootstrap_debug_expected.css"), result);
+		result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_debug_expected.css"), result);
 		
 	}
 	
+	@Test
+	public void testCssBundleGeneratorWithImageReferenceInSubDir() throws Exception{
+		
+		ctx = new GeneratorContext(config, "/generator/classpath/css/temp_in_subdir.css");
+		ctx.setResourceReaderHandler(rsReaderHandler);
+		
+		// Check result in Production mode
+		ctx.setProcessingBundle(true);
+		Reader rd = generator.createResource(ctx);
+		String result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_in_subdir_expected.css"), result);
+		
+		// Check result in debug mode
+		ctx.setProcessingBundle(false);
+		rd = generator.createResource(ctx);
+		result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_in_subdir_debug_expected.css"), result);
+		
+	}
+
 }

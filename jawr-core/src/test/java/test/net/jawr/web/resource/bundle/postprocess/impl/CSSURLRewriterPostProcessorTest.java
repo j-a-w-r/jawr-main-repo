@@ -332,9 +332,9 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 		// Set up the Image servlet Jawr config
 		props = new Properties();
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
+		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
-		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
+		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
@@ -377,8 +377,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 		// Set up the Image servlet Jawr config
 		props = new Properties();
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
-		GeneratorRegistry generatorRegistry = addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
+		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
+		GeneratorRegistry generatorRegistry = addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
 		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		generatorRegistry.setResourceReaderHandler(rsHandler);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
@@ -418,7 +418,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 		// Set up the Image servlet Jawr config
 		props = new Properties();
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
+		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, null, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
@@ -457,9 +457,9 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 
 		// Set up the Image servlet Jawr config
 		props = new Properties();
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
+		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, null, null);
-		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
+		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		imgRsHandler.addMapping("/images/someImage.gif", "/cp653321354/images/someImage.gif");
 		// basic test
@@ -492,8 +492,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 
 		// Set up the Image servlet Jawr config
 		props = new Properties();
-		JawrConfig imgServletJawrConfig = new JawrConfig("img", props);
-		addGeneratorRegistryToConfig(imgServletJawrConfig, "img");
+		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
+		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
 		
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);

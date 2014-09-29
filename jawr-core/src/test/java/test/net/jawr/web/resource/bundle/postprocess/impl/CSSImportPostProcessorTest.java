@@ -70,7 +70,7 @@ public class CSSImportPostProcessorTest {
 		generatorRegistry.setConfig(config);
 		config.setGeneratorRegistry(generatorRegistry);
 		
-		JawrConfig imgConfig = new JawrConfig("img", new Properties());
+		JawrConfig imgConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
 		GeneratorRegistry imgGeneratorRegistry = new GeneratorRegistry(JawrConstant.BINARY_TYPE);
 		generatorRegistry.setConfig(imgConfig);
 		imgConfig.setGeneratorRegistry(imgGeneratorRegistry);

@@ -132,7 +132,7 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 
 		// Here we create a new context where the bundle name is the Jawr
 		// generator CSS path
-		String cssGeneratorBundlePath = PathNormalizer.concatWebPath(context
+		String cssGeneratorBundlePath = PathNormalizer.joinPaths(context
 				.getConfig().getServletMapping(),
 				ResourceGenerator.CSS_DEBUGPATH);
 

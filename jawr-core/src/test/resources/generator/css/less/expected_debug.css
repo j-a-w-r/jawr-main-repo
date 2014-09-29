@@ -10,7 +10,7 @@ h2 {
   -webkit-box-shadow: 2px 5px 1px #000000;
 }
 body {
-  background-image: url("img/logo.png");
+  background-image: url("../img/logo.png");
   background-repeat: no-repeat;
 }
 div {
@@ -20,7 +20,7 @@ div {
 .calendar {
   background-repeat: no-repeat;
   padding-left: 20px;
-  background-image: url("img/calendarIcons/calendar.png");
+  background-image: url("../img/calendarIcons/calendar.png");
 }
 .clock {
   background-repeat: no-repeat;
