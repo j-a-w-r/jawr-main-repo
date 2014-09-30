@@ -2,7 +2,7 @@
 
 .mandatory { 
 	color:black;
-	background-image: url(../img/iconInformation.gif);  /** sprite-ref: myCpsprite; jawr:base64-skip*/
+	background-image: url(../img/iconInformation.gif);  /** sprite-ref: myCpsprite; sprite-margin-top: 8px; sprite-margin-bottom: 5px; jawr:base64-skip*/
 	background-repeat: no-repeat;
 	padding-left : 20px;
 	font-family: sans-serif, courier, arial;
@@ -11,7 +11,7 @@
 
 .tools { 
 	color:black;
-	background-image: url(img:/cog.png);  /** sprite-ref: myCpsprite; jawr:base64-skip */
+	background-image: url(img:/cog.png);  /** sprite-ref: myCpsprite; sprite-margin-top: 8px; sprite-margin-bottom: 5px; jawr:base64-skip */
 	background-repeat: no-repeat;
 	padding-left : 20px;
 	margin-top : 80px;

@@ -65,6 +65,10 @@
 	</servlet-mapping -->
 	<servlet-mapping>
 		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.png</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
