@@ -107,6 +107,34 @@ jawr.css.mapping = '/style/'
 jawr.binary.mapping='*.png; *.jpg; *.gif'
 +-----------------------------------------+	
 
+* Using Plugin resource
+
+	Jawr Grails Plugin support the use of grails plugins web resources.\
+	The reference of the web resource must start with <<'/plugins/'>> followed by the name of the plugin (with or without its version number) and finally the location of the resources in the webapp folder of the plugin.
+	
+	We will take the example of the jquery plugin
+	
+[../images/grails/pluginStructure.png] JQuery plugin structure
+	
+	Here is an example of configuration where we reference the jquery script :
+
++-----------------------------------------+
+
+jawr.js.bundle.common.id='/js/common.js'
+jawr.js.bundle.common.mappings='/plugins/jquery/js/jquery/jquery-1.11.1.js'
+
++-----------------------------------------+	
+
+	You can also reference it with the version number but this is not recommended as you will need to change your configuration for each version modification.
+
++-----------------------------------------+
+
+jawr.js.bundle.common.id='/js/common.js'
+jawr.js.bundle.common.mappings='/plugins/jquery-1.11.1/js/jquery/jquery-1.11.1.js'
+
++-----------------------------------------+	
+	
+	
 * i18n message
 
 	Grails support in standard the internationalisation of message in the application using the grails-app/i18n/messages resource bundle. \
