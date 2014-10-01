@@ -146,6 +146,10 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	protected void initializeJawrConfig(Properties props)
 			throws ServletException {
 
+		if(this.binaryMimeTypeMap == null){
+			this.binaryMimeTypeMap = MIMETypesSupport.getSupportedProperties(this);
+		}
+		
 		// init registry
 		generatorRegistry = new GeneratorRegistry(resourceType);
 
