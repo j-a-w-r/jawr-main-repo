@@ -50,7 +50,7 @@ How to set up Jawr to serve images
 		</init-param>
 		<init-param>
 			<param-name>type</param-name>
-			<param-value>img</param-value>
+			<param-value>binary</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -109,9 +109,9 @@ How to set up Jawr to serve images
 *---------------+---------+--------------+----------------+
 | jawr.css.classpath.handle.image | Boolean | The flag indicating if the CSS images should be retrieved from the classpath, for the CSS defined in the classpath. | None| 
 *---------------+---------+--------------+----------------+
-| jawr.image.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    | 
+| jawr.binary.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    | 
 *---------------+---------+--------------+----------------+
-| jawr.image.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 | 
+| jawr.binary.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 | 
 *---------------*---------*--------------+----------------+
 	
 	

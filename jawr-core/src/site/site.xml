@@ -65,6 +65,7 @@
 			<item name="How to use Google Closure Compiler with Jawr" href="/tutorials/howToUseGoogleClosureCompiler.html" />
 			<item name="FAQ-Howto" href="/tutorials/faq_howto.html" />
 			<item name="Using popular libraries" href="/tutorials/libraries.html" />
+			<item name="Sample applications" href="/docs/sampleApplications.html" />
 		</menu>
 
 		<menu name="API and sources">

@@ -142,7 +142,11 @@ Jawr with wicket
 	the components used in your Wicket page class.  
 		
 	
+* Sample application
 
+	You will find below the link to a sample application source code showing the integration of Jawr and Wicket :
+	
+	{{{https://github.com/ic3fox/jawr-wicket/tree/master/jawr-wicket-webapp-sample}source code}}  
 	
 	
 	

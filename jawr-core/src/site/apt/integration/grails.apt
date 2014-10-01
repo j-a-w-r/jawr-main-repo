@@ -165,5 +165,9 @@ jawr.js.bundle.common.mappings='/plugins/jquery-1.11.1/js/jquery/jquery-1.11.1.j
 +------------------------------------------+	
 
 
+* Sample application
 
+	You will find below the link to a sample application source code showing the integration of Jawr and Grails :
+	
+	{{{https://github.com/ic3fox/jawr-grails/tree/master/jawr-grails-sample}source code}}  
 	
