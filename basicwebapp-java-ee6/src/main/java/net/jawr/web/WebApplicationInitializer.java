@@ -27,13 +27,6 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class WebApplicationInitializer implements ServletContextListener {
 
-	/**
-	 * Constructor
-	 */
-	public WebApplicationInitializer() {
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
