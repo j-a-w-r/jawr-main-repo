@@ -111,7 +111,6 @@ Jawr Generators
 	bundle together resources from the WAR and from the classpath. 
 	
 	If you need to load CSS files from the classpath, you would use the exact same syntax <<jar:>>.
-	Note that you could also use <<jar_css:>>, but this prefix is deprecated since Jawr 2.8. 
 	
 +------------------------------------------+
 	jawr.css.bundle.styles.mappings=jar:/com/mycompany/myapp/stylesheet.css, /css/bar.css	
@@ -123,7 +122,24 @@ Jawr Generators
 	  
 	Unlike the normal mapping, this way of referring to resources does not yet allow wildcards (i.e.: <jar:/com/mycompany/myapp/**> would not 
 	work).  
+
+<<Webjars generator>>
+
+	* <<Prefix>>: webjars
 	
+	[]
+	
+	This generator allows you to include resources which are stored in a webjars files.
+	WebJars are client-side web libraries (e.g. jQuery & Bootstrap) packaged into JAR files.
+	You will have to include your webjars as depdendencies of your project and then reference them as follow : 
+	
++------------------------------------------+
+	jawr.js.bundle.foo.mappings=webjars:/jquery/1.11.1/jquery.js, /js/foo.js	
++------------------------------------------+
+
+	Here is the link to the webjars site for more information : <a href="http://www.webjars.org/">webjars</a>
+	
+		
 <<Less CSS generator>>
 
 	* <<Suffix>>: .less
