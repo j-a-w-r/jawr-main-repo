@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.jawr</groupId>
 	<artifactId>jawr-core-parent</artifactId>
-	<version>3.6</version>
+	<version>3.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>jawr parent</name>
 	<url>http://jawr.java.net/</url>
@@ -26,7 +26,7 @@
 		<connection>scm:git:git@github.com:ic3fox/jawr-core.git</connection>
 		<developerConnection>scm:git:git@github.com:ic3fox/jawr-core.git</developerConnection>
 		<url>http://github.com/ic3fox/jawr-core</url>
-		<tag>jawr-core-parent-3.6</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<developers>
 		<developer>
