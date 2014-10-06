@@ -6,9 +6,126 @@
   
     <body>
 	
-    <section name="Announcementes and change log">
+    <section name="Announcements and change log">
     <ul>
-      	  <li> <strong>05/08/2014</strong>: Version 3.5.2 released:<br/>
+      	  <li> <strong>06th October 2014</strong>: Version 3.6 released:<br/>
+	      This version is containing bug fixes and some new features.<br/>
+	  	  <strong>Important note : </strong>
+	  	  The version 3.6 of Jawr is not backward compatible. The component handling image resource has evolved.
+	  	  We've kept the task as easy as possible to migrate from the previous version to this new one.
+	  	  Please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
+	  	  <strong>New features: </strong>
+	  	  	<ul>
+      		 	<li>
+      			Jawr now support font web font caching (*.ttf, *.eot, *.woff, ...).<br/> 
+      			The component which was handling the image caching has evolved to support any binary web resources.<br/>
+      			You will need to update your web.xml configuration to use the new <b>binary</b>, which now replace the old <b>img</b> type.
+      			Please check the <a href="./docs/servlet.html">servlet documentation</a> and the <a href="./migrationGuide.html">migration guide</a> for more info.  
+      			</li>	
+      			<li>
+      		 	Jawr provides a new generator to handle <b>webjars</b> resources. 
+      		 	For more information about webjars, please check the folllowing link : <a href="http://www.webjars.org/">webjars site</a>
+      		 	To reference webjars resources, you'll need to use the new prefix "webjars:".<br/>
+      		 	For example, you could use <i>webjars:/jquery/1.11.1/jquery.js</i> to reference the jquery script associated to the JQuery webjars. (<a href="https://github.com/webjars/jquery">Source site</a>)<br/> 
+      		 	Please check the <a href="./docs/generators.html">generator documentation</a> for more information. 
+      			</li>
+      			<li>
+      		 	Jawr provides by default a new JS minifier based on <a href="http://lisperator.net/uglifyjs/">UglifyJS</a>.
+      		 	It is important to note that this Javascript minifier will become the default one in the next release.
+      		 	Please check the <a href="./docs/postprocessors.html">postprocessor documentation</a> for more information. 
+      			</li>
+      			<li>
+      		 	Jawr now support JSON format for the configuration file using <b>net.jawr.web.resource.bundle.factory.util.JsonPropertiesSource</b> for <b>configPropertyResolverClass</b>
+      		 	in the Jawr Servlet initialisation parameter.
+      		 	Please check the <a href="./docs/servlet.html">Jawr servlet documentation</a> for more information. 
+      			</li>
+      			<li>
+      		 	The Spring MVC extension has been renamed to <b>jawr-spring</b> instead of <b>jawr-spring-2.0.x</b>.
+      		 	</li>
+      		</ul>
+	      <strong>Fixed issues : </strong>
+	    	<ul>   
+	    		 <li>
+	      		 	<strong>Issue #216 fixed:</strong> JsMin is failing with a RegEx trying to process Modernizr
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #264 fixed:</strong> BrowserResolver doesn't recognize IE11, returning NULL
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #278 fixed:</strong> Less generator don't properly handle import directive
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #280 fixed:</strong> Add check in Jawr to handle case where resource type is not properly set
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #282 fixed:</strong> Mime-Type missing for jawr_loader.js
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #283 fixed:</strong> JSMin doesn't handle properly tabulation in strings
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #284 fixed:</strong> The JAWR/smartsprite directory isn't being cleared when JAWR runs again
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #285 fixed:</strong> Uncorrect behavior for unknown browser variants
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #286 fixed:</strong> In CSSImportPostProcessor, external URLs are causing errors
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #289 fixed:</strong> Image URLs are not properly generated when setting jawr.url.contextpath.override and image servlet mapping as empty
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #291 fixed:</strong> Issue in Jawr image tag which appends the jsessionid at the end of the URL
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #292 fixed:</strong> When using the jawr.locale.generator.quoteMsgKey property, only a part of key messages is quoted
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #293 fixed:</strong> Unable to define multiple ResourceBundle in message generator using pipe character
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #296 fixed:</strong> Jawr doesn't handle properly font resources from generated css content like CSS in classpath
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #299 fixed:</strong> Jawr doesn't properly handle URL rewriting in CSS when URL contains the following characters '?' and '#'
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #300 fixed:</strong> Issue with skin generator for image URL rewriting
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #302 fixed:</strong> Issue with generated resources containing dot characters but no extension       
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #303 fixed:</strong> Issue in debug mode with Image URL rewriting in CSS provided by generators when servlet mapping is not empty       
+	      		 </li>
+	      	</ul>
+	      </li>
+	      <li>
+     	  	Thanks to tdahmez, ungarida, sudnam, rragan, takacsot, diorcety, shoot_the_moon  for reporting the issues.
+     	  </li>
+     	  <li>
+     	  	Thanks to M.Cegledi, volt0, kazimir70 for reporting the issues and also provding patches.
+     	  </li>
+	</ul>
+	<ul>
+      	  <li> <b>06th October 2014</b>: Grails plugin 3.6 released:<br />
+	      The grails plugin has been released in the grails central repository.<br />
+	      You'll need at least Grails 2.4.3 to use this version. 
+	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.<br/>
+	      <strong>Fixed issue : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #243 fixed:</strong> Allow Jawr Grails plugin message generator to retrieve message from others grails plugins     
+	      		 </li>
+	      	</ul>
+	      </li>
+	      <li>
+	      	Thanks to kevin.mershon for reporting this issue
+	      </li>
+	</ul>
+	<ul>
+      	  <li> <strong>08th May 2014</strong>: Version 3.5.2 released:<br/>
 	      This version is a minor version containing only a bug fix about sprite generation.<br/>
 	  	  <strong>Fixed issue : </strong>
 	    	<ul>   
@@ -22,9 +139,9 @@
      	  </li>
 	</ul>
 	<ul>
-      	  <li> <b>04/18/2014</b>: Grails plugin 3.5.1 released:<br />
+      	  <li> <b>18th April 2014</b>: Grails plugin 3.5.1 released:<br />
 	      The grails plugin has been released in the grails central repository.<br />
-	      Please check the grails plugin <a href="./integration/grails.html">documentation</a> for more detail on how to use it.<br/>
+	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.<br/>
 	      <strong>Fixed issue : </strong>
 	    	<ul>   
 	    	 	 <li>
@@ -32,7 +149,7 @@
 	      		 </li>
 	      	</ul>
 	      </li>
-		  <li> <strong>04/18/2014</strong>: Version 3.5.1 released:<br/>
+		  <li> <strong>18th April 2014</strong>: Version 3.5.1 released:<br/>
 	      This version is a minor version containing mainly bug fixes.
 	  	  <strong>New features: </strong>
 	  	  	<ul>
@@ -111,11 +228,11 @@
      	  </li>
 	  </ul>
 	  <ul>
-      	  <li> <b>01/06/2014</b>: Grails plugin 3.5 released:<br />
+      	  <li> <b>06th Januray 2014</b>: Grails plugin 3.5 released:<br />
 	      The grails plugin has been released in the grails central repository.<br />
-	      Please check the grails plugin <a href="./integration/grails.html">documentation</a> for more detail on how to use it.
+	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.
 		  </li>
-		  <li> <strong>01/01/2014</strong>: Version 3.5 released:<br/>
+		  <li> <strong>01rst January 2014</strong>: Version 3.5 released:<br/>
 	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
 	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
 	  	  <strong>New features: </strong>
@@ -136,15 +253,15 @@
       			Jawr allows the user to define the use of random parameter in debug mode at application level using <strong>jawr.debug.use.random.parameter</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
       			</li>
       			<li>
-      			Jawr adds support for custom generator resolver. Before the 3.5 version, the generator were only available with a mapping prefix (for ex: ""jar:" for classpath generator). Now the user are able to define their own generator resolver.
-      			You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
+      			Jawr adds support for custom generator resolver. Before the 3.5 version, the generator were only available with a mapping prefix (for ex: ""jar:" for classpath generator). Now the users are able to define their own generator resolver.
+      			For those who had defines their custom generator, they will need to update their generator. Please check the  <a href="./migrationGuide.html">migration guide</a> for more info.
       			</li>
       			<li>
       			Jawr provides a built-in LESS Css generator.
       			You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
       			</li>
       			<li>
-      			Jawr provides a bult-in CoffeeScript generator.
+      			Jawr provides a built-in CoffeeScript generator.
       			You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
       			</li>
       			<li>
@@ -177,11 +294,15 @@
       			</li>
       			<li>
       			Jawr now uses <a href="http://www.slf4j.org/">slf4j</a> as logging framework.
-      			For those who are using log4j as loging framework, you must add <i>slf4j-log4j12-xxx.jar</i> in your classpath. Please check the slf4j <a href="http://www.slf4j.org/manual.html">documentation</a> for more detail.
+      			For those who are using log4j as loging framework, you must add <i>slf4j-log4j12-xxx.jar</i> in your classpath. Please check the <a href="http://www.slf4j.org/manual.html">slf4j documentation</a> for more detail.
       			</li>
       			<li>
       			The Jawr javascript tag now support the aysnc and defer attributes. Please check the <a href="./docs/taglibs.html">taglib doc</a> for more detail.
       			</li>
+      			<li>
+      			The URL of the Jawr facelet taglib has been updated from <b>https://jawr.dev.java.net/jsf/facelets</b> to <b>https://jawr.java.net/jsf/facelets</b>.
+      			</li>
+      			
         	</ul>
       		<ul>   
 	    	 	 <li>
@@ -329,7 +450,7 @@
       </ul>
       
       <ul>
-    	<li> <strong>08/15/2010</strong>: Version 3.3.3 released:<br/>
+      	  <li> <strong>15th August 2010</strong>: Version 3.3.3 released:<br/>
 	      	This version contains 2 bug fixes including a major one. It is highly recommended to upgrade to this version.<br/><br/>
 	      	There was an issue in the hashcode generation, which causes the bundle to be reloaded even if the bundle content didn't change.
 	      	This implies some performance penalties.<br/>
@@ -350,7 +471,7 @@
 	      		 Thanks to Mark W. for reporting the hashcode generation issue.
 	      	</ul>
       	  </li>	
-      	  <li> <strong>07/20/2010</strong>: Version 3.3.2 released:<br/>
+	      <li> <strong>20th July 2010</strong>: Version 3.3.2 released:<br/>
 	      	This version contains only bug fixes.<br/><br/>
 	      	<strong>Fixed issues: </strong>
 	    	 <ul>   
@@ -531,14 +652,7 @@
       	  			<li>wicket sample</li>
       	  			<li>grails sample</li>
       	  		</ul>	 
-      	  	You can retrieve them from the SVN repository respectiveley from :
-      	  	 <b></b>
-      	  	 <ul>
-      	  			<li>https://svn.java.net/svn/jawr~svn/core/tags/jawr-core-parent-&lt;version&gt;/basicwebapp</li>
-      	  			<li>https://svn.java.net/svn/jawr~svn/extenstions/spring-2.0.x/tags/jawr-spring-2.0.x-parent-&lt;version&gt;/jawr-spring-2.0.x-webapp-sample</li>
-      	  			<li>https://svn.java.net/svn/jawr~svn/extenstions/wicket/tags/wicket-parent-&lt;version&gt;/jawr-wicket-webapp-sample</li>
-      	  			<li>https://svn.java.net/svn/jawr~svn/extenstions/grails/tags/grails-parent-&lt;version&gt;/jawr-grails-sample</li>
-      	  		</ul>  
+      	  	You can retrieve them from the different modules on the SVN repository : <b>https://svn.java.net/svn/jawr~svn</b>  
       	  	<br/>
       	  	<br/>
       	  	<strong>Important note :</strong><br/>
@@ -549,7 +663,7 @@
 			There still a lot to do. So any contribution is more than welcome.<br/>
 			If you want to be part of the Jawr project, don't hesitate, join us. 
      	  </li>
-      	  <li> <strong>02/01/2010</strong>: Version 3.2.1 released:<br/>
+      	  <li> <strong>01rst February 2010</strong>: Version 3.2.1 released:<br/>
 	      	This version contains mainly bug fixes.<br/><br/>
 	      	<strong>New feature: </strong>
 	    	<ul>
@@ -598,7 +712,7 @@
 	      		 Thanks to acklenx for reporting the issue. 
       	  	</ul> 
      	  </li>
-      	  <li> <strong>12/09/2009</strong>: Version 3.2 released:<br/>
+      	  <li> <strong>09th December 2009</strong>: Version 3.2 released:<br/>
 	      	A serious security issue has been found in Jawr when using the property <strong>jawr.debug.overrideKey</strong>, which allowed a user to access the content of the WEB-INF folder, and any file of your web application
 	      	if the user finds the value of the property <strong>jawr.debug.overrideKey</strong>, which is defined your configuration file. <br/>
 	      	This issue is fixed in this new version. <br/>
@@ -674,7 +788,7 @@
 	      		 Thanks to rodneyphillips, axelfont, tkaefer and chupa for reporting issues. 
       	  	</ul>
       	  </li>
-      	  <li> <strong>09/28/2009</strong>: Version 3.1.2 released:<br/>
+	      <li> <strong>28th September 2009</strong>: Version 3.1.2 released:<br/>
 	      	This version contains only bug fixes.<br/><br/>
 	    	<strong>Fixed issues: </strong>
 	    	 <ul>    	 	
@@ -687,17 +801,17 @@
 	      		 Thanks to jmundt for reporting localized messages issue. 
       	  	</ul>
       	  	<br/><br/>
-      	  	Jawr ant task and maven plugin - Version 1.1.2 released:<br/>
+      	  	<strong>Jawr ant task and maven plugin</strong> - Version 1.1.2 released:<br/>
 	    	This version contains only one bug fix.<br/><br/>
 	    	<strong>Fixed issue: </strong>
 	    	 <ul>    	 	
 	      		 <li>
-	      		 	<strong>Issue #96 fixed:</strong> Remove entity resolution in web.xml when using bundle preprocessor.      
+	      		 	<strong>Issue #96 fixed:</strong> Remove entity resolution when using bundle preprocessor.      
 	      		 </li>      
 	      		 Thanks to acklenx for reporting the issue. 
       	  	</ul>
 	      </li>
-	      <li> <strong>09/01/2009</strong>: Version 3.1.1 released:<br/>
+	      <li> <strong>01rst September 2009</strong>: Version 3.1.1 released:<br/>
 	      	This version contains only bug fixes.<br/><br/>
 	    	<strong>Fixed issues: </strong>
 	    	 <ul>    	 	
@@ -719,7 +833,7 @@
 	      		 We would like to thank qxo, jmundt, reardonm, cpo, kape and axelfont for reporting issues and providing patches when possible. 
       	  	</ul>
 	    </li>
-	    <li> <strong>08/10/2009</strong>: Version 3.1 released:<br/>
+	    <li> <strong>10th August 2009</strong>: Version 3.1 released:<br/>
 	      	This version contains mainly bug fixes.<br/><br/>
 	    	<strong>New features/ fixed issues: </strong>
 	    	 <ul>    	 	
@@ -741,7 +855,7 @@
 	      		 We would like to thank sfrancois99, qxo and nordicdevil for reporting issues and providing patches when possible. 
       	  	</ul>
 	    </li>
-	    <li> <strong>08/03/2009</strong>: Version 3.0 released:<br/>
+	    <li> <strong>03rd August 2009</strong>: Version 3.0 released:<br/>
 	    	<strong>New features/ fixed issues: </strong>
 	    	 <ul>    	 	
 	      		 <li>
@@ -759,6 +873,8 @@
 	      			A new "bundle preprocessing" feature has been added in Jawr. This feature is also known as "build time bundle processing".
 	      			This feature allows the user to skip the bundling process at server start-up, and use instead the data of preprocessed bundles. 
 	      			Look at the <a href="./docs/bundle_preprocessing.html">bundle preprocessing documentation</a> for extra info.
+	      			<br/>
+	      			This feature is a new one, it can certainly be improved. So please don't hesitate to give your feedback on the Discussion Forum, on this feature and on Jawr in general.    
 	      		 </li>
 	      		 <li>
 	      		 	We have also created a <strong>maven plugin</strong> and an <strong>Ant task</strong> to integrate the new bundle preprocessing feature in the project build phase.  
@@ -803,7 +919,7 @@
 	      		 </li>  
 	      	</ul>
 	    </li>  
-    <li> <strong>5/31/2009</strong>: Version 2.8 released:<br/>
+      	<li> <strong>31 May 2009</strong>: Version 2.8 released:<br/>
     	<strong>New features/ fixed issues: </strong>
     	 <ul>    	 	
       		 <li>
@@ -863,7 +979,7 @@
       	for previous releases and decided to join the project. And indeed he has taken it seriously since most of the changes for this version 
       	are his work. Cheers to our new member! 
     </li>
-    <li> <strong>2/13/2009</strong>: Version 2.7 released:<br/> 
+      	<li> <strong>13th February 2009</strong>: Version 2.7 released:<br/> 
       		<strong>New features/ fixed issues: </strong>
       		 <ul>
       		 <li>
@@ -895,12 +1011,12 @@
       		 <li>
       		 Fixed issue 56 (incorrect path management in Spring MVC controller )
       		 </li>
-			</ul>
-      This release includes code from our new commiter, <strong>Matt Ruby</strong>. Welcome aboard!. Also, as noted 
-      above, <strong>Ibrahim Chaehoi</strong> submitted a couple of high quality patches that were included in the 
-      release. Thanks a lot Ibrahim! 
-      </li>
-    	<li> <strong>11/23/2008</strong>: Version 2.6 released:<br/> 
+				</ul>
+	      This release includes code from our new commiter, <strong>Matt Ruby</strong>. Welcome aboard!. Also, as noted 
+	      above, <strong>Ibrahim Chaehoi</strong> submitted a couple of high quality patches that were included in the 
+	      release. Thanks a lot Ibrahim! 
+	      </li>
+      	<li> <strong>23rd November 2008</strong>: Version 2.6 released:<br/> 
       		<strong>New features/ fixed issues: </strong>
       		 <ul><li> <strong>Spring MVC support added. </strong> Jawr now provides a Spring MVC Controller so it can now be fully configured 
       		 through Spring's configuration mechanism. See <a href="./integration/spring.html" >the manual page</a> for details. </li>
@@ -915,8 +1031,8 @@
       		 <li>[Unregistered Issue] Jawr does not close the outputstream nor the output writers handed by the servlet container, since 
       		 that's an illegal operation, as was pointed out by user Lance. </li>      		
 			</ul>
-      	</li>   
-      	<li> <strong>11/9/2008</strong>: Version 2.5.1 released:<br/> 
+      	</li>
+      	<li> <strong>09th November 2008</strong>: Version 2.5.1 released:<br/> 
       		<strong>New features/ fixed issues: </strong>
       		 <ul><li>[Grails, issue #26] Switched from using controllers to using a servlet: This has several advantages: it is faster, there is no 
       		 need to fiddle with the grails.mime.file.extensions property, and no controller mappings need to be added. So if you are upgrading, you 
@@ -931,7 +1047,7 @@
       		 <li>Fixed improper exception handling at some points where stack data was being spoiled. </li>
 			</ul>
       	</li>   
-      	<li> <strong>10/7/2008</strong>: Version 2.5 released:<br/> 
+      	<li> <strong>07th October 2008</strong>: Version 2.5 released:<br/> 
       		<strong>New features: </strong>
       		 <ul><li>CDN support: Jawr can be used with a CDN by setting the parameter to an absolute URL. </li>
       		 <li><a href="./docs/generators.html" >Generators API</a>: you can now write components that dynamically generate scripts or 
@@ -946,7 +1062,7 @@
       		 <li>#19:PropsFilePropertiesSource.configChanged() doesn't work on Tomcat (now properties can be read from the filesystem)</li>
       		 <li>Also, a new version of the DWR 3 has been published, fixing the latest incompatibilities. </li></ul>
       	</li>   
-      	<li> <strong>7/7/2008</strong>: Version 2.4.2 released:<br/> 
+      	<li> <strong>07th July 2008</strong>: Version 2.4.2 released:<br/> 
       	A performance improvement has been added: buffering is now used when using writers. Thanks to Richie for submitting a patch. <br/>
       	There was a bug causing CSS URLs to be broken when using the static pages resource includer, which is now fixed. 
       	</li>   
@@ -956,11 +1072,11 @@
       	context. The class is named net.jawr.web.resource.bundle.factory.util.ServletContextAware. 
       	
       	</li>      
-      	<li> <strong>6/16/2008</strong>: Version 2.4 released:<br/> 
+      	<li> <strong>16th June 2008</strong>: Version 2.4 released:<br/> 
       	<strong>Jawr can be used in plain HTML pages</strong>: This has been a major drawback for Jawr, since many times applications are a mix of 
       	static HTML and dynamic pages. <a href="./docs/plain_html.html" > Click here to find out how this has been solved. </a>     
       	</li>      
-      	<li> <strong>6/9/2008</strong>: Version 2.3 released:<br/> <strong>Commons Validator integration</strong>: Users of Struts and other libraries 
+      	<li> <strong>9 june 2008</strong>: Version 2.3 released:<br/> <strong>Commons Validator integration</strong>: Users of Struts and other libraries 
       	supporting the Commons Validator can now have the static and dynamic scripts added to bundles, minified and compressed with Jawr.  
       	<br/><strong>DWR 3 support: </strong> Jawr now supports the upcoming version 3 of the DWR framework. 
       	<br/>	
@@ -975,7 +1091,7 @@
 				
 				<li> Bug with 'dwr:_**' mapping in debug mode. </li></ul>
       	</li>
-      	<li> <strong>6/2/2008</strong>: Version 2.2 released:<br/> <strong>DWR integration</strong>: DWR users can now leverage the new integration with Jawr, 
+      	<li> <strong>02nd June 2008</strong>: Version 2.2 released:<br/> <strong>DWR integration</strong>: DWR users can now leverage the new integration with Jawr, 
       	which allows bundling all DWR resources along with other static scripts. <br/>
       	<strong>Mapping of classpath resources: </strong> bundles can now map to  resources (javascript and CSS) which are available in the classpath. 
       	<br/>				      	
@@ -989,14 +1105,14 @@
 				<li> Decreased logging verbosity of the ConcurrentCollectionsFactory. </li></ul>
       	</li>
 
-      	<li> <strong>5/19/2008</strong>: Version 2.1 released: <strong>i18n messages mapping from java ResourceBundles to javascript:</strong> 
+      	<li> <strong>19th May 2008</strong>: Version 2.1 released: <strong>i18n messages mapping from java ResourceBundles to javascript:</strong> 
       	your internationalized messages that you keep in properties files can be easily converted into a script that allows for easy access to 
       	every message and supports variable substitution. According tho the user's locale, the script generated will correspond to his language.   
       	<br/>Other than that, mostly internal changes and bugfixes. The internal changes include a new system to 
       	map to Generators. These are java components which generate javascript/CSS, or read it from a different place than the usual WAR directories.
       	This opens interesting possibilities for the near future. 
       	</li>
-      	<li> <strong>4/5/2008</strong>: Version 2.0 released: new automatic prefixing system, conditional comments support, grails and facelets 
+      	<li> <strong>5th April 2008</strong>: Version 2.0 released: new automatic prefixing system, conditional comments support, grails and facelets 
       	plugins, YUI compressor... Check the <a href="./docs/changes_20.html" >what's new in 2.0 page</a> for a description of all the new features and fixes.    
       	</li>
       	

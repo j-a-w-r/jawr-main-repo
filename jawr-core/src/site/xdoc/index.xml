@@ -171,7 +171,7 @@
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
-      	  <li> <strong>05th October 2014</strong>: Version 3.6 released:<br/>
+      	  <li> <strong>06th October 2014</strong>: Version 3.6 released:<br/>
 	      This version is containing bug fixes and some new features.<br/>
 	  	  <strong>Important note : </strong>
 	  	  The version 3.6 of Jawr is not backward compatible. The component handling image resource has evolved.
@@ -265,11 +265,14 @@
 	      	</ul>
 	      </li>
 	      <li>
-     	  	Thanks to XXX for reporting the issues.
+     	  	Thanks to tdahmez, ungarida, sudnam, rragan, takacsot, diorcety, shoot_the_moon  for reporting the issues.
+     	  </li>
+     	  <li>
+     	  	Thanks to M.Cegledi, volt0, kazimir70 for reporting the issues and also provding patches.
      	  </li>
 	</ul>
 	<ul>
-      	  <li> <b>05th October 2014</b>: Grails plugin 3.6 released:<br />
+      	  <li> <b>06th October 2014</b>: Grails plugin 3.6 released:<br />
 	      The grails plugin has been released in the grails central repository.<br />
 	      You'll need at least Grails 2.4.3 to use this version. 
 	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.<br/>
@@ -279,6 +282,9 @@
 	      		 	<strong>Issue #243 fixed:</strong> Allow Jawr Grails plugin message generator to retrieve message from others grails plugins     
 	      		 </li>
 	      	</ul>
+	      </li>
+	      <li>
+	      	Thanks to kevin.mershon for reporting this issue
 	      </li>
 	</ul>
 	<ul>
