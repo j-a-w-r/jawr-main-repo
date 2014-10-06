@@ -79,7 +79,7 @@
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
 		<ehcache.version>2.7.4</ehcache.version>
 		<smartsprites.version>0.2.10</smartsprites.version>
-		<google-closure.version>v20131014</google-closure.version>
+		<google-closure.version>v20140814</google-closure.version>
 		<lesscss-engine.version>1.5.1</lesscss-engine.version>
 		<jackson-json.version>2.4.2</jackson-json.version>
 		<jetty.version>6.1.10</jetty.version>
