@@ -40,7 +40,7 @@
 	<img src="./images/index/logo.png" style="border:0 !important" id="mainJawrLogo"  />
 	
 	<div id="jawrlinks">
-		<b>Latest version : 3.5.1</b><br/>
+		<b>Latest version : 3.6</b><br/>
 		<a href="https://java.net/projects/jawr/downloads/directory/release">
 			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr"  /></a> 
 		<a href="https://jawr.java.net/tutorials/quickstart.html" >
@@ -72,7 +72,7 @@
 	<a href="http://myweb.yahoo.com/myresults/bookmarklet?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.java.net&amp;ei=UTF" target="_blank"><img border="0" src="./images/badges/yahoo.png" alt="add to yahoo"/></a> 
 
 	</div>
-		
+	
 	<div id="firstPara">	
 	
 	

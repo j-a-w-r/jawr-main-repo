@@ -250,7 +250,7 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+----------------+
 | jawr.custom.postprocessors.names  | Comma separated list.  | List of all the custom postprocessors you wish to define in the descriptor. For every item in this list, you must define the postprocessor implementation class as defined below. Afterwards, you may use the names defined in this list to define postprocessor chains, as in: <jawr.js.bundle.factory.bundlepostprocessors=JSMin,[myUserDefinedPostprocessor],license>.   | None    |  2.8 | 
 *---------------+---------+--------------+----------------+----------------+
-| jawr.css.imagepath.override | String | Value to prepend to normalized css urls.  So css background: url(../../img/bkrnd/bg.gif); will = background: url(${jawr.css.imagepath.override}img/bkrnd/bg.gif); | none|  3.0 | 
+| jawr.css.imagepath.override | String | Value to prepend to normalized css urls.  So css background: url(../../img/bkrnd/bg.gif); will = background: url($\{jawr.css.imagepath.override\}img/bkrnd/bg.gif); | None |  3.0 | 
 *---------------+---------+--------------+----------------+----------------+
 | jawr.js.bundle.[name].locales  | Comma separated list.  | Defines the locale variants to generate for this bundle, which will be available whenever a locale resolver returns a key matching any of the specified values.    | None    |  3.0 |
 *---------------+---------+--------------+----------------+----------------+
@@ -258,9 +258,9 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+----------------+
 | factory.use.orphans.mapper | Boolean | Enable/disable auto scanning of non explicitly mapped files to auto-compress and to generate a one-file bundle out of each.  | true| 3.2.1 |
 *---------------+---------+--------------+----------------+----------------+
-| jawr.image.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    |   Not supported since 3.6 (Please use <jawr.image.resources> instead)  |
-*---------------+---------+--------------+----------------+
+| jawr.image.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    |   Not supported since 3.6 (Please use <jawr.binary.resources> instead)  |
+*---------------+---------+--------------+----------------+----------------+
 | jawr.image.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 |  Not supported since 3.6 (Please use <jawr.binary.hash.algorithm> instead)  |
-*---------------*---------*--------------+----------------+
+*---------------+---------+--------------+----------------+----------------+
 
 

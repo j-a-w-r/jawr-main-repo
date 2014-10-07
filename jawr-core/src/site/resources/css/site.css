@@ -67,3 +67,10 @@ div.source, #bodyColumn img {
 #bodyColumn ul li{margin:1.5em auto;}
 #bodyColumn ul ul li{margin:1em auto;}
 #navcolumn li {padding-top:4px !important;}
+
+.pull-right {
+	position: absolute; 
+	top: 0; 
+	right: 0; 
+	border: 0;
+}

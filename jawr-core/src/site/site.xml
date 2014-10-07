@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Jawr">
+	<bannerRight>
+	    <name/>
+	    <src>https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67</src>
+	    <alt>Fork me on GitHub</alt>
+	    <href>https://github.com/ic3fox/jawr-core"</href>
+	    <border/>
+	    <width/>
+	    <height/>
+	    <title/>
+	  </bannerRight>
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
@@ -80,10 +90,18 @@
 			<item name="Discussion forums" href="http://java.net/projects/jawr/forums/discussion-forum" />
 			<item name="Mailing lists" href="http://java.net/projects/jawr/lists" />
 			<item name="Documents &amp; files" href="http://java.net/projects/jawr/downloads/directory/release" />
-			<item name="Subversion" href="http://java.net/projects/jawr/sources" />
+			<item name="Old Subversion Repository" href="http://java.net/projects/jawr/sources" />
 			<item name="Issue tracker" href="http://java.net/jira/browse/JAWR" />
 		</menu>
 
-
+		<menu name="Github repositories">
+			<item name="Jawr core repository" href="https://github.com/ic3fox/jawr-core" />
+			<item name="Jawr spring repository" href="https://github.com/ic3fox/jawr-spring" />
+			<item name="Jawr wicket repository" href="https://github.com/ic3fox/jawr-wicket" />
+			<item name="Jawr grails repository" href="https://github.com/ic3fox/jawr-grails" />
+			<item name="Jawr dwr2.x repository" href="https://github.com/ic3fox/jawr-dwr2.x" />
+			<item name="Jawr dwr3.x repository" href="https://github.com/ic3fox/jawr-dwr3.x" />
+			<item name="Jawr tools repository" href="https://github.com/ic3fox/jawr-tools" />
+		</menu>
 	</body>
 </project>
