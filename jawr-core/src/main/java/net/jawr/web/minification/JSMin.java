@@ -125,7 +125,9 @@ public class JSMin {
 		theLookahead = EOF;
 		if (c == EOF) {
 			c = in.read();
-			currentByteIndex++;
+			if (c != EOF){
+				currentByteIndex++;
+			}
 		}
 		if (c == '\n') {
 			line++;
