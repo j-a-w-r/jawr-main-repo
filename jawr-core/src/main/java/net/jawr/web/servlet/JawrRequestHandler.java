@@ -15,6 +15,7 @@ package net.jawr.web.servlet;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -85,6 +86,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JawrRequestHandler.class);
+
+	/** The content encoding */
+	private static final String CONTENT_ENCODING = "Content-Encoding";
+
+	/** The gzip encoding */
+	private static final String GZIP = "gzip";
 
 	/** The cache control header parameter name */
 	protected static final String CACHE_CONTROL_HEADER = "Cache-Control";
@@ -245,14 +252,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		resourceType = getInitParameter("type");
 		resourceType = null == resourceType ? "js" : resourceType;
 
-		if(resourceType.equals("img")){
-			throw new BundlingProcessException("The resource type 'img' is not supported since the version 3.6. You should use the type 'binary' instead.");
+		if (resourceType.equals("img")) {
+			throw new BundlingProcessException(
+					"The resource type 'img' is not supported since the version 3.6. You should use the type 'binary' instead.");
 		}
-		
+
 		// Check if the resource type is a valid one
 		if (!(resourceType.equals(JawrConstant.JS_TYPE)
-				|| resourceType.equals(JawrConstant.CSS_TYPE)
-				|| resourceType
+				|| resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
 					.equals(JawrConstant.BINARY_TYPE))) {
 			throw new BundlingProcessException("Unknown resource Type:"
 					+ resourceType);
@@ -693,26 +700,29 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			// manual reload request
 			if (this.jawrConfig.getRefreshKey().length() > 0
-					&& null != request.getParameter("refreshKey")
+					&& null != request.getParameter(JawrConstant.REFRESH_KEY_PARAM)
 					&& this.jawrConfig.getRefreshKey().equals(
-							request.getParameter("refreshKey"))) {
+							request.getParameter(JawrConstant.REFRESH_KEY_PARAM))) {
 				this.configChanged(propertiesSource.getConfigProperties());
 			}
 
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Request received for path:" + requestedPath);
 
-			String contentType = getContentType(requestedPath, request);
-
-			if (handleSpecificRequest(requestedPath, contentType, request,
-					response)) {
+			
+			if (handleSpecificRequest(requestedPath, request, response)) {
 				return;
 			}
 
 			// Handle the strict mode
 			boolean validBundle = isValidBundle(requestedPath);
-			processRequest(requestedPath, request, response, contentType,
-					validBundle);
+			if (validBundle || jawrConfig.isStrictMode()) {
+				processRequest(requestedPath, request, response, validBundle);
+			} else {
+				// Not a valid bundle and not in strict mode
+				String contentType = getContentType(requestedPath, request);
+				copyRequestedContentToResponse(requestedPath, response, contentType);
+			}
 		} finally {
 
 			// Reset the Thread local for the Jawr context
@@ -721,12 +731,43 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	}
 
 	/**
+	 * Copy the requested content to the response
+	 * 
+	 * @param requestedPath
+	 *            the requested path
+	 * @param response
+	 *            the response
+	 * @param contentType
+	 * @throws IOException
+	 */
+	protected void copyRequestedContentToResponse(String requestedPath,
+			HttpServletResponse response, String contentType)
+			throws IOException {
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Path '"
+					+ requestedPath
+					+ "' does not belong to a bundle. Forwarding request to the server. ");
+		}
+
+		InputStream is = servletContext.getResourceAsStream(requestedPath);
+		if (is != null) {
+			response.setContentType(contentType);
+			IOUtils.copy(is, response.getOutputStream());
+			IOUtils.close(is);
+		} else {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Resource '" + requestedPath + "' not found.");
+			}
+		}
+	}
+
+	/**
 	 * Handle the specific requests
 	 * 
 	 * @param requestedPath
 	 *            the requested path
-	 * @param contentType
-	 *            the content type
 	 * @param request
 	 *            the request
 	 * @param response
@@ -738,8 +779,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 *             if a IO exception occurs
 	 */
 	protected boolean handleSpecificRequest(String requestedPath,
-			String contentType, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		boolean processed = false;
 		if (CLIENTSIDE_HANDLER_REQ_PATH.equals(requestedPath)) {
@@ -755,10 +796,11 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 							.equals(getExtension(requestedPath))) {
 
 				if (null == bundlesHandler.resolveBundleForPath(requestedPath)) {
-					if (LOGGER.isDebugEnabled())
+					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Path '"
 								+ requestedPath
 								+ "' does not belong to a bundle. Forwarding request to the server. ");
+					}
 					request.getRequestDispatcher(requestedPath).forward(
 							request, response);
 					processed = true;
@@ -778,7 +820,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 */
 	protected boolean isValidBundle(String requestedPath) {
 		boolean validBundle = true;
-		if (!jawrConfig.isDebugModeOn() && jawrConfig.isStrictMode()) {
+		if (!jawrConfig.isDebugModeOn()) {
 			validBundle = bundlesHandler
 					.containsValidBundleHashcode(requestedPath);
 		}
@@ -801,7 +843,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 */
 	protected void processRequest(String requestedPath,
 			HttpServletRequest request, HttpServletResponse response,
-			String contentType, boolean validBundle) throws IOException {
+			boolean validBundle) throws IOException {
 
 		boolean writeResponseHeader = false;
 
@@ -842,7 +884,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 							requestedPath, request)) {
 				// By setting content type, the response writer will use
 				// appropriate encoding
-				response.setContentType(contentType);
+				response.setContentType(getContentType(requestedPath, request));
 				writeContent(requestedPath, request, response);
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("request succesfully attended");
@@ -908,12 +950,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		int idx = requestedPath.indexOf(BundleRenderer.GZIP_PATH_PREFIX);
 		if (idx != -1) {
 
-			requestedPath = "/"
+			requestedPath = JawrConstant.URL_SEPARATOR
 					+ requestedPath.substring(idx
 							+ BundleRenderer.GZIP_PATH_PREFIX.length(),
 							requestedPath.length());
 			if (isValidRequestedPath(requestedPath)) {
-				response.setHeader("Content-Encoding", "gzip");
+				response.setHeader(CONTENT_ENCODING, GZIP);
 				bundlesHandler.streamBundleTo(requestedPath,
 						response.getOutputStream());
 			} else {
@@ -1135,7 +1177,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			ThreadLocalJawrContext.reset();
 		}
 
-		if (LOGGER.isDebugEnabled())
+		if (LOGGER.isDebugEnabled()){
 			LOGGER.debug("Jawr configuration succesfully reloaded. ");
+		}
 	}
 }
