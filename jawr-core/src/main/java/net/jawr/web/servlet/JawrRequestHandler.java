@@ -132,8 +132,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 	/** The generated image pattern */
 	private static final Pattern GENERATED_BINARY_RESOURCE_PATTERN = Pattern
-			.compile("(url\\(([\"' ]*))(([a-zA-Z]+)(?! (http|data)):(/)?)([^\\)\"']*)([\"']?\\))");
+			.compile("(url\\(([\"' ]*))(?!(http|https|data|mhtml))(([a-zA-Z]+):(/)?)([^\\)\"']*)([\"']?\\))");
 
+	
 	/** The resource bundles handler */
 	protected ResourceBundlesHandler bundlesHandler;
 
