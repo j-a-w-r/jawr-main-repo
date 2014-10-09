@@ -1,11 +1,9 @@
 package test.net.jawr.web.resource.bundle.global.postprocessor.google.closure;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -17,7 +15,6 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import net.jawr.web.DebugMode;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -27,26 +24,49 @@ import net.jawr.web.resource.bundle.factory.global.postprocessor.GlobalPostProce
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.global.postprocessor.google.closure.ClosureGlobalPostProcessor;
-import net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
-import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
-import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ClosureGlobalPostProcessorTestCase {
 
+	@Mock
 	private JoinableResourceBundle bundle01;
+	
+	@Mock
 	private JoinableResourceBundle bundle02;
+	
+	@Mock
 	private JoinableResourceBundle bundle03;
+	
+	@Mock
 	private JoinableResourceBundle msgBundle;
+	
+	@Mock
 	private JoinableResourceBundle variantBundle;
+	
+	@Mock
+	private ResourceReaderHandler rsHandler;
+	
+	@Mock
+	private ResourceBundlesHandler rsBundlesHandler;
+	
+	private String bundleDirPath;
+	
 	private JawrConfig config;
 	private GlobalPostProcessingContext ctx;
 	private ClosureGlobalPostProcessor processor;
@@ -59,25 +79,21 @@ public class ClosureGlobalPostProcessorTestCase {
 		InclusionPattern inclusionPattern = new InclusionPattern(false, 0);
 		
 		// Bundle path (full url would be: /servletMapping/prefix/css/bundle.css
-		bundle01 = mock(JoinableResourceBundle.class);
 		when(bundle01.getVariants()).thenReturn(new HashMap<String, VariantSet>());
 		when(bundle01.getId()).thenReturn("/myBundle/bundle01.js");
 		when(bundle01.getName()).thenReturn("bundle01");
 		when(bundle01.getInclusionPattern()).thenReturn(inclusionPattern);
 		
-		bundle02 = mock(JoinableResourceBundle.class);
 		when(bundle02.getVariants()).thenReturn(new HashMap<String, VariantSet>());
 		when(bundle02.getId()).thenReturn("/myBundle/bundle02.js");
 		when(bundle02.getName()).thenReturn("bundle02");
 		when(bundle02.getInclusionPattern()).thenReturn(inclusionPattern);
 			
-		bundle03 = mock(JoinableResourceBundle.class);
 		when(bundle03.getVariants()).thenReturn(new HashMap<String, VariantSet>());
 		when(bundle03.getId()).thenReturn("/myBundle/bundle03.js");
 		when(bundle03.getName()).thenReturn("bundle03");
 		when(bundle03.getInclusionPattern()).thenReturn(inclusionPattern);
 		
-		msgBundle = mock(JoinableResourceBundle.class);
 		Map<String, VariantSet> variantMap = new HashMap<String, VariantSet>();
 		VariantSet variantSet = new VariantSet("locale", "", Arrays.asList("", "fr", "en"));
 		variantMap.put("locale", variantSet);
@@ -86,7 +102,6 @@ public class ClosureGlobalPostProcessorTestCase {
 		when(msgBundle.getName()).thenReturn("msgBundle");
 		when(msgBundle.getInclusionPattern()).thenReturn(inclusionPattern);
 		
-		variantBundle = mock(JoinableResourceBundle.class);
 		variantMap = new HashMap<String, VariantSet>();
 		variantSet = new VariantSet("locale", "", Arrays.asList("", "fr"));
 		variantMap.put("locale", variantSet);
@@ -106,17 +121,39 @@ public class ClosureGlobalPostProcessorTestCase {
 	private void initProcessingContext(Properties props)
 			throws Exception, ResourceNotFoundException {
 		
-		String bundleDirPath = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/";
-		ResourceBundlesHandler rsBundlesHandler = getResourceBundlesHandler(bundleDirPath);
-		
 		config = new JawrConfig("js",props);
+		bundleDirPath = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/";
+		
+		Mockito.doAnswer(new Answer<Object>() {
+	        public Object answer(InvocationOnMock invocation) {
+	            Object[] args = invocation.getArguments();
+	            String bundlePath = (String) args[0];
+	            Writer writer = (Writer) args[1];
+	            String path = PathNormalizer.removeVariantPrefixFromPath(bundlePath);
+				String content;
+				try {
+					content = FileUtils.readFile(bundleDirPath+path);
+				} catch (Exception e1) {
+					throw new RuntimeException(e1);
+				}
+				
+				try {
+					writer.append(content);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+	            return "called with arguments: " + args;
+	        }
+	    }).when(rsBundlesHandler).writeBundleTo(Matchers.anyString(), Matchers.any(Writer.class));
+		
+		when(rsBundlesHandler.getConfig()).thenReturn(config);
+		
 		ServletContext servletContext = new MockServletContext();
 		servletContext.setAttribute(JawrConstant.JS_CONTEXT_ATTRIBUTE, rsBundlesHandler);
 		config.setContext(servletContext);
 		config.setCharsetName("UTF-8");		
 		addGeneratorRegistryToConfig(config, "js");
 		
-		ResourceReaderHandler rsHandler = mock(ResourceReaderHandler.class);
 		when(rsHandler.getWorkingDirectory()).thenReturn(FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/");
 		when(rsHandler.getResource("extern.js")).thenReturn(new StringReader(FileUtils.readClassPathFile("global/postprocessor/google/closure/externs/extern.js")));
 		
@@ -251,112 +288,6 @@ public class ClosureGlobalPostProcessorTestCase {
 		String expected = FileUtils.readClassPathFile("global/postprocessor/google/closure/expectedResult/"+bundle+"_"+(whitespaceCompression? "whitespace" :"advanced") + "_compression.js");
 		String result = FileUtils.readFile(destDir+"myBundle/"+bundle+".js");
 		assertEquals(expected, result);
-	}
-	
-	private ResourceBundlesHandler getResourceBundlesHandler(final String bundleDirPath) {
-		
-		ResourceBundlesHandler bundlesHandler = new ResourceBundlesHandler() {
-			
-			//final Map<String, String> mapContent = mapData;
-			public void writeBundleTo(String bundlePath, Writer writer)
-					throws ResourceNotFoundException {
-				
-				String path = PathNormalizer.removeVariantPrefixFromPath(bundlePath);
-				String content;
-				try {
-					content = FileUtils.readFile(bundleDirPath+path);
-				} catch (Exception e1) {
-					throw new ResourceNotFoundException(path);
-				}
-				
-				try {
-					writer.append(content);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-			
-			public void streamBundleTo(String bundlePath, OutputStream out)
-					throws ResourceNotFoundException {
-				
-			}
-			
-			public JoinableResourceBundle resolveBundleForPath(String path) {
-				
-				return null;
-			}
-			
-			public boolean isGlobalResourceBundle(String resourceBundleId) {
-				return false;
-			}
-			
-			public void initAllBundles() {
-				
-			}
-			
-			public List<JoinableResourceBundle> getContextBundles() {
-				return null;
-			}
-			
-			public JawrConfig getConfig() {
-				return config;
-			}
-			
-			public ClientSideHandlerGenerator getClientSideHandler() {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-					DebugMode debugMode,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-					String bundlePath,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getBundlePaths(String bundleId,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public ResourceBundlePathsIterator getBundlePaths(
-					DebugMode debugMode, String bundleId,
-					ConditionalCommentCallbackHandler commentCallbackHandler,
-					Map<String, String> variants) {
-				return null;
-			}
-
-			public boolean containsValidBundleHashcode(String requestedPath) {
-				return false;
-			}
-
-			public String getBundleTextDirPath() {
-				return bundleDirPath;
-			}
-
-			public List<JoinableResourceBundle> getGlobalBundles() {
-				return new ArrayList<JoinableResourceBundle>();
-			}
-
-			public String getResourceType() {
-				return null;
-			}
-			
-		};
-		return bundlesHandler;
 	}
 
 }

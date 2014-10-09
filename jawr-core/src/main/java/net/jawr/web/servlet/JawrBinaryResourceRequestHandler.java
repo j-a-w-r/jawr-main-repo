@@ -46,6 +46,7 @@ import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.servlet.util.MIMETypesSupport;
@@ -151,6 +152,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * @throws ServletException
 	 *             if an exception occurs
 	 */
+	@Override
 	protected void initializeJawrConfig(Properties props)
 			throws ServletException {
 
@@ -413,11 +415,19 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
+	@Override
 	protected void processRequest(String requestedPath,
 			HttpServletRequest request, HttpServletResponse response,
-			boolean validBundle) throws IOException {
+			BundleHashcodeType bundleHashcodeType) throws IOException {
 
 		boolean responseHeaderWritten = false;
+		boolean validBundle = true;
+		if (!jawrConfig.isDebugModeOn()
+				&& jawrConfig.isStrictMode()
+				&& bundleHashcodeType
+						.equals(BundleHashcodeType.INVALID_HASHCODE)) {
+			validBundle = false;
+		}
 
 		// If debug mode is off, check for If-Modified-Since and
 		// If-none-match headers and set response caching headers.
@@ -456,7 +466,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 
 				// Set the content type
 				response.setContentType(getContentType(requestedPath, request));
-				writeContent(response, filePath);
+				writeContent(filePath, request, response);
+
 			} else {
 				if (!responseHeaderWritten) {
 					LOGGER.error("Unable to load the image for the request URI : "
@@ -481,13 +492,14 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * @see
 	 * net.jawr.web.servlet.JawrRequestHandler#isValidBundle(java.lang.String)
 	 */
-	protected boolean isValidBundle(String requestedPath) {
-		boolean validBundle = true;
+	@Override
+	protected BundleHashcodeType isValidBundle(String requestedPath) {
+		BundleHashcodeType bundleHashcodeType = BundleHashcodeType.VALID_HASHCODE;
 		if (!jawrConfig.isDebugModeOn()) {
-			validBundle = binaryRsHandler
-					.containsValidBundleHashcode(requestedPath);
+			bundleHashcodeType = binaryRsHandler
+					.getBundleHashcodeType(requestedPath);
 		}
-		return validBundle;
+		return bundleHashcodeType;
 	}
 
 	/*
@@ -568,44 +580,31 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		return result;
 	}
 
-	/**
-	 * Write the image content to the response
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param response
-	 *            the response
-	 * @param fileName
-	 *            the filename
-	 * @throws IOException
-	 *             if an IO exception occurs.
+	 * @see
+	 * net.jawr.web.servlet.JawrRequestHandler#writeContent(java.lang.String,
+	 * javax.servlet.http.HttpServletRequest,
+	 * javax.servlet.http.HttpServletResponse)
 	 */
-	private void writeContent(HttpServletResponse response, String fileName)
-			throws IOException {
+	@Override
+	protected void writeContent(String requestedPath,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ResourceNotFoundException {
 
-		OutputStream os = response.getOutputStream();
-		InputStream is = null;
-
-		String resourceName = fileName;
+		String resourceName = requestedPath;
 		if (!jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(
 				resourceName)
 				&& !resourceName.startsWith(URL_SEPARATOR)) {
 			resourceName = URL_SEPARATOR + resourceName;
 		}
 
+		OutputStream os = response.getOutputStream();
+		InputStream is = null;
+
 		try {
 			is = rsReaderHandler.getResourceAsStream(resourceName);
-		} catch (ResourceNotFoundException e) {
-			// Nothing to do here
-		}
-
-		if (is == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info("Received a request for a non existing binary resource: "
-						+ resourceName);
-			return;
-		}
-
-		try {
 			IOUtils.copy(is, os);
 		} catch (EOFException eofex) {
 			LOGGER.debug("Browser cut off response", eofex);

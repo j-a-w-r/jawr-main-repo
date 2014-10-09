@@ -16,7 +16,9 @@ package net.jawr.web.resource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
@@ -110,12 +112,27 @@ public class BinaryResourcesHandler {
 	}
 
 	/**
-	 * Checks if the requested image is a valid one or not
+	 * Checks the bundle hashcode type of the requested binary resource
 	 * @param requestedPath the requested path
 	 * @return true if the requested image is a valid one or not
 	 */
-	public boolean containsValidBundleHashcode(String requestedPath) {
-		return binaryResourcePathMap.containsValue(requestedPath);
+	public BundleHashcodeType getBundleHashcodeType(String requestedPath) {
+		
+		if(binaryResourcePathMap.containsValue(requestedPath)){
+			return BundleHashcodeType.VALID_HASHCODE;
+		}
+		
+		BundleHashcodeType bundleHashcodeType = BundleHashcodeType.UNKNOW_BUNDLE;
+		String binaryRequest = requestedPath;
+		int idx = binaryRequest.indexOf(JawrConstant.URL_SEPARATOR,1);
+		if(idx != -1){
+			binaryRequest = binaryRequest.substring(idx);
+		}
+		if(binaryResourcePathMap.containsKey(binaryRequest)){
+			bundleHashcodeType = BundleHashcodeType.INVALID_HASHCODE;
+			
+		}
+		return bundleHashcodeType;
 	}
 	
 }

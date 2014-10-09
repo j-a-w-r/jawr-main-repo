@@ -163,12 +163,11 @@ public interface ResourceBundlesHandler {
 	public ClientSideHandlerGenerator getClientSideHandler();
 
 	/**
-	 * Returns true if the requested path contains a valid bundle hashcode for the
-	 * requested path
+	 * Returns the type of bundle hashcode (valid, invalid, unknown bunle) for the requested path given in parameter 
 	 * @param requestedPath the requested path
 	 * @return true if the requested path contains a valid bundle hashcode
 	 */
-	public boolean containsValidBundleHashcode(String requestedPath);
+	public BundleHashcodeType getBundleHashcodeType(String requestedPath);
 	
 	/**
      * Returns the path of the directory containing the generated text bundles 

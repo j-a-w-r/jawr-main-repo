@@ -59,6 +59,7 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.PropsFilePropertiesSource;
 import net.jawr.web.resource.bundle.factory.util.ServletContextAware;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.bundle.handler.ClientSideHandlerScriptRequestHandler;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
@@ -686,48 +687,65 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		try {
 			// Initialize the Thread local for the Jawr context
-			ThreadLocalJawrContext
-					.setJawrConfigMgrObjectName(JmxUtils.getJawrConfigMBeanObjectName(
-							request.getContextPath(),
-							resourceType,
-							jawrConfig
-									.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX)));
-
-			ThreadLocalJawrContext.setRequest(request.getRequestURL()
-					.toString());
-
-			RendererRequestUtils.setRequestDebuggable(request, jawrConfig);
+			initThreadLocalJawrContext(request);
 
 			// manual reload request
 			if (this.jawrConfig.getRefreshKey().length() > 0
-					&& null != request.getParameter(JawrConstant.REFRESH_KEY_PARAM)
-					&& this.jawrConfig.getRefreshKey().equals(
-							request.getParameter(JawrConstant.REFRESH_KEY_PARAM))) {
+					&& null != request
+							.getParameter(JawrConstant.REFRESH_KEY_PARAM)
+					&& this.jawrConfig
+							.getRefreshKey()
+							.equals(request
+									.getParameter(JawrConstant.REFRESH_KEY_PARAM))) {
 				this.configChanged(propertiesSource.getConfigProperties());
 			}
 
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Request received for path:" + requestedPath);
 
-			
 			if (handleSpecificRequest(requestedPath, request, response)) {
 				return;
 			}
 
 			// Handle the strict mode
-			boolean validBundle = isValidBundle(requestedPath);
-			if (validBundle || jawrConfig.isStrictMode()) {
-				processRequest(requestedPath, request, response, validBundle);
+			BundleHashcodeType bundleHashcodeType = isValidBundle(requestedPath);
+			if (jawrConfig.isDebugModeOn()
+					|| !bundleHashcodeType
+							.equals(BundleHashcodeType.UNKNOW_BUNDLE)) {
+				processRequest(requestedPath, request, response,
+						bundleHashcodeType);
 			} else {
-				// Not a valid bundle and not in strict mode
-				String contentType = getContentType(requestedPath, request);
-				copyRequestedContentToResponse(requestedPath, response, contentType);
+
+				try {
+					writeContent(requestedPath, request, response);
+				} catch (ResourceNotFoundException e) {
+					response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				}
 			}
 		} finally {
 
 			// Reset the Thread local for the Jawr context
 			ThreadLocalJawrContext.reset();
 		}
+	}
+
+	/**
+	 * Initialize the ThreadLocalJawrContext
+	 * 
+	 * @param requestthe
+	 *            HTTP request
+	 */
+	protected void initThreadLocalJawrContext(HttpServletRequest request) {
+		ThreadLocalJawrContext
+				.setJawrConfigMgrObjectName(JmxUtils.getJawrConfigMBeanObjectName(
+						request.getContextPath(),
+						resourceType,
+						jawrConfig
+								.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX)));
+
+		ThreadLocalJawrContext.setRequest(request.getRequestURL().toString());
+
+		RendererRequestUtils.setRequestDebuggable(request, jawrConfig);
 	}
 
 	/**
@@ -818,13 +836,13 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 *            the requested path
 	 * @return true if the bundle is a valid bundle
 	 */
-	protected boolean isValidBundle(String requestedPath) {
-		boolean validBundle = true;
+	protected BundleHashcodeType isValidBundle(String requestedPath) {
+		BundleHashcodeType bundleHashcodeType = BundleHashcodeType.VALID_HASHCODE;
 		if (!jawrConfig.isDebugModeOn()) {
-			validBundle = bundlesHandler
-					.containsValidBundleHashcode(requestedPath);
+			bundleHashcodeType = bundlesHandler
+					.getBundleHashcodeType(requestedPath);
 		}
-		return validBundle;
+		return bundleHashcodeType;
 	}
 
 	/**
@@ -843,9 +861,16 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 */
 	protected void processRequest(String requestedPath,
 			HttpServletRequest request, HttpServletResponse response,
-			boolean validBundle) throws IOException {
+			BundleHashcodeType bundleHashcodeType) throws IOException {
 
 		boolean writeResponseHeader = false;
+		boolean validBundle = true;
+		if (!jawrConfig.isDebugModeOn()
+				&& jawrConfig.isStrictMode()
+				&& bundleHashcodeType
+						.equals(BundleHashcodeType.INVALID_HASHCODE)) {
+			validBundle = false;
+		}
 
 		if (this.jawrConfig.isDebugModeOn()
 				&& null != request.getParameter(GENERATION_PARAM))
@@ -1177,7 +1202,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			ThreadLocalJawrContext.reset();
 		}
 
-		if (LOGGER.isDebugEnabled()){
+		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Jawr configuration succesfully reloaded. ");
 		}
 	}

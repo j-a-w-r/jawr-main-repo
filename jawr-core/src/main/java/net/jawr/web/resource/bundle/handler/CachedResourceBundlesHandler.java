@@ -310,10 +310,10 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
-	 * containsValidBundleHashcode(java.lang.String)
+	 * getTypeBundleHashcode(java.lang.String)
 	 */
-	public boolean containsValidBundleHashcode(String requestedPath) {
-		return rsHandler.containsValidBundleHashcode(requestedPath);
+	public BundleHashcodeType getBundleHashcodeType(String requestedPath) {
+		return rsHandler.getBundleHashcodeType(requestedPath);
 	}
 
 	/*

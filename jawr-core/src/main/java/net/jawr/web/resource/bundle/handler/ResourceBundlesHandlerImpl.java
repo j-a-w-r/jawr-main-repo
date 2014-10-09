@@ -804,11 +804,11 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
-	 * containsValidBundleHashcode(java.lang.String)
+	 * getTypeBundleHashcode(java.lang.String)
 	 */
-	public boolean containsValidBundleHashcode(String requestedPath) {
+	public BundleHashcodeType getBundleHashcodeType(String requestedPath) {
 
-		boolean validHashcode = false;
+		BundleHashcodeType typeBundleHashcode = BundleHashcodeType.UNKNOW_BUNDLE;
 
 		String[] pathInfos = PathNormalizer
 				.extractBundleInfoFromPath(requestedPath);
@@ -830,11 +830,13 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 						&& hashcode.equals(bundleHashcode)
 						&& ((bundlePrefix == null && bundle.getBundlePrefix() == null) || (bundlePrefix != null && bundlePrefix
 								.equals(bundle.getBundlePrefix())))) {
-					validHashcode = true;
+					typeBundleHashcode = BundleHashcodeType.VALID_HASHCODE;
+				}else{
+					typeBundleHashcode = BundleHashcodeType.INVALID_HASHCODE;
 				}
 			}
 		}
-		return validHashcode;
+		return typeBundleHashcode;
 	}
 
 	/**
