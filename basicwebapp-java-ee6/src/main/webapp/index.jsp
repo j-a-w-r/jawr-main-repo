@@ -10,6 +10,10 @@
 <script type="text/javascript">
 	$(function() {
 		$("#tabView").tabs();
+		
+		// Initialize the theme swicther select box
+		var themeSwitcher = document.getElementById("themeSwitcher");
+		themeSwitcher.value = JAWR.skin.getCurrentSkin();
 	});
 
 	$(function() {
@@ -33,10 +37,6 @@
 		
 		$("#dialog-message").dialog("open");
 	}
-	
-	// Initialize the theme swicther select box
-	var themeSwitcher = document.getElementById("themeSwitcher");
-	themeSwitcher.value = JAWR.skin.getCurrentSkin();
 	
 </script>
 </head>
@@ -112,7 +112,6 @@
 					<jwr:image value="temp" src="/img/cog.png" />
 					This input image use a generated path which force the caching for
 					the browser.
-					<jwr:image value="temp" src="/img/1mb-img.jpg" />
 				</div>
 			</div>
 			<div id="tab4">
