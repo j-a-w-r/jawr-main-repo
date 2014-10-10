@@ -516,14 +516,16 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			throws IOException {
 
 		boolean copyDone = false;
-		
-		try {
-			writeContent(requestedPath, null, response);
-			copyDone = true;
-		} catch (ResourceNotFoundException e) {
-			// Nothing to do here
+		if (isValidRequestedPath(requestedPath)) {
+
+			try {
+				writeContent(requestedPath, null, response);
+				copyDone = true;
+			} catch (ResourceNotFoundException e) {
+				// Nothing to do here
+			}
 		}
-	
+
 		return copyDone;
 	}
 
@@ -580,7 +582,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String contentType = (String) binaryMimeTypeMap.get(extension);
 		if (contentType == null) {
 
-			LOGGER.error("No image extension match the extension '" + extension
+			LOGGER.error("No binary extension match the extension '" + extension
 					+ "' for the request URI : " + requestUri);
 			return null;
 		}
@@ -645,15 +647,16 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *            the file name
 	 * @return the file name without the cache buster.
 	 */
-	private String getRealFilePath(String fileName, BundleHashcodeType bundleHashcodeType) {
+	private String getRealFilePath(String fileName,
+			BundleHashcodeType bundleHashcodeType) {
 
 		String realFilePath = fileName;
-		if(bundleHashcodeType.equals(BundleHashcodeType.INVALID_HASHCODE)){
-			int idx = realFilePath.indexOf(JawrConstant.URL_SEPARATOR,1);
-			if(idx != -1){
+		if (bundleHashcodeType.equals(BundleHashcodeType.INVALID_HASHCODE)) {
+			int idx = realFilePath.indexOf(JawrConstant.URL_SEPARATOR, 1);
+			if (idx != -1) {
 				realFilePath = realFilePath.substring(idx);
 			}
-		}else{
+		} else {
 			if (realFilePath.startsWith(JawrConstant.URL_SEPARATOR)) {
 				realFilePath = realFilePath.substring(1);
 			}
@@ -669,7 +672,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 				realFilePath = result.toString();
 			}
 		}
-		
+
 		return realFilePath;
 	}
 

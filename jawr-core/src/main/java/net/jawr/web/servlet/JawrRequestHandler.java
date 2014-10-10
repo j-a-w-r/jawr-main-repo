@@ -134,7 +134,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	private static final Pattern GENERATED_BINARY_RESOURCE_PATTERN = Pattern
 			.compile("(url\\(([\"' ]*))(?!(http|https|data|mhtml))(([a-zA-Z]+):(/)?)([^\\)\"']*)([\"']?\\))");
 
-	
 	/** The resource bundles handler */
 	protected ResourceBundlesHandler bundlesHandler;
 
@@ -717,11 +716,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 						bundleHashcodeType);
 			} else {
 
-				boolean copyDone = copyRequestedContentToResponse(requestedPath, response, getContentType(requestedPath,  request));
-				if(!copyDone){
+				boolean copyDone = copyRequestedContentToResponse(
+						requestedPath, response,
+						getContentType(requestedPath, request));
+				if (!copyDone) {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("Resource '" + requestedPath + "' not found.");
+						LOGGER.debug("Resource '" + requestedPath
+								+ "' not found.");
 					}
 				}
 			}
@@ -758,29 +760,33 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 *            the requested path
 	 * @param response
 	 *            the response
-	 * @param contentType teh ontentt type
-	 * @return true if the resource exists and has been copied in the response 
-	 * @throws IOException if an IO exception occurs
+	 * @param contentType
+	 *            teh ontentt type
+	 * @return true if the resource exists and has been copied in the response
+	 * @throws IOException
+	 *             if an IO exception occurs
 	 */
 	protected boolean copyRequestedContentToResponse(String requestedPath,
 			HttpServletResponse response, String contentType)
 			throws IOException {
 
 		boolean copyDone = false;
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Path '"
-					+ requestedPath
-					+ "' does not belong to a bundle. Forwarding request to the server. ");
-		}
 
-		InputStream is = servletContext.getResourceAsStream(requestedPath);
-		if (is != null) {
-			response.setContentType(contentType);
-			IOUtils.copy(is, response.getOutputStream());
-			IOUtils.close(is);
-			copyDone = true;
-		} 
-		
+		if (isValidRequestedPath(requestedPath)) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Path '"
+						+ requestedPath
+						+ "' does not belong to a bundle. Forwarding request to the server. ");
+			}
+
+			InputStream is = servletContext.getResourceAsStream(requestedPath);
+			if (is != null) {
+				response.setContentType(contentType);
+				IOUtils.copy(is, response.getOutputStream());
+				IOUtils.close(is);
+				copyDone = true;
+			}
+		}
 		return copyDone;
 	}
 
@@ -816,7 +822,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					&& !JawrConstant.CSS_TYPE
 							.equals(getExtension(requestedPath))) {
 
-				if (null == bundlesHandler.resolveBundleForPath(requestedPath)) {
+				if (null == bundlesHandler.resolveBundleForPath(requestedPath) && isValidRequestedPath(requestedPath)) {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Path '"
 								+ requestedPath
