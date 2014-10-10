@@ -457,7 +457,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		}
 
 		// Returns the real file path
-		String filePath = getRealFilePath(requestedPath);
+		String filePath = getRealFilePath(requestedPath, bundleHashcodeType);
 
 		try {
 			if (isValidRequestedPath(filePath)
@@ -500,6 +500,31 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 					.getBundleHashcodeType(requestedPath);
 		}
 		return bundleHashcodeType;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.servlet.JawrRequestHandler#copyRequestedContentToResponse
+	 * (java.lang.String, javax.servlet.http.HttpServletResponse,
+	 * java.lang.String)
+	 */
+	@Override
+	protected boolean copyRequestedContentToResponse(String requestedPath,
+			HttpServletResponse response, String contentType)
+			throws IOException {
+
+		boolean copyDone = false;
+		
+		try {
+			writeContent(requestedPath, null, response);
+			copyDone = true;
+		} catch (ResourceNotFoundException e) {
+			// Nothing to do here
+		}
+	
+		return copyDone;
 	}
 
 	/*
@@ -620,24 +645,31 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *            the file name
 	 * @return the file name without the cache buster.
 	 */
-	private String getRealFilePath(String fileName) {
+	private String getRealFilePath(String fileName, BundleHashcodeType bundleHashcodeType) {
 
 		String realFilePath = fileName;
-		if (realFilePath.startsWith(JawrConstant.URL_SEPARATOR)) {
-			realFilePath = realFilePath.substring(1);
-		}
+		if(bundleHashcodeType.equals(BundleHashcodeType.INVALID_HASHCODE)){
+			int idx = realFilePath.indexOf(JawrConstant.URL_SEPARATOR,1);
+			if(idx != -1){
+				realFilePath = realFilePath.substring(idx);
+			}
+		}else{
+			if (realFilePath.startsWith(JawrConstant.URL_SEPARATOR)) {
+				realFilePath = realFilePath.substring(1);
+			}
 
-		Matcher matcher = cacheBusterPattern.matcher(realFilePath);
-		StringBuffer result = new StringBuffer();
-		if (matcher.find()) {
-			matcher.appendReplacement(
-					result,
-					StringUtils.isEmpty(matcher
-							.group(GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX)) ? CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN
-							: CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN);
-			return result.toString();
+			Matcher matcher = cacheBusterPattern.matcher(realFilePath);
+			StringBuffer result = new StringBuffer();
+			if (matcher.find()) {
+				matcher.appendReplacement(
+						result,
+						StringUtils.isEmpty(matcher
+								.group(GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX)) ? CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN
+								: CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN);
+				realFilePath = result.toString();
+			}
 		}
-
+		
 		return realFilePath;
 	}
 

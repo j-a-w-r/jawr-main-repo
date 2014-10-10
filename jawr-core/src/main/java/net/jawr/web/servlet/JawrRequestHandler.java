@@ -717,10 +717,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 						bundleHashcodeType);
 			} else {
 
-				try {
-					writeContent(requestedPath, request, response);
-				} catch (ResourceNotFoundException e) {
+				boolean copyDone = copyRequestedContentToResponse(requestedPath, response, getContentType(requestedPath,  request));
+				if(!copyDone){
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("Resource '" + requestedPath + "' not found.");
+					}
 				}
 			}
 		} finally {
@@ -756,13 +758,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 *            the requested path
 	 * @param response
 	 *            the response
-	 * @param contentType
-	 * @throws IOException
+	 * @param contentType teh ontentt type
+	 * @return true if the resource exists and has been copied in the response 
+	 * @throws IOException if an IO exception occurs
 	 */
-	protected void copyRequestedContentToResponse(String requestedPath,
+	protected boolean copyRequestedContentToResponse(String requestedPath,
 			HttpServletResponse response, String contentType)
 			throws IOException {
 
+		boolean copyDone = false;
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Path '"
 					+ requestedPath
@@ -774,12 +778,10 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			response.setContentType(contentType);
 			IOUtils.copy(is, response.getOutputStream());
 			IOUtils.close(is);
-		} else {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Resource '" + requestedPath + "' not found.");
-			}
-		}
+			copyDone = true;
+		} 
+		
+		return copyDone;
 	}
 
 	/**
@@ -1064,7 +1066,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				.getRootRelativePath(requestPath);
 		String replacementPattern = PathNormalizer.normalizePath("$1"
 				+ relativeRootUrlPath + imageServletMapping
-				+ "/$4_cbDebug/$7$8");
+				+ "/$5_cbDebug/$7$8");
 
 		Matcher matcher = GENERATED_BINARY_RESOURCE_PATTERN.matcher(content);
 
