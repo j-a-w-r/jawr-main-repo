@@ -1,11 +1,15 @@
-<document>
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
     <title>More than a Javascript/CSS compressor</title>
   </properties>
 	
 	<head>
-		<style>
+		<title></title>
+		<style type="">
 			h2{display:none}
 			#firstPara{
 				clear:right;
@@ -35,16 +39,16 @@
 	
   <body>
 	
-    <section>
+    <section name="jawr">
 	
-	<img src="./images/index/logo.png" style="border:0 !important" id="mainJawrLogo"  />
+	<img src="./images/index/logo.png" style="border:0 !important" id="mainJawrLogo"  alt="Logo" />
 	
 	<div id="jawrlinks">
 		<b>Latest version : 3.6</b><br/>
 		<a href="https://java.net/projects/jawr/downloads/directory/release">
-			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr"  /></a> 
+			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr" alt="Download" /></a> 
 		<a href="https://jawr.java.net/tutorials/quickstart.html" >
-			<img src="./images/index/get-started.png" style="border:0 !important" title="Go to the quickstart tutorial and start using Jawr" /></a> 		
+			<img src="./images/index/get-started.png" style="border:0 !important" title="Go to the quickstart tutorial and start using Jawr" alt="Get started" /></a> 		
 	</div>
 	<div id="badges">
 		<!-- FURL -->
@@ -87,7 +91,7 @@
 	</p>
 	</div>
   	
-  	<img src="./images/index/jawr.png" />
+  	<img src="./images/index/jawr.png" alt="jawr" />
 	<p>
 	It is common knowledge that it is faster to serve one large file rather than two smaller ones, because of increased HTTP negotiation and the fact 
 	that most browsers only keep two connections open to the same host at any given time. 
@@ -107,7 +111,7 @@
 	by allowing to distribute modules in separate files without worrying about how the application will be served to clients. 
 	</p>	
 	<p>
-		The alternatives to using Jawr are: 
+		The alternatives to using Jawr are:</p>
 		<ul>
 			<li>Developing all-in-one script files which conform to the deployment scheme. That is, cram all the modules into a few files. Version control becomes
 			unmanageable and it is hard to find a component that needs change. As the project grows, the code becomes near to impossible to mantain. 
@@ -116,7 +120,6 @@
 				slightest of changes in their code. 
 				</li>
 		</ul>
-	</p>
 	<p>
 		Jawr offers the best of both worlds, by combining a powerful bundling-minifying-compressing scheme for optimal service in 
 		production, with a rapid development mode for quick change-save-test cycles. 
@@ -631,8 +634,8 @@
 	      		 <li>
 	      		 	<strong>Issue #163 fixed:</strong> Issue with bundle hashcode generation which must be based on bundle content      
 	      		 </li>
-	      		 Thanks to Mark W. for reporting the hashcode generation issue.
 	      	</ul>
+     		 <p>Thanks to Mark W. for reporting the hashcode generation issue.</p>
       	  </li>	
 	      <li> <strong>20th July 2010</strong>: Version 3.3.2 released:<br/>
 	      	This version contains only bug fixes.<br/><br/>
@@ -644,8 +647,8 @@
 	      		 <li>
 	      		 	<strong>Issue #159 fixed:</strong> Space in the dependencies configuration lead to omitted dependencies      
 	      		 </li>
-	      		 Thanks to zafo and Trygve Lie for reporting these issues.
 	      	</ul>
+      		 <p>Thanks to zafo and Trygve Lie for reporting these issues.</p>
       	  </li>	
 	      <li> <strong>06/29/2010</strong>: Version 3.3.1 released:<br/>
 	      	This version contains a lot of new features and bug fixes.<br/><br/>
@@ -755,9 +758,9 @@
 	      		 <li>
 	      		 	<strong>Issue #152 fixed:</strong> For the image tags in Wicket, Jawr doesn't handle properly the URL generation of generated images
 	      		 </li>     
-	      		 Thanks to eliotsykes, mkkoch, wangg3, Martin Jönsson, jnichols959 and all those who participate through the discusion forum for reporting issues and giving feedbacks. <br/>
-	      		 Thanks also to Gerben Jorna for his implementation of the combine media post processor and for the base implementation of the base64 CSS image postprocessor. 
 	      	</ul>
+      		 <p>Thanks to eliotsykes, mkkoch, wangg3, Martin Jönsson, jnichols959 and all those who participate through the discusion forum for reporting issues and giving feedbacks. <br/>
+      		 Thanks also to Gerben Jorna for his implementation of the combine media post processor and for the base implementation of the base64 CSS image postprocessor. </p>
 	      	<br/><br/>
 	      	<strong>Jawr ant task and maven plugin</strong> - Version 1.4 released:<br/>
 		    This version contains one new feature and one bug fix.<br/><br/>
@@ -862,8 +865,8 @@
 	      		 <li>
 	      		 	<strong>Issue #125 fixed:</strong> In Spring MVC, an exception is thrown when the controller mapping is defined while the Spring servlet mapping is set to "/*".   
 	      		 </li>    
-	      		 Thanks to qxo, mahoney266 and Robin Sander for reporting issues.
 	      	</ul>
+      		 <p>Thanks to qxo, mahoney266 and Robin Sander for reporting issues.</p>
 	      	<br/><br/>
 	      	<strong>Jawr ant task and maven plugin</strong> - Version 1.3 released:<br/>
 		    This version contains only one bug fix.<br/><br/>
@@ -872,8 +875,8 @@
 	      		 <li>
 	      		 	<strong>Issue #116 fixed:</strong> Jawr bundle processing with the maven plugin or ant Task doesn't work with a spring MVC project. Please check the <a href="./docs/bundle_preprocessing.html">bundle preprocessing documentation</a> for more detail.      
 	      		 </li>      
-	      		 Thanks to acklenx for reporting the issue. 
       	  	</ul> 
+      		 <p>Thanks to acklenx for reporting the issue.</p> 
      	  </li>
       	  <li> <strong>09th December 2009</strong>: Version 3.2 released:<br/>
 	      	A serious security issue has been found in Jawr when using the property <strong>jawr.debug.overrideKey</strong>, which allowed a user to access the content of the WEB-INF folder, and any file of your web application
@@ -948,8 +951,8 @@
 	      		 <li>
 	      		 	<strong>Issue #112 fixed:</strong> <strong>jawr.config.reload.interval</strong>, <strong>jawr.config.reload.refreshKey</strong> don't work for Jawr with Spring MVC.      
 	      		 </li>       
-	      		 Thanks to rodneyphillips, axelfont, tkaefer and chupa for reporting issues. 
       	  	</ul>
+      		 <p>Thanks to rodneyphillips, axelfont, tkaefer and chupa for reporting issues.</p> 
       	  </li>
 	      <li> <strong>28th September 2009</strong>: Version 3.1.2 released:<br/>
 	      	This version contains only bug fixes.<br/><br/>
@@ -961,8 +964,8 @@
 	      		 <li>
 	      		 	<strong>Issue #95 fixed:</strong> CSS classpath generated resources contain postprocessors data in debug mode.      
 	      		 </li>      
-	      		 Thanks to jmundt for reporting localized messages issue. 
       	  	</ul>
+     		 <p>Thanks to jmundt for reporting localized messages issue.</p> 
       	  	<br/><br/>
       	  	<strong>Jawr ant task and maven plugin</strong> - Version 1.1.2 released:<br/>
 	    	This version contains only one bug fix.<br/><br/>
@@ -971,8 +974,8 @@
 	      		 <li>
 	      		 	<strong>Issue #96 fixed:</strong> Remove entity resolution when using bundle preprocessor.      
 	      		 </li>      
-	      		 Thanks to acklenx for reporting the issue. 
       	  	</ul>
+      		 <p>Thanks to acklenx for reporting the issue.</p> 
 	      </li>
 	      <li> <strong>01rst September 2009</strong>: Version 3.1.1 released:<br/>
 	      	This version contains only bug fixes.<br/><br/>
@@ -993,8 +996,8 @@
 	      		 <li>
 	      		 	<strong>Issue #92 fixed:</strong> Jawr trips over Javascript multiline string literals
 	      		 </li> 
-	      		 We would like to thank qxo, jmundt, reardonm, cpo, kape and axelfont for reporting issues and providing patches when possible. 
       	  	</ul>
+	        <p>We would like to thank qxo, jmundt, reardonm, cpo, kape and axelfont for reporting issues and providing patches when possible.</p> 
 	    </li>
 	    <li> <strong>10th August 2009</strong>: Version 3.1 released:<br/>
 	      	This version contains mainly bug fixes.<br/><br/>
@@ -1015,8 +1018,8 @@
 	      		 <li>
 	      		 	<strong>Issue #88 fixed:</strong> Incorrect logging of "The jawr bundle mapping 'jawr-img-mapping.properties' is not found"
 	      		 </li> 
-	      		 We would like to thank sfrancois99, qxo and nordicdevil for reporting issues and providing patches when possible. 
       	  	</ul>
+	        <p>We would like to thank sfrancois99, qxo and nordicdevil for reporting issues and providing patches when possible.</p> 
 	    </li>
 	    <li> <strong>03rd August 2009</strong>: Version 3.0 released:<br/>
 	    	<strong>New features/ fixed issues: </strong>

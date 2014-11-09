@@ -32,8 +32,6 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 			e.printStackTrace();
 		}
 		
-		String COMPOSITE_ID = "/bundles/composite.js";
-
 		List<String> mappingA = new ArrayList<String>();
 		mappingA.add("/js/subfolder/");
 		mappingA.add("/outsider.js");

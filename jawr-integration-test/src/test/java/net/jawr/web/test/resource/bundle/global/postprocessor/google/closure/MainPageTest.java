@@ -4,8 +4,6 @@
 package net.jawr.web.test.resource.bundle.global.postprocessor.google.closure;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.Collections;
 import java.util.List;
 
 import net.jawr.web.test.AbstractPageTest;

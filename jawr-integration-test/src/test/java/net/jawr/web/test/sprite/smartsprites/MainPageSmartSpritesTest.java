@@ -8,7 +8,6 @@ import net.jawr.web.test.AbstractPageTest;
 import net.jawr.web.test.JawrTestConfigFiles;
 import net.jawr.web.test.utils.Utils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.JavaScriptPage;

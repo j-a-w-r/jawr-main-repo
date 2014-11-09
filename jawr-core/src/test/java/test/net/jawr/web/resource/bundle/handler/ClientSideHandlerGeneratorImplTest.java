@@ -33,11 +33,8 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.resource.bundle.PredefinedBundlesHandlerUtil;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
