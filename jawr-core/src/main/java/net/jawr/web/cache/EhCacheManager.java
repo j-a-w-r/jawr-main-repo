@@ -88,7 +88,7 @@ public class EhCacheManager extends JawrCacheManager {
 
 		Element element = cache.get(key);
 		if (element != null) {
-			return element.getValue();
+			return element.getObjectValue();
 		}
 		return null;
 	}
