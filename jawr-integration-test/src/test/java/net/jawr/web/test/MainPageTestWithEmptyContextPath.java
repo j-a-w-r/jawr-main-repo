@@ -5,25 +5,13 @@ package net.jawr.web.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.jawr.web.test.utils.Utils;
-
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import com.gargoylesoftware.htmlunit.CollectingAlertHandler;
-import com.gargoylesoftware.htmlunit.JavaScriptPage;
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.html.HtmlImage;
-import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
-import com.gargoylesoftware.htmlunit.html.HtmlLink;
-import com.gargoylesoftware.htmlunit.html.HtmlScript;
 
 /**
  * Test case for standard page in production mode.

@@ -59,6 +59,8 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 	private GeneratorRegistry addGeneratorRegistryToConfig(JawrConfig config, String type) {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(type){
 
+			private static final long serialVersionUID = 1L;
+
 			public boolean isHandlingCssImage(String cssResourcePath) {
 				
 				boolean result = false;

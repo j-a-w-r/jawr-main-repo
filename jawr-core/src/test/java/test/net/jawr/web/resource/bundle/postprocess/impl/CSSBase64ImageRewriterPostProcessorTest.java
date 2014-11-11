@@ -54,6 +54,7 @@ public class CSSBase64ImageRewriterPostProcessorTest extends TestCase {
 
 	private GeneratorRegistry addGeneratorRegistryToConfig(JawrConfig config, String type) {
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(type){
+			private static final long serialVersionUID = 1L;
 
 			public boolean isHandlingCssImage(String cssResourcePath) {
 				

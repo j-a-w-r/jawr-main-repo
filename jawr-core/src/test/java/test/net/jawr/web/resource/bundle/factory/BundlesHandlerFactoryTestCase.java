@@ -21,8 +21,6 @@ import javax.servlet.ServletContext;
 
 import org.mockito.Mockito;
 
-import test.net.jawr.web.resource.bundle.handler.MockResourceReaderHandler;
-
 import junit.framework.TestCase;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundleDependencyException;
@@ -149,6 +147,9 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 		ServletContext ctx = Mockito.mock(ServletContext.class);
 		config.setContext(ctx);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(){
+
+			private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see net.jawr.web.resource.bundle.generator.GeneratorRegistry#getAvailableVariantMap(java.util.Map, java.util.Map)
 			 */
