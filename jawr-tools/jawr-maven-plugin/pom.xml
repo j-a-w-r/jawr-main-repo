@@ -1,0 +1,154 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.jawr.tools</groupId>
+		<artifactId>jawr-tools-parent</artifactId>
+		<version>1.7-SNAPSHOT</version>
+	</parent>
+	<artifactId>maven-jawr-plugin</artifactId>
+	<packaging>maven-plugin</packaging>
+	<name>JAWR Maven Plugin</name>
+	<url>http://jawr.java.net/</url>
+	<description>
+		The Maven JAWR Plugin contains the compression goal and compresses JavaScript/css in a web application.
+    </description>
+	<prerequisites>
+		<maven>2.0.1</maven>
+	</prerequisites>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>license.txt</url>
+		</license>
+	</licenses>
+	<!-- Developers and Contributors -->
+	<developers>
+		<developer>
+			<id>andyhot</id>
+			<name>Andreas Andreou</name>
+			<roles>
+				<role>Original Author</role>
+			</roles>
+			<organization>Amplafi</organization>
+			<organizationUrl>http://www.amplafi.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>icefox</id>
+			<name>Ibrahim Chaehoi</name>
+			<roles>
+				<role>Project owner</role>
+			</roles>
+			<organization>java.dev.net</organization>
+			<url>http://java.dev.net</url>
+		</developer>
+	</developers>
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<tags>
+						<tag>TODO</tag>
+						<tag>@todo</tag>
+						<tag>FIXME</tag>
+						<tag>XXX</tag>
+						<tag>Auto-generated</tag>
+					</tags>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jawr-bundle-processor</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- test -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<!-- test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- The MOJO Api -->
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-artifact</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugin-testing</groupId>
+			<artifactId>maven-plugin-testing-harness</artifactId>
+			<version>2.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
