@@ -1,0 +1,45 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+	<link rel="stylesheet" type="text/css" media="all" href="/jawr-wicket-integration-test/jawrCss/N859397245/fwk/core/component.css" >
+
+	<script type="text/javascript" src="/jawr-wicket-integration-test/jawrJs/983504194/bundles/global.js" ></script>
+<script type="text/javascript" src="/jawr-wicket-integration-test/jawrJs/690372103.en_US/js/bundle/msg.js" ></script>
+
+
+</head>
+<body>
+	<div class="mandatory">For this element, the style and the image
+		associated are retrieved directly from the classpath.</div>
+	<div style="height: 20px">
+		
+			<input type="image" src="/jawr-wicket-integration-test/jawrImg/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png" src="/img/appIcons/application.png" /> This HTML image use a generated path which force the caching for the browser.
+	
+	</div>
+	<div>
+		<span class="calendar">The CSS image is retrieved from the
+			webapp, which is a classic case.</span>
+	</div>
+	<div>
+		<span class="clock">The CSS image is retrieved from the
+			classpath. The CSS used here is defined in the webapp under the "css"
+			folder.<br> This mean that you could reference a CSS image in
+			the classpath from a standard CSS define in a bundle.
+		</span>
+	</div>
+	<div style="height: 20px">
+		
+			<img src="/jawr-wicket-integration-test/jawrImg/cb30a18063ef42b090194a7e936086960f/img/cog.png" type="image" value="temp" src="/img/cog.png" /> This input image use a generated path which force the caching for the browser.
+		
+	</div>
+
+	<script type="text/javascript">
+/*<![CDATA[*/
+
+		alert("A little message retrieved from the message bundle : "
+				+ messages.ui.msg.hello.world());
+	
+/*]]>*/
+</script>
+</body>
+</html>

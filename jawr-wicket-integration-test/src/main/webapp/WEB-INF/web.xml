@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+
+	<display-name>wicket-sample</display-name>
+
+	<!-- There are three means to configure Wickets configuration mode and they 
+		are tested in the order given. 1) A system property: -Dwicket.configuration 
+		2) servlet specific <init-param> 3) context specific <context-param> The 
+		value might be either "development" (reloading when templates change) or 
+		"deployment". If no configuration is found, "development" is the default. -->
+
+	<filter>
+		<filter-name>wicket.wicket-sample</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>net.jawr.wicket.resource.WicketApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ignorePaths</param-name>
+			<param-value>/jawrJs/,/jawrCss/,/jawrImg/</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>wicket.wicket-sample</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mapping</param-name>
+			<param-value>/jawrJs/</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>CssServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>css</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mapping</param-name>
+			<param-value>/jawrCss/</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>binary</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mapping</param-name>
+			<param-value>/jawrImg/</param-value>
+		</init-param>
+		<!-- Start Jawr image servlet before Jawr CSS servlet -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<url-pattern>/jawrJs/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CssServlet</servlet-name>
+		<url-pattern>/jawrCss/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>/jawrImg/*</url-pattern>
+	</servlet-mapping>
+	
+</web-app>
