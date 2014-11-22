@@ -1,0 +1,38 @@
+.mandatory {
+color:black;
+background-image: url('mhtml:{JAWR_BUNDLE_PATH}!img-1234621363');
+background-repeat: no-repeat;
+padding-left : 20px;
+font-family: sans-serif, courier, arial;
+border : thin solid rgb(250,0,255);
+}
+
+.info {
+color:black;
+background-image: url("mhtml:{JAWR_BUNDLE_PATH}!img-1233697842"); /** jawr:base64 */
+background-repeat: no-repeat;
+padding-left : 20px;
+margin-top : 80px;
+border : thin solid rgb(250,0,255);
+}
+.info {
+color:black;
+background-image: url("../../../cssImg/cb3015770054/style/default/img/myImg3.png"); /** jawr:base64-skip */
+background-repeat: no-repeat;
+padding-left : 20px;
+margin-top : 80px;
+border : thin solid rgb(250,0,255);
+}
+.tools {
+color:black;
+background-image: url("../../../cssImg/sprite_cb3015770054/img/mySprite.png");  
+background-repeat: no-repeat;
+padding-left : 20px;
+margin-top : 80px;
+border : thin solid rgb(250,0,255);
+}
+
+div {
+
+padding-top : 8px;
+}

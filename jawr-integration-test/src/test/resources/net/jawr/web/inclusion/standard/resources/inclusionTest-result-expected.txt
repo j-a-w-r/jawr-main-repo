@@ -1,0 +1,31 @@
+
+
+<html>
+<head>    
+ <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/N1822449606/bundles/globalStyleBundle.css" >
+<link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/N39807316/bundles/compositeStyleBundle.css" >
+
+ 
+ <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/N220599642/bundles/productionStyleBundle.css" >
+
+ <link rel="stylesheet" type="text/css" media="all" href="http://mycompany.com/css/production.css" >
+
+
+ <script type="text/javascript" src="/jawr-integration-test/N578619511/bundles/globalBundle.js" ></script>
+<script type="text/javascript" src="/jawr-integration-test/N473643075/bundles/compositeBundle.js" ></script>
+
+ 
+ <script type="text/javascript" src="/jawr-integration-test/411147102/bundles/stdBundle.js" ></script>
+
+ 
+ <script type="text/javascript" src="/jawr-integration-test/1894355696/bundles/productionBundle.js" ></script>
+
+ <script type="text/javascript" src="http://mycompany.com/js/production.js" ></script>
+
+</head>
+<body>
+	<div class="mainContent">
+	Inclusion page test
+	</div> 
+</body>
+</html>

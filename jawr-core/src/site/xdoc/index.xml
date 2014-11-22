@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>More than a Javascript/CSS compressor</title>
+  </properties>
+	
+	<head>
+		<title></title>
+		<style type="">
+			h2{display:none}
+			#firstPara{
+				clear:right;
+				margin-top:100px
+			}
+			#mainJawrLogo {
+				border:0 !important;
+				margin:auto 0 auto;
+				float:left;
+			}
+			#jawrlinks {
+				float:right;
+				width:45%;
+				text-align:right;
+				margin-right:-20px;
+			}
+			#jawrlinks img {
+				margin-bottom:10px;
+			}
+			#badges{
+				float:right;
+				clear:right;
+			}
+			#badges img  { border:0 !important;}
+		</style>
+	</head>
+	
+  <body>
+	
+    <section name="jawr">
+	
+	<img src="./images/index/logo.png" style="border:0 !important" id="mainJawrLogo"  alt="Logo" />
+	
+	<div id="jawrlinks">
+		<b>Latest version : 3.6</b><br/>
+		<a href="https://java.net/projects/jawr/downloads/directory/release">
+			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr" alt="Download" /></a> 
+		<a href="https://jawr.java.net/tutorials/quickstart.html" >
+			<img src="./images/index/get-started.png" style="border:0 !important" title="Go to the quickstart tutorial and start using Jawr" alt="Get started" /></a> 		
+	</div>
+	<div id="badges">
+		<!-- FURL -->
+	<a href="http://www.furl.net/storeIt.jsp?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.java.net" target="_blank"><img border="0" src="./images/badges/furl.png" alt="add to furl"/></a>  
+	
+	<!-- DEL.ICIO.US -->
+	<a href="http://del.icio.us/post?v=4&amp;noui&amp;jump=close&amp;url=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="./images/badges/delicious.png" alt="add to del.icio.us"/></a>  
+	
+	<!-- TECHNORATI -->
+	<a href="http://technorati.com/faves?add=https://jawr.java.net" target="_blank"><img border="0" src="./images/badges/technorati.png" alt="add to technorati"/></a>  
+	
+	<!-- BLINKLIST -->
+	<a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&amp;Url=https://jawr.java.net&amp;Title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="./images/badges/blinklist.png" alt="add to blinklist"/></a>  
+	
+	<!-- DIGG -->
+	<a href="http://digg.com/submit?phase=2&amp;url=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="./images/badges/digg.png" alt="add to digg"/></a>  
+	
+	<!-- GOOGLE -->
+	<a href="http://www.google.com/bookmarks/mark?op=edit&amp;output=popup&amp;bkmk=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="./images/badges/google.png" alt="add to google"/></a>  
+	
+	<!-- STUMBLEUPON -->
+	<a href="http://www.stumbleupon.com/submit?url=https://jawr.java.net&amp;title=JAWR%20-%20More%20than%20a%20javascript/css%20compressor" target="_blank"><img border="0" src="./images/badges/stumbleupon.png" alt="add to stumbleupon"/></a>  
+	
+	<!-- YAHOO -->
+	<a href="http://myweb.yahoo.com/myresults/bookmarklet?t=JAWR%20-%20More%20than%20a%20javascript/css%20compressor&amp;u=https://jawr.java.net&amp;ei=UTF" target="_blank"><img border="0" src="./images/badges/yahoo.png" alt="add to yahoo"/></a> 
+
+	</div>
+	
+	<div id="firstPara">	
+	
+	
+	
+	<p>Jawr is a tunable packaging solution for Javascript and CSS which allows for rapid development of resources in separate module files. 
+	Developers can work with a large set of split javascript files in development mode, then Jawr bundles all together into one or several files 
+	in a configurable way. 
+	<br/>By using a tag library, Jawr allows you to use the same, unchanged pages for development and production. 
+	Jawr also minifies and compresses the files, resulting in reduced page load times. 
+	<br/>Jawr is configured using a simple .properties descriptor, and aside of standard java web applications it can also be used with 
+	<a href="https://facelets.dev.java.net/">Facelets</a>, <a href="http://grails.org/">Grails</a>, <a href="http://wicket.apache.org/">Wicket</a> and <a href="http://projects.spring.io/spring-framework/">Spring</a> applications.   
+	</p>
+	</div>
+  	
+  	<img src="./images/index/jawr.png" alt="jawr" />
+	<p>
+	It is common knowledge that it is faster to serve one large file rather than two smaller ones, because of increased HTTP negotiation and the fact 
+	that most browsers only keep two connections open to the same host at any given time. 
+	Jawr will reduce the number of requests needed to load a page and the amount of data to transfer to clients, achieving drastic improvement of 
+	loading times. With a simple configuration file, resources can be distributed in bundles to best suit the usage pattern for a site. 
+	Files not added to bundles also benefit from minification and compression (if no bundles are declared, Jawr will work as an easy to configure
+	resources compressor). 
+	</p>	
+	<p>
+	A JSP tag library (Facelets also supported) is used to import the resources to pages. In development mode, the tags generate &lt;script&gt; and &lt;style&gt; links for each resource 
+	mapped to a bundle.
+	In production mode, the tags generate a single link pointing to the bundle file. Thus, there is no need to change code in pages when switching 
+	from development to production mode. 
+	</p>	
+	<p>
+	There is an increasing trend towards richer client interfaces with complex javascript implementations. Using Jawr will ease the development process 
+	by allowing to distribute modules in separate files without worrying about how the application will be served to clients. 
+	</p>	
+	<p>
+		The alternatives to using Jawr are:</p>
+		<ul>
+			<li>Developing all-in-one script files which conform to the deployment scheme. That is, cram all the modules into a few files. Version control becomes
+			unmanageable and it is hard to find a component that needs change. As the project grows, the code becomes near to impossible to mantain. 
+			</li>
+			<li>Use a build script to join and compress the files, which forces developers to build and redeploy the whole application for testing  even the 
+				slightest of changes in their code. 
+				</li>
+		</ul>
+	<p>
+		Jawr offers the best of both worlds, by combining a powerful bundling-minifying-compressing scheme for optimal service in 
+		production, with a rapid development mode for quick change-save-test cycles. 
+	</p>
+	<p>
+		You can download the latest release of Jawr 
+		<a href="https://java.net/projects/jawr/downloads/directory/release">here</a>. Also, check out the 
+		<a href="./tutorials/quickstart.html">quick start tutorial</a> to see how easy it is to use Jawr in your project. 
+		<br/>And don't forget to check the <a href="./tutorials/faq_howto.html">FAQ - Howto page</a> for tips and troubleshooting. 
+	</p>
+	
+	
+      <subsection name="Features">
+		<ul>
+			
+			<li> <strong>Free and open source</strong>: Released under an Apache 2.0 license, Jawr can be used free of charge with or 
+			without modifications, for both commercial and noncommercial purposes.</li> 
+			
+			<li> <strong>Easy to setup</strong>: All you need to start using Jawr is to declare a couple of servlets in you deployment descriptor, create a simple .properties configuration file, 
+			and use the Jawr tag library to import css and javascript resources to your pages. A complete setup takes a matter of minutes and requires little or no modifications over time. </li> 
+			
+			<li> <strong>Lightweight</strong>: Bundling and compression is done once at server startup so there is no overhead to requests. Also, a cache component
+			is available and enabled by default to serve resources directly from memory instead of from the filesystem.</li> 
+			
+			
+			<li> <strong>Built-in minification and postprocessing</strong>: Jawr includes JSMin and the YUI compressor, both from Yahoo!. A custom minificator for 
+			CSS is also included, although the YUI compressor can be used for CSS too. For each bundle, a customizable postprocessing chain is executed 
+			during startup. Relative URLs in CSS files are rewritten by a postprocessor so they keep working with a different relative path. It is also 
+			easy to create custom postprocessors to perform any modifications to your js and css files at deploy time. 
+			 <a href="./docs/postprocessors.html" > Learn more</a>. 
+			</li> 
+			
+			<li><strong>Third party frameworks integration</strong>: Jawr can be used with 
+				<a href="./integration/dwr.html">DWR</a>, 
+				<a href="./integration/spring.html">Spring</a>, JSF, 
+				<a href="./integration/facelets.html">Facelets</a>, 
+				<a href="./integration/wicket.html">Wicket</a>, 
+				<a href="./integration/validator.html">Commons Validator (with Struts)</a>, 
+				 and <a href="./integration/grails.html">Grails.</a>  
+				 It can also be easily plugged <a href="./integration/augmenter.html">into your own infrastructure. </a> 
+			</li>			
+		</ul>
+		<p>There are many more features, check the <a href="./features.html">features list page</a> for a full listing. </p>
+      </subsection>
+      <subsection name="Requirements">
+      	<p>
+      		You can use Jawr with any compliant Java Servlet 2.5 or higher container implementation (i.e. Tomcat, Jetty, BEA Weblogic etc.), as long as the 
+			virtual machine it runs on is 1.6 or higher. There are no other requirements.  
+      	</p>
+      </subsection>
+      <subsection name="Announcements">
+      <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
+      added over time at the <a href="./changes.html">change log.</a> </p>
+      <ul>
+      	  <li> <strong>06th October 2014</strong>: Version 3.6 released:<br/>
+	      This version is containing bug fixes and some new features.<br/>
+	  	  <strong>Important note : </strong>
+	  	  The version 3.6 of Jawr is not backward compatible. The component handling image resource has evolved.
+	  	  We've kept the task as easy as possible to migrate from the previous version to this new one.
+	  	  Please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
+	  	  <strong>New features: </strong>
+	  	  	<ul>
+      		 	<li>
+      			Jawr now support font web font caching (*.ttf, *.eot, *.woff, ...).<br/> 
+      			The component which was handling the image caching has evolved to support any binary web resources.<br/>
+      			You will need to update your web.xml configuration to use the new <b>binary</b>, which now replace the old <b>img</b> type.
+      			Please check the <a href="./docs/servlet.html">servlet documentation</a> and the <a href="./migrationGuide.html">migration guide</a> for more info.  
+      			</li>	
+      			<li>
+      		 	Jawr provides a new generator to handle <b>webjars</b> resources. 
+      		 	For more information about webjars, please check the folllowing link : <a href="http://www.webjars.org/">webjars site</a>
+      		 	To reference webjars resources, you'll need to use the new prefix "webjars:".<br/>
+      		 	For example, you could use <i>webjars:/jquery/1.11.1/jquery.js</i> to reference the jquery script associated to the JQuery webjars. (<a href="https://github.com/webjars/jquery">Source site</a>)<br/> 
+      		 	Please check the <a href="./docs/generators.html">generator documentation</a> for more information. 
+      			</li>
+      			<li>
+      		 	Jawr provides by default a new JS minifier based on <a href="http://lisperator.net/uglifyjs/">UglifyJS</a>.
+      		 	It is important to note that this Javascript minifier will become the default one in the next release.
+      		 	Please check the <a href="./docs/postprocessors.html">postprocessor documentation</a> for more information. 
+      			</li>
+      			<li>
+      		 	Jawr now support JSON format for the configuration file using <b>net.jawr.web.resource.bundle.factory.util.JsonPropertiesSource</b> for <b>configPropertyResolverClass</b>
+      		 	in the Jawr Servlet initialisation parameter.
+      		 	Please check the <a href="./docs/servlet.html">Jawr servlet documentation</a> for more information. 
+      			</li>
+      			<li>
+      		 	The Spring MVC extension has been renamed to <b>jawr-spring</b> instead of <b>jawr-spring-2.0.x</b>.
+      		 	</li>
+      		</ul>
+	      <strong>Fixed issues : </strong>
+	    	<ul>   
+	    		 <li>
+	      		 	<strong>Issue #216 fixed:</strong> JsMin is failing with a RegEx trying to process Modernizr
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #264 fixed:</strong> BrowserResolver doesn't recognize IE11, returning NULL
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #278 fixed:</strong> Less generator don't properly handle import directive
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #280 fixed:</strong> Add check in Jawr to handle case where resource type is not properly set
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #282 fixed:</strong> Mime-Type missing for jawr_loader.js
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #283 fixed:</strong> JSMin doesn't handle properly tabulation in strings
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #284 fixed:</strong> The JAWR/smartsprite directory isn't being cleared when JAWR runs again
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #285 fixed:</strong> Uncorrect behavior for unknown browser variants
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #286 fixed:</strong> In CSSImportPostProcessor, external URLs are causing errors
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #289 fixed:</strong> Image URLs are not properly generated when setting jawr.url.contextpath.override and image servlet mapping as empty
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #291 fixed:</strong> Issue in Jawr image tag which appends the jsessionid at the end of the URL
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #292 fixed:</strong> When using the jawr.locale.generator.quoteMsgKey property, only a part of key messages is quoted
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #293 fixed:</strong> Unable to define multiple ResourceBundle in message generator using pipe character
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #296 fixed:</strong> Jawr doesn't handle properly font resources from generated css content like CSS in classpath
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #299 fixed:</strong> Jawr doesn't properly handle URL rewriting in CSS when URL contains the following characters '?' and '#'
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #300 fixed:</strong> Issue with skin generator for image URL rewriting
+	    	 	 </li>
+	      		 <li>
+	      		 	<strong>Issue #302 fixed:</strong> Issue with generated resources containing dot characters but no extension       
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #303 fixed:</strong> Issue in debug mode with Image URL rewriting in CSS provided by generators when servlet mapping is not empty       
+	      		 </li>
+	      	</ul>
+	      </li>
+	      <li>
+     	  	Thanks to tdahmez, ungarida, sudnam, rragan, takacsot, diorcety, shoot_the_moon  for reporting the issues.
+     	  </li>
+     	  <li>
+     	  	Thanks to M.Cegledi, volt0, kazimir70 for reporting the issues and also provding patches.
+     	  </li>
+	</ul>
+	<ul>
+      	  <li> <b>06th October 2014</b>: Grails plugin 3.6 released:<br />
+	      The grails plugin has been released in the grails central repository.<br />
+	      You'll need at least Grails 2.4.3 to use this version. 
+	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.<br/>
+	      <strong>Fixed issue : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #243 fixed:</strong> Allow Jawr Grails plugin message generator to retrieve message from others grails plugins     
+	      		 </li>
+	      	</ul>
+	      </li>
+	      <li>
+	      	Thanks to kevin.mershon for reporting this issue
+	      </li>
+	</ul>
+	<ul>
+      	  <li> <strong>08th May 2014</strong>: Version 3.5.2 released:<br/>
+	      This version is a minor version containing only a bug fix about sprite generation.<br/>
+	  	  <strong>Fixed issue : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #279 fixed:</strong> Sprite generation doesn't work properly       
+	      		 </li>
+	      	</ul>
+	      </li>
+	      <li>
+     	  	Thanks to shoot_the_moon for reporting the issues.
+     	  </li>
+	</ul>
+	<ul>
+      	  <li> <b>18th April 2014</b>: Grails plugin 3.5.1 released:<br />
+	      The grails plugin has been released in the grails central repository.<br />
+	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.<br/>
+	      <strong>Fixed issue : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #265 fixed:</strong> Grails plugin can't be loaded     
+	      		 </li>
+	      	</ul>
+	      </li>
+		  <li> <strong>18th April 2014</strong>: Version 3.5.1 released:<br/>
+	      This version is a minor version containing mainly bug fixes.
+	  	  <strong>New features: </strong>
+	  	  	<ul>
+      		 	<li>
+      		 	Jawr allows the users to define if they want to put quote for the key of their messages in the message generator using a new property <strong>jawr.locale.generator.quoteMsgKey</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      		 	This property is set to <strong>true</strong> by default. If your message keys are don't have a dash in their name, you can use this option to remive the unnecessary quote. 
+      			</li>
+      			<li>
+      			Jawr allows the users to define bundle path prefix for generated URLs. For instance, if the user would like to have a bunch of secured budnle, he would be able to define a prefix for those bundle which will be prepend before the bundle hashcode.
+      			This will allow him to define a filter which will check the access right for the users for example.
+      			The new property <strong>jawr.[type].bundle.[name].bundle.prefix</strong> has been added to the bundle. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>	
+      		</ul>
+	  	  <strong>Fixed issues : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #225 fixed:</strong> Bundling Bootstrap CSS file with CSSMinifier causing java.lang.StackOverflowError     
+	      		 </li>
+	      		 <li>
+	      		 	<b>Issue #239 fixed:</b> Issue with productionURL and dependencies
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #241 fixed:</strong> Issue when using jawr.use.bundle.mapping option with a bundle using a production URL
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #254 fixed:</strong> /jawr_loader.js not serving bundles correct path prefix override when request is secure
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #255 fixed:</strong> Issue with alternateProduction URL on global bundle
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #258 fixed:</strong> Jawr.use.bundle.mapping and productionURL do not work together
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #259 fixed:</strong> Exception during startup when contextPath is empty
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #260 fixed:</strong> Remove log4j dependency in smartsprites global preprocessor
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #261 fixed:</strong> In Production mode, the debugnever bundle property is not properly handled for composite bundle	      		 
+	      		 </li>
+				 <li>
+	      		 	<strong>Issue #262 fixed:</strong> Sprite generation doesn't work for not generated css content
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #267 fixed:</strong> JAWR cannot process Bootstrap CSS
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #269 fixed:</strong> Javascript i18n message generator doesn't create escaped Unicode characters.
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #271 fixed:</strong> Jawr doesn't handle properly bundle dependencies in Closure compiler arguments
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #272 fixed:</strong> OverrideKey does not work in production mode for composite bundle
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #273 fixed:</strong> ResourceBundleMessagesGenerator does not add quotes around property message keys
+	      		 	The new property <strong>jawr.locale.generator.quoteMsgKey</strong> has been added allows the user to choose if he would like to put quote or not for the message keys
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #275 fixed:</strong> Exceptions not properly handle in PathNormalizer.extractBundleInfoFromPath(requestedPath)
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #276 fixed:</strong> Custom global post processors not properly registered
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #277 fixed:</strong> LessException not properly handled in LessGenerator (cast issue &amp; nullPointerException)
+	      		 </li>
+	    	</ul>
+	  	  </li>
+	  	  <li>
+     	  	Thanks to Monomachus, dr.piefel, pbusque, sessert, LightningMan, mzz6wh, hweic for reporting the issues.
+     	  	Thanks to paranoiabla, dmurat, webguy, sbaruzza, diorcety  for reporting the issues and also providing patches.
+     	  </li>
+	  </ul>
+	  <ul>
+      	  <li> <b>06th Januray 2014</b>: Grails plugin 3.5 released:<br />
+	      The grails plugin has been released in the grails central repository.<br />
+	      Please check the <a href="./integration/grails.html">grails plugin documentation</a> for more detail on how to use it.
+		  </li>
+		  <li> <strong>01rst January 2014</strong>: Version 3.5 released:<br/>
+	      This version is a major version. This version requires at least the use of java 6 and servlet API 2.5.
+	      For those, who were using the version 3.3.x, please read the <a href="./migrationGuide.html">migration guide</a>.<br/><br/>
+	  	  <strong>New features: </strong>
+	    	<ul>
+      		 	<li>
+      		 	It is now possible to set a custom Javascript ClientSideGenerator using the new <strong>jawr.js.clientside.handler.generator.class</strong> configuration property. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      		 	It is now possible to set custom link renderer using the following properties <strong>jawr.js.bundle.link.renderer.class</strong>, <strong>jawr.css.bundle.link.renderer.class</strong>, <strong>jawr.img.bundle.link.renderer.class</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr adds support to JS compression with Google Compiler. Please check <a href="./tutorial/howToUseGoogleClosureCompiler.html">this tutorial</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr adds new <strong>jawr.locale.generator.fallbackToSystemLocale</strong> property for i18n message resource generator, to use System locale if no locale is found. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr allows the user to define the use of random parameter in debug mode at application level using <strong>jawr.debug.use.random.parameter</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr adds support for custom generator resolver. Before the 3.5 version, the generator were only available with a mapping prefix (for ex: ""jar:" for classpath generator). Now the users are able to define their own generator resolver.
+      			For those who had defines their custom generator, they will need to update their generator. Please check the  <a href="./migrationGuide.html">migration guide</a> for more info.
+      			</li>
+      			<li>
+      			Jawr provides a built-in LESS Css generator.
+      			You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
+      			</li>
+      			<li>
+      			Jawr provides a built-in CoffeeScript generator.
+      			You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
+      			</li>
+      			<li>
+      			Jawr allows the user to define prefix to Jawr JMX MBean using <strong>jawr.jmx.mbean.prefix</strong> property.
+      			This will fix issues, for application which are deployed on different server using the same application context.
+      			Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr allows the user to define a custom cache mechanism using <strong>jawr.cache.manager</strong>.
+      			Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr adds support for built-in EhCache manager. <strong>jawr.cache.manager</strong>.
+      			Please check the <a href="./docs/cacheManager.html">cache manager documentation</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr allows the user to define the configuration property resolver in the Jawr configurationd files using <strong>configPropertyResolverClass</strong> in the Jawr servlet definition.
+      			Please check <a href="./docs/servlet.html">servlet configuration documentation</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr allows the user to define an external base context directory where Jawr will be able to find resources using the <strong>jawr.basecontext.directory</strong>,
+      			and you can now define what is the priority when searching for resource using the property <strong>jawr.basecontext.directory.high.priority</strong>.
+      			This allows user to create bundle from resources oustide the war file. 
+      			Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr allows the user to define custom implementation of built in Resolvers (LocaleResolver, BrowserTypeResolver, ConnectionTypeResolver, SkinVariantResolver, ) using configuration properties 
+      			<strong>jawr.locale.resolver</strong>, <strong>jawr.browser.resolver</strong>, <strong>jawr.url.connection.type.resolver</strong>, <strong>jawr.css.skin.resolver</strong>
+      			Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      			</li>
+      			<li>
+      			Jawr now uses <a href="http://www.slf4j.org/">slf4j</a> as logging framework.
+      			For those who are using log4j as loging framework, you must add <i>slf4j-log4j12-xxx.jar</i> in your classpath. Please check the <a href="http://www.slf4j.org/manual.html">slf4j documentation</a> for more detail.
+      			</li>
+      			<li>
+      			The Jawr javascript tag now support the aysnc and defer attributes. Please check the <a href="./docs/taglibs.html">taglib doc</a> for more detail.
+      			</li>
+      			<li>
+      			The URL of the Jawr facelet taglib has been updated from <b>https://jawr.dev.java.net/jsf/facelets</b> to <b>https://jawr.java.net/jsf/facelets</b>.
+      			</li>
+      			
+        	</ul>
+      		<ul>   
+	    	 	 <li>
+	      		 	<strong>Unfortunately, we weren't able to include the updated version of the grails plugin in this release. We will try to release it as soon as possible.
+	      		 	So grails users will have to wait to get the 3.5 release.
+	      		 	</strong>.     
+	      		 </li>      
+	      	</ul>
+	      	<ul>   
+	    	 	 <li>
+	      		 	<strong>jawr.css.image.classpath.use.servlet</strong>  properties removed. It is replaced by <strong>jawr.css.classpath.handle.image</strong>.     
+	      		 </li>      
+	      	</ul>
+	      <strong>Fixed issues : </strong>
+	    	<ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #72 fixed:</strong> Avoid skipping repeated members of bundles     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #166 fixed:</strong> Generated URL is different for jwr:script and JAWR.loader.script     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #168 fixed:</strong> URL of CSS resources using CSS skin are not properly handled by JAWR.loader     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #169 fixed:</strong> Base64 encoding works only on composite bundle for IE     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #171 fixed:</strong> SmartSpritesResourceHandler does not resolve absolute css-url()s     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #174 fixed:</strong> Media parameter not taking in account in debughandler.js     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #177 fixed:</strong> MessageBundleGenerator doesn't handle properly messages bundle charset     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #178 fixed:</strong> Issue with use.bundling.mapping for preprocessed orphan bundles containing dots in the name     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #180 fixed:</strong> Bundle contents are mangled when using cache feature on high load
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #183 fixed:</strong> Jawr groovy TagLib attributes not properly handle for boolean
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #187 fixed:</strong> Documentation for base64postprocessor contradicts itself     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #193 fixed:</strong> CSSMinifier issue with new CSS 3 "@media" syntax.     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #195 fixed:</strong> Problem in documentation for PostProcessors   
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #196 fixed:</strong> JMX refreshConfig() does not re-read jawr.properties
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #197 fixed:</strong> Taglib should honor refreshKey parameter     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #198 fixed:</strong> Memory leak when restarting server due to missing reset of a ThreadLocal     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #200 fixed:</strong> Jawr CSS minifier doesn't handle properly CSS3 selectors like : E[foo$="bar"]     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #202 fixed:</strong> Issue when defining OrphanResourceBundlesMapper basedir as generated path     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #203 fixed:</strong> Issue with generator when using JRockit R27.4.0-xxx     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #204 fixed:</strong> Inappropriate log level in CssSmartSpritesGlobalPreprocessor     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #206 fixed:</strong> Byte-Order-Marks (BOM) in Javascript files corrupt bundle     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #208 fixed:</strong> BundleProcessor doesn't handle properly a web.xml where the servlet-class contains spaces     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #209 fixed:</strong> BundleProcessor doesn't use the jars defined in /WEB-INF/lib in its classloader     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #210 fixed:</strong> In CSSMinifier, when an exception is raised add a log to define which bundle is causing the issue     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #211 fixed:</strong> Make inheritance easier in BundleProcessor     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #212 fixed:</strong> Issue while setting jawr.image.resources to a generated path using directory wildcard     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #213 fixed:</strong> Orphan resources cannot be found if basedir is set to webapp root directory     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #215 fixed:</strong> Issue when using a Servlet API 2.5 with Jawr bundle preprocessor     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #217 fixed:</strong> Issue with character encoding for Grails messages     
+	      		 </li>  
+	      		 <li>
+	      		 	<strong>Issue #218 fixed:</strong> The values of the jawr.properties file must be trimmed     
+	      		 </li>  
+	      		 <li>
+	      		 	<strong>Issue #220 fixed:</strong> CSS media queries not correctly minified     
+	      		 </li>  
+	      		 <li>
+	      		 	<strong>Issue #221 fixed:</strong> Javascript i18n message generator uses a pipe separator, not a comma as mentioned in the documentation     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #222 fixed:</strong> Issue in Wicket integration: Unable to serialize net.jawr.web.resource.bundle.renderer.CSSHTMLBundleLinkRenderer     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #223 fixed:</strong> CacheBusterUrl generation does not support urls with postfixes     
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #224 fixed:</strong> Random debug parameter in the URL is not set for the generated resources in debug mode     
+	      		 </li> 
+	      		 <li>
+	      		 	<strong>Issue #226 fixed:</strong> When using debug override the bundle defines as debugonly and debug never are not properly taken in account 
+	      		 </li> 
+	      		 <li>
+	      		 	<strong>Issue #227 fixed:</strong> JmxUtils.getMBeanObjectName doesn't handle root context path correctly 
+	      		 </li> 
+	      		 <li>
+	      		 	<strong>Issue #230 fixed:</strong> Minification of js anonymous function expessions is incorrect     
+	      		 </li>  
+	      		 <li>
+	      		 	<strong>Issue #231 fixed:</strong> Jawr doesn't handle properly the font URL in CSS.     
+	      		 </li>  
+	      		 <li>
+	      		 	<strong>Issue #233 fixed:</strong> Issue with base64 postprocessor when the css files are not in the same directory level     
+	      		 </li>  
+	      		 <li>
+	      		 	<strong>Issue #245 fixed:</strong> Issue with bas64 postprocessor, which didn't work properly. Please check the <a href="./tutorials/howToUseJawrToGenerateBase64Image.html">tutorial</a> on how to set up the bas64 postprocessor.     
+	      		 </li>  
+	      	</ul>
+     	  </li>
+     	  <li>
+     	  	Thanks to julienw, kgo, ghillert, henrik242, sfrancois99, gregkatz, EddiBosh, brienwheeler, omega_ula, dtabuenc, dtrunk90, D_mitar, TimDGSL, jfasrc, smalbegui, bai.ben, deleted_user, pakmans for reporting the issues.
+     	  	Thanks to das2k_117, sankar_netsoft, ZikFat, nbourdeau, Musikolo, tduffey, nik9000, wwwpol, hay_dave, tgilles, glin, Stephane Landelle, oxc, Chris Kulinski for reporting the issues and also providing patches.
+     	  </li>
+      </ul>
+      
+      <ul>
+      	  <li> <strong>15th August 2010</strong>: Version 3.3.3 released:<br/>
+	      	This version contains 2 bug fixes including a major one. It is highly recommended to upgrade to this version.<br/><br/>
+	      	There was an issue in the hashcode generation, which causes the bundle to be reloaded even if the bundle content didn't change.
+	      	This implies some performance penalties.<br/>
+	      	The hashcode was based on the Java object ID instead of the bundle content.<br/>
+	      	The consequences are :
+	      		<ul>
+	      			<li>If you restart your application server, for the same application, Jawr could generate different hashcodes for the same bundle.</li>
+	      			<li>If you are using load balancing and run the same application on 2 servers, they could generate different hashcodes for the same bundle.</li>
+	      		</ul>
+	      	<strong>Fixed issues: </strong>
+	    	 <ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #160 fixed:</strong> An exception is thrown, when using JMX on an application whose the context path is empty     
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #163 fixed:</strong> Issue with bundle hashcode generation which must be based on bundle content      
+	      		 </li>
+	      	</ul>
+     		 <p>Thanks to Mark W. for reporting the hashcode generation issue.</p>
+      	  </li>	
+	      <li> <strong>20th July 2010</strong>: Version 3.3.2 released:<br/>
+	      	This version contains only bug fixes.<br/><br/>
+	      	<strong>Fixed issues: </strong>
+	    	 <ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #157 fixed:</strong> NullPointerException thrown in BrowserResolver when no user agent found in HTTP header      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #159 fixed:</strong> Space in the dependencies configuration lead to omitted dependencies      
+	      		 </li>
+	      	</ul>
+      		 <p>Thanks to zafo and Trygve Lie for reporting these issues.</p>
+      	  </li>	
+	      <li> <strong>06/29/2010</strong>: Version 3.3.1 released:<br/>
+	      	This version contains a lot of new features and bug fixes.<br/><br/>
+	      	<strong>New features: </strong>
+	    	<ul>
+      		 <li>
+      		 	One of the big new features of this release is the ability to define variant bundles.
+      		 	A variant bundle is the generalization of what already exists for the locale aware bundle.
+      		 	A variant bundle is a bundle which can change depending on some defined criteria.
+      		 	This means for example that you can define a specific bundle content by browser type. You can define a specific bundle for IE, and for the same bundle sent another content to Firefox, Chrome, Opera...
+      		 	For more information about the variant bundle, please check the following <a href="./docs/variant_bundle.html">variant bundle documentation</a> for more detail.
+      		 </li>
+      		 <li>
+      		 	One of the feature derived from the use of variant bundle is the support for CSS bundle skin.
+      		 	Jawr allows you to define CSS bundle, where the skin variant will be sent back to the user depending on the skin
+      		 	used by the user. The user skin is defined in a cookie.
+      		 	The good news is that the CSS skin can also be combined with the user locale, which means that Jawr is able to
+      		 	sent to the user the CSS bundle depending on the user skin and also depending on the user locale.
+      			For more information about how to use the new skin feature, please check the following <a href="./tutorials/howToUseJawrCssSkin.html">Jawr skin documentation</a> for more detail.
+      		 </li>
+      		 <li>
+      		 	The Jawr CSS tag has been updated to be able to generate title and alternate attributes for CSS bundles.
+      		 	The Jawr CSS tag has also been updated to be able to generate alternate for CSS skin bundles.
+      		 	Look for the CSS tag at the <a href="./docs/taglibs.html">tag library doc</a> for extra info.
+      		 </li>
+      		 <li>
+      		 	The Jawr skin swicther javascript generator has been created to generate the javascript file for the skin switcher.
+      		 	You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
+      		 </li>
+      		 <li>
+      		 	Jawr now supports base64 image encoding.<br/>
+      		 	Jawr is now able to generate base64 encoded image in your CSS bundle using a new postprocessor.<br/>
+      		 	Please check the tutorial on <a href="./tutorials/howToUseJawrToGenerateBase64Image.html">how to use Jawr to generate base64 image in CSS bundle</a> for more detail.
+      		 	<br/>
+      		 	The Jawr image tags have been updated to be able to generate base64 encoded image. 
+      		 	Please check the documentation on the <a href="./docs/taglibs.html">taglib description</a> for more detail.
+      		 </li>
+      		 <li>
+      		 	Jawr supports hashcode bundle generator. This means that you can now define your own implementation of the id used to identify the bundle.(Ex: application version based, ...) 
+      		 	For more detail, about how to implement your own hashcode bundle generator, take a look at the documentation about <a href="./docs/hashcodeBundleGenerator.html">hashcode bundle generator</a>.
+      		 </li>
+      		 <li>
+      		 	Jawr provides also an MD5 hashcode bundle generator, which use MD5 to create the bundle hashcode. Take a look at the documentation about <a href="./docs/hashcodeBundleGenerator.html">hashcode bundle generator</a>.
+      		 </li>
+      		 <li>
+      		 	Jawr introduces the <b>strict mode</b>. For earlier version, Jawr didn't take in account the hashcode of the requested bundle.<br/>
+      		 	This means that if a user request a bundle, for which the hashcode is different from the current one, Jawr will sent back the current bundle.<br/>
+      		 	This may be an issue if you are using an application on a clustered environment. If you deploy a new version of your application on one server,
+      		 	while the other is still up. You can face cases where the user request a page on one server, and try to retrieve the web resource bundles one another.<br/>
+      		 	This may lead to strange behaviors.<br/>
+      		 	To overcome this issue, Jawr introduces the <b>strict mode</b>. In this mode, Jawr will allow you to define how you want to handle such requests by defining your own <b>IllegalBundleRequestHandler</b>.
+      		 	Jawr also provides a default implementation whch returns a "404" if it receive a such request.  
+      		 	Take a look at the documentation about <a href="./docs/illegalBundleRequestHandler.html">strict mode and illegal bundle request handler</a>.
+      		 	Jawr provides just a default implementation, if you want to contribute and share your own implementation with the community,
+      		 	feel free to create and attach a patch in the issue tracker. 
+      		 </li>
+      		 <li>
+      		 	Jawr supports composite bundle postprocessors for bundle and for the unitary files.<br/>
+      		 	You can take a look to the <a href="./docs/postprocessors.html">postprocessors documentation</a> for more info.
+      		 </li>
+      		 <li>
+      		 	Jawr uses now alphabetical ordering for bundle resources by default.
+      		 </li>
+      		 <li>
+      		 	Jawr supports media keyword in CSS Import PostProcessor. Please check the <a href="./docs/postprocessors.html">CSS import postprocessor documentation</a> for more detail.
+      		 </li>
+      		  <li>
+      		 	Jawr introduce a new postprocessor to combine CSS media. Please check the <a href="./docs/postprocessors.html">CSS combine media postprocessor documentation</a> for more detail.
+      		 	Thanks to Gerben Jorna for the implementation of this feature.
+      		 </li>
+      		</ul>
+      		<strong>Fixed issues: </strong>
+	    	 <ul>   
+	    	 	 <li>
+	      		 	<strong>Issue #41 fixed:</strong> Add title attribute to style tag      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #127 fixed:</strong> Problem parsing jawr-jsp2x.tld in Resin      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #132 fixed:</strong> CSS image URL not written properly for generators which don't handle CSS images      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #133 fixed:</strong> Issue on Jawr context management for debug mode and JMX in the JawrSpringController
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #134 fixed:</strong> In debug mode, Jawr generates wrong CSS image paths for generated Css resources when using JawrSpringController      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #139 fixed:</strong> Jawr don't handle *.ico files as image files      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #141 fixed:</strong> Issue on Jawr CssMinifier which doesn't handle properly CSS rules with linefeed inside      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #144 fixed:</strong> NPE when using jawr.debug.ie.force.css.bundle=true and ieonly.condition bundle property.      
+	      		 </li>     
+	      		 <li>
+	      		 	<strong>Issue #145 fixed:</strong> Jawr not compatible with Java 1.4.      
+	      		 </li>     
+	      		 <li>
+	      		 	<strong>Issue #146 fixed:</strong> ThreadLocal memory leak when reloading application.
+	      		 </li>   
+	      		 <li>
+	      		 	<strong>Issue #151 fixed:</strong> The Wicket image tag rendering is not working properly for HTML images      
+	      		 </li>     
+	      		 <li>
+	      		 	<strong>Issue #152 fixed:</strong> For the image tags in Wicket, Jawr doesn't handle properly the URL generation of generated images
+	      		 </li>     
+	      	</ul>
+      		 <p>Thanks to eliotsykes, mkkoch, wangg3, Martin Jönsson, jnichols959 and all those who participate through the discusion forum for reporting issues and giving feedbacks. <br/>
+      		 Thanks also to Gerben Jorna for his implementation of the combine media post processor and for the base implementation of the base64 CSS image postprocessor. </p>
+	      	<br/><br/>
+	      	<strong>Jawr ant task and maven plugin</strong> - Version 1.4 released:<br/>
+		    This version contains one new feature and one bug fix.<br/><br/>
+		    <strong>New feature: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 For IE6 and IE7 CSS bundles which use the new <b>base64ImageEncoder</b>, the bundle processor generates a placeholder for the web application URL.
+	      		 Please take a look to the following <a href="./tutorials/howToUseJawrToGenerateBase64Image.html">documentation</a> for more detail.   
+	      		 </li>      
+	      	</ul> 
+      	  	<strong>Fixed issue: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #142 fixed:</strong> Add support to generate exact path mapping for Jawr bundle processor .      
+	      		 </li>      
+	      	</ul> 
+      	  	<br/><br/>
+      	  	<strong>Jawr Grails plugin</strong> - Version 3.3.1 released:<br/>
+		    We are happy to finally provide to the Grails community the latest Jawr Grails plugin, which is fully compatible with all the new features of the Jawr 3.3.1 version.
+		    We also would like to apologize for the discontinuation of the plugin release.<br/>
+		    We are sorry for the inconvenience made to the Grails users, which where not able to use Jawr.
+		    We hope that you will enjoy this new version with all the latest features of Jawr.<br/>
+		    The Grails plugin 3.3.1 is available <a href="https://java.net/projects/jawr/downloads/directory/release">here</a>. <br/>
+		    It will be soon available at the grails plugin repository. 
+		    <br/><br/>
+		    <strong>New feature: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 Compatible with Grails version > 1.2.1   
+	      		 </li>
+	      		 <li>
+	      		 Fully compatible with Jawr 3.3.1.
+	      		 </li>
+	      	</ul> 
+      	  	<strong>Fixed issues: </strong>
+	    	 <ul>
+	    	 	 <li>
+	    	 	 	<strong>Issue #68 fixed :</strong> jawr.config.reload.refreshKey fails on the Grails plugin
+	    	 	 </li>
+	    	 	 <li>
+	      		 	<strong>Issue #130 fixed:</strong> In develpment Since Grails 1.2, Jawr can't reference pluing resources	 	
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #148 fixed:</strong> Since grails 1.2, Jawr is not able to generate i18n messages
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #149 fixed:</strong> Since grails 1.2, Jawr is not able to generate i18n messages
+	      		 </li>      
+	      	</ul> 
+      	  	<br/><br/>
+      	  	The following Jawr sample applications have been updated. You can have a look to them to see how to integrate the latest features :
+      	  		<ul>
+      	  			<li>basicwebapp</li>
+      	  			<li>spring sample</li>
+      	  			<li>wicket sample</li>
+      	  			<li>grails sample</li>
+      	  		</ul>	 
+      	  	You can retrieve them from the different modules on the SVN repository : <b>https://svn.java.net/svn/jawr~svn</b>  
+      	  	<br/>
+      	  	<br/>
+      	  	<strong>Important note :</strong><br/>
+			It is important to notice that this version will be the last version which supports Java 1.4.
+	      	The next major release will target Java 5.<br/><br/>
+	      	
+	      	Thanks to all of you who contributed and provided feedback in the discussion forum.<br/>
+			There still a lot to do. So any contribution is more than welcome.<br/>
+			If you want to be part of the Jawr project, don't hesitate, join us. 
+     	  </li>
+      	  <li> <strong>01rst February 2010</strong>: Version 3.2.1 released:<br/>
+	      	This version contains mainly bug fixes.<br/><br/>
+	      	<strong>New feature: </strong>
+	    	<ul>
+      		 <li>
+      		 For spring MVC projects, Jawr now allows you to use simultaneously <strong>configuration</strong> and <strong>configLocation</strong> properties.
+      		 The values found in the configuration file at <strong>configLocation</strong> will be overrided by the properties defined in <strong>configuration</strong>.<br/>
+      		 The <strong>configuration</strong> property is no more deprecated.
+      		 Thanks to sfrancois99 and szeller for their feedbacks.<br/>
+      		 Please check the documentation on the <a href="./integration/spring.html">Spring MVC integration</a> for more detail.
+      		 </li>
+      		</ul>
+      		<strong>Fixed issues: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #81 fixed:</strong> <strong>jawr.[type].factory.dirmapper.excluded</strong> property doesn't work.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #113 fixed:</strong> In spring MVC, when using only configuration property an exception is thrown.      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #115 fixed:</strong> Css image sprite generation doesn't work for generated CSS resource.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #118 fixed:</strong> Image Streaming throws exception if the browser closes the stream      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #123 fixed:</strong> Images are not handled property with JawrSpringController.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #124 fixed:</strong> The property "factory.use.orphans.mapper" is never taken in account. To be compliant with the Jawr properties naming convention,
+	      		 	this property has been renamed to <strong>jawr.factory.use.orphans.mapper</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.   
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #125 fixed:</strong> In Spring MVC, an exception is thrown when the controller mapping is defined while the Spring servlet mapping is set to "/*".   
+	      		 </li>    
+	      	</ul>
+      		 <p>Thanks to qxo, mahoney266 and Robin Sander for reporting issues.</p>
+	      	<br/><br/>
+	      	<strong>Jawr ant task and maven plugin</strong> - Version 1.3 released:<br/>
+		    This version contains only one bug fix.<br/><br/>
+		    <strong>Fixed issue: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #116 fixed:</strong> Jawr bundle processing with the maven plugin or ant Task doesn't work with a spring MVC project. Please check the <a href="./docs/bundle_preprocessing.html">bundle preprocessing documentation</a> for more detail.      
+	      		 </li>      
+      	  	</ul> 
+      		 <p>Thanks to acklenx for reporting the issue.</p> 
+     	  </li>
+      	  <li> <strong>09th December 2009</strong>: Version 3.2 released:<br/>
+	      	A serious security issue has been found in Jawr when using the property <strong>jawr.debug.overrideKey</strong>, which allowed a user to access the content of the WEB-INF folder, and any file of your web application
+	      	if the user finds the value of the property <strong>jawr.debug.overrideKey</strong>, which is defined your configuration file. <br/>
+	      	This issue is fixed in this new version. <br/>
+	      	<br/>
+	      	We highly recommend you to switch to this new version or at least to remove this property from your configuration file if you want to stay with a previous version.
+	      	The recommended way to switch your current session from production to debug, is to use the JMX feature of Jawr. Please check the <a href="./docs/jmx_support.html">JMX documentation</a> for more detail.
+	      	<br/>
+	      	For those, who have created their own resource generator, we recommend them to look at the security issue section of the <a href="./docs/generators.html">generator documentation</a><br/><br/>
+	      	<strong>New features/ fixed issues: </strong>
+	    	<ul>
+      		 <li>
+      		 Jawr supports the generation of CSS image sprites. Jawr uses <a href="http://csssprites.org/">smartsprites</a> for the sprite generation.
+      		 Thanks to Stanislaw Osinski, smartsprites creator, for his help on the integration of Jawr with smartsprites.<br/>
+      		 Please check the tutorial on the <a href="./tutorials/jawrSpriteImage.html">image sprite generation with Jawr</a> for more detail.
+      		 </li>
+      		 <li>
+      		 Jawr now provides a new property named <strong>dependencies</strong>, which allows the user to define the dependencies for a bundle.
+      		 Thanks to kgray for the original idea.<br/>
+      		 Please check <a href="./docs/custom_bundles.html">the bundle definition document</a> for more detail.
+      		 </li>
+      		 <li>
+      		 Jawr now provides support for Wicket, thanks to a patch submitted by Robert Kopaczewski.<br/>
+      		 Please check <a href="./integration/wicket.html">the Wicket integration document</a> for more detail.
+      		 </li>
+      		 <li>
+      		 The generator API has been enhanced. Now you can create image generators, locale aware generators and generators, which support directory mapping. 
+      		 Please check <a href="./docs/advanced_generators.html">the advanced generators document</a> for more detail.
+      		 </li>
+      		 <li>
+      		 Jawr provides an new API for <strong>global preprocessor</strong>. The global preprocessors are executed before the standard resource bundling and post processing.
+      		 Please check <a href="./docs/global_preprocessors.html">the global preprocessor document</a> for more detail.
+      		 </li>
+      		 <li>
+      		 Jawr has introduced a new feature to overcome in <strong>debug mode</strong> the IE limitation, which can only handle 30 stylesheets in one page.<br/>
+      		 This is particularly usefull for user which have CSS bundles in one page, containing more than 30 stylesheets.    
+      		 The new property <strong>jawr.debug.ie.force.css.bundle</strong> has been added for this purpose.
+      		 If you set this value to true,  in debug mode with an IE browser, Jawr will reference each CSS bundle as a unique CSS resource, instead of referencing all the resources of the bundle. 
+      		 Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      		 </li>
+      		 <li>
+      		 The property <strong>jawr.css.image.classpath.use.servlet</strong> has been renamed to <strong>jawr.css.classpath.handle.image</strong>.  
+      		 So the use of <strong>jawr.css.image.classpath.use.servlet</strong> in your configuration file is deprecated. Use the property <strong>jawr.css.classpath.handle.image</strong> instead.
+      		 Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
+      		 </li>
+      		</ul>
+      		 <br/><br/>
+	    	<strong>Fixed issues: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #98 fixed:</strong> Input image tag produces <b>&lt;input type="image" disabled="false"&gt;</b> which disables the button.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #105 fixed:</strong> css @charset declarations must be filtered out for CSS bundle.      
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #107 fixed:</strong> NullPointerException when using JAWR in JSR-168 context.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #108 fixed:</strong> No check for duplicate rendering of bundles using an alternate production URL.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #109 fixed:</strong> Unnecessary bundling process for bundle using alternate production URL.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #110 fixed:</strong> Image content length is set after the response has been sent.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #111 fixed:</strong> Able to view files under web-inf directory.      
+	      		 </li>       
+	      		 <li>
+	      		 	<strong>Issue #112 fixed:</strong> <strong>jawr.config.reload.interval</strong>, <strong>jawr.config.reload.refreshKey</strong> don't work for Jawr with Spring MVC.      
+	      		 </li>       
+      	  	</ul>
+      		 <p>Thanks to rodneyphillips, axelfont, tkaefer and chupa for reporting issues.</p> 
+      	  </li>
+	      <li> <strong>28th September 2009</strong>: Version 3.1.2 released:<br/>
+	      	This version contains only bug fixes.<br/><br/>
+	    	<strong>Fixed issues: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #93 fixed:</strong> Localized messages generation only generates default locale when using message generator parameters.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #95 fixed:</strong> CSS classpath generated resources contain postprocessors data in debug mode.      
+	      		 </li>      
+      	  	</ul>
+     		 <p>Thanks to jmundt for reporting localized messages issue.</p> 
+      	  	<br/><br/>
+      	  	<strong>Jawr ant task and maven plugin</strong> - Version 1.1.2 released:<br/>
+	    	This version contains only one bug fix.<br/><br/>
+	    	<strong>Fixed issue: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #96 fixed:</strong> Remove entity resolution when using bundle preprocessor.      
+	      		 </li>      
+      	  	</ul>
+      		 <p>Thanks to acklenx for reporting the issue.</p> 
+	      </li>
+	      <li> <strong>01rst September 2009</strong>: Version 3.1.1 released:<br/>
+	      	This version contains only bug fixes.<br/><br/>
+	    	<strong>Fixed issues: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	<strong>Issue #76 fixed:</strong> A Page should render resource bundle only once.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #89 fixed:</strong> Multiple invocations of a custom generator.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #90 fixed:</strong> RendererRequestUtils.setRequestDebuggable(...) creates http sessions.
+	      		 </li>        
+	      		 <li>
+	      		 	<strong>Issue #91 fixed:</strong> Src of img tag does not support relative path and is incorrect when the requested page is not in the web application root directory.
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #92 fixed:</strong> Jawr trips over Javascript multiline string literals
+	      		 </li> 
+      	  	</ul>
+	        <p>We would like to thank qxo, jmundt, reardonm, cpo, kape and axelfont for reporting issues and providing patches when possible.</p> 
+	    </li>
+	    <li> <strong>10th August 2009</strong>: Version 3.1 released:<br/>
+	      	This version contains mainly bug fixes.<br/><br/>
+	    	<strong>New features/ fixed issues: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	A new tag have been added to the tag library to generate the URL to an image which is handled by Jawr. Look for the image tags at the <a href="./docs/taglibs.html">tag library doc</a> for extra info.
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #74 fixed:</strong> NoSuchElementException when bundle has no file. The issue occured when a bundle was defined with no mapping.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #75 fixed:</strong> NullPointerException when using JawrImgServlet and image does not exist.
+	      		 </li>        
+	      		 <li>
+	      		 	<strong>Issue #79 fixed:</strong> NullPointerException while requesting a CSS in debug mode if no Jawr image servlet was defined.
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #88 fixed:</strong> Incorrect logging of "The jawr bundle mapping 'jawr-img-mapping.properties' is not found"
+	      		 </li> 
+      	  	</ul>
+	        <p>We would like to thank sfrancois99, qxo and nordicdevil for reporting issues and providing patches when possible.</p> 
+	    </li>
+	    <li> <strong>03rd August 2009</strong>: Version 3.0 released:<br/>
+	    	<strong>New features/ fixed issues: </strong>
+	    	 <ul>    	 	
+	      		 <li>
+	      		 	Jawr is now able to handle images. This means that all images managed by Jawr will be cached in the browser as the other Javascript and CSS resources.
+	      		 	By default all CSS images will be handled by Jawr if the Jawr image servlet is defined. 
+	      		 	Look for the <em>Jawr image handling</em> section in the <a href="./docs/servlet.html">servlet docs</a> and at <em>jawr.image.resources</em> in the <a href="./docs/descriptor_syntax.html">descriptor syntax docs</a> for extra info.<br/>
+	      		 	Two new tags have been added to the tag library to handle these images. Look for the image tags at the <a href="./docs/taglibs.html">tag library doc</a> for extra info.
+	      		 </li>
+	      		 <li>
+	      		 	Jawr supports now JMX, which means that you will be able to modify at runtime the behaviour of Jawr using a JMX console.
+	      		 	For example, you will be able to pass from production mode to debug mode an entire application or only one session at runtime.
+	      		 	Look at the <a href="./docs/jmx_support.html">JMX support doc</a> for extra info.
+	      		 </li>
+	      		 <li>
+	      			A new "bundle preprocessing" feature has been added in Jawr. This feature is also known as "build time bundle processing".
+	      			This feature allows the user to skip the bundling process at server start-up, and use instead the data of preprocessed bundles. 
+	      			Look at the <a href="./docs/bundle_preprocessing.html">bundle preprocessing documentation</a> for extra info.
+	      			<br/>
+	      			This feature is a new one, it can certainly be improved. So please don't hesitate to give your feedback on the Discussion Forum, on this feature and on Jawr in general.    
+	      		 </li>
+	      		 <li>
+	      		 	We have also created a <strong>maven plugin</strong> and an <strong>Ant task</strong> to integrate the new bundle preprocessing feature in the project build phase.  
+	      		 	Look at the <a href="./docs/jawr_ant_task.html">Jawr Ant task docs</a> and the <a href="./docs/jawr_maven_plugin.html">Jawr maven plugin docs</a> for extra info.<br/>
+	      		 	Thanks to Andreas Andreou for the original idea of the maven plugin.    
+	      		 </li>
+	      		 <li>
+	      		 	We have also decided to provide a better support to usage of CDN in Jawr. <br/>
+	      		 	The new property <em>jawr.url.contextpath.ssl.override</em> allows you to define what the CDN URL to use for HTTPS requests is. <br/>
+	      		 	In debug mode, it is now possible to reference the debug resource files deployed on the CDN. To enable this feature, you will have to set to true, the property 
+	      		 	<em>jawr.url.contextpath.override.used.in.debug.mode</em>. <br/>
+	      		 	Look for these properties in the <a href="./docs/descriptor_syntax.html">descriptor syntax docs</a> for extra info.    
+	      		 </li>
+	      		 <li>
+	      		 	The property <em>jawr.css.imagepath.override</em> which defined the override path for CSS images has been removed.
+	      		 	Now for CSS images, Jawr generates URLs which are relative to the CSS bundle even if the resource is deployed on a CDN. 
+	      		 	Look at the <em>jawr.css.imagepath.override</em> section at the <a href="./docs/bundle_preprocessing.html">bundle preprocessing doc</a> for extra info.    
+	      		 </li>
+	      		 <li>
+	      		 	For a better support of CDN, Jawr provides resources which can be integrated more easily in CDN. These files are generated using the bundle preprocessing feature. 
+	      		 	It even provides a rewrite configuration file for Apache server.
+	      		 	Look at the <em>CDN support</em> section at the <a href="./docs/bundle_preprocessing.html">bundle preprocessing doc</a> for extra info.    
+	      		 </li>
+	      		 <li>
+	      		 	Jawr is now able to discover automatically the locales available for message resources.
+	      		 	So the use of the bundle property <em>jawr.js.bundle.[name].locales</em> is no more necessary.
+	      		 	Look for <em>jawr.js.bundle.[name].locales</em> at <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for extra info.    
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #69 fixed:</strong> CSS from jar file fails when using jawr.debug.overrideKey in production, is now fixed.      
+	      		 </li>      
+	      		 <li>
+	      		 	<strong>Issue #66 fixed:</strong> Add support for @import keyword in CSS is now fixed. You can use the new <strong>cssimport</strong> post processor to resolve the CSS import. Please take a look at the section <em>CSS Import resolver</em> at <a href="./docs/postprocessors.html">postprocessors documentation</a> for more info.
+	      		 </li>        
+	      		 <li>
+	      		 	<strong>Issue #72 fixed:</strong> Avoid skipping repeated members of bundles in debug mode which is fixed now.
+	      		 	Before when the same resources was referenced twice in debug mode, the second one was skipped.        
+	      		 </li>
+	      		 <li>
+	      		 	<strong>Issue #73 fixed:</strong> java.lang.IndexOutOfBoundsException in CSSMinifier is fixed now.
+	      		 	The issue occured when the CSS file contains a '$' character in a non commented section. 
+	      		 </li>  
+	      	</ul>
+	    </li>  
+      	<li> <strong>31 May 2009</strong>: Version 2.8 released:<br/>
+    	<strong>New features/ fixed issues: </strong>
+    	 <ul>    	 	
+      		 <li>
+      		 	While until now it has been possible to load CSS from the classpath, images referenced in them would not be resolved. Now the 
+      		 	Jawr servlet can be used to serve images from the classpath as well, thus enabling fully the ability to serve styles and related
+      		 	images from jar files.  Look for <em>jawr.css.image.classpath.use.servlet</em> at the  
+      		 	<a href="./docs/servlet.html">servlet docs</a> for extra info.    
+      		 </li>
+      		 <li>
+      		 	The classpath resource generator now allows to use the <em>jar:</em> prefix to map css (it used to be <em>jar_css:</em> for
+      		 	css, now the syntax is the same for both js and css files).   
+      		 </li>
+      		 <li>
+      			It is possible to request debug debug mode for a page in production mode. The purpose is to be able to have a javascript 
+      			debugging session in a deployed application. The bundle members will be requested sepparately as if Jawr were in debug mode 
+      			easing debug operations without having to redeploy. This is done by adding a special request parameter which is defined in 
+      			configuration.  Look for <em>jawr.debug.overrideKey</em> at the  
+				<a href="./docs/modes.html">debug and production modes documentation</a> for extra info.    
+      		 </li>
+      		 <li>
+      		 	A new way to force a refresh of all bundles has been added. A secret parameter name is defined in configuration using the key 
+      		 	<strong>jawr.config.reload.refreshKey</strong>, and whenever a request that matches the Jawr servlet includes it, the configuration
+      		 	wil be reloaded.  Look for <em>jawr.config.reload.refreshKey</em> at the  
+				<a href="./docs/servlet.html">servlet docs</a> for extra info.    
+      		 </li>
+      		 <li>
+      		 	Orphans search and auto bundle generation can now be disabled for convenience using a new configuration parameter named 
+      		 	<strong>factory.use.orphans.mapper</strong>. It is on by default but when set to false orphans will no longer be searched for.     
+      		 </li>
+      		 <li>
+      		 	Bundles can now be defined with an alternate static URL to use in production mode. This is useful for instance to use publicly 
+      		 	served libraries (e.g. the YUI framework) while still using locally served files in development mode.  Details can be found at
+      		 	at the <a href="./docs/custom_bundles.html">bundle definition documentation</a>, check out the <em>productionURL</em> param.         
+      		 </li>     
+      		 <li>
+      		 	<strong>Issue #60 fixed:</strong> Per-file custom postprocessor were not being added to the postprocessing chain. Thanks 
+      		 	to user ebottard for providing a patch to solve the issue.      
+      		 </li>      
+      		 <li>
+      		 	<strong>Issue #61 fixed:</strong> The URL path rewriting postprocessor for CSS files was corrupting data: scheme image URLs which 
+      		 	is now fixed. Thanks to user Tim Kingman for providing a patch to solve the issue.      
+      		 </li>        
+      		 <li>
+      		 	<strong>Issue #63 fixed:</strong> The 'jawr.custom.postprocessors.names' property is no longer required. Instead, Jawr will 
+      		 	detect all 'jawr.custom.postprocessors.[name_of_the_postprocessor].class' declarations to define postprocessors.       
+      		 </li>         
+      		 <li>
+      		 	<strong>Issue #65 fixed:</strong> There was a file leak when using the jawr.config.reload.interval parameter because of a 
+      		 	non closed FileInputStream. Fixed.       
+      		 </li>            
+      		 <li>
+      		 	<strong>Issue #67 fixed:</strong> It was not possible to use more than one custom postprocessor per chain due to a bug which 
+      		 	is now fixed.        
+      		 </li>     		 
+      	</ul>
+      	This release includes features and fixes by a new commiter, <strong>Ibrahim Chaehoi</strong>, who had already submitted patches 
+      	for previous releases and decided to join the project. And indeed he has taken it seriously since most of the changes for this version 
+      	are his work. Cheers to our new member! 
+    </li>
+      	<li> <strong>13th February 2009</strong>: Version 2.7 released:<br/> 
+      		<strong>New features/ fixed issues: </strong>
+      		 <ul>
+      		 <li>
+      		 EL expressions in tag libraries are now supported on older servlet containers, thanks to a patch 
+      		 submitted by Ibrahim Chaehoi. 
+      		 </li>
+      		 <li>
+      		 The jawr.*.bundle.names property is now deprecated, also thanks to a patch submitted by Ibrahim Chaehoi. 
+      		 <strong>You may remove all jawr.js.bundle.names and jawr.css.bundle.names from your descriptors</strong>. 
+      		 You can still use them if you feel more comfortable that way. 
+      		 </li>
+      		 <li>
+      		 Jawr now supports jawr.url.contextpath.override that begin with: //.  This is a protocol relative url 
+      		 structure. It's handy when you are sharing your css and/or js with different domains and protocols.  
+      		 So these // urls will work relative to http and https. 
+      		 </li>
+      		 <li>
+      		 Added jawr.css.imagepath.override property to allow for css url replacement that supports absolute URLs or 
+      		 really anything you would like prepended to the URL.  This is usefull if you are sharing your css 
+      		 across multiple domains and use background images.
+      		 </li>
+      		 <li>
+      		 Classloading has been improved to better support the 18n messages generator, which failed to load 
+      		 properties files under certain conditions. 
+      		 </li>
+      		 <li>
+      		 Fixed issue 49 (with no jawr.csslinks.flavor setting, style tags are ended with 'null')
+      		 </li>
+      		 <li>
+      		 Fixed issue 56 (incorrect path management in Spring MVC controller )
+      		 </li>
+				</ul>
+	      This release includes code from our new commiter, <strong>Matt Ruby</strong>. Welcome aboard!. Also, as noted 
+	      above, <strong>Ibrahim Chaehoi</strong> submitted a couple of high quality patches that were included in the 
+	      release. Thanks a lot Ibrahim! 
+	      </li>
+      	<li> <strong>23rd November 2008</strong>: Version 2.6 released:<br/> 
+      		<strong>New features/ fixed issues: </strong>
+      		 <ul><li> <strong>Spring MVC support added. </strong> Jawr now provides a Spring MVC Controller so it can now be fully configured 
+      		 through Spring's configuration mechanism. See <a href="./integration/spring.html" >the manual page</a> for details. </li>
+      		 <li>The way LINK tags are rendered can now be configured. Specifically, depending on the content type you choose for your 
+      		 pages, you may need the link tags to be closed differently, or even not closed at all. By default, tags will be closed as 
+      		 usual (i.e. with '/&gt;'). But adding a new parameter to the properties configuration will make this behavior change. 
+      		 Check the <a href="./docs/taglibs.html" > taglib documentation</a> and look for 'jawr.csslinks.flavor' for details.  </li>
+      		 <li>A new generator has been added. Now CSS resources can be retrieved from the classpath by using the 
+      		 <strong>jar_css</strong> prefix. </li>
+      		 <li>[Issue #46] The jawr[css|js].bundle.names property is now augmentable when using ConfigPropertiesAugmenter, 
+      		 as it should have from the start. </li>      		 
+      		 <li>[Unregistered Issue] Jawr does not close the outputstream nor the output writers handed by the servlet container, since 
+      		 that's an illegal operation, as was pointed out by user Lance. </li>      		
+			</ul>
+      	</li>
+      </ul>
+      </subsection>
+      
+
+    </section>
+  </body>
+
+</document>

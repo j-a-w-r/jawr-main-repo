@@ -1,0 +1,143 @@
+																		------
+                                    Tutorial: How to set up Jawr to serve images
+                                    ------
+                                    ------
+                                    ------
+
+How to set up Jawr to serve images
+
+	The goal of this tutorial is to explain how to set up Jawr to serve images.
+	Since the version 3.0, Jawr is also able to handle images. The images can be reference from
+	the CSS stylesheets or directly in the JSP using specific tags. Look for the image tags at the 
+	{{{https://jawr.java.net/docs/taglibs.html}tag library doc}} for extra info.
+	Jawr will set a long expiration date for the image, and will create a unique URL for the image,
+	which is dependent of the file content.
+
+* Set up Jawr in your project
+
+	Please check the "quickstart" tutorial for the instruction about Jawr installation in your project.
+		
+* Configure instances of the Jawr Servlet
+
+	As for CSS and Javascript resources, Jawr use a specific Servlet to serve the images.
+	So you will need to add <<net.jawr.web.servlet.JawrServlet>> to your web.xml descriptor.
+	<<Important note :>> If you are using Jawr for CSS, the JawrServlet for image resources must be initialized before the CSS one.
+	Otherwise the bundling process will not work.
+	
+	For instance: 
+		
++------------------------------------------+
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		
+		<!-- Location in classpath of the config file -->
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		
+		<!-- Location in classpath of the config file -->
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>binary</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>CSSServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		
+		<!-- Location in classpath of the config file -->
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>css</param-value>
+		</init-param>
+		<!-- Here we make sure that the CSS servlet will start after the image one -->
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	...
+	
+	<servlet-mapping>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<url-pattern>*.js</url-pattern>
+	</servlet-mapping> 
+	
+	<servlet-mapping>
+		<servlet-name>CSSServlet</servlet-name>
+		<url-pattern>*.css</url-pattern>
+	</servlet-mapping> 
+	
+	<!-- The image servlet will be able to serve "png" and "gif" files -->
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.png</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.gif</url-pattern>
+	</servlet-mapping> 
+	
++------------------------------------------+
+	
+	This is all the configuration required to get the Jawr servlet up and running. 
+	You will note that we have set the property <<load-on-startup>> for the servlets,
+	to make sure that the image servlet will start before the CSS one.
+	
+* Jawr configuration file
+
+	There are 3 properties which are related to image handling in Jawr.
+	
+*---------------+---------+--------------+----------------+
+| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+----------------+
+| jawr.css.classpath.handle.image | Boolean | The flag indicating if the CSS images should be retrieved from the classpath, for the CSS defined in the classpath. | None| 
+*---------------+---------+--------------+----------------+
+| jawr.binary.resources | String | The comma separated list of images, whose the hashcode will be calculated at Jawr image servlet startup. If an image is not defined here, the hashcode will be calculated at runtime and put in cache.   | None    | 
+*---------------+---------+--------------+----------------+
+| jawr.binary.hash.algorithm | String | The hash algorithm to use for the images. Two values are possible : CRC32 and MD5  | CRC32 | 
+*---------------*---------*--------------+----------------+
+	
+	
+	The declaration of your images in the <<jawr.image.resources>> property is not mandatory. 
+	This property is used to calculate the hashcode of the images at the image servlet startup. 
+	If an image is not defined in this property, the hashcode of the image will be calculated at runtime.
+	 
+	
+* Test the image resource serving
+
+	Create an  <</img>> directory at the root of your web application and copy an <<png>> image in it and rename it as <<logo.png>> . Write a test JSP page and add the following content: 
+
++------------------------------------------+
+<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html>
+<head>
+</head>
+<body>
+	...
+	<jwr:img src="/img/logo.png"/>	
+</body>
+</html>
+
++------------------------------------------+	
+
+	Deploy your application to a server and open the JSP you created. The page should contain a link to cb1341564321/logo.png. 
+	 
+	

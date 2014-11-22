@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>Jawr :: Features</title>
+  </properties>
+  
+    <body>
+	
+    <section name="Jawr features">
+    	<ul>
+			
+			<li> <strong>Free and open source</strong>: Released under an Apache 2.0 license, Jawr can be used free of charge with or 
+			without modifications, for both commercial and noncommercial purposes.</li> 
+			
+			<li> <strong>Easy to setup</strong>: All you need to start using Jawr is to declare a couple of servlets in you deployment descriptor, create a simple .properties configuration file, 
+			and use the Jawr tag library to import css and javascript resources to your pages. A complete setup takes a matter of minutes and requires little or no modifications over time. </li> 
+			
+			<li> <strong>Lightweight</strong>: Bundling and compression is done once at server startup so there is no overhead to requests. Also, a cache component
+			is available and enabled by default to serve resources directly from memory instead of from the filesystem.</li> 
+			
+			
+			<li> <strong>Built-in minification and postprocessing</strong>: Jawr includes JSMin and the YUI compressor, both from Yahoo!. A custom minificator for 
+			CSS is also included, although the YUI compressor can be used for CSS too. For each bundle, a customizable postprocessing chain is executed 
+			during startup. Relative URLs in CSS files are rewritten by a postprocessor so they keep working with a different relative path. It is also 
+			easy to create custom postprocessors to perform any modifications to your js and css files at deploy time. 
+			 <a href="./docs/postprocessors.html" > Learn more</a>. 
+			</li> 
+			
+			<li> <strong>Proxy-friendly gzip support</strong>: For each bundle there are two URLs that point to a gzipped and a regular version of the resource. Since the URLs 
+			are be generated within a JSP, the request headers are analyzed to decide if the browser will support gzipping and the appropiate URL is written out. 
+			With this system, caching proxies will not be a problem since it works around known Internet Explorer problems with the VARY header.</li> 
+			
+			
+			<li> <strong>Caching enforcement</strong>: Jawr will try its best to force your clients to cache the resources. If a browser asks if a file changed, a 304 (not modified) 
+			header is sent back with no content. On the other hand, with Jawr you will be 100% sure that new versions of your bundles are downloaded by all 
+			clients. Every URL to your resources will include an automatically generated, content-based prefix that changes automatically whenever a 
+			resurce is updated. Once you deploy a new version, the URL to the bundle will change as well so it will be impossible that a client uses an 
+			older, cached version.</li> 
+			
+			
+			<li> <strong>Flexible bundling scheme</strong>: Choose which files go into which bundle, and in which order. Choose wether you want a bundle minified or not. 
+			Choose wether a bundle will be used only in development mode (for adding things such as console loggers). Create partially minified bundles. 
+			Create bundles which are automatically added within an Internet Explorer conditional comment.  
+			All with a very easy to use configuration system. 
+			 <a href="./docs/custom_bundles.html" > Learn more</a>. </li> 
+			
+			<li> <strong>CDN compatible</strong>: Jawr can be used easily with a CDN for even better response times.</li> 
+			
+			
+			<li> <strong>Global bundles</strong>: Some bundles such as libraries will be needed anywhere in your site where there is javascript code. Same goes for base CSS 
+			stylesheets. With Jawr, these will be added to pages automatically so you don't need to repeat the same import statement everywhere.</li> 
+			
+			<li> <strong>Dynamic pages not required</strong>: Jawr can be used in plain HTML pages, so even if your application uses a mix of HTML and JSP (or other template based dynamic 
+			technology), Jawr can be used on every page. 
+			 <a href="./docs/plain_html.html" > Learn more</a>. </li> 
+			 
+			<li> <strong>CSS skin</strong>: Jawr allows you to define skin (theme) for your CSS bundle. This means that the user will get the CSS bundle skin depending on his current skin setting.  
+			 <a href="/tutorials/howToUseJawrCssSkin.html" > Learn more</a>. </li> 
+			
+			<li> <strong>Sprite generation support</strong>: You can define you sprite in your CSS by putting annotations and Jawr will generate the CSS bundles and the image sprites associated.  
+			 <a href="./tutorials/jawrSpriteImage.html" > Learn more</a>. </li> 
+			
+			<li> <strong>Base64 encoded image support</strong>: Jawr allows you to define the image which you want to encode in base64 to minimize the HTTP request. It also support MHTML generation for IE6 and IE7.  
+			 <a href="/tutorials/howToUseJawrToGenerateBase64Image.html" > Learn more</a>. </li> 
+			
+			<li> <strong>JMX support</strong>: You could modify the behaviour of Jawr at runtime using a JMX console. For example, you could pass an entire application from production mode to debug mode,
+			or modify only one session.  
+			 <a href="./docs/jmx_support.html" > Learn more</a>. </li> 
+			
+			<li> <strong>Bundle preprocessing</strong>: By default, the bundle processing is done at server startup, but you could preprocess your bundles, and use them directly. This will reduce the startup time of your application
+			because Jawr will skip the bundle processing.
+			 <a href="./docs/bundle_preprocessing.html" > Learn more</a>. </li> 
+			
+			<li> <strong>Spring MVC support</strong>: Instead of configuring the Jawr servlet, you can tightly integrate it with your Spring MVC application by 
+			adding the provided Jawr Controller to your Spring descriptor.  
+			 <a href="./integration/spring.html" > Learn more</a>. </li> 
+			
+			<li> <strong>JSF/Facelets support</strong>: If you are using JSF with Facelets as the view technology, you can still use Jawr using a specific tag library.
+			 <a href="./integration/facelets.html" > Learn more</a>. </li> 
+			
+			<li> <strong>Wicket support</strong>: Jawr provides components for JS, CSS and images handled by Jawr.
+			<a href="./integration/wicket.html" > Learn more</a>. </li> 
+		
+			<li> <strong>Grails plugin</strong>: Jawr can be used seamlessly in Grails applications, using a provided plugin that includes a GSP tag library.
+			<a href="./integration/grails.html" > Learn more</a>. </li> 
+			
+			<li> <strong>DWR integration</strong>: You can use DWR and have Jawr handle the serving of the static and dynamic scripts DWR generates, with the 
+					added feature of being able to bundle them together and with other scripts from your application. 
+					<a href="./integration/dwr.html" > Learn more</a>.</li> 
+		
+			<li> <strong>Struts/Commons Validator integration</strong>: finally you can minify and compress the validation scripts generated by this framework. 
+						With Jawr you can also bundle the Validator static javascript with other scripts in your application.
+						<a href="./integration/validator.html" > Learn more</a>.</li> 
+					
+			 <li><strong>CSS image sprite generation</strong>:
+      		 Jawr supports image sprites generation using smartsprites. <a href="./tutorials/jawrSpriteImage.html">Learn more</a>.
+      		 </li>
+      		 
+      		 <li> <strong>Library friendly</strong>: Open source javascript libraries can be used seamlessly with Jawr. Most of these are modular or have plugins: add the modules or 
+			plugins you need and bundle all together. And, even if you minify them (thus eliminating comments), you can still keep the mandatory licenses in
+			the bundle. The <a href="../tutorials/quickstart.html">libraries tutorial</a> will show you how to integrate popular js libraries such 
+			as Protoype, JQuery or YUI. </li>
+		</ul>
+    </section>
+    </body>
+    
+</document>

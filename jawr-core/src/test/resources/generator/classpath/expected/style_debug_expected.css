@@ -1,0 +1,17 @@
+.mandatory { 
+	color:black;
+	background-image: url(../../jar_cb1090762209/generator/classpath/img/iconInformation.gif); 
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	font-family: sans-serif, courier, arial;
+	border : thin solid rgb(250,0,255);
+}
+
+.tools { 
+	color:black;
+	background-image: url(../../jar_cb1090762209/generator/classpath/img/cog.png);  
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	margin-top : 80px;
+	border : thin solid rgb(250,0,255);
+}

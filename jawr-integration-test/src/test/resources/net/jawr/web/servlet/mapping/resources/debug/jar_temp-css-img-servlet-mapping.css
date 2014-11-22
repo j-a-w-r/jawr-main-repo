@@ -1,0 +1,15 @@
+.mandatory { 
+	color:black;
+	background: #fff url(../imgJawr/jar_cb3df496cbae960efd97933bdd50e5d454/fwk/img/iconInformation.gif) no-repeat left;
+	padding-left : 20px;
+	margin-top : 80px;
+	border : thin solid rgb(250,0,255);
+}
+
+.info { 
+	color:black;
+	background: #fff url(../imgJawr/jar_cb3df496cbae960efd97933bdd50e5d454/fwk/img/iconInformation.gif) no-repeat left;
+	padding-left : 20px;
+	margin-top : 80px;
+	border : thin solid rgb(250,0,255);
+}

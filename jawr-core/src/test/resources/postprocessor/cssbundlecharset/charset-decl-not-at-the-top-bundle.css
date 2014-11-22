@@ -1,0 +1,30 @@
+body {
+	background-image: url("../img/logo.png");
+	background-repeat: no-repeat;
+}
+
+@charset "utf-8";
+
+div {
+
+	padding-top : 8px;		
+}
+
+@charset "iso-8859-1";
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../img/calendarIcons/calendar.png");
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("jar:net/jawr/img/clock.png");
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../img/calendarIcons/calendar.png");
+}
