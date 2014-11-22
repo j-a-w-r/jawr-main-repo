@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" id="dwr">
+  <display-name>DWR (Direct Web Remoting)</display-name>
+  <description>A Simple Demo DWR</description>
+  <servlet>
+    <description>Direct Web Remoter Servlet</description>
+    <display-name>DWR Servlet</display-name>
+    <servlet-name>dwr-invoker</servlet-name>
+    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>activeReverseAjaxEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>initApplicationScopeCreatorsAtStartup</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>maxWaitAfterWrite</param-name>
+      <param-value>100</param-value>
+    </init-param>
+    <init-param>
+      <param-name>pollWithXhr</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>scriptTagProtection</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>JavascriptServlet</servlet-name>
+    <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+    <init-param>
+      <param-name>configLocation</param-name>
+      <param-value>jawr.properties</param-value>
+    </init-param>
+    <init-param>
+      <param-name>mapping</param-name>
+      <param-value>/jawr/</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>CSServlet</servlet-name>
+    <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+    <init-param>
+      <param-name>configLocation</param-name>
+      <param-value>jawr.properties</param-value>
+    </init-param>
+    <init-param>
+      <param-name>type</param-name>
+      <param-value>css</param-value>
+    </init-param>
+    <init-param>
+      <param-name>mapping</param-name>
+      <param-value>/css/</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dwr-invoker</servlet-name>
+    <url-pattern>/dwr/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JavascriptServlet</servlet-name>
+    <url-pattern>/jawr/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CSServlet</servlet-name>
+    <url-pattern>/css/*</url-pattern>
+  </servlet-mapping>
+</web-app>
