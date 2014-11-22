@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "facelet-taglib_1_0.dtd">
+<facelet-taglib>
+      <namespace>https://jawr.java.net/jsf/facelets</namespace>
+   <tag>
+      <tag-name>script</tag-name>
+      <component>
+            <component-type>jawr.JavascriptBundle</component-type>            
+       </component>
+   </tag>
+   <tag>
+      <tag-name>style</tag-name>
+      <component>
+            <component-type>jawr.CSSBundle</component-type>
+       </component>
+   </tag>
+   <tag>
+      <tag-name>imagePath</tag-name>
+      <component>
+            <component-type>jawr.ImagePath</component-type>
+       </component>
+   </tag>
+   <tag>
+      <tag-name>img</tag-name>
+      <component>
+            <component-type>jawr.ImgHtml</component-type>
+       </component>
+   </tag>
+   <tag>
+      <tag-name>image</tag-name>
+      <component>
+            <component-type>jawr.ImageInput</component-type>
+       </component>
+   </tag>
+   
+</facelet-taglib>
