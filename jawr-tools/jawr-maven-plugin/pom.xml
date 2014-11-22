@@ -6,7 +6,7 @@
 		<artifactId>jawr-tools-parent</artifactId>
 		<version>1.7-SNAPSHOT</version>
 	</parent>
-	<artifactId>maven-jawr-plugin</artifactId>
+	<artifactId>jawr-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>JAWR Maven Plugin</name>
 	<url>http://jawr.java.net/</url>
