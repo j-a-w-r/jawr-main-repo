@@ -1,0 +1,88 @@
+
+
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" media="all" href="/jawr-dwr2.x-integration-test/css/61573181/fwk/core/component.css" >
+
+<script type="text/javascript">if(!JAWR){var JAWR = {};};;JAWR.jawr_dwr_path='/jawr-dwr2.x-integration-test/dwr';JAWR.dwr_scriptSessionId='11111';JAWR.app_context_path='/jawr-dwr2.x-integration-test';</script>
+<script type="text/javascript" src="/jawr-dwr2.x-integration-test/jawr/N1741745057/bundles/global.js" ></script>
+
+
+<script type="text/javascript" src="/jawr-dwr2.x-integration-test/jawr/N341689529.en_US/js/bundle/msg.js" ></script>
+
+</head>
+<body>
+	<div class="mandatory">For this element, the style and the image
+		associated are retrieved directly from the classpath.</div>
+	<div style="height: 20px">
+		<img src="/jawr-dwr2.x-integration-test/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png" />
+		This HTML image use a generated path which force the caching for the
+		browser.
+	</div>
+	<div>
+		<span class="calendar">The CSS image is retrieved from the
+			webapp, which is a classic case.</span>
+	</div>
+	<div>
+		<span class="clock">The CSS image is retrieved from the
+			classpath. The CSS used here is defined in the webapp under the "css"
+			folder.<br> This mean that you could reference a CSS image in
+			the classpath from a standard CSS define in a bundle.
+		</span>
+	</div>
+	<div style="height: 20px">
+		<input type="image" src="/jawr-dwr2.x-integration-test/cb30a18063ef42b090194a7e936086960f/img/cog.png" value="temp" />
+		This input image use a generated path which force the caching for the
+		browser.
+	</div>
+
+	<script type="text/javascript">
+		alert("A little message retrieved from the message bundle : "
+				+ messages.ui.msg.hello.world());
+	</script>
+
+	<div>
+		<h1>Dynamically Updating Text</h1>
+
+		<p>This is a simple demonstration of how to dynamically update a
+			web-page with text fetched from a web server.</p>
+
+		<ul id="tabList">
+			<li><a href="#" tabId="demoDiv">Demo</a></li>
+			<li><a href="#" tabId="explainDiv">How it works</a></li>
+			<li><a href="#" tabId="sourceDiv">Source</a></li>
+		</ul>
+
+		<div id="tabContents">
+
+			<div id="demoDiv">
+
+				<p>
+					Name: <input type="text" id="demoName" value="Joe" /> <input
+						value="Send" id="sendButton" type="button" onclick="update()" /> <br /> Reply: <span
+						id="demoReply"
+						style="background: #eeffdd; padding-left: 4px; padding-right: 4px;"></span>
+				</p>
+
+			</div>
+
+			<div id="explainDiv">
+				<p>
+					When you click on the "Send" button the browser calls the onclick
+					event, which calls the
+					<code>update()</code>
+					function:
+				</p>
+
+				<pre>
+function update() {
+  var name = dwr.util.getValue("demoName");
+  Demo.sayHello(name, loadinfo);
+}
+</pre>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
