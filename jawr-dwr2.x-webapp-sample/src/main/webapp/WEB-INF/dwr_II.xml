@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr/dwr20.dtd">
+
+<dwr>
+
+  <allow>
+
+    <!--
+    <filter class="org.getahead.dwrdemo.monitor.MonitoringAjaxFilter"/>
+    <filter class="org.directwebremoting.filter.ExtraLatencyAjaxFilter">
+      <param name="delay" value="200"/>
+    </filter>
+    -->
+
+   
+    <!-- simpletext -->
+    <create creator="new" javascript="Demo">
+      <param name="class" value="org.getahead.dwrdemo.simpletext.Demo"/>
+    </create>
+
+    
+    <!-- this is a bad idea for live, but can be useful in testing -->
+    <convert converter="exception" match="java.lang.Exception"/>
+    <convert converter="bean" match="java.lang.StackTraceElement"/>
+
+  </allow>
+
+</dwr>
