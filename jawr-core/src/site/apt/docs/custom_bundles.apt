@@ -353,7 +353,7 @@ jawr.js.bundle.comp.child.names=foo, bar
 	You can configure Jawr to do one of three things with orphans: 
 	
 	* <<Ignore them altogether>>: since scanning may be time and resource consuming during start up and in some cases it is undesirable to treat 
-	orphans, you can set a parameter in config to disable all orphans related activity. Simply set <<factory.use.orphans.mapper>> to false 
+	orphans, you can set a parameter in config to disable all orphans related activity. Simply set <<jawr.factory.use.orphans.mapper>> to false 
 	(it would be true by default) and it's done. 
 	
 	* <<Create one-file bundles with each orphan resource>>: This is what Jawr will do by default. Even for files you don't need to serve within a bundle, 
