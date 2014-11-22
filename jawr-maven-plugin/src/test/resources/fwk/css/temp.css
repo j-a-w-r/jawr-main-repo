@@ -1,0 +1,8 @@
+.mandatory { 
+	color:black;
+	background: #fff url(../img/arrow_right.png) no-repeat left;
+	padding-left : 20px;
+	margin-top : 85px;
+	font-family: sans-serif, courier, arial;
+	border : thin solid #1E90FF;
+}
