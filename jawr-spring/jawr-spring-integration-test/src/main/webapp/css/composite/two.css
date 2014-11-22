@@ -1,0 +1,10 @@
+body {
+	color:white;
+	background-color:red;
+}
+
+.arrow_up {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../img/arrowIcons/arrow_up.png");
+}
