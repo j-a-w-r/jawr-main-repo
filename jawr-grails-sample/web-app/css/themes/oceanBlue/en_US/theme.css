@@ -1,0 +1,16 @@
+.header {
+	background-image: url("../../../../images/logo_us.png");
+	background-repeat: no-repeat;
+	height : 81px;
+	margin-left : 232px;
+}
+
+#tabView {
+	
+	margin: 0 5px 0 232px;
+}
+
+.flag {
+	background : #ffffff url("../../../../images/flags/us.png") no-repeat;
+	height : 20px;
+}

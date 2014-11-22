@@ -1,0 +1,18 @@
+<plugin name='jawr' version='3.6' grailsVersion='2.4 &gt; *'>
+  <authorEmail>icefox@dev.java.net</authorEmail>
+  <title>adds Jawr (https://jawr.dev.java.net) functionality to Grails applications.</title>
+  <description>    			Jawr is a tunable packaging solution for Javascript and CSS which allows for rapid development of resources 
+    			in separate module files. You can work with a large set of split javascript files in development mode, then
+    			Jawr bundles all together into one or several files in any way you define. By using a tag library, Jawr allows 
+    			you to use the same, unchanged GSP pages for development and production. Jawr also minifies and compresses the 
+    			files, resulting in reduced page load times. 
+    			</description>
+  <documentation>https://jawr.dev.java.net</documentation>
+  <type>JawrGrailsPlugin</type>
+  <resources>
+    <resource>JawrBinaryController</resource>
+    <resource>JawrCSSController</resource>
+    <resource>JawrJavascriptController</resource>
+    <resource>JawrTagLib</resource>
+  </resources>
+</plugin>
