@@ -682,17 +682,28 @@ public class GeneratorRegistry implements Serializable {
 			String variantType = entry.getKey();
 			VariantSet variantSet = entry.getValue();
 			String variant = variantSet.getDefaultVariant();
+
 			if (curVariants.containsKey(variantType)) {
-				variant = curVariants.get(variantType);
-				if (!variantSet.contains(variant)) {
-					variant = variantSet.getDefaultVariant();
+				String curVariant = curVariants.get(variantType);
+				VariantResolver resolver = variantResolvers.get(variantType);
+				if (resolver != null) {
+					variant = resolver.getAvailableVariant(curVariant,
+							variants.get(variantType));
+					if (variant == null) {
+						variant = variants.get(variantType).getDefaultVariant();
+					}
+				} else {
+					throw new BundlingProcessException(
+							"Unable to find variant resolver for variant type '"
+									+ variantType + "'");
 				}
 			}
 
 			availableVariantMap.put(variantType, variant);
+
 		}
 
 		return availableVariantMap;
 	}
-
+	
 }
