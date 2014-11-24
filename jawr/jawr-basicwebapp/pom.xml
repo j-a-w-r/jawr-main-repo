@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
 		<artifactId>jawr</artifactId>
 		<version>3.7-SNAPSHOT</version>
-		<relativePath>../../</relativePath>		
+		<relativePath>../../</relativePath>
 	</parent>
 	<artifactId>jawr-basicwebapp</artifactId>
 	<packaging>war</packaging>
@@ -63,7 +64,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- Webjars resources -->
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -83,8 +84,13 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!-- plugin> <groupId>org.mortbay.jetty</groupId> <artifactId>maven-jetty-plugin</artifactId> 
-				<version>6.0.1</version> </plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>

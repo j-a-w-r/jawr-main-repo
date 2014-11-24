@@ -5,7 +5,7 @@
 		<groupId>net.jawr</groupId>
 		<artifactId>jawr</artifactId>
 		<version>3.7-SNAPSHOT</version>
-		<relativePath>../../</relativePath>		
+		<relativePath>../../</relativePath>
 	</parent>
 	<artifactId>jawr-integration-test</artifactId>
 	<packaging>war</packaging>
@@ -135,6 +135,13 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<downloadSources>true</downloadSources>
@@ -162,8 +169,8 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
-        <reuseForks>false</reuseForks>
-        <forkCount>1</forkCount>
+							<reuseForks>false</reuseForks>
+							<forkCount>1</forkCount>
 							<skip>false</skip>
 							<systemProperties>
 								<property>
