@@ -78,7 +78,7 @@ Jawr maven plugin
 	        </executions>
 	        <configuration>
 	            <generateCDNFiles>true</generateCDNFiles>
-	            <springConfigFiles>classpath:/spring-JawrConfig.xml,/WEB-INF/jawr-controllers.xml</springConfigFiles>
+	            <springConfigFiles>classpath:/spring-jawrConfig.xml,/WEB-INF/jawr-controllers.xml</springConfigFiles>
 	        </configuration>
 	  </plugin>
 +------------------------------------------+	

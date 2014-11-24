@@ -170,6 +170,7 @@ public class BundleProcessor {
 	/** The default web application URL */
 	private static final String DEFAULT_WEBAPP_URL = "{WEBAPP_URL}";
 
+
 	/**
 	 * Launch the bundle processing
 	 * 
@@ -1046,6 +1047,9 @@ public class BundleProcessor {
 			}
 
 			File destFile = new File(destDirPath, binaryFinalPath);
+						
+			Map<String, String> variantMap = new HashMap<String, String>();
+			setRequestUrl(request, variantMap , path, binaryRsHandler.getConfig());
 
 			// Update the bundle mapping
 			path = PathNormalizer.concatWebPath(

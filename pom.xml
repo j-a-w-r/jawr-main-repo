@@ -8,10 +8,9 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.jawr</groupId>
-	<artifactId>jawr-core-parent</artifactId>
+	<artifactId>jawr</artifactId>
 	<version>3.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>jawr parent</name>
 	<url>http://jawr.java.net/</url>
 	<description>Javascript/CSS bundling and compressing tool for java web apps.
   	By using jawr resources are automatically bundled together and optionally minified and gzipped. 
@@ -24,9 +23,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:ic3fox/jawr-core.git</connection>
-		<developerConnection>scm:git:git@github.com:ic3fox/jawr-core.git</developerConnection>
-		<url>http://github.com/ic3fox/jawr-core</url>
+		<connection>scm:git:git@github.com:ic3fox/jawr-main-repo.git</connection>
+		<developerConnection>scm:git:git@github.com:ic3fox/jawr-main-repo.git</developerConnection>
+		<url>http://github.com/ic3fox/jawr-main-repo</url>
 		<tag>HEAD</tag>
 	</scm>
 	<developers>
@@ -90,20 +89,71 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compile.encoding>UTF-8</maven.compile.encoding>
 		<maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
+		<jetty.version>6.1.10</jetty.version>
+		<jquery-version>1.11.1</jquery-version>
+		<wicket.version>6.10.0</wicket.version>
+		<spring.version>4.1.2.RELEASE</spring.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<!-- Project Dependencies -->
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.jawr</groupId>
 				<artifactId>jawr-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.jawr</groupId>
 				<artifactId>jawr-integration-test</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-integration-test-utils</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-bundle-processor</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-maven-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-ant</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-spring-extension</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-spring-integration-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-wicket-extension</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-dwr2.x-extension</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-dwr3.x-extension</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
 			<!-- Test Dependencies -->
 			<dependency>
 				<groupId>org.mockito</groupId>
@@ -254,7 +304,13 @@
 			<dependency>
 				<groupId>org.webjars</groupId>
 				<artifactId>jquery</artifactId>
-				<version>1.10.2</version>
+				<version>${jquery-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>jquery-ui</artifactId>
+				<version>${jquery-version}</version>
 				<scope>test</scope>
 			</dependency>
 
@@ -288,6 +344,11 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>net.jawr</groupId>
+					<artifactId>jawr-maven-plugin</artifactId>
+					<version>3.7-SNAPSHOT</version>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5</version>
@@ -310,12 +371,55 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>2.4</version>
+					<version>2.5</version>
+					<configuration>
+						<failOnMissingWebXml>false</failOnMissingWebXml>
+					</configuration>
+
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.16</version>
+				</plugin>
+				<!-- does not affect the maven build. Just for removing warnings wehn 
+					working with eclipse m2e -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-plugin-plugin</artifactId>
+										<versionRange>[1.0,)</versionRange>
+										<goals>
+											<goal>descriptor</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -452,29 +556,19 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<modules>
+		<module>jawr/jawr-core</module>
+		<module>jawr/jawr-integration-test</module>
+		<module>jawr/jawr-integration-test-utils</module>
+		<module>jawr/jawr-basicwebapp</module>
+		<module>jawr/jawr-basicwebapp-java-ee6</module>
+		<module>jawr-tools</module>
+		<module>jawr-spring</module>
+		<module>jawr-wicket</module>
+		<module>jawr-dwr2.x</module>
+		<module>jawr-dwr3.x</module>
+	</modules>
 	<profiles>
-		<profile>
-			<id>default</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules>
-				<module>jawr-core</module>
-				<module>jawr-integration-test-utils</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>all</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-				<module>jawr-core</module>
-				<module>jawr-integration-test</module>
-				<module>jawr-integration-test-utils</module>
-				<module>basicwebapp</module>
-			</modules>
-		</profile>
 		<profile>
 			<id>release-sign-artifacts</id>
 			<activation>
@@ -483,6 +577,10 @@
 					<value>true</value>
 				</property>
 			</activation>
+			<modules>
+				<module>jawr-core</module>
+				<module>jawr-integration-test-utils</module>
+			</modules>
 			<build>
 				<plugins>
 					<plugin>

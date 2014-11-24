@@ -2,18 +2,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.jawr.extensions</groupId>
+		<groupId>net.jawr</groupId>
 		<artifactId>jawr-dwr3.x-parent</artifactId>
-		<version>3.6-SNAPSHOT</version>
+		<version>3.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>jawr-dwr3.x-integration-test</artifactId>
 	<packaging>war</packaging>
-	<name>jawr-dwr3.x-integration-test</name>
-	<description>Basic web app for Jawr DWR 3.x integration test</description>
 	<properties>
-		<jawr-integration-test-utils.version>${jawr-core.version}</jawr-integration-test-utils.version>
-		<webapp.name>jawr-dwr3.x-integration-test</webapp.name>
+		<webapp.name>${project.name}</webapp.name>
 	</properties>
+	<description>Basic web app for Jawr DWR 3.x integration test</description>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -49,9 +47,6 @@
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr-integration-test-utils</artifactId>
-			<version>${jawr-integration-test-utils.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -92,14 +87,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<downloadSources>true</downloadSources>
@@ -130,11 +117,11 @@
 							<systemProperties>
 								<property>
 									<name>test.web.xml.path</name>
-									<value>${basedir}/target/${webapp.name}/WEB-INF/web.xml</value>
+									<value>${basedir}/target/${project.name}/WEB-INF/web.xml</value>
 								</property>
 								<property>
 									<name>test.jawr.config.path</name>
-									<value>${basedir}/target/${webapp.name}/WEB-INF/classes/jawr.properties</value>
+									<value>${basedir}/target/${project.name}/WEB-INF/classes/jawr.properties</value>
 								</property>
 								<property>
 									<name>test.initial.delay</name>
@@ -146,7 +133,7 @@
 								<property>
 									<name>com.sun.management.jmxremote</name>
 								</property>
-								-XX:PermSize=1024m -XX:MaxPermSize=1024m
+								<argLine>-XX:PermSize=1024m -XX:MaxPermSize=1024m</argLine>
 							</systemProperties>
 
 						</configuration>
@@ -154,6 +141,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<finalName>${webapp.name}</finalName>
+		<finalName>${project.name}</finalName>
 	</build>
 </project>

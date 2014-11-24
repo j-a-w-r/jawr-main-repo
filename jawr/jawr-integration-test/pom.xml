@@ -3,15 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
-		<artifactId>jawr-core-parent</artifactId>
+		<artifactId>jawr</artifactId>
 		<version>3.7-SNAPSHOT</version>
+		<relativePath>../../</relativePath>		
 	</parent>
 	<artifactId>jawr-integration-test</artifactId>
 	<packaging>war</packaging>
-	<name>jawr-integration-test</name>
 	<description>Basic web app for Jawr integration test</description>
 	<properties>
-		<jetty.version>6.1.10</jetty.version>
+		<webapp.name>${project.name}</webapp.name>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -21,8 +21,6 @@
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr-integration-test-utils</artifactId>
-			<version>${project.version}</version>
-			<type>test-jar</type>
 		</dependency>
 		<!-- Webjars resources -->
 		<dependency>
@@ -137,14 +135,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<downloadSources>true</downloadSources>
@@ -161,6 +151,8 @@
 				<configuration>
 					<skip>true</skip>
 					<argLine>-XX:MaxPermSize=512m -verbose:gc -XX:+PrintClassHistogram</argLine>
+
+
 				</configuration>
 				<executions>
 					<execution>
@@ -170,15 +162,17 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
+        <reuseForks>false</reuseForks>
+        <forkCount>1</forkCount>
 							<skip>false</skip>
 							<systemProperties>
 								<property>
 									<name>test.web.xml.path</name>
-									<value>${basedir}/target/jawr-integration-test/WEB-INF/web.xml</value>
+									<value>${basedir}/target/${webapp.name}/WEB-INF/web.xml</value>
 								</property>
 								<property>
 									<name>test.jawr.config.path</name>
-									<value>${basedir}/target/jawr-integration-test/WEB-INF/classes/jawr.properties</value>
+									<value>${basedir}/target/${webapp.name}/WEB-INF/classes/jawr.properties</value>
 								</property>
 								<property>
 									<name>test.initial.delay</name>
@@ -190,15 +184,13 @@
 								<property>
 									<name>com.sun.management.jmxremote</name>
 								</property>
-								-XX:PermSize=1024m -XX:MaxPermSize=1024m
+								<argLine>-Xmx1024m -XX:PermSize=1024m -XX:MaxPermSize=1024m</argLine>
 							</systemProperties>
-
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
-
-		<finalName>jawr-integration-test</finalName>
+		<finalName>${project.name}</finalName>
 	</build>
 </project>

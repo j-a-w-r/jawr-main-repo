@@ -2,14 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
-		<artifactId>jawr-core-parent</artifactId>
-		<version>3.7-SNAPSHOT</version>
+		<artifactId>jawr</artifactId>
+		<version>3.7-SNAPSHOT</version>		
+		<relativePath>../../</relativePath>
 	</parent>
-	<artifactId>basicwebapp</artifactId>
+	<artifactId>jawr-basicwebapp-java-ee6</artifactId>
 	<packaging>war</packaging>
-	<name>basicwebapp</name>
-	<description>Basic Jawr web app sample</description>
-	<url>https://jawr.java.net</url>
 	<dependencies>
 		<dependency>
 			<groupId>net.jawr</groupId>
@@ -17,7 +15,8 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -75,13 +74,11 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>1.11.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-ui</artifactId>
-			<version>1.11.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
@@ -98,8 +95,7 @@
 			</plugin>
 			<plugin>
 				<groupId>net.jawr</groupId>
-				<artifactId>maven-jawr-plugin</artifactId>
-				<version>1.5</version>
+				<artifactId>jawr-maven-plugin</artifactId>
 				<dependencies>
 					<dependency>
 						<groupId>com.carrotsearch</groupId>
@@ -136,7 +132,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
-		<finalName>basicwebapp</finalName>
 	</build>
 </project>

@@ -1,21 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.jawr.extensions</groupId>
+		<groupId>net.jawr</groupId>
 		<artifactId>jawr-wicket-parent</artifactId>
 		<version>3.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>jawr-wicket-integration-test</artifactId>
 	<packaging>war</packaging>
-	<name>jawr-wicket-integration-test</name>
 	<description>Basic web app for Jawr Wicket integration test</description>
 	<properties>
-		<jawr-integration-test-utils.version>${jawr-core.version}</jawr-integration-test-utils.version>
-		<webapp.name>jawr-wicket-integration-test</webapp.name>
+		<webapp.name>${project.name}</webapp.name>
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>net.jawr</groupId>
 			<artifactId>jawr-wicket-extension</artifactId>
 		</dependency>
 		<dependency>
@@ -43,9 +42,6 @@
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr-integration-test-utils</artifactId>
-			<version>3.5.1</version>
-			<type>test-jar</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -86,14 +82,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<downloadSources>true</downloadSources>
@@ -107,7 +95,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.16</version>
 				<configuration>
 					<skip>true</skip>
 					<argLine>-XX:MaxPermSize=512m -verbose:gc -XX:+PrintClassHistogram</argLine>
@@ -124,11 +111,11 @@
 							<systemProperties>
 								<property>
 									<name>test.web.xml.path</name>
-									<value>${basedir}/target/${webapp.name}/WEB-INF/web.xml</value>
+									<value>${basedir}/target/${project.name}/WEB-INF/web.xml</value>
 								</property>
 								<property>
 									<name>test.jawr.config.path</name>
-									<value>${basedir}/target/${webapp.name}/WEB-INF/classes/jawr.properties</value>
+									<value>${basedir}/target/${project.name}/WEB-INF/classes/jawr.properties</value>
 								</property>
 								<property>
 									<name>test.initial.delay</name>
@@ -148,6 +135,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<finalName>${webapp.name}</finalName>
+		<finalName>${project.name}</finalName>
 	</build>
 </project>

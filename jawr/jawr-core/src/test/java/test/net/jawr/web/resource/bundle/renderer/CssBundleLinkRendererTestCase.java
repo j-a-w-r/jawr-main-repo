@@ -534,7 +534,7 @@ public class CssBundleLinkRendererTestCase extends ResourceHandlerBasedTest {
 		assertEquals("Invalid number of tags written. ",3, tk.countTokens());
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 0:" + next, next.startsWith(CSS_PRE_TAG + "/ctxPathCss/srvMapping/"));
-		assertTrue("Unexpected tag added at position 0:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=ieCssGen%3A%2F1723629412%2Flibrary.css" + CSS_POST_TAG));
+		assertTrue("Unexpected tag added at position 0:" + next, next.endsWith("/jawr_generator.css?generationConfigParam=ieCssGen%3A%2F546923304%2Flibrary.css" + CSS_POST_TAG));
 		
 		next = tk.nextElement().toString();
 		assertTrue("Unexpected tag added at position 1:" + next, next.startsWith(CSS_PRE_TAG + "/ctxPathCss/srvMapping/"));

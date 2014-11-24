@@ -1,164 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<groupId>net.jawr</groupId>
+		<artifactId>jawr</artifactId>
+		<version>3.7-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.jawr.extensions</groupId>
 	<artifactId>jawr-spring-parent</artifactId>
-	<version>3.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>jawr spring parent pom</name>
-	<url>http://jawr.java.net/</url>
-	<description>Javascript/CSS bundling and compressing tool for java web apps.
-  	By using jawr resources are automatically bundled together and optionally minified and gzipped. 
-  	Jawr provides tag libraries to reference a generated bundle either by id or by using the name of any of its members.</description>
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<scm>
-		<connection>scm:git:git@github.com:ic3fox/jawr-spring.git</connection>
-		<developerConnection>scm:git:git@github.com:ic3fox/jawr-spring.git</developerConnection>
-		<url>http://github.com/ic3fox/jawr-spring</url>
-		<tag>HEAD</tag>
-	</scm>
-	<developers>
-		<developer>
-			<id>icefox</id>
-			<name>Ibrahim Chaehoi</name>
-			<roles>
-				<role>Project owner</role>
-			</roles>
-		</developer>
-	</developers>
-	<mailingLists>
-		<mailingList>
-			<name>Users mailing list</name>
-			<post>users@jawr.java.net</post>
-			<archive>https://java.net/projects/jawr/lists/users/archive</archive>
-		</mailingList>
-		<mailingList>
-			<name>Dev mailing list</name>
-			<post>dev@jawr.java.net</post>
-			<archive>https://java.net/projects/jawr/lists/dev/archive</archive>
-		</mailingList>
-	</mailingLists>
-	<properties>
-		<java.version>1.6</java.version>
-		<jawr-core.version>3.6-SNAPSHOT</jawr-core.version>
-		<spring.version>2.0.8</spring.version>
-		<mockito.version>1.9.5</mockito.version>
-		<junit.version>4.11</junit.version>
-		<slf4j-api.version>1.7.5</slf4j-api.version>
-		<log4j.version>1.2.17</log4j.version>
-		<servlet-api.version>2.5</servlet-api.version>
-		<jsp-api.version>2.1</jsp-api.version>
-		<rhino.version>1.7R4</rhino.version>
-		<yuicompressor.version>2.4.7</yuicompressor.version>
-		<jsf-api.version>1.1_02</jsf-api.version>
-		<commons-validator.version>1.2.0</commons-validator.version>
-		<taglibs-standard.version>1.1.2</taglibs-standard.version>
-		<ehcache.version>2.7.4</ehcache.version>
-		<smartsprites.version>0.2.10</smartsprites.version>
-		<google-closure.version>v20131014</google-closure.version>
-		<jetty.version>6.1.10</jetty.version>
-		<htmlunit.version>2.5</htmlunit.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compile.encoding>UTF-8</maven.compile.encoding>
-		<maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
-	</properties>
 	<dependencyManagement>
 		<dependencies>
-			<!-- Project Dependencies -->
-			<dependency>
-				<groupId>net.jawr</groupId>
-				<artifactId>jawr-core</artifactId>
-				<version>3.7-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>jawr-spring-extension</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>jawr-spring-integration-test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<!-- Test Dependencies -->
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>${mockito.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.htmlunit</groupId>
-				<artifactId>htmlunit</artifactId>
-				<version>${htmlunit.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<!-- Other Dependencies -->
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>${servlet-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j-api.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>${jsp-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.mozilla</groupId>
-				<artifactId>rhino</artifactId>
-				<version>${rhino.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.yahoo.platform.yui</groupId>
-				<artifactId>yuicompressor</artifactId>
-				<version>${yuicompressor.version}</version>
-				<scope>provided</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>rhino</groupId>
-						<artifactId>js</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
 
 			<dependency>
 				<groupId>javax.faces</groupId>
@@ -281,30 +132,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
@@ -359,26 +186,17 @@
 		<profile>
 			<id>default</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules>
-				<module>jawr-spring-extension</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>all</id>
-			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
 				<module>jawr-spring-extension</module>
-				<module>jawr-spring-integration-test</module>
-				<module>jawr-spring-webapp-sample</module>
-				<module>jawr-spring-boot-sample</module>
 			</modules>
 		</profile>
 	</profiles>
 	<modules>
-		<module>jawr-spring-boot</module>
+	        <module>jawr-spring-extension</module>
+		<module>jawr-spring-integration-test</module>
+		<module>jawr-spring-webapp-sample</module>
+		<module>jawr-spring-boot-sample</module>
 	</modules>
 </project>

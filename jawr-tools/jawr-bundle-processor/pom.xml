@@ -2,63 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.jawr.tools</groupId>
+		<groupId>net.jawr</groupId>
 		<artifactId>jawr-tools-parent</artifactId>
-		<version>1.7-SNAPSHOT</version>
+		<version>3.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>jawr-bundle-processor</artifactId>
 	<packaging>jar</packaging>
-	<name>Bundle processor for Jawr</name>
 	<description>This artifact will contain the processor used to bundle the web resources at build time.
   	</description>
-	<url>https://jawr.dev.java.net/</url>
-	<developers>
-		<developer>
-			<id>icefox</id>
-			<name>Ibrahim CHAEHOI</name>
-			<roles>
-				<role>Project owner</role>
-			</roles>
-		</developer>
-	</developers>
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>license.txt</url>
-		</license>
-	</licenses>
-	<build>
-		<extensions>
-			<extension>
-				<groupId>org.jvnet.wagon-svn</groupId>
-				<artifactId>wagon-svn</artifactId>
-				<version>1.8</version>
-			</extension>
-		</extensions>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>

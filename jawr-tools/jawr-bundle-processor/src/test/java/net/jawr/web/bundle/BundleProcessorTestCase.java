@@ -315,7 +315,7 @@ public class BundleProcessorTestCase extends TestCase {
 						baseDirPath,
 						tmpDirPath,
 						destDirPath,
-						"classpath:/spring-JawrConfig.xml,/WEB-INF/dispatcher-servlet.xml",
+						"classpath:/spring-jawrConfig.xml,/WEB-INF/dispatcher-servlet.xml",
 						new ArrayList<String>(), true, false, servletAPIVersion);
 		checkGeneratedContent(destDirPath);
 	}
@@ -338,7 +338,7 @@ public class BundleProcessorTestCase extends TestCase {
 						baseDirPath,
 						tmpDirPath,
 						destDirPath,
-						"classpath:/spring-JawrConfig.xml,/WEB-INF/dispatcher-servlet.xml",
+						"classpath:/spring-jawrConfig.xml,/WEB-INF/dispatcher-servlet.xml",
 						new ArrayList<String>(), true, false, servletAPIVersion);
 		checkGeneratedContent(destDirPath);
 	}

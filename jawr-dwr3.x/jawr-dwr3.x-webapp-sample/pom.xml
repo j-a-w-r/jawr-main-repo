@@ -2,17 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.jawr.extensions</groupId>
+		<groupId>net.jawr</groupId>
 		<artifactId>jawr-dwr3.x-parent</artifactId>
-		<version>3.6-SNAPSHOT</version>
+		<version>3.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>jawr-dwr3.x-webapp-sample</artifactId>
 	<packaging>war</packaging>
-	<name>DWR Sample Webapp</name>
-	<properties>
-		<jawr-maven-plugin.version>1.6-SNAPSHOT</jawr-maven-plugin.version>
-		<smartsprites.version>0.2.10</smartsprites.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -66,9 +61,8 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>net.jawr.tools</groupId>
-				<artifactId>maven-jawr-plugin</artifactId>
-				<version>${jawr-maven-plugin.version}</version>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<!-- Use this phase so that maven war includes our bundles -->
@@ -97,9 +91,8 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>net.jawr.tools</groupId>
-				<artifactId>maven-jawr-plugin</artifactId>
-				<version>${jawr-maven-plugin.version}</version>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<!-- Use this phase so that maven war includes our bundles -->

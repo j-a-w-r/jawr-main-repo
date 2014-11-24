@@ -2,33 +2,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
-		<artifactId>jawr-core-parent</artifactId>
+		<artifactId>jawr</artifactId>
 		<version>3.7-SNAPSHOT</version>
+		<relativePath>../../</relativePath>		
 	</parent>
 	<artifactId>jawr-integration-test-utils</artifactId>
 	<name>jawr-integration-test-utils</name>
 	<description>Utilities for Jawr integration tests</description>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
 			<version>${jetty.version}</version>
-			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -40,19 +30,16 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-api-2.1</artifactId>
 			<version>${jetty.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-2.1</artifactId>
 			<version>${jetty.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty-servlet-tester</artifactId>
 			<version>${jetty.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>

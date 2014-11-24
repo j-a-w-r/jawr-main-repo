@@ -2,48 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.jawr.tools</groupId>
+		<groupId>net.jawr</groupId>
 		<artifactId>jawr-tools-parent</artifactId>
-		<version>1.7-SNAPSHOT</version>
+		<version>3.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>jawr-ant</artifactId>
 	<packaging>jar</packaging>
-	<name>Java web resources bundling and compression Ant task</name>
 	<description>The ant task which launch Javascript/CSS bundling and compressing tool for java web apps.
   	By using jawr resources are automatically bundled together and optionally minified and gzipped. 
   	Jawr provides tag libraries to reference a generated bundle either by id or by using the name of any of its members.</description>
-	<url>https://jawr.dev.java.net/</url>
-	<developers>
-		<developer>
-			<id>icefox</id>
-			<name>Ibrahim CHAEHOI</name>
-			<roles>
-				<role>Project owner</role>
-			</roles>
-		</developer>
-	</developers>
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>license.txt</url>
-		</license>
-	</licenses>
-	<build>
-		<extensions>
-			<extension>
-				<groupId>org.jvnet.wagon-svn</groupId>
-				<artifactId>wagon-svn</artifactId>
-				<version>1.8</version>
-			</extension>
-		</extensions>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jawr-bundle-processor</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.jawr.extensions</groupId>
+			<groupId>net.jawr</groupId>
 			<artifactId>jawr-spring-extension</artifactId>
 		</dependency>
 		<dependency>
