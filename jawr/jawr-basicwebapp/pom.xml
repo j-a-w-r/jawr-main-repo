@@ -133,6 +133,6 @@
 			</plugin>
 		</plugins>
 
-		<finalName>basicwebapp</finalName>
+		<finalName>${project.name}</finalName>
 	</build>
 </project>
