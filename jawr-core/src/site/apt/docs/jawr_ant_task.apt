@@ -58,7 +58,7 @@ Jawr Ant task
 	...
 	
 	<jawrBundle rootPath="${webapp.dir}" tempDirPath="${temp.dir}/jawrFinal/" 
-			 	destDirPath="${temp.dir}/jawrTemp/" springConfigFiles="classpath:/spring-JawrConfig.xml,/WEB-INF/jawr-controllers.xml"/>
+			 	destDirPath="${temp.dir}/jawrTemp/" springConfigFiles="classpath:/spring-jawrConfig.xml,/WEB-INF/jawr-controllers.xml"/>
 			 	
 +------------------------------------------+	
 	   	

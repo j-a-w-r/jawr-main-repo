@@ -2,14 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
-		<artifactId>jawr-core-parent</artifactId>
+		<artifactId>jawr</artifactId>
 		<version>3.7-SNAPSHOT</version>
+		<relativePath>../../</relativePath>		
 	</parent>
-	<artifactId>basicwebapp-java-ee6</artifactId>
+	<artifactId>jawr-basicwebapp</artifactId>
 	<packaging>war</packaging>
-	<name>basicwebapp</name>
-	<description>Basic Jawr web app sample servlet 3</description>
-	<url>https://jawr.java.net</url>
 	<dependencies>
 		<dependency>
 			<groupId>net.jawr</groupId>
@@ -17,8 +15,7 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -81,7 +78,6 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery-ui</artifactId>
-			<version>1.11.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
@@ -137,6 +133,6 @@
 			</plugin>
 		</plugins>
 
-		<finalName>basicwebappJavaEE6</finalName>
+		<finalName>basicwebapp</finalName>
 	</build>
 </project>
