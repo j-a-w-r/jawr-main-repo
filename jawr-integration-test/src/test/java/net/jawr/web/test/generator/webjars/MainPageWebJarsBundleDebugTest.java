@@ -41,7 +41,7 @@ public class MainPageWebJarsBundleDebugTest extends MainPageWebJarsBundleTest {
 		assertEquals(4, scripts.size());
 		HtmlScript script = (HtmlScript) scripts.get(0);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=webjars%3A%2Fjquery%2F1.10.2%2Fjquery.js",
+				getUrlPrefix()+"/jawr_generator.js?d=11111&generationConfigParam=webjars%3A%2Fjquery%2F1.11.1%2Fjquery.js",
 				script.getSrcAttribute());
 		
 		script = (HtmlScript) scripts.get(1);

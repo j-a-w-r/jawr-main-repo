@@ -54,7 +54,7 @@ public class MainPageWebJarsBundleTest extends MainPageTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = scripts.get(0);
 		assertEquals(
-				getUrlPrefix()+"/625815777/js/bundle/global.js",
+				getUrlPrefix()+"/N1028884196/js/bundle/global.js",
 				script.getSrcAttribute());
 		script = scripts.get(1);
 		assertEquals(
