@@ -91,6 +91,7 @@
 		<maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
 		<jetty.version>6.1.10</jetty.version>
 		<jquery-version>1.11.1</jquery-version>
+		<bootstrap-version>3.2.0</bootstrap-version>
 		<wicket.version>6.10.0</wicket.version>
 		<spring.version>4.1.2.RELEASE</spring.version>
 	</properties>
@@ -298,7 +299,7 @@
 			<dependency>
 				<groupId>org.webjars</groupId>
 				<artifactId>bootstrap</artifactId>
-				<version>3.2.0</version>
+				<version>${bootstrap-version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
