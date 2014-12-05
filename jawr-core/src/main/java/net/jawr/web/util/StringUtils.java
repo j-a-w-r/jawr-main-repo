@@ -45,7 +45,8 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
 	/** The new line separator */
-	public static final String LINE_SEPARATOR = "\r\n"; //System.getProperty("line.separator");
+	public static final String LINE_SEPARATOR = "\r\n"; 
+	//public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	/**
 	 * <code>\u000a</code> linefeed LF ('\n').
