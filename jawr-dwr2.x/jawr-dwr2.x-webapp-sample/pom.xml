@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
@@ -70,7 +71,19 @@
 				<executions>
 					<execution>
 						<!-- Use this phase so that maven war includes our bundles -->
+						<id>withoutCDNFiles</id>
 						<phase>prepare-package</phase>
+						<configuration>
+							<generateCDNFiles>true</generateCDNFiles>
+						</configuration>
+					</execution>
+					<execution>
+						<!-- Use this phase so that maven war includes our bundles -->
+						<id>withCDNFiles</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<generateCDNFiles>true</generateCDNFiles>
+						</configuration>
 					</execution>
 				</executions>
 				<dependencies>
@@ -97,26 +110,6 @@
 				</dependencies>
 				<configuration>
 					<generateCDNFiles>false</generateCDNFiles>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>net.jawr</groupId>
-				<artifactId>jawr-maven-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>com.carrotsearch</groupId>
-						<artifactId>smartsprites</artifactId>
-						<version>${smartsprites.version}</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<!-- Use this phase so that maven war includes our bundles -->
-						<phase>prepare-package</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<generateCDNFiles>true</generateCDNFiles>
 				</configuration>
 			</plugin>
 		</plugins>

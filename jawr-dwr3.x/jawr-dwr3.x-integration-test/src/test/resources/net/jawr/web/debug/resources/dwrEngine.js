@@ -42,11 +42,9 @@ if (!dwr.engine) dwr.engine = {};
 
 
 
-
 dwr.engine.setErrorHandler = function(handler) {
 dwr.engine._errorHandler = handler;
 };
-
 
 
 
@@ -68,22 +66,9 @@ dwr.engine.setTextHtmlHandler = function(handler) {
 dwr.engine._textHtmlHandler = handler;
 };
 
-
-
-
-
-
-
-
-
-dwr.engine.setTextOrRedirectHandler = function(handler) {
-dwr.engine._textOrRedirectHandler = handler;
-};
-
 dwr.engine.setPollStatusHandler = function(handler) {
 dwr.engine._pollStatusHandler = handler;
 };
-
 
 
 
@@ -97,11 +82,9 @@ dwr.engine._timeout = timeout;
 
 
 
-
 dwr.engine.setPreHook = function(handler) {
 dwr.engine._preHook = handler;
 };
-
 
 
 
@@ -115,7 +98,6 @@ dwr.engine._postHook = handler;
 
 
 
-
 dwr.engine.setHeaders = function(headers) {
 dwr.engine._headers = headers;
 };
@@ -124,11 +106,9 @@ dwr.engine._headers = headers;
 
 
 
-
 dwr.engine.setAttributes = function(attributes) {
 dwr.engine._attributes = attributes;
 };
-
 
 
 
@@ -144,11 +124,9 @@ dwr.engine._ordered = ordered;
 
 
 
-
 dwr.engine.setAsync = function(async) {
 dwr.engine._async = async;
 };
-
 
 
 
@@ -179,12 +157,10 @@ dwr.engine._activeReverseAjax = false;
 
 
 
-
 dwr.engine.setNotifyServerOnPageUnload = function(notify, asyncUnload) {
 dwr.engine._asyncUnload = (asyncUnload !== undefined) ? asyncUnload : false;
 dwr.engine._isNotifyServerOnPageUnload = notify;
 };
-
 
 
 
@@ -218,7 +194,6 @@ dwr.engine._retryIntervals = intervalsArray;
 
 
 
-
 dwr.engine.defaultErrorHandler = function(message, ex) {
 dwr.engine._debug("Error: " + ex.name + ", " + ex.message, true);
 
@@ -226,7 +201,6 @@ if (message.indexOf("0x80040111") != -1) return;
 if (message === null || message === "") message = "A server error has occurred.";
 if ("false" == "true") alert(message);
 };
-
 
 
 
@@ -242,11 +216,11 @@ dwr.engine._debug(message);
 
 
 
-
 dwr.engine.defaultPollStatusHandler = function(newStatus, ex) {
+dwr.engine.util.logHandlerEx(function() {
 if (newStatus === false && dwr.engine._errorHandler) dwr.engine._errorHandler(ex.message, ex);
+});
 };
-
 
 
 
@@ -258,7 +232,6 @@ return;
 }
 dwr.engine._batch = dwr.engine.batch.create();
 };
-
 
 
 
@@ -374,7 +347,7 @@ dwr.engine._pathToDwrServlet = "/jawr-dwr3.x-integration-test/dwr";
 dwr.engine._contextPath = "/jawr-dwr3.x-integration-test";
 
 
-dwr.engine._pollWithXhr = "true";
+dwr.engine._useStreamingPoll = "false";
 
 dwr.engine._pollOnline = true;
 
@@ -427,13 +400,16 @@ dwr.engine._timeout = 0;
 dwr.engine._activeReverseAjax = false;
 
 
+dwr.engine._nextReverseAjaxIndex = 0;
+
+
+dwr.engine._reverseAjaxQueue = {};
+
+
 dwr.engine._pollBatch = null;
 
 
 dwr.engine._pollCometInterval = 200;
-
-
-dwr.engine.SSL_SECURE_URL = "about:blank";
 
 
 dwr.engine._retries = 1;
@@ -449,8 +425,6 @@ dwr.engine._retryIntervals = [];
 dwr.engine._defaultRetryIntervals = [ 1, 3, 3 ];
 
 dwr.engine._textHtmlHandler = null;
-
-dwr.engine._textOrRedirectHandler = null;
 
 
 dwr.engine._headers = null;
@@ -470,12 +444,11 @@ dwr.engine._nextBatchId = 0;
 dwr.engine._instanceId = -1;
 
 
-dwr.engine._propnames = [ "async", "timeout", "errorHandler", "warningHandler", "textHtmlHandler", "textOrRedirectHandler" ];
+dwr.engine._propnames = [ "async", "timeout", "errorHandler", "warningHandler", "textHtmlHandler" ];
 
 
 dwr.engine._partialResponseNo = 0;
 dwr.engine._partialResponseYes = 1;
-dwr.engine._partialResponseFlush = 2;
 
 
 dwr.engine._isNotifyServerOnPageUnload = false;
@@ -514,6 +487,8 @@ dwr.engine._excludeObjectAttributes = {
 "$_dwrConversionRef": true
 };
 
+dwr.engine._ieConditions = {};
+
 
 dwr.engine._beforeUnloading = false;
 
@@ -548,11 +523,8 @@ dwr.engine._batchQueue.length = 0;
 var batch;
 for (var batchId in dwr.engine._batches) {
 batch = dwr.engine._batches[batchId];
-
-if (batch && batch.map) {
-if (batch.req) {
-batch.req.abort();
-}
+if (batch.transport && batch.transport.abort) {
+batch.transport.abort(batch);
 }
 }
 
@@ -569,7 +541,7 @@ callCount:1,
 paramCount:0, isPoll:false, async:dwr.engine._asyncUnload,
 headers:{}, preHooks:[], postHooks:[],
 timeout:dwr.engine._timeout,
-errorHandler:null, warningHandler:null, textHtmlHandler:null, textOrRedirectHandler:null,
+errorHandler:null, globalErrorHandler:dwr.engine._errorHandler, warningHandler:null, textHtmlHandler:null, globalTextHtmlHandler:null,
 path:dwr.engine._pathToDwrServlet,
 handlers:[{ exceptionHandler:null, callback:null }]
 };
@@ -597,35 +569,6 @@ dwr.engine._initializer = {
 
 
 
-
-setCurrentBrowser: function() {
-var userAgent = navigator.userAgent;
-var versionString = navigator.appVersion;
-var version = parseFloat(versionString);
-dwr.engine.isOpera = (userAgent.indexOf("Opera") >= 0) ? version : 0;
-dwr.engine.isKhtml = (versionString.indexOf("Konqueror") >= 0) || (versionString.indexOf("Safari") >= 0) ? version : 0;
-dwr.engine.isSafari = (versionString.indexOf("Safari") >= 0) ? version : 0;
-dwr.engine.isJaxerServer = (window.Jaxer && Jaxer.isOnServer);
-
-var geckoPos = userAgent.indexOf("Gecko");
-dwr.engine.isMozilla = ((geckoPos >= 0) && (!dwr.engine.isKhtml)) ? version : 0;
-dwr.engine.isFF = 0;
-dwr.engine.isIE = 0;
-
-try {
-if (dwr.engine.isMozilla) {
-dwr.engine.isFF = parseFloat(userAgent.split("Firefox/")[1].split(" ")[0]);
-}
-if ((document.all) && (!dwr.engine.isOpera)) {
-dwr.engine.isIE = parseFloat(versionString.split("MSIE ")[1].split(";")[0]);
-}
-}
-catch(ex) { }
-},
-
-
-
-
 preInit: function() {
 
 dwr.engine._pageId = dwr.engine.util.tokenify(new Date().getTime()) + "-" + dwr.engine.util.tokenify(Math.random() * 1E16);
@@ -634,53 +577,23 @@ dwr.engine._pageId = dwr.engine.util.tokenify(new Date().getTime()) + "-" + dwr.
 dwr.engine.transport.updateDwrSessionFromCookie();
 
 
-if (!dwr.engine.isJaxerServer) {
 dwr.engine.util.addEventListener(window, 'beforeunload', dwr.engine._beforeUnloader);
 dwr.engine.util.addEventListener(window, 'unload', dwr.engine._unloader);
-}
 
 
 var g = dwr.engine._global;
-if (!g.dwr) {
-g.dwr = {};
-}
-if (!g.dwr._) {
-g.dwr._ = [];
-}
+if (!g.dwr) g.dwr = {};
+if (!g.dwr._) g.dwr._ = [];
 dwr.engine._instanceId = g.dwr._.length;
-g.dwr._[dwr.engine._instanceId] = {
-handleCallback: dwr.engine.remote.handleCallback,
-handleException: dwr.engine.remote.handleException,
-handleNewWindowName: dwr.engine.remote.handleNewWindowName,
-handleBatchException: dwr.engine.remote.handleBatchException,
-handleFunctionCall: dwr.engine.remote.handleFunctionCall,
-handleObjectCall: dwr.engine.remote.handleObjectCall,
-handleSetCall: dwr.engine.remote.handleSetCall,
-handleFunctionClose: dwr.engine.remote.handleFunctionClose,
-handleObjectCall: dwr.engine.remote.handleObjectCall,
-handleForeign: dwr.engine.remote.handleForeign,
-pollCometDisabled: dwr.engine.remote.pollCometDisabled,
-newObject: dwr.engine.remote.newObject,
-toDomElement: dwr.engine.serialize.toDomElement,
-toDomDocument: dwr.engine.serialize.toDomDocument,
-beginIFrameResponse: dwr.engine.transport.iframe.remote.beginIFrameResponse,
-endIFrameResponse: dwr.engine.transport.iframe.remote.endIFrameResponse,
-_eval: dwr.engine._eval
-};
+g.dwr._[dwr.engine._instanceId] = dwr;
 },
 
 init: function() {
-dwr.engine._initializer.setCurrentBrowser();
 dwr.engine._initializer.preInit();
 
 if (dwr.engine._isNotifyServerOnPageLoad) {
 eval("dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'pageLoaded', [ function() { dwr.engine._ordered = false; }]);");
 }
-},
-
-initForPushState: function() {
-dwr.engine._dwrSessionId = null;
-dwr.engine._initializer.init();
 }
 };
 
@@ -695,10 +608,10 @@ dwr.engine._initializer.init();
 
 
 dwr.engine._execute = function(path, scriptName, methodName, args) {
-var singleShot = false;
+dwr.engine._singleShot = false;
 if (dwr.engine._batch == null) {
 dwr.engine.beginBatch();
-singleShot = true;
+dwr.engine._singleShot = true;
 }
 
 var batch = dwr.engine._batch;
@@ -717,7 +630,7 @@ dwr.engine.batch.addCall(batch, scriptName, methodName, args);
 
 
 batch.map.callCount++;
-if (singleShot) {
+if (dwr.engine._singleShot) {
 return dwr.engine.endBatch();
 }
 };
@@ -735,7 +648,7 @@ dwr.engine.transport.send(dwr.engine._pollBatch);
 };
 
 
-dwr.engine._eval = function(script) {
+dwr.engine._executeScript = function(script) {
 if (script == null) {
 return null;
 }
@@ -744,7 +657,7 @@ dwr.engine._debug("Warning: blank script", true);
 return null;
 }
 
-return eval(script);
+(new Function("dwr", script))(dwr);
 };
 
 
@@ -778,6 +691,7 @@ if (dwr.engine._isHeartbeatBatch(batch)) {
 return;
 }
 var errorHandlers = [];
+var anyCallWithoutErrorHandler = false;
 if (batch && batch.isPoll) {
 dwr.engine._handlePollRetry(batch, ex);
 } else {
@@ -786,45 +700,42 @@ if (batch) {
 for (var i = 0; i < batch.map.callCount; i++) {
 var handlers = batch.handlers[i];
 if (!handlers.completed) {
-if (typeof handlers.errorHandler == "function") errorHandlers.push(handlers.errorHandler);
+if (typeof handlers.errorHandler == "function")
+errorHandlers.push(handlers.errorHandler);
+else
+anyCallWithoutErrorHandler = true;
 handlers.completed = true;
 }
 }
 }
 
 ignoreIfUnloading(batch, function() {
-if (ex.name === "dwr.engine.emptyReply" && ex.hasOwnProperty("responseText") && dwr.engine._textHtmlOrRedirectHandlerExists(batch)) {
-dwr.engine._handleTextHtmlResponse(batch, ex);
+if (batch) {
+var textHtmlHandler = batch.textHtmlHandler || batch.globalTextHtmlHandler;
+if (ex.name === "dwr.engine.textHtmlReply" && textHtmlHandler) {
+textHtmlHandler(ex);
 return;
+}
 }
 dwr.engine._prepareException(ex);
 var errorHandler;
 while(errorHandlers.length > 0) {
 errorHandler = errorHandlers.shift();
+dwr.engine.util.logHandlerEx(function() {
 errorHandler(ex.message, ex);
-}
-if (batch && typeof batch.errorHandler == "function") batch.errorHandler(ex.message, ex);
-else if (dwr.engine._errorHandler) dwr.engine._errorHandler(ex.message, ex);
-if (batch) { dwr.engine.batch.remove(batch); };
 });
 }
-};
-
-dwr.engine._textHtmlOrRedirectHandlerExists = function(batch) {
-return (batch && batch.textHtmlHandler) || (batch && batch.textOrRedirectHandler) || dwr.engine._textHtmlHandler || dwr.engine._textOrRedirectHandler;
-};
-
-dwr.engine._handleTextHtmlResponse = function(batch, textHtmlObj) {
-if (batch && typeof batch.textHtmlHandler === "function") batch.textHtmlHandler(textHtmlObj);
-else if (dwr.engine._textHtmlHandler) dwr.engine._textHtmlHandler(textHtmlObj);
-else dwr.engine._handleTextOrRedirectResponse(batch, textHtmlObj);
-if (batch) dwr.engine.batch.remove(batch);
-};
-
-dwr.engine._handleTextOrRedirectResponse = function(batch, textHtmlObj) {
-if (batch && typeof batch.textOrRedirectHandler == "function") batch.textOrRedirectHandler(textHtmlObj);
-else if (dwr.engine._textOrRedirectHandler) dwr.engine._textOrRedirectHandler(textHtmlObj);
-if (batch) dwr.engine.batch.remove(batch);
+if (batch) {
+dwr.engine.util.logHandlerEx(function() {
+if (typeof batch.errorHandler == "function") batch.errorHandler(ex.message, ex);
+else if (anyCallWithoutErrorHandler) {
+if (typeof batch.globalErrorHandler == "function") batch.globalErrorHandler(ex.message, ex);
+}
+});
+dwr.engine.batch.remove(batch);
+}
+});
+}
 };
 
 
@@ -880,13 +791,15 @@ return retryInterval;
 
 
 
-
 dwr.engine._handlePollStatusChange = function(newStatus, ex, batch) {
 if (batch.isPoll || dwr.engine._isHeartbeatBatch(batch)) {
 var changed = dwr.engine._pollOnline !== newStatus;
 var maxRetriesReached = dwr.engine._maxRetries === dwr.engine._retries;
 dwr.engine._pollOnline = newStatus;
-if ((changed || maxRetriesReached) && typeof dwr.engine._pollStatusHandler === "function") dwr.engine._pollStatusHandler(newStatus, ex, maxRetriesReached);
+if ((changed || maxRetriesReached) && typeof dwr.engine._pollStatusHandler === "function")
+dwr.engine.util.logHandlerEx(function() {
+dwr.engine._pollStatusHandler(newStatus, ex, maxRetriesReached);
+});
 if (newStatus) {
 dwr.engine._retries = 1;
 }
@@ -906,8 +819,10 @@ return;
 ignoreIfUnloading(batch, function() {
 
 dwr.engine._prepareException(ex);
+dwr.engine.util.logHandlerEx(function() {
 if (batch && typeof batch.warningHandler == "function") batch.warningHandler(ex.message, ex);
 else if (dwr.engine._warningHandler) dwr.engine._warningHandler(ex.message, ex);
+});
 if (batch) dwr.engine.batch.remove(batch);
 });
 };
@@ -1004,15 +919,11 @@ var written = false;
 try {
 if (window.console) {
 if (stacktrace && window.console.trace) window.console.trace();
-window.console.log(message);
+if (window.console.log) window.console.log(message);
 written = true;
 }
 else if (window.opera && window.opera.postError) {
 window.opera.postError(message);
-written = true;
-}
-else if (window.Jaxer && Jaxer.isOnServer) {
-Jaxer.Log.info(message);
 written = true;
 }
 }
@@ -1041,10 +952,7 @@ dwr.engine.remote = {
 
 handleCallback:function(batchId, callId, reply) {
 var batch = dwr.engine._batches[batchId];
-if (batch == null) {
-dwr.engine._debug("Warning: batch == null in remoteHandleCallback for batchId=" + batchId, true);
-return;
-}
+if (!batch) return;
 
 
 batch.reply = reply;
@@ -1059,7 +967,9 @@ dwr.engine._debug("Warning: Missing handlers. callId=" + callId, true);
 else {
 batch.handlers[callId].completed = true;
 if (typeof handlers.callback == "function") {
+dwr.engine.util.logHandlerEx(function() {
 handlers.callback.apply(handlers.callbackScope, [ reply, handlers.callbackArg ]);
+});
 }
 }
 }
@@ -1115,10 +1025,7 @@ delete dwr.engine.serialize.remoteFunctions[id];
 
 handleException:function(batchId, callId, ex) {
 var batch = dwr.engine._batches[batchId];
-if (batch == null) {
-dwr.engine._debug("Warning: null batch in remoteHandleException", true);
-return;
-}
+if (!batch) return;
 
 var handlers = batch.handlers[callId];
 batch.handlers[callId].completed = true;
@@ -1131,11 +1038,36 @@ if (ex.message === undefined) {
 ex.message = "";
 }
 
+dwr.engine.util.logHandlerEx(function() {
 if (typeof handlers.exceptionHandler == "function") {
 handlers.exceptionHandler.call(handlers.exceptionScope, ex.message, ex, handlers.exceptionArg);
 }
+else if (typeof handlers.errorHandler == "function") {
+handlers.errorHandler(ex.message, ex);
+}
 else if (typeof batch.errorHandler == "function") {
 batch.errorHandler(ex.message, ex);
+}
+else if (typeof batch.globalErrorHandler == "function") {
+batch.globalErrorHandler(ex.message, ex);
+}
+});
+},
+
+
+
+
+handleReverseAjax:function(reverseAjaxIndex, reverseAjaxFunc) {
+if (reverseAjaxIndex < dwr.engine._nextReverseAjaxIndex) return;
+dwr.engine._reverseAjaxQueue[reverseAjaxIndex] = reverseAjaxFunc;
+while(true) {
+var nextFunc = dwr.engine._reverseAjaxQueue[dwr.engine._nextReverseAjaxIndex];
+if (!nextFunc) return;
+dwr.engine.util.logHandlerEx(function() {
+nextFunc();
+});
+delete dwr.engine._reverseAjaxQueue[dwr.engine._nextReverseAjaxIndex];
+dwr.engine._nextReverseAjaxIndex++;
 }
 },
 
@@ -1146,16 +1078,9 @@ batch.errorHandler(ex.message, ex);
 
 
 handleBatchException:function(ex, batchId) {
-var searchBatch = (dwr.engine._receivedBatch == null && batchId != null);
-if (searchBatch) {
-dwr.engine._receivedBatch = dwr.engine._batches[batchId];
-}
+var batch = dwr.engine._batches[batchId];
 if (ex.message === undefined) ex.message = "";
-dwr.engine._handleError(dwr.engine._receivedBatch, ex);
-if (searchBatch) {
-dwr.engine._receivedBatch = null;
-dwr.engine.batch.remove(dwr.engine._batches[batchId]);
-}
+dwr.engine._handleError(batch, ex);
 },
 
 
@@ -1174,41 +1099,14 @@ window.name = windowName;
 
 
 
-handleForeign:function(windowName, script) {
-var foreign = window.open(null, windowName);
-if (foreign != null) {
-if (foreign.dwr != null) {
-foreign.dwr.engine._eval(script);
-}
-else {
-dwr.engine._debug("Found window, but DWR did not exist in it");
-}
-}
-else {
-dwr.engine._debug("Could not find window");
-}
-},
-
-
-
-
-
-
 
 pollCometDisabled:function(ex, batchId){
 dwr.engine.setActiveReverseAjax(false);
-var searchBatch = (dwr.engine._receivedBatch == null && batchId != null);
-if (searchBatch) {
-dwr.engine._receivedBatch = dwr.engine._batches[batchId];
-}
+var batch = dwr.engine._batches[batchId];
 if (ex.message === undefined) {
 ex.message = "";
 }
-dwr.engine._handleError(dwr.engine._receivedBatch, ex);
-if (searchBatch) {
-dwr.engine._receivedBatch = null;
-dwr.engine.batch.remove(dwr.engine._batches[batchId]);
-}
+dwr.engine._handleError(batch, ex);
 },
 
 
@@ -1335,7 +1233,7 @@ else {
 
 
 if (data.nodeName && data.nodeType) {
-batch.map[name] = dwr.engine.serialize.convertXml(batch, directrefmap, otherrefmap, data, name, depth + 1);
+batch.map[name] = dwr.engine.serialize.convertDom(data);
 }
 else {
 batch.map[name] = dwr.engine.serialize.convertObject(batch, directrefmap, otherrefmap, data, name, depth + 1);
@@ -1374,7 +1272,7 @@ return "byref:" + funcId;
 
 convertArray:function(batch, directrefmap, otherrefmap, data, name, depth) {
 var childName, i;
-if (dwr.engine.isIE <= 7) {
+if (dwr.engine.util.ieCondition("if lte IE 7")) {
 
 var buf = ["array:["];
 for (i = 0; i < data.length; i++) {
@@ -1437,13 +1335,15 @@ return reply;
 
 
 
-convertXml:function(batch, directrefmap, otherrefmap, data, name, depth) {
+convertDom:function(data) {
+return "xml:" + encodeURIComponent(dwr.engine.serialize.serializeDom(data));
+},
+serializeDom:function(data) {
 var output;
 if (window.XMLSerializer) output = new XMLSerializer().serializeToString(data);
-else if (data.toXml) output = data.toXml;
-else output = data.innerHTML;
-
-return "xml:" + encodeURIComponent(output);
+else if (data.xml) output = data.xml;
+else throw new Error("The browser doesn't support XML serialization of: " + data);
+return output;
 },
 
 
@@ -1526,6 +1426,7 @@ send:function(batch) {
 dwr.engine.transport.updateDwrSessionFromCookie();
 if (!dwr.engine._dwrSessionId) {
 dwr.engine._internalOrdered = true;
+var retval;
 var idbatch = {
 map:{
 callCount:1,
@@ -1539,7 +1440,7 @@ postHooks:[function() {
 dwr.engine._internalOrdered = false;
 }],
 timeout:dwr.engine._timeout,
-errorHandler:batch.errorHandler, warningHandler:batch.warningHandler, textHtmlHandler:batch.textHtmlHandler, textOrRedirectHandler:batch.textOrRedirectHandler,
+errorHandler:batch.errorHandler, globalErrorHandler:batch.globalErrorHandler, warningHandler:batch.warningHandler, textHtmlHandler:batch.textHtmlHandler, globalTextHtmlHandler:batch.globalTextHtmlHandler,
 path:batch.path,
 handlers:[{
 exceptionHandler:null,
@@ -1548,11 +1449,12 @@ dwr.engine.transport.updateDwrSessionFromCookie();
 if (!dwr.engine._dwrSessionId) {
 dwr.engine.transport.setDwrSession(id);
 }
-dwr.engine.transport.send2(batch);
+retval = dwr.engine.transport.send2(batch);
 }
 }]
 };
-return dwr.engine.transport.send2(idbatch);
+dwr.engine.transport.send2(idbatch);
+return retval;
 }
 else {
 return dwr.engine.transport.send2(batch);
@@ -1584,12 +1486,12 @@ throw new Error("Cross domain file uploads are not possible with this release of
 }
 batch.transport = dwr.engine.transport.iframe;
 }
-else if (isCrossDomain && !dwr.engine.isJaxerServer) {
+else if (isCrossDomain) {
 batch.transport = dwr.engine.transport.scriptTag;
 }
-
-
-
+else if (batch.isPoll && dwr.engine._useStreamingPoll == "true" && dwr.engine.util.ieCondition("if (IE 8)|(IE 9)")) {
+batch.transport = dwr.engine.transport.iframe;
+}
 else {
 batch.transport = dwr.engine.transport.xhr;
 }
@@ -1612,11 +1514,10 @@ dwr.engine.transport.remove(batch);
 
 abort:function(batch) {
 var transport = batch.transport;
-dwr.engine.transport.remove(batch);
 if (transport.abort) {
 transport.abort(batch);
 }
-dwr.engine._handleError(batch, { name:"dwr.engine.timeout", message:"Timeout" });
+dwr.engine.transport.remove(batch);
 },
 
 
@@ -1673,10 +1574,10 @@ batch.map.partialResponse = dwr.engine._partialResponseYes;
 }
 
 
-if (batch.isPoll && dwr.engine._pollWithXhr == "true") {
+if (batch.isPoll && dwr.engine._useStreamingPoll == "false") {
 batch.map.partialResponse = dwr.engine._partialResponseNo;
 }
-if (batch.isPoll && dwr.engine.isIE) {
+if (batch.isPoll && dwr.engine.util.ieCondition("if lte IE 9")) {
 batch.map.partialResponse = dwr.engine._partialResponseNo;
 }
 
@@ -1709,7 +1610,7 @@ httpMethod = "GET";
 else {
 dwr.engine._handleWarning(batch, {
 name: "dwr.engine.oldSafari",
-message: "Safari GET support disabled. See getahead.org/dwr/server/servlet and allowGetForSafariButMakeForgeryEasier."
+message: "Safari GET support disabled. See allowGetForSafariButMakeForgeryEasier setting."
 });
 }
 }
@@ -1760,8 +1661,9 @@ return batch.reply;
 stateChange:function(batch) {
 var toEval;
 
+if (batch.aborted) return;
 if (batch.completed) {
-dwr.engine._debug("Error: _stateChange() with batch.completed");
+if (batch.transport) dwr.engine._debug("Error: _stateChange() with batch.completed");
 return;
 }
 
@@ -1794,7 +1696,7 @@ if (req.readyState != 4) {
 return;
 }
 
-if (dwr.engine._unloading && !dwr.engine.isJaxerServer) {
+if (dwr.engine._unloading) {
 dwr.engine._debug("Ignoring reply from server as page is unloading.");
 return;
 }
@@ -1802,20 +1704,22 @@ return;
 try {
 var reply = req.responseText;
 reply = dwr.engine._replyRewriteHandler(reply);
-var contentType = dwr.engine.util.getContentType(req, dwr.engine.isJaxerServer);
-if (status === 200) {
-if (reply == null || reply === "") {
-dwr.engine._handleError(batch, { name:"dwr.engine.missingData", message:"No data received from server" });
+var contentType = req.getResponseHeader("Content-Type");
+if (status >= 200 && status < 300) {
+if (contentType.indexOf("text/plain") < 0 && contentType.indexOf("text/javascript") < 0) {
+if (contentType.indexOf("text/html") == 0) {
+dwr.engine._handleError(batch, { name:"dwr.engine.textHtmlReply", message:"HTML reply from the server.", responseText:reply||"" });
+} else {
+dwr.engine._handleError(batch, { name:"dwr.engine.invalidMimeType", message:"Invalid content type: '" + contentType + "'" });
 }
-if (!contentType.match(/^text\/plain/) && !contentType.match(/^text\/javascript/) && !contentType.match(/^text\/html/)) {
-dwr.engine._handleWarning(batch, { name:"dwr.engine.invalidMimeType", message:"Invalid content type: '" + contentType + "'" });
-} else if (contentType.match(/^text\/plain/) || contentType.match(/^text\/javascript/)) {
-
+} else if (reply == null || reply === "") {
+dwr.engine._handleError(batch, { name:"dwr.engine.missingData", message:"No data received from server" });
+} else {
 if (batch.isPoll && batch.map.partialResponse == dwr.engine._partialResponseYes) {
 dwr.engine.transport.xhr.processCometResponse(reply, batch);
 } else {
 if (reply.search("//#DWR") === -1) {
-dwr.engine._handleWarning(batch, { name:"dwr.engine.invalidReply", message:"Invalid reply from server" });
+dwr.engine._handleError(batch, { name:"dwr.engine.invalidReply", message:"Invalid reply from server" });
 } else {
 toEval = reply;
 }
@@ -1831,14 +1735,12 @@ statusText = req.statusText;
 dwr.engine._handleError(batch, { name:"dwr.engine.http." + status, message:statusText });
 }
 } catch (ex2) {
-dwr.engine._handleWarning(batch, ex2);
+dwr.engine._handleError(batch, ex2);
 }
 
 
-dwr.engine._receivedBatch = batch;
 if (toEval != null) toEval = toEval.replace(dwr.engine._scriptTagProtection, "");
-dwr.engine._eval(toEval);
-dwr.engine._receivedBatch = null;
+dwr.engine._executeScript(toEval);
 dwr.engine.transport.complete(batch);
 },
 
@@ -1900,9 +1802,7 @@ batch.charsProcessed = lastEndTag + 11;
 var exec = response.substring(firstStartTag + 13, lastEndTag);
 
 try {
-dwr.engine._receivedBatch = batch;
-dwr.engine._eval(exec);
-dwr.engine._receivedBatch = null;
+dwr.engine._executeScript(exec);
 }
 catch (ex) {
 
@@ -1918,6 +1818,7 @@ dwr.engine._handleError(batch, ex);
 
 abort:function(batch) {
 if (batch.req) {
+batch.aborted = true;
 batch.req.abort();
 }
 },
@@ -1957,44 +1858,34 @@ if (batch.fileUpload) {
 batch.httpMethod = "POST";
 batch.encType = "multipart/form-data";
 }
+batch.loadingStarted = false;
+if (window.location.hostname != document.domain) batch.map.documentDomain = document.domain;
 var idname = dwr.engine.transport.iframe.getId(batch);
 batch.div1 = document.createElement("div");
-document.body.appendChild(batch.div1);
-batch.div1.innerHTML = "<iframe src='" + dwr.engine.SSL_SECURE_URL + "' frameborder='0' style='width:0px;height:0px;border:0;display:none;' id='" + idname + "' name='" + idname + "'></iframe>";
+batch.div1.innerHTML = "<iframe frameborder='0' style='width:0px;height:0px;border:0;display:none;' id='" + idname + "' name='" + idname + "'></iframe>";
 batch.iframe = batch.div1.firstChild;
 batch.document = document;
 batch.iframe.batch = batch;
-
-if ('readyState' in batch.iframe) {
-var readyStateCompleteCount = 0;
-dwr.engine.util.addEventListener(batch.iframe, "readystatechange", function(ev) {
-
-
-if (batch.iframe.readyState === "complete") {
-readyStateCompleteCount = readyStateCompleteCount + 1;
-if (readyStateCompleteCount > 1) {
-dwr.engine.transport.iframe.checkForAndCompleteNonDWRResponse(batch);
-}
-}
-});
-} else {
 dwr.engine.util.addEventListener(batch.iframe, "load", function(ev) {
-dwr.engine.transport.iframe.checkForAndCompleteNonDWRResponse(batch);
+
+if (!batch.loadingStarted) return;
+
+if (batch.completed) return;
+
+try {
+var contentDoc = batch.iframe.contentDocument || batch.iframe.contentWindow.document;
+} catch(ex) {
+var contentEx = ex;
+}
+if (typeof dwr != "undefined") {
+var htmlResponse = contentDoc && contentDoc.documentElement ? contentDoc.documentElement.outerHTML : "(Could not extract HTML response: " + contentEx.message + ")";
+dwr.engine._handleError(batch, {name:"dwr.engine.textHtmlReply", message:"HTML reply from the server.", responseText:htmlResponse});
+}
 });
-}
+
+// http://stackoverflow.com/questions/18414964/load-event-for-iframe-does-not-fire-in-ie
+document.body.appendChild(batch.div1);
 dwr.engine.transport.iframe.beginLoader(batch, idname);
-},
-
-checkForAndCompleteNonDWRResponse:function(batch) {
-if (typeof dwr != "undefined" && batch && batch.iframe) {
-
-var contentDocument = dwr.engine.util.getContentDocument(batch);
-var htmlResponse = contentDocument.documentElement ? contentDocument.documentElement.outerHTML : null;
-
-if (htmlResponse && htmlResponse.search("//#DWR") === -1) {
-dwr.engine.transport.complete(batch.iframe.batch);
-}
-}
 },
 
 
@@ -2003,20 +1894,14 @@ dwr.engine.transport.complete(batch.iframe.batch);
 
 
 getId:function(batch) {
-return batch.isPoll ? "dwr-if-poll-" + batch.map.batchId : "dwr-if-" + batch.map.batchId;
+return batch.isPoll ? "dwr-if-poll-" + dwr.engine._instanceId + "-" + batch.map.batchId : "dwr-if-" + dwr.engine._instanceId + "-" + batch.map.batchId;
 },
 
 
 
 
 
-
 beginLoader:function(batch, idname) {
-var contentDocument = dwr.engine.util.getContentDocument(batch);
-if (contentDocument.body === null) {
-setTimeout(function(){dwr.engine.transport.iframe.beginLoader(batch, idname);}, 100);
-return;
-}
 if (batch.isPoll) {
 batch.map.partialResponse = dwr.engine._partialResponseYes;
 }
@@ -2059,6 +1944,7 @@ batch.form.appendChild(formInput);
 }
 }
 }
+batch.loadingStarted = true;
 batch.form.submit();
 }
 },
@@ -2074,7 +1960,22 @@ remote:{
 
 
 beginIFrameResponse:function(iframe, batchId) {
-if (iframe != null) dwr.engine._receivedBatch = iframe.batch;
+},
+
+
+
+
+
+
+endChunk:function(iframeWindow) {
+setTimeout(function() {
+
+var scriptTags = iframeWindow.document.body.getElementsByTagName("script");
+if (scriptTags.length > 0) {
+var s = scriptTags[0];
+s.parentNode.removeChild(s);
+}
+}, 0);
 },
 
 
@@ -2083,9 +1984,8 @@ if (iframe != null) dwr.engine._receivedBatch = iframe.batch;
 
 
 endIFrameResponse:function(batchId) {
-dwr.engine._receivedBatch = dwr.engine._batches[batchId];
-dwr.engine.transport.complete(dwr.engine._receivedBatch);
-dwr.engine._receivedBatch = null;
+var batch = dwr.engine._batches[batchId];
+if (batch) dwr.engine.transport.complete(batch);
 }
 },
 
@@ -2111,58 +2011,6 @@ batch.div2 = null;
 }
 }, 100);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 },
 
 
@@ -2193,6 +2041,7 @@ if (typeof dwr != "undefined") dwr.engine.transport.scriptTag.complete(batch);
 });
 dwr.engine.util.addEventListener(batch.script, "readystatechange", function(ev) {
 if (typeof dwr != "undefined") {
+if (batch.completed) return;
 if (batch.script.readyState == "complete" || batch.script.readyState == "loaded") {
 dwr.engine.transport.scriptTag.complete(batch);
 }
@@ -2219,29 +2068,6 @@ if (!batch.script) return;
 batch.script.parentNode.removeChild(batch.script);
 batch.script = null;
 }
-},
-
-
-
-
-htmlfile:{
-
-
-
-
-send:function(batch) {
-var idname = dwr.engine.transport.iframe.getId(batch);
-batch.htmlfile = new window.ActiveXObject("htmlfile");
-batch.htmlfile.open();
-batch.htmlfile.write("<" + "html>");
-batch.htmlfile.write("<div><iframe className='wibble' src='javascript:void(0)' id='" + idname + "' name='" + idname + "' onload='dwr.engine.transport.iframe.loadingComplete(" + batch.map.batchId + ");'></iframe></div>");
-batch.htmlfile.write("</" + "html>");
-batch.htmlfile.close();
-batch.htmlfile.parentWindow.dwr = dwr;
-batch.document = batch.htmlfile;
-
-dwr.engine.transport.iframe.beginLoader(batch, idname);
-}
 }
 };
 
@@ -2265,11 +2091,13 @@ paramCount:0,
 preHooks:[],
 postHooks:[],
 timeout:dwr.engine._timeout,
-errorHandler:dwr.engine._errorHandler,
+errorHandler:null,
+globalErrorHandler:dwr.engine._errorHandler,
 warningHandler:dwr.engine._warningHandler,
-textHtmlHandler:dwr.engine._textHtmlHandler,
-textOrRedirectHandler:dwr.engine._textOrRedirectHandler
+textHtmlHandler:null,
+globalTextHtmlHandler:dwr.engine._textHtmlHandler
 };
+if (!dwr.engine._activeReverseAjax) batch.map.nextReverseAjaxIndex = dwr.engine._nextReverseAjaxIndex;
 
 if (dwr.engine._preHook) {
 batch.preHooks.push(dwr.engine._preHook);
@@ -2298,7 +2126,7 @@ setTimeout(dwr.engine._poll, pause);
 }
 }],
 isPoll:true,
-map:{ windowName:window.name, callCount:1 },
+map:{ windowName:window.name, callCount:1, nextReverseAjaxIndex:dwr.engine._nextReverseAjaxIndex},
 paramCount:0,
 path:dwr.engine._pathToDwrServlet,
 preHooks:[],
@@ -2356,14 +2184,15 @@ stopAt = args.length;
 }
 
 
-dwr.engine.batch.merge(batch, callData);
+if (dwr.engine._singleShot) dwr.engine.batch.merge(batch, callData);
 batch.handlers[batch.map.callCount] = {
+callback:callData.callbackHandler || callData.callback,
+callbackArg:callData.callbackArg || callData.arg || null,
+callbackScope:callData.callbackScope || callData.scope || window,
 exceptionHandler:callData.exceptionHandler,
 exceptionArg:callData.exceptionArg || callData.arg || null,
 exceptionScope:callData.exceptionScope || callData.scope || window,
-callback:callData.callbackHandler || callData.callback,
-callbackArg:callData.callbackArg || callData.arg || null,
-callbackScope:callData.callbackScope || callData.scope || window
+errorHandler:callData.errorHandler
 };
 
 
@@ -2388,6 +2217,7 @@ merge:function(batch, overrides) {
 var propname, data;
 for (var i = 0; i < dwr.engine._propnames.length; i++) {
 propname = dwr.engine._propnames[i];
+if (dwr.engine._singleShot && propname == "errorHandler") continue;
 if (overrides[propname] != null) batch[propname] = overrides[propname];
 }
 if (overrides.preHook != null) batch.preHooks.unshift(overrides.preHook);
@@ -2432,7 +2262,10 @@ batch.preHooks[i]();
 batch.preHooks = null;
 
 if (batch.timeout && batch.timeout !== 0) {
-batch.timeoutId = setTimeout(function() { dwr.engine.transport.abort(batch); }, batch.timeout);
+batch.timeoutId = setTimeout(function() {
+dwr.engine.transport.abort(batch);
+dwr.engine._handleError(batch, { name:"dwr.engine.timeout", message:"Timeout" });
+}, batch.timeout);
 }
 },
 
@@ -2500,7 +2333,7 @@ request.body = null;
 else {
 
 request.body = "";
-if (dwr.engine.isIE <= 7) {
+if (dwr.engine.util.ieCondition("if lte IE 7")) {
 
 var buf = [];
 for (prop in batch.map) {
@@ -2538,34 +2371,10 @@ if (batch.handlers[i].completed === true) {
 repliesReceived++;
 }
 }
-if (repliesReceived === 0) {
-dwr.engine._handleError(batch, dwr.engine.batch.buildEmptyReplyException(batch));
-} else if (repliesReceived < batch.map.callCount) {
+if (repliesReceived < batch.map.callCount) {
 dwr.engine._handleError(batch, { name:"dwr.engine.incompleteReply", message:"Incomplete reply from server" });
 }
 }
-},
-
-buildEmptyReplyException:function(batch) {
-var req, responseText, contentType, status = 0;
-if (batch.req) {
-req = batch.req;
-try {
-if (req.readyState >= 2) {
-status = req.status;
-}
-}
-catch(ignore) {}
-responseText = req.responseText;
-contentType = dwr.engine.util.getContentType(req, dwr.engine.isJaxerServer);
-}
-if (batch.iframe) {
-
-var contentDocument = dwr.engine.util.getContentDocument(batch);
-responseText = contentDocument.documentElement ? contentDocument.documentElement.outerHTML : "";
-contentType = contentDocument.contentType || "text/html";
-}
-return { name:"dwr.engine.emptyReply", message:"Empty reply from the server", status:status, htmlResponseText:responseText, contentType:contentType };
 },
 
 
@@ -2594,10 +2403,12 @@ delete batch.timeoutId;
 }
 
 
-if (batch.map && (batch.map.batchId || batch.map.batchId === 0)) {
+if (batch.map && (batch.map.batchId != null)) {
 delete dwr.engine._batches[batch.map.batchId];
 dwr.engine._batchesLength--;
 }
+if (batch == dwr.engine._batch) dwr.engine._batch = null;
+if (batch == dwr.engine._pollBatch) dwr.engine._pollBatch = null;
 
 
 
@@ -2630,17 +2441,13 @@ catch (ex) {   }
 return returnValue;
 },
 
-getContentType:function(req, isJaxerServer) {
-var contentType = req.getResponseHeader("Content-Type");
-if (isJaxerServer) {
-
-contentType = "text/javascript";
+ieCondition:function(cond) {
+if (!(cond in dwr.engine._ieConditions)) {
+var div = document.createElement("div");
+div.innerHTML = "<!--[" + cond + "]><p><![endif]-->";
+dwr.engine._ieConditions[cond] = !!(div.getElementsByTagName("p").length);
 }
-return contentType;
-},
-
-getContentDocument:function(batch) {
-return batch.iframe.contentDocument || batch.iframe.contentWindow.document;
+return dwr.engine._ieConditions[cond];
 },
 
 
@@ -2669,8 +2476,16 @@ isCallOptionArgument: function(lastArg) {
 return (typeof lastArg === "object" && (typeof lastArg.callback === "function" ||
 typeof lastArg.exceptionHandler === "function" || typeof lastArg.callbackHandler === "function" ||
 typeof lastArg.errorHandler === "function" || typeof lastArg.warningHandler === "function" || lastArg.hasOwnProperty("async")));
-}
+},
 
+logHandlerEx: function(func) {
+try {
+func();
+} catch(ex) {
+dwr.engine._debug("Exception occured in user-specified handler:");
+dwr.engine._debug(ex);
+}
+}
 };
 
 
