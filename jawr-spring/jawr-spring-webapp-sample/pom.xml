@@ -75,13 +75,25 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>net.jawr.tools</groupId>
-				<artifactId>maven-jawr-plugin</artifactId>
-				<version>3.7-SNAPSHOT</version>
+				<groupId>net.jawr</groupId>
+				<artifactId>jawr-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<!-- Use this phase so that maven war includes our bundles -->
+						<id>withoutCDNFiles</id>
 						<phase>prepare-package</phase>
+						<configuration>
+							<generateCDNFiles>false</generateCDNFiles>
+							<servletsToInitialize>dispatcher</servletsToInitialize>
+						</configuration>
+					</execution>
+					<execution>
+						<id>withCDNFiles</id>
+						<!-- Use this phase so that maven war includes our bundles -->
+						<phase>prepare-package</phase>
+						<configuration>
+							<generateCDNFiles>true</generateCDNFiles>
+						</configuration>
 					</execution>
 				</executions>
 				<dependencies>
@@ -106,31 +118,6 @@
 						<version>${project.version}</version>
 					</dependency>
 				</dependencies>
-				<configuration>
-					<generateCDNFiles>false</generateCDNFiles>
-					<servletsToInitialize>dispatcher</servletsToInitialize>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>net.jawr.tools</groupId>
-				<artifactId>maven-jawr-plugin</artifactId>
-				<version>3.7-SNAPSHOT</version>
-				<dependencies>
-					<dependency>
-						<groupId>com.carrotsearch</groupId>
-						<artifactId>smartsprites</artifactId>
-						<version>${smartsprites.version}</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<!-- Use this phase so that maven war includes our bundles -->
-						<phase>prepare-package</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<generateCDNFiles>true</generateCDNFiles>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

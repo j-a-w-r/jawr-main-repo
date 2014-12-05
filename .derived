@@ -1,0 +1,10 @@
+# Only used for Eclipse Plugin at 
+# https://github.com/nodj/AutoDeriv
+jawr
+jawr-dwr2.x
+jawr-dwr3.x
+jawr-grails
+jawr-spring
+jawr-tools
+jawr-wicket
+

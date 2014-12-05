@@ -98,12 +98,10 @@ return (original.indexOf('&') != -1
 
 
 
-
 dwr.util.onReturn = function(event, action) {
 if (!event) event = window.event;
 if (event && event.keyCode && event.keyCode == 13) action();
 };
-
 
 
 
@@ -122,7 +120,6 @@ range.select();
 }
 ele.focus();
 };
-
 
 
 
@@ -174,11 +171,9 @@ return elemId;
 
 
 
-
 if (typeof $ == 'undefined') {
 $ = dwr.util.byId;
 }
-
 
 
 
@@ -368,7 +363,6 @@ return recursive(data, showLevels, 0, opt);
 
 
 
-
 dwr.util.useLoadingMessage = function(message) {
 var loadingMessage;
 if (message) loadingMessage = message;
@@ -489,7 +483,6 @@ else if (dwr.util._highlightHandler != null) {
 dwr.util._highlightHandler(dwr.util.byId(ele));
 }
 };
-
 
 
 
@@ -639,7 +632,6 @@ ele.options[i].selected = (ele.options[i].text == val);
 
 
 
-
 dwr.util.getValue = function(ele, options) {
 if (options == null) options = {};
 var orig = ele;
@@ -735,7 +727,6 @@ return ele.innerHTML;
 
 
 
-
 dwr.util.getText = function(ele) {
 ele = dwr.util._getElementById(ele, "getText()");
 if (ele == null) return null;
@@ -754,7 +745,6 @@ else {
 return "";
 }
 };
-
 
 
 
@@ -814,7 +804,6 @@ dwr.util.setValue(subidpath, data[prop], options);
 
 
 
-
 dwr.util.getValues = function(data, options) {
 if (typeof data == "string" || dwr.util._isHTMLElement(data)) {
 return dwr.util.getFormValues(data);
@@ -829,7 +818,6 @@ dwr.util._getValuesRecursive(data, prefix, depth, options);
 return data;
 }
 };
-
 
 
 
@@ -905,7 +893,6 @@ data[prop] = dwr.util.getValue(subidpath);
 }
 }
 };
-
 
 
 
@@ -1044,7 +1031,6 @@ return options.document.createElement("li");
 
 
 
-
 dwr.util.removeAllOptions = function(ele) {
 ele = dwr.util._getElementById(ele, "removeAllOptions()");
 if (ele == null) return;
@@ -1063,7 +1049,6 @@ ele.removeChild(ele.firstChild);
 }
 }
 };
-
 
 
 
@@ -1163,7 +1148,6 @@ return options.document.createElement("td");
 
 
 
-
 dwr.util.removeAllRows = function(ele, options) {
 ele = dwr.util._getElementById(ele, "removeAllRows()");
 if (ele == null) return;
@@ -1227,7 +1211,6 @@ else {
 ele.className += " " + className;
 }
 };
-
 
 
 
