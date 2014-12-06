@@ -64,7 +64,11 @@
 		</mailingList>
 	</mailingLists>
 	<properties>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compile.encoding>UTF-8</maven.compile.encoding>
+		<maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
 		<mockito.version>1.9.5</mockito.version>
 		<junit.version>4.11</junit.version>
 		<slf4j-api.version>1.7.5</slf4j-api.version>
@@ -85,11 +89,6 @@
 		<im4java.version>1.4.0</im4java.version>
 		<jetty.version>6.1.10</jetty.version>
 		<htmlunit.version>2.5</htmlunit.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compile.encoding>UTF-8</maven.compile.encoding>
-		<maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
-		<jetty.version>6.1.10</jetty.version>
 		<jquery-version>1.11.1</jquery-version>
 		<bootstrap-version>3.2.0</bootstrap-version>
 		<wicket.version>6.10.0</wicket.version>
