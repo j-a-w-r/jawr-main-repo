@@ -64,7 +64,7 @@ public class Clock implements Runnable
 
             while (active)
             {
-                Collection sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
+                Collection<?> sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
                 Util pages = new Util(sessions);
                 pages.setValue("clockDisplay", new Date().toString());
 
@@ -72,7 +72,7 @@ public class Clock implements Runnable
                 Thread.sleep(1000);
             }
 
-            Collection sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
+            Collection<?> sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
             Util pages = new Util(sessions);
             pages.setValue("clockDisplay", "");
 

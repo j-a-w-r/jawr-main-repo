@@ -3,6 +3,7 @@ package org.getahead.dwrdemo.chat;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.directwebremoting.ScriptSession;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
@@ -36,7 +37,7 @@ public class JavaChat
         utilThis.setValue("text", "");
 
         // For all the browsers on the current page:
-        Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+        Collection<ScriptSession> sessions = wctx.getScriptSessionsByPage(currentPage);
         Util utilAll = new Util(sessions);
 
         // Clear the list and add in the new set of messages
@@ -47,7 +48,7 @@ public class JavaChat
     /**
      * The current set of messages
      */
-    private LinkedList messages = new LinkedList();
+    private LinkedList<Message> messages = new LinkedList<Message>();
 
     /**
      * The log stream

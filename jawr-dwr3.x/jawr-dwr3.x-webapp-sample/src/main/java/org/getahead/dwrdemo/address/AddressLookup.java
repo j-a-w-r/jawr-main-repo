@@ -34,9 +34,9 @@ public class AddressLookup
      * @param origpostcode the code to lookup
      * @return a map of postcode data
      */
-    public Map fillAddress(String origpostcode)
+    public Map<String,String> fillAddress(String origpostcode)
     {
-        Map reply = new HashMap();
+        Map<String,String> reply = new HashMap<String,String>();
         String postcode = origpostcode.replace(" ", "");
 
         if (postcode.equalsIgnoreCase("LE167TR"))

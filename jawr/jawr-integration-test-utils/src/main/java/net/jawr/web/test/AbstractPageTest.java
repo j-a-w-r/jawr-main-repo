@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import net.jawr.web.test.utils.Utils;
 

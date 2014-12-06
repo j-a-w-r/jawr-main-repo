@@ -60,5 +60,5 @@ public class Corporations
     /**
      * The corporations that we manage
      */
-    private List corporations = new ArrayList();
+    private List<Corporation> corporations = new ArrayList<Corporation>();
 }

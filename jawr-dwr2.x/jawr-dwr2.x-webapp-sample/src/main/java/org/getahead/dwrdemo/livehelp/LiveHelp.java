@@ -17,6 +17,7 @@ package org.getahead.dwrdemo.livehelp;
 
 import java.util.Collection;
 
+import org.directwebremoting.ScriptSession;
 import org.directwebremoting.Security;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
@@ -73,13 +74,14 @@ public class LiveHelp
     /**
      * @return The collection of people to affect
      */
-    private Collection getUsersToAffect()
+    private Collection<ScriptSession> getUsersToAffect()
     {
         WebContext wctx = WebContextFactory.get();
         String currentPage = wctx.getCurrentPage();
 
         // For all the browsers on the current page:
-        Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+        @SuppressWarnings("unchecked")
+		Collection<ScriptSession> sessions = wctx.getScriptSessionsByPage(currentPage);
 
         // But not the current user!
         sessions.remove(wctx.getScriptSession());

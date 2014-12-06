@@ -1,7 +1,6 @@
 package org.getahead.dwrdemo.chat;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.directwebremoting.ScriptBuffer;
@@ -38,10 +37,9 @@ public class JavascriptChat
               .appendScript(");");
 
         // Loop over all the users on the current page
-        Collection pages = wctx.getScriptSessionsByPage(currentPage);
-        for (Iterator it = pages.iterator(); it.hasNext();)
+        Collection<ScriptSession> pages = wctx.getScriptSessionsByPage(currentPage);
+        for (ScriptSession otherSession : pages)
         {
-            ScriptSession otherSession = (ScriptSession) it.next();
             otherSession.addScript(script);
         }
     }
@@ -49,7 +47,7 @@ public class JavascriptChat
     /**
      * The current set of messages
      */
-    private LinkedList messages = new LinkedList();
+    private LinkedList<Message> messages = new LinkedList<Message>();
 
     /**
      * The log stream

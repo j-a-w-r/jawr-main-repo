@@ -45,12 +45,12 @@
 <table class="plain">
   <tr>
     <td>EMail Address:</td>
-    <td><input type=text" id="address" onkeypress="dwr.util.onReturn(event, process)" onblur="verifyAddress()"/></td>
+    <td><input type="text" id="address" onkeypress="dwr.util.onReturn(event, process)" onblur="verifyAddress()"/></td>
     <td><span class="error" id="addressError"></span></td>
   </tr>
   <tr>
     <td>Name:</td>
-    <td><input type=text" id="name" onkeypress="dwr.util.onReturn(event, process)" onblur="verifyName()"/></td>
+    <td><input type="text" id="name" onkeypress="dwr.util.onReturn(event, process)" onblur="verifyName()"/></td>
     <td><span class="error" id="nameError"></span></td>
   </tr>
   <tr>

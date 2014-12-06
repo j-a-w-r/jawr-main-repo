@@ -56,7 +56,7 @@ public class Publisher implements Runnable
 
             while (!Thread.currentThread().isInterrupted())
             {
-                Collection sessions = serverContext.getScriptSessionsByPage("/dwr/gi/index.html");
+                Collection<?> sessions = serverContext.getScriptSessionsByPage("/dwr/gi/index.html");
                 ScriptProxy proxy = new ScriptProxy(sessions);
 
                 Corporation corp = corporations.getNextChangedCorporation();

@@ -16,7 +16,6 @@
 package org.getahead.dwrdemo.people;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public class People
      * Accessor for the current list of people
      * @return the current list of people
      */
-    public Set getAllPeople()
+    public Set<Person> getAllPeople()
     {
         return people;
     }
@@ -79,7 +78,7 @@ public class People
     /**
      * the current list of people
      */
-    private Set people = new HashSet();
+    private Set<Person> people = new HashSet<Person>();
 
     /**
      * Create a random person
@@ -112,9 +111,8 @@ public class People
      */
     protected void debug()
     {
-        for (Iterator it = people.iterator(); it.hasNext();)
+        for (Person person : people)
         {
-            Person person = (Person) it.next();
             log.debug(person.toString());
         }
     }

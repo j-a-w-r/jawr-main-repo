@@ -20,6 +20,7 @@ import java.util.Date;
 
 import javax.servlet.ServletContext;
 
+import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ServerContext;
 import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContextFactory;
@@ -64,7 +65,7 @@ public class Clock implements Runnable
 
             while (active)
             {
-                Collection sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
+                Collection<ScriptSession> sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
                 Util pages = new Util(sessions);
                 pages.setValue("clockDisplay", new Date().toString());
 
@@ -72,7 +73,7 @@ public class Clock implements Runnable
                 Thread.sleep(1000);
             }
 
-            Collection sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
+            Collection<ScriptSession> sessions = sctx.getScriptSessionsByPage("/dwr/clock/index.html");
             Util pages = new Util(sessions);
             pages.setValue("clockDisplay", "");
 
