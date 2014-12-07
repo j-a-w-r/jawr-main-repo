@@ -100,8 +100,7 @@
 			</plugin>
 			<plugin>
 				<groupId>net.jawr</groupId>
-				<artifactId>maven-jawr-plugin</artifactId>
-				<version>1.5</version>
+				<artifactId>jawr-maven-plugin</artifactId>
 				<dependencies>
 					<dependency>
 						<groupId>com.carrotsearch</groupId>

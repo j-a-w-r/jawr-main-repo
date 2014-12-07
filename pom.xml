@@ -562,11 +562,7 @@
 		</plugins>
 	</reporting>
 	<modules>
-		<module>jawr/jawr-core</module>
-		<module>jawr/jawr-integration-test</module>
-		<module>jawr/jawr-integration-test-utils</module>
-		<module>jawr/jawr-basicwebapp</module>
-		<module>jawr/jawr-basicwebapp-java-ee6</module>
+		<module>jawr</module>
 		<module>jawr-tools</module>
 		<module>jawr-spring</module>
 		<module>jawr-wicket</module>
