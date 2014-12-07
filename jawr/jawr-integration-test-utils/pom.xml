@@ -2,9 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.jawr</groupId>
-		<artifactId>jawr</artifactId>
+		<artifactId>jawr-core-parent</artifactId>
 		<version>3.7-SNAPSHOT</version>
-		<relativePath>../../</relativePath>		
 	</parent>
 	<artifactId>jawr-integration-test-utils</artifactId>
 	<name>jawr-integration-test-utils</name>
