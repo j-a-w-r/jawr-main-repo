@@ -1,0 +1,31 @@
+
+Asset Pipeline
+
+jawr.properties or other means of configuration in project
+
+Development Modus
+- Startup
+- Read Configuration
+- Make Bundles, Remember Resources (Files, Classpath, Webjar, etc)
+- Start a FileWatcher
+- Rerun specific Bundles if content has changed
+- Log newly created bundle
+
+Production Modus
+- Build Bundles from plugin (maven, ant, gradle)
+- Package bundles in final jar
+
+
+How to test Production Modus
+- easy, just run plugin, compare results
+
+How to test Development Modus
+- Startup Container
+- check expected results 
+- Change Files (jar vs workspace resolution) 
+  only in target folder
+  chaning them in project chnages project files = bad
+  thread is killed: repo is messed up
+- Compare with other expected results
+- change back
+
