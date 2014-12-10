@@ -3,10 +3,4 @@ target/
 .launcher
 .classpath
 .project
-/jawr/
-/jawr-dwr2.x/
-/jawr-dwr3.x/
-/jawr-grails/
-/jawr-spring/
-/jawr-tools/
-/jawr-wicket/
+
