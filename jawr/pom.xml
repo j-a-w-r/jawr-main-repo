@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>net.jawr</groupId>
+    <artifactId>jawr</artifactId>
+    <version>3.7-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>jawr-core-parent</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>jawr-core</module>
+    <module>jawr-integration-test</module>
+    <module>jawr-integration-test-utils</module>
+    <module>jawr-basicwebapp</module>
+    <module>jawr-basicwebapp-java-ee6</module>
+  </modules>
+</project>
