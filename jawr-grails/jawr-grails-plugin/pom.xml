@@ -3,19 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>net.jawr</groupId>
-		<artifactId>jawr</artifactId>
+		<artifactId>jawr-grails-parent</artifactId>
 		<version>3.7-SNAPSHOT</version>
-		<relativePath>../../</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.grails.plugins</groupId>
-	<version>3.6</version>
-	<artifactId>jawr</artifactId>
-	<packaging>grails-plugin</packaging>
+	<artifactId>grails-jawr</artifactId>
 
+	<packaging>grails-plugin</packaging>
 	<name>jawr Grails plugin</name>
 	<description>jawr grails plugin</description>
-
 	<properties>
 		<grails.version>2.4.3</grails.version>
 		<h2.version>1.3.170</h2.version>
@@ -120,22 +116,22 @@
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr-core</artifactId>
-			<version>3.6</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-		  <groupId>javax.servlet</groupId>
-		  <artifactId>javax.servlet-api</artifactId>
-		  <version>3.0.1</version>
-		  <scope>provided</scope>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
 
 	<build>
-		<pluginManagement >
+		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -157,6 +153,21 @@
 											<goal>init-plugin</goal>
 											<goal>config-directories</goal>
 											<goal>maven-compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.google.code.maven-replacer-plugin</groupId>
+										<artifactId>replacer</artifactId>
+										<versionRange>
+											[1.5.0,)
+										</versionRange>
+										<goals>
+											<goal>replace</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -209,17 +220,63 @@
 				</configuration>
 			</plugin>
 
+			<!-- the following plugin configuration is based on http://www.znetdevelopment.com/blogs/2012/07/13/grails-2-1-and-maven-integration-plugins/ 
+				Basicly it keeps version number in Plugin descriptor and pom in Sync and 
+				commits the changes to the plugin descriptor on release -->
+
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.0</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>JawrGrailsPlugin.groovy</file>
+					<replacements>
+						<replacement>
+							<token>/\*\s*@@VERSION@@\s*\*/\s*".*"\s*/\*\s*@@VERSION@@\s*\*/</token>
+							<value>/* @@VERSION@@ */ "${project.version}" /* @@VERSION@@ */</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.grails</groupId>
 				<artifactId>grails-maven-plugin</artifactId>
 				<version>${grails.version}</version>
 				<configuration>
-				   <grailsVersion>2.4.3</grailsVersion>
-				   <!-- Whether for Fork a JVM to run Grails commands -->
-				   <fork>true</fork>
+					<grailsVersion>${grails.version}</grailsVersion>
+					<fork>true</fork>
 				</configuration>
 				<extensions>true</extensions>
+				<!-- RUN VALIDATION IN INITIALIZE PHASE SO REPLACEMENT PLUGIN RUNS PROPERLY 
+					IN VALIDATE PHASE -->
+				<executions>
+					<execution>
+						<id>default-validate-plugin</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>validate-plugin</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<preparationGoals>clean verify scm:checkin -Dmessage="perform
+						release"</preparationGoals>
+					<completionGoals>validate scm:checkin -Dmessage="prepare for next
+						release"</completionGoals>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 

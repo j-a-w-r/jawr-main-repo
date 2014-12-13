@@ -10,7 +10,7 @@ import net.jawr.web.servlet.JawrRequestHandler
 class JawrGrailsPlugin {
 
 	// the plugin version
-	def version = "3.6"
+	def version = "3.7-SNAPSHOT"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "2.4 > *"
 	// resources that are excluded from plugin packaging

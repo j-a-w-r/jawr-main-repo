@@ -568,6 +568,7 @@
 		<module>jawr-wicket</module>
 		<module>jawr-dwr2.x</module>
 		<module>jawr-dwr3.x</module>
+		<module>jawr-grails</module>
 	</modules>
 	<profiles>
 		<profile>
