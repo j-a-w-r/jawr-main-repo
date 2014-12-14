@@ -41,52 +41,64 @@ public class GrailsServletContextResourceReaderTestCase extends TestCase {
 
 	@Mock
 	private ServletContext servletContext;
-	
+
 	private GrailsServletContextResourceReader rsReader;
 	private Map<String, String> pluginPaths;
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
-	public void setUp(){
-		
+	public void setUp() {
+
 		pluginPaths = new HashMap<String, String>();
-		pluginPaths.put("test","C:/plugins/test/webapp");
-		when(servletContext.getAttribute(JawrGrailsConstant.JAWR_GRAILS_PLUGIN_PATHS)).thenReturn(pluginPaths);
-		when(servletContext.getAttribute(JawrGrailsConstant.GRAILS_WAR_DEPLOYED)).thenReturn(Boolean.FALSE);
+		pluginPaths.put("test", "C:/plugins/test/webapp");
+		when(
+				servletContext
+						.getAttribute(JawrGrailsConstant.JAWR_GRAILS_PLUGIN_PATHS))
+				.thenReturn(pluginPaths);
+		when(
+				servletContext
+						.getAttribute(JawrGrailsConstant.GRAILS_WAR_DEPLOYED))
+				.thenReturn(Boolean.FALSE);
 	}
-	
+
 	@Test
-	public void testGrailsPluginPathResolverNotFound(){
-		JawrConfig config = new JawrConfig("js",new Properties());
-		when(servletContext.getAttribute(JawrGrailsConstant.JAWR_GRAILS_PLUGIN_PATHS)).thenReturn(null);
-		try{
+	public void testGrailsPluginPathResolverNotFound() {
+		JawrConfig config = new JawrConfig("js", new Properties());
+		when(
+				servletContext
+						.getAttribute(JawrGrailsConstant.JAWR_GRAILS_PLUGIN_PATHS))
+				.thenReturn(null);
+		try {
 			rsReader = new GrailsServletContextResourceReader();
 			rsReader.init(servletContext, config);
-			fail("An exception should be thrown");	
-		}catch(Exception e){
-			
+			fail("An exception should be thrown");
+		} catch (Exception e) {
+
 		}
 	}
-	
+
 	@Test
-	public void testGetRealResourcePath(){
-		JawrConfig config = new JawrConfig("js",new Properties());
+	public void testGetRealResourcePath() {
+		JawrConfig config = new JawrConfig("js", new Properties());
 		rsReader = new GrailsServletContextResourceReader();
 		rsReader.init(servletContext, config);
-		
-		String realPath = rsReader.getRealResourcePath("/plugins/test/css/myStyle.css");
+
+		String realPath = rsReader
+				.getRealResourcePath("/plugins/test/css/myStyle.css");
 		assertEquals("C:/plugins/test/webapp/css/myStyle.css", realPath);
 	}
-	
+
 	@Test
-	public void testGetRealResourcePathWithGeneratorPrefix(){
-		JawrConfig config = new JawrConfig("js",new Properties());
+	public void testGetRealResourcePathWithGeneratorPrefix() {
+		JawrConfig config = new JawrConfig("js", new Properties());
 		rsReader = new GrailsServletContextResourceReader();
 		rsReader.init(servletContext, config);
-		String realPath = rsReader.getRealResourcePath("ext:/plugins/test/css/myStyle.css");
+		String realPath = rsReader
+				.getRealResourcePath("ext:/plugins/test/css/myStyle.css");
 		assertEquals("ext:/plugins/test/css/myStyle.css", realPath);
 	}
-	
 }

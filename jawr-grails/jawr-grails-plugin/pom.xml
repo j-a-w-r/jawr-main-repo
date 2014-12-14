@@ -24,6 +24,11 @@
 	</scm>
 	<dependencies>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<scope>compile</scope>
@@ -124,7 +129,6 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -135,7 +139,6 @@
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
@@ -198,7 +201,9 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
-							<skip>false</skip>
+						  <testClassesDirectory>target/test-classes/unit</testClassesDirectory>
+						  <testSourceDirectory>test/unit</testSourceDirectory>
+						  <skip>false</skip>
 						</configuration>
 					</execution>
 				</executions>
@@ -206,7 +211,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.4.1</version>
 				<configuration>
 					<filesets>
 						<fileset>
