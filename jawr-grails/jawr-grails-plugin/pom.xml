@@ -8,7 +8,6 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>grails-jawr</artifactId>
-
 	<packaging>grails-plugin</packaging>
 	<name>jawr Grails plugin</name>
 	<description>jawr grails plugin</description>
@@ -242,10 +241,11 @@
 				</executions>
 				<configuration>
 					<file>JawrGrailsPlugin.groovy</file>
-					<replacements>
+					<replacements>        def version = "3.7-SNAPSHOT"
+
 						<replacement>
-							<token>/\*\s*@@VERSION@@\s*\*/\s*".*"\s*/\*\s*@@VERSION@@\s*\*/</token>
-							<value>/* @@VERSION@@ */ "${project.version}" /* @@VERSION@@ */</value>
+							<token>def version\s*=\s*".*"</token>
+							<value>def version = "${project.version}"</value>
 						</replacement>
 					</replacements>
 				</configuration>
