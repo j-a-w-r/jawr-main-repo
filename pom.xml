@@ -64,7 +64,7 @@
 		</mailingList>
 	</mailingLists>
 	<properties>
-		<java.version>1.7</java.version>
+		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compile.encoding>UTF-8</maven.compile.encoding>
@@ -115,42 +115,42 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.tools</groupId>
 				<artifactId>jawr-bundle-processor</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.tools</groupId>
 				<artifactId>jawr-maven-plugin</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.tools</groupId>
 				<artifactId>jawr-ant</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.extensions</groupId>
 				<artifactId>jawr-spring-extension</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.extensions</groupId>
 				<artifactId>jawr-spring-integration-test</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.extensions</groupId>
 				<artifactId>jawr-wicket-extension</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.extensions</groupId>
 				<artifactId>jawr-dwr2.x-extension</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.jawr</groupId>
+				<groupId>net.jawr.extensions</groupId>
 				<artifactId>jawr-dwr3.x-extension</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -574,7 +574,7 @@
 		<module>jawr-wicket</module>
 		<module>jawr-dwr2.x</module>
 		<module>jawr-dwr3.x</module>
-		<module>jawr-grails</module>
+		<module>jawr-grails/jawr-grails-plugin</module>
 	</modules>
 	<profiles>
 		<profile>

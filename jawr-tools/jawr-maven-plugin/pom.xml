@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.jawr</groupId>
+		<groupId>net.jawr.tools</groupId>
 		<artifactId>jawr-tools-parent</artifactId>
 		<version>3.7-SNAPSHOT</version>
 	</parent>
@@ -49,7 +49,7 @@
 	</reporting>
 	<dependencies>
 		<dependency>
-			<groupId>net.jawr</groupId>
+			<groupId>net.jawr.tools</groupId>
 			<artifactId>jawr-bundle-processor</artifactId>
 		</dependency>
 		<dependency>
