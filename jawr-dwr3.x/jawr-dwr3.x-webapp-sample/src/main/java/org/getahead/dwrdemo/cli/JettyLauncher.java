@@ -1,8 +1,8 @@
 package org.getahead.dwrdemo.cli;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
+
 
 /**
  * Launch Jetty embedded.
@@ -16,15 +16,9 @@ public class JettyLauncher
      */
     public static void main(String[] args) throws Exception
     {
-        Server server = new Server();
-
-        SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(8080);
-        server.addConnector(connector);
+        Server server = new Server(8080);
         server.setStopAtShutdown(true);
-
-        server.addHandler(new WebAppContext("web","/dwr"));
-
+        server.setHandler(new WebAppContext("web","/dwr"));
         server.start();
         server.join();
     }
