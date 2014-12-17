@@ -21,9 +21,12 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppClassLoader;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.webapp.WebAppClassLoader;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  * @author Ibrahim Chaehoi
@@ -32,58 +35,63 @@ import org.mortbay.jetty.webapp.WebAppContext;
 public class JawrIntegrationServer {
 
 	/** The logger */
-	private static Logger LOGGER = Logger.getLogger(JawrIntegrationServer.class);
+	private static Logger LOGGER = Logger
+			.getLogger(JawrIntegrationServer.class);
 
 	/** The properties file name */
 	private static final String PROP_FILE_NAME = "jawr-integration-server.properties";
-	
+
 	/** The port property name */
 	private static final String PORT_PROPERTY_NAME = "port";
 
 	/** The webapp property name */
 	private static final String WEBAPP_PROPERTY_NAME = "webapp-name";
-	
+
 	/** The default webapp name */
 	private static final String DEFAULT_WEBAPP_NAME = "jawr-integration-test";
-	
+
 	/** The port */
 	protected static String DEFAULT_PORT = "8080";
-	
+
 	/** The property indicating if we must use the empty context path */
 	private static String USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME = "use-empty-context-path";
-	
+
 	/** The default value for the use of default context path */
 	private static String DONT_USE_DEFAULT_CONTEXT_PATH = "false";
-	
+
 	/** The application URL */
-	public static final String SERVER_URL = "http://localhost:"+DEFAULT_PORT;
+	public static final String SERVER_URL = "http://localhost:" + DEFAULT_PORT;
 
 	/** The target root directory */
 	private static final String TARGET_ROOT_DIR = "target/";
 
-	/** The flag indicating if we have configured the web application for all the tests of the current test case class */
+	/**
+	 * The flag indicating if we have configured the web application for all the
+	 * tests of the current test case class
+	 */
 	private static boolean webAppConfigInitialized = false;
 
 	/** The Jawr integration HTTP Server */
 	private static JawrIntegrationServer instance = new JawrIntegrationServer();
-	
+
 	/** The Jetty server */
 	private Server server;
-	
+
 	/** The web app context path */
 	private int serverPort;
-	
+
 	/** The web app dir */
 	private String webAppRootDir;
-	
+
 	/** The web application context */
 	private WebAppContext jettyWebAppContext;
-	
-	public JawrIntegrationServer() {
-		
+
+	JawrIntegrationServer() {
+
 		Properties prop = new Properties();
-		InputStream inStream = getClass().getClassLoader().getResourceAsStream(PROP_FILE_NAME);
-		if(inStream != null){
+		InputStream inStream = getClass().getClassLoader().getResourceAsStream(
+				PROP_FILE_NAME);
+		if (inStream != null) {
 			try {
 				prop.load(inStream);
 			} catch (IOException e) {
@@ -91,114 +99,138 @@ public class JawrIntegrationServer {
 			}
 			IOUtils.closeQuietly(inStream);
 		}
-		
-		serverPort = Integer.parseInt(prop.getProperty(PORT_PROPERTY_NAME, DEFAULT_PORT));
+
+		serverPort = Integer.parseInt(prop.getProperty(PORT_PROPERTY_NAME,
+				DEFAULT_PORT));
 		server = new Server(serverPort);
 		server.setStopAtShutdown(true);
-		String webappName = prop.getProperty(WEBAPP_PROPERTY_NAME, DEFAULT_WEBAPP_NAME);
+		String webappName = prop.getProperty(WEBAPP_PROPERTY_NAME,
+				DEFAULT_WEBAPP_NAME);
 		try {
-			webAppRootDir = new File(TARGET_ROOT_DIR+webappName).getCanonicalFile().getAbsolutePath();
+			webAppRootDir = new File(TARGET_ROOT_DIR + webappName)
+					.getCanonicalFile().getAbsolutePath();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		boolean useEmptyContextPath = Boolean.parseBoolean(prop.getProperty(USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME, DONT_USE_DEFAULT_CONTEXT_PATH));
+
+		boolean useEmptyContextPath = Boolean.parseBoolean(prop.getProperty(
+				USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME,
+				DONT_USE_DEFAULT_CONTEXT_PATH));
 		String webAppCtx = "";
-		if(!useEmptyContextPath){
-			webAppCtx = "/"+webappName;
+		if (!useEmptyContextPath) {
+			webAppCtx = "/" + webappName;
 		}
-		
+
 		jettyWebAppContext = new WebAppContext(webAppRootDir, webAppCtx);
 		jettyWebAppContext.setConfigurationClasses(new String[] {
-				"org.mortbay.jetty.webapp.WebInfConfiguration",
-				"org.mortbay.jetty.webapp.WebXmlConfiguration", });
+				"org.eclipse.jetty.webapp.WebInfConfiguration",
+				"org.eclipse.jetty.webapp.WebXmlConfiguration",
+				"org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
+				"org.eclipse.jetty.annotations.AnnotationConfiguration" });
+
+		ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
+		contextHandlerCollection
+				.setHandlers(new Handler[] { jettyWebAppContext });
+		server.setHandler(contextHandlerCollection);
 	}
-	
-	public static JawrIntegrationServer getInstance(){
+
+	public static JawrIntegrationServer getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Returns the Jetty webapp context
+	 * 
 	 * @return the Jetty webapp context
 	 */
-	public WebAppContext getJettyWebAppContext(){
+	public WebAppContext getJettyWebAppContext() {
 		return jettyWebAppContext;
 	}
-	
+
 	/**
 	 * Returns the webapp context path
+	 * 
 	 * @return the webapp context path
 	 */
 	public String getServerUrlPrefix() {
-		return "http://localhost:"+serverPort;
+		return "http://localhost:" + serverPort;
 	}
-	
+
 	/**
 	 * Returns the webapp context path
+	 * 
 	 * @return the webapp context path
 	 */
 	public String getContextPath() {
 		return jettyWebAppContext.getContextPath();
 	}
-	
+
 	/**
 	 * Returns the webapp root dir
+	 * 
 	 * @return the webapp root dir
 	 */
 	public String getWebAppRootDir() {
 		return webAppRootDir;
 	}
-	
+
 	/**
 	 * Initialize the application server before the test
 	 * 
 	 * @throws IOException
 	 */
-	public void initBeforeTestCase() throws IOException{
-		
+	public void initBeforeTestCase() throws IOException {
+
 		LOGGER.info("Init Jawr integration server before testcase");
 		webAppConfigInitialized = false;
 		// Set default locale to en_US
-		Locale.setDefault(new Locale("en","US"));
+		Locale.setDefault(new Locale("en", "US"));
 	}
-	
+
 	public void setup() throws Exception {
 
-		LOGGER.info("Jawr integration server "+(webAppConfigInitialized?"is already started" : "will start now."));
+		LOGGER.info("Jawr integration server "
+				+ (webAppConfigInitialized ? "is already started"
+						: "will start now."));
 		if (!webAppConfigInitialized) {
-			// Starts the web application 
+			// Starts the web application
 			startWebApplication();
-			
+
 			webAppConfigInitialized = true;
 		}
 	}
-	
+
 	/**
-	 * Starts the web application.
-	 * The web application root directory will be define in target/jawr-integration-test, the directory used for the war generation.
+	 * Starts the web application. The web application root directory will be
+	 * define in target/jawr-integration-test, the directory used for the war
+	 * generation.
 	 * 
-	 * @throws Exception if an exception occurs
+	 * @throws Exception
+	 *             if an exception occurs
 	 */
 	public void startWebApplication() throws Exception {
-	
-		// Create a new class loader to take in account the changes of the jawr config file in the WEB-INF/classes
-		WebAppClassLoader webAppClassLoader = new WebAppClassLoader(jettyWebAppContext);
+
+		// Create a new class loader to take in account the changes of the jawr
+		// config file in the WEB-INF/classes
+		WebAppClassLoader webAppClassLoader = new WebAppClassLoader(
+				jettyWebAppContext);
 		jettyWebAppContext.setClassLoader(webAppClassLoader);
-		
-		server.setHandler(jettyWebAppContext);
-		
-		if(server.isStopped()){
+
+		if (server.isStopped()) {
 			LOGGER.info("Start jetty server....");
-				server.start();
+			server.start();
+			// server.join();
 		}
-		if(jettyWebAppContext.isStopped()){
+		if (jettyWebAppContext.isStopped()) {
 			LOGGER.info("Start jetty webApp context....");
+			// ContextHandlerCollection contextHandlerCollection =
+			// (ContextHandlerCollection) server.getHandler();
+			// contextHandlerCollection.removeHandler(jettyWebAppContext);
+			// contextHandlerCollection.addHandler(jettyWebAppContext);
 			jettyWebAppContext.start();
 		}
-		
 	}
-	
+
 	/**
 	 * Resets the test configuration.
 	 * 
@@ -214,5 +246,4 @@ public class JawrIntegrationServer {
 		jettyWebAppContext.stop();
 	}
 
-	
 }
