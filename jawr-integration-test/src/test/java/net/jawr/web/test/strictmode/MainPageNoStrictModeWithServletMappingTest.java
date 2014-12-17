@@ -86,7 +86,7 @@ public class MainPageNoStrictModeWithServletMappingTest extends MainPageStrictMo
 		webClient.setThrowExceptionOnFailingStatusCode(false);
 		int status = webClient
 				.getPage(getServerUrlPrefix() + getUrlPrefix()
-						+ "/jawrBin/7777777/img/appIcons/application.png")
+						+ "/jawrBin/cb7777777/img/appIcons/application.png")
 				.getWebResponse().getStatusCode();
 
 		assertEquals(200, status);

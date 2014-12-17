@@ -86,7 +86,7 @@ public class MainPageNoStrictModeTest extends MainPageStrictModeTest {
 		webClient.setThrowExceptionOnFailingStatusCode(false);
 		int status = webClient
 				.getPage(getServerUrlPrefix() + getUrlPrefix()
-						+ "/7777777/img/appIcons/application.png")
+						+ "/cb7777777/img/appIcons/application.png")
 				.getWebResponse().getStatusCode();
 
 		assertEquals(200, status);
