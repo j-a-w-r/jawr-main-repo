@@ -103,11 +103,17 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>${jetty.groupId}</groupId>
-			<artifactId>jetty-jsp</artifactId>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>apache-jsp</artifactId>
 			<version>${jetty.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>apache-jstl</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>

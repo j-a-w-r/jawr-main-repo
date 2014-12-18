@@ -8,6 +8,10 @@
 	</parent>
 	<artifactId>jawr-dwr3.x-webapp-sample</artifactId>
 	<packaging>war</packaging>
+	<properties>
+		<!-- Eclipse WTP required Java 1.7. This can be removed when complete project moves to java 1.7  -->
+		<java.version>1.7</java.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -63,8 +67,7 @@
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<downloadSources>true</downloadSources>
-					<wtpversion>1.5</wtpversion>
+					<wtpversion>2.0</wtpversion>
 				</configuration>
 			</plugin>
 			<plugin>
