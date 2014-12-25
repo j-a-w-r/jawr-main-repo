@@ -10,6 +10,7 @@
  */
 package net.jawr.web.util;
 
+import java.util.Enumeration;
 import java.util.regex.Pattern;
 
 /**
@@ -44,9 +45,24 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+	public enum LINEFEED {
+		CRLF ("\r\n"),
+		LF ("\r\n"),
+		AUTO ("\r\n");
+		
+		String linefeed;
+		
+		LINEFEED(String value){
+			this.linefeed = value;
+		}
+	}
+	
 	/** The new line separator */
 	public static final String LINE_SEPARATOR = "\r\n"; 
 	//public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+	/** The string value for line feed */
+	public static final String STR_LINE_FEED= "\n"; 
 	
 	/**
 	 * <code>\u000a</code> linefeed LF ('\n').

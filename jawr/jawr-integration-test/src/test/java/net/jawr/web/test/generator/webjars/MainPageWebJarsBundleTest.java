@@ -83,7 +83,7 @@ public class MainPageWebJarsBundleTest extends MainPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
-		assertEquals(getUrlPrefix()+"/N1503182411/fwk/core/component.css",
+		assertEquals(getUrlPrefix()+"/1241221784/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

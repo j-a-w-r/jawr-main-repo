@@ -215,18 +215,15 @@ public class JawrIntegrationServer {
 		WebAppClassLoader webAppClassLoader = new WebAppClassLoader(
 				jettyWebAppContext);
 		jettyWebAppContext.setClassLoader(webAppClassLoader);
-
+		// Fix issue with web app context reloading on Windows where deleting temporary directory fails because of locked files
+		jettyWebAppContext.setPersistTempDirectory(true);
+		
 		if (server.isStopped()) {
 			LOGGER.info("Start jetty server....");
 			server.start();
-			// server.join();
 		}
 		if (jettyWebAppContext.isStopped()) {
 			LOGGER.info("Start jetty webApp context....");
-			// ContextHandlerCollection contextHandlerCollection =
-			// (ContextHandlerCollection) server.getHandler();
-			// contextHandlerCollection.removeHandler(jettyWebAppContext);
-			// contextHandlerCollection.addHandler(jettyWebAppContext);
 			jettyWebAppContext.start();
 		}
 	}

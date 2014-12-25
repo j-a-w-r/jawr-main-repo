@@ -26,6 +26,7 @@ import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.PostProcessorCssImageUrlRewriter;
 import net.jawr.web.resource.bundle.variant.VariantSet;
+import net.jawr.web.util.LineSeparator;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -165,7 +166,7 @@ public class Base64ImageEncoderPostProcessor extends
 		Iterator<Entry<String, Base64EncodedResource>> it = encodedImages
 				.entrySet().iterator();
 		StringBuffer mhtml = new StringBuffer();
-		String lineSeparator = net.jawr.web.util.StringUtils.LINE_SEPARATOR;
+		String lineSeparator = LineSeparator.CRLF.getLineSeparator();
 		mhtml.append("/*!" + lineSeparator);
 		mhtml.append("Content-Type: multipart/related; boundary=\""
 				+ BOUNDARY_SEPARATOR + "\"" + lineSeparator + lineSeparator);
