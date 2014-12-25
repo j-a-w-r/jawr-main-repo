@@ -48,7 +48,7 @@ public class MainPageTest extends AbstractPageTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = scripts.get(0);
 		assertEquals(
-				getUrlPrefix()+"/202344892/js/jquery.js",
+				getUrlPrefix()+"/N535363516/js/jquery.js",
 				script.getSrcAttribute());
 		
 		script = scripts.get(1);

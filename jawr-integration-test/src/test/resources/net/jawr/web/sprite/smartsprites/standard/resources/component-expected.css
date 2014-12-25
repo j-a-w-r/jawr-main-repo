@@ -29,7 +29,6 @@
 	border : thin solid rgb(250,0,255);
 }
 
-
 .header {
   background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
   background-position: left -0px;
@@ -71,4 +70,3 @@ div {
   background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
   background-position: left -140px;
 }
-

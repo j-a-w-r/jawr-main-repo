@@ -77,6 +77,9 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.illegal.bundle.request.handler | String |The class name of the handler for illegal bundle request.  | net.jawr.web.servlet.IllegalBundleRequestHandlerImpl | 
 *---------------*---------*--------------+----------------+
+| jawr.bundle.line.separator | String | The line separator between resources aggregates in a bundle. Available values : CRLF, LF or AUTO. | AUTO    | 
+|							 |		  | CRLF for windows line separator, LF for Unix and AUTO for default operating system line separator |			|
+*---------------+---------+--------------+----------------+
 | jawr.bundle.hashcode.generator | String | The class name of the hashcode bundle generator or MD5 if you want to use the MD5 algorithm for the hashcode.  | none| 
 *---------------*---------*--------------+----------------+
 | jawr.js.postprocessor.uglify.script.location | String | the location of uglify scripts (utils.js, ast.js, parse.js, ...) | /net/jawr/web/resource/bundle/postprocessor/js/uglify/ |
