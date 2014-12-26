@@ -475,11 +475,10 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
 			}
+		} catch (EOFException eofex) {
+			LOGGER.info("Browser cut off response", eofex);
 		} catch (Exception ex) {
-
-			LOGGER.error("Unable to load the image for the request URI : "
-					+ request.getRequestURI(), ex);
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			LOGGER.error("Unable to write resource "+ request.getRequestURI(), ex);
 		}
 
 		if (LOGGER.isDebugEnabled())

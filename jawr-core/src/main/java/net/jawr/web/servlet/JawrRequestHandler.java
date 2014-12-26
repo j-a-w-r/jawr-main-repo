@@ -929,7 +929,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				}
 			}
 		} catch (EOFException eofex) {
-			LOGGER.debug("Browser cut off response", eofex);
+			LOGGER.info("Browser cut off response", eofex);
 		} catch (ResourceNotFoundException e) {
 			logBundleNotFound(requestedPath);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
