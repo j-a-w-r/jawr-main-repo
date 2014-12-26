@@ -19,7 +19,6 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
-import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,3 +94,4 @@ public class CSSCombineMediaPostProcessor extends
 		return sb;
 	}
 }
+

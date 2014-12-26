@@ -24,7 +24,6 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSCombineMediaPostProcessor;
 import net.jawr.web.util.LineSeparator;
-import net.jawr.web.util.StringUtils;
 import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 

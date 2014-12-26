@@ -12,7 +12,6 @@ import java.util.List;
 import net.jawr.web.test.JawrTestConfigFiles;
 import net.jawr.web.test.utils.Utils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.JavaScriptPage;
@@ -27,7 +26,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
  * 
  * @author ibrahim Chaehoi
  */
-@Ignore
 @JawrTestConfigFiles(webXml = "net/jawr/web/generator/skin/standard/config/web.xml", jawrConfig = "net/jawr/web/generator/skin/standard/config/jawr.properties")
 public class MainPageGeneratedResourceSkinLocaleFrTest extends MainPageGeneratedResourceSkinTest {
 

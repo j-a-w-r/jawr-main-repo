@@ -208,7 +208,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Set the Jawr config
 	 * 
-	 * @param config the config to set
+	 * @param config
+	 *            the config to set
 	 */
 	public void setConfig(JawrConfig config) {
 		this.config = config;
@@ -217,7 +218,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Sets the resource handler
 	 * 
-	 * @param rsHandler the rsHandler to set
+	 * @param rsHandler
+	 *            the rsHandler to set
 	 */
 	public void setResourceReaderHandler(ResourceReaderHandler rsHandler) {
 		this.rsHandler = rsHandler;
@@ -226,7 +228,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Lazy loads generators, to avoid the need for undesired dependencies.
 	 * 
-	 * @param generatorKey the generator key
+	 * @param generatorKey
+	 *            the generator key
 	 * 
 	 * @return the resource generator
 	 */
@@ -259,7 +262,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Initialize the generator
 	 * 
-	 * @param generator the generator to intialize
+	 * @param generator
+	 *            the generator to intialize
 	 */
 	private void initGenerator(ResourceGenerator generator) {
 
@@ -273,7 +277,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Update the registries with the generator given in parameter
 	 * 
-	 * @param generator the generator
+	 * @param generator
+	 *            the generator
 	 */
 	private void updateRegistries(ResourceGenerator generator) {
 
@@ -293,7 +298,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Register a variant resolver
 	 * 
-	 * @param clazz the class of the variant resolver
+	 * @param clazz
+	 *            the class of the variant resolver
 	 */
 	public void registerVariantResolver(String clazz) {
 
@@ -305,7 +311,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Register a variant resolver
 	 * 
-	 * @param resolver the variant resolver
+	 * @param resolver
+	 *            the variant resolver
 	 */
 	public void registerVariantResolver(VariantResolver resolver) {
 
@@ -334,7 +341,8 @@ public class GeneratorRegistry implements Serializable {
 	 * Returns the variant resolver corresponding to the variant type given in
 	 * parameter
 	 * 
-	 * @param variantType the variant type
+	 * @param variantType
+	 *            the variant type
 	 * @return the variant resolver
 	 */
 	public VariantResolver getVariantResolver(String variantType) {
@@ -344,7 +352,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Register a generator mapping it to the specified prefix.
 	 * 
-	 * @param clazz the classname of the generator
+	 * @param clazz
+	 *            the classname of the generator
 	 */
 	public void registerGenerator(String clazz) {
 
@@ -391,7 +400,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Initializes the generator properties.
 	 * 
-	 * @param generator the generator
+	 * @param generator
+	 *            the generator
 	 */
 	private void initializeGeneratorProperties(ResourceGenerator generator) {
 		// Initialize the generator
@@ -422,7 +432,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Determines wether a path is to be handled by a generator.
 	 * 
-	 * @param path the resource path
+	 * @param path
+	 *            the resource path
 	 * @return true if the path could be handled by a generator
 	 */
 	public boolean isPathGenerated(String path) {
@@ -432,7 +443,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Returns the path to use in the generation URL for debug mode.
 	 * 
-	 * @param path the resource path
+	 * @param path
+	 *            the resource path
 	 * @return the path to use in the generation URL for debug mode.
 	 */
 	public String getDebugModeGenerationPath(String path) {
@@ -445,7 +457,8 @@ public class GeneratorRegistry implements Serializable {
 	 * Returns the path to use in the "build time process" to generate the
 	 * resource path for debug mode.
 	 * 
-	 * @param path the resource path
+	 * @param path
+	 *            the resource path
 	 * @return the path to use in the "build time process" to generate the
 	 *         resource path for debug mode.
 	 */
@@ -480,7 +493,8 @@ public class GeneratorRegistry implements Serializable {
 	 * Finds the resource generator which will handle the resource, whose the
 	 * path is given in parameter
 	 * 
-	 * @param path the resource path
+	 * @param path
+	 *            the resource path
 	 * @return the resource generator
 	 */
 	private ResourceGenerator resolveResourceGenerator(String path) {
@@ -506,7 +520,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Returns the resource generator for the path given in parameter
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource generator for the path given in parameter
 	 */
 	public ResourceGenerator getResourceGenerator(String path) {
@@ -530,7 +545,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Loads the generator which corresponds to the specified path.
 	 * 
-	 * @param path the resource path
+	 * @param path
+	 *            the resource path
 	 */
 	public void loadGeneratorIfNeeded(String path) {
 
@@ -540,7 +556,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Returns the available variant for a bundle
 	 * 
-	 * @param bundle the bundle
+	 * @param bundle
+	 *            the bundle
 	 * @return the available variant for a bundle
 	 */
 	public Map<String, VariantSet> getAvailableVariants(String bundle) {
@@ -576,7 +593,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Returns the variant types for a generated resource
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return he variant types for a generated resource
 	 */
 	public Set<String> getGeneratedResourceVariantTypes(String path) {
@@ -606,7 +624,8 @@ public class GeneratorRegistry implements Serializable {
 	 * Returns true if the generator associated to the css resource path handle
 	 * also CSS image.
 	 * 
-	 * @param cssResourcePath the Css resource path
+	 * @param cssResourcePath
+	 *            the Css resource path
 	 * @return true if the generator associated to the css resource path handle
 	 *         also CSS image.
 	 */
@@ -627,7 +646,8 @@ public class GeneratorRegistry implements Serializable {
 	 * Returns true if the generator associated to the binary resource path is
 	 * an Image generator.
 	 * 
-	 * @param resourcePath the binary resource path
+	 * @param resourcePath
+	 *            the binary resource path
 	 * @return true if the generator associated to the binary resource path is
 	 *         an Image generator.
 	 */
@@ -647,7 +667,8 @@ public class GeneratorRegistry implements Serializable {
 	/**
 	 * Resolve the variants for the request passed in parameter
 	 * 
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the map of variants defined in the request
 	 */
 	public Map<String, String> resolveVariants(HttpServletRequest request) {
@@ -667,14 +688,16 @@ public class GeneratorRegistry implements Serializable {
 
 	/**
 	 * Returns the available variants.
-	 * 
-	 * @param variants the current bundle variants
-	 * @param curVariants the current variant
+	 *
+	 * @param variants
+	 *            the current bundle variants
+	 * @param curVariants
+	 *            the current variant
 	 * @return the available variants
 	 */
 	public Map<String, String> getAvailableVariantMap(
 			Map<String, VariantSet> variants, Map<String, String> curVariants) {
-
+		
 		Map<String, String> availableVariantMap = new HashMap<String, String>();
 		for (Iterator<Entry<String, VariantSet>> iterator = variants.entrySet()
 				.iterator(); iterator.hasNext();) {
@@ -683,16 +706,22 @@ public class GeneratorRegistry implements Serializable {
 			VariantSet variantSet = entry.getValue();
 			String variant = variantSet.getDefaultVariant();
 			if (curVariants.containsKey(variantType)) {
-				variant = curVariants.get(variantType);
-				if (!variantSet.contains(variant)) {
-					variant = variantSet.getDefaultVariant();
+				String curVariant = curVariants.get(variantType);
+				VariantResolver resolver = variantResolvers.get(variantType);
+				if (resolver != null) {
+					variant = resolver.getAvailableVariant(curVariant,
+							variants.get(variantType));
+					if (variant == null) {
+						variant = variants.get(variantType).getDefaultVariant();
+					}
+				} else {
+					throw new BundlingProcessException(
+							"Unable to find variant resolver for variant type '"
+									+ variantType + "'");
 				}
 			}
-
 			availableVariantMap.put(variantType, variant);
 		}
-
 		return availableVariantMap;
 	}
-
 }
