@@ -82,6 +82,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>jawr-basicwebapp</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -137,6 +138,5 @@
 			</plugin>
 		</plugins>
 
-		<finalName>${project.name}</finalName>
 	</build>
 </project>
