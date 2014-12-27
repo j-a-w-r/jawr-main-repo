@@ -81,7 +81,7 @@ public class MainPageNoStrictModeTest extends MainPageStrictModeTest {
 						+ "/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
-		// Check access to link with wrong hashcode
+		// Check access to resource with wrong hashcode already referenced in img tag
 		WebClient webClient = new WebClient();
 		webClient.setThrowExceptionOnFailingStatusCode(false);
 		int status = webClient
@@ -90,6 +90,14 @@ public class MainPageNoStrictModeTest extends MainPageStrictModeTest {
 				.getWebResponse().getStatusCode();
 
 		assertEquals(200, status);
+		
+		// Check access to resource with wrong hashcode and not referenced by jawr
+		status = webClient
+						.getPage(getServerUrlPrefix() + getUrlPrefix()
+								+ "/cb7777777/img/calendarIcons/clock/clock_add.png")
+						.getWebResponse().getStatusCode();
+
+				assertEquals(200, status);
 	}
 
 }

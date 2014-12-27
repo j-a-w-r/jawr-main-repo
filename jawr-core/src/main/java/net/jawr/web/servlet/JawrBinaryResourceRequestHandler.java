@@ -479,6 +479,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			LOGGER.info("Browser cut off response", eofex);
 		} catch (Exception ex) {
 			LOGGER.error("Unable to write resource "+ request.getRequestURI(), ex);
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 
 		if (LOGGER.isDebugEnabled())
