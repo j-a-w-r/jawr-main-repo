@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.CheckSumUtils;
+import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -126,28 +126,25 @@ public class BinaryResourcesHandler {
 		}
 		
 		BundleHashcodeType bundleHashcodeType = BundleHashcodeType.UNKNOW_BUNDLE;
-		String binaryRequest = requestedPath;
-		int idx = binaryRequest.indexOf(JawrConstant.URL_SEPARATOR,1);
-		if(idx != -1){
-			binaryRequest = binaryRequest.substring(idx);
-		}
-		
-		try {
-			String cacheBustedPath = CheckSumUtils.getCacheBustedUrl(binaryRequest,
-					getRsReaderHandler(), jawrConfig);
-			addMapping(binaryRequest, cacheBustedPath);
-			
-			if(requestedPath.equals(cacheBustedPath)){
-				bundleHashcodeType = BundleHashcodeType.VALID_HASHCODE;
-			}else {
-				bundleHashcodeType = BundleHashcodeType.INVALID_HASHCODE;
+		String[] resourceInfo = PathNormalizer.extractBinaryResourceInfo(requestedPath);
+		String binaryRequest = resourceInfo[0];
+		if(resourceInfo[1] != null){ // an hashcode is defined in the path
+			try {
+				String cacheBustedPath = CheckSumUtils.getCacheBustedUrl(binaryRequest,
+						getRsReaderHandler(), jawrConfig);
+				addMapping(binaryRequest, cacheBustedPath);
+				
+				if(requestedPath.equals(cacheBustedPath)){
+					bundleHashcodeType = BundleHashcodeType.VALID_HASHCODE;
+				}else {
+					bundleHashcodeType = BundleHashcodeType.INVALID_HASHCODE;
+				}
+			} catch (IOException e) {
+				// Nothing to do
+			} catch (ResourceNotFoundException e) {
+				// Nothing to do
 			}
-		} catch (IOException e) {
-			// Nothing to do
-		} catch (ResourceNotFoundException e) {
-			// Nothing to do
 		}
-		
 		return bundleHashcodeType;
 	}
 	
