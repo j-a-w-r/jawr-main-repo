@@ -53,6 +53,23 @@ public final class PathNormalizer {
 	/** The pattern to go to the root */
 	private static final String ROOT_REPLACE_PATTERN = "../";
 
+	/** The cache buster pattern */
+	private static Pattern cacheBusterPattern = Pattern.compile("("
+			+ "((([a-zA-Z0-9]+)_)?" + JawrConstant.CACHE_BUSTER_PREFIX
+			+ ")[a-zA-Z0-9]+)(/.*)$");
+
+	/**
+	 * The index of the generated web resource prefix in the cache buster
+	 * pattern
+	 */
+	private static final int GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX = 4;
+
+	/** The cache buster replace pattern for standard web resource */
+	private static final String CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN = "$5";
+
+	/** The cache buster replace pattern for generated web resource */
+	private static final String CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN = "$4:$5";
+
 	/**
 	 * Constructor
 	 */
@@ -107,7 +124,8 @@ public final class PathNormalizer {
 	 * prefix contains a variant information, it adds it to the name.
 	 * 
 	 * @param path the path
-	 * @return the bundle info from the
+	 * @return the bundle info from the path. Here is the content of the array : [bundlePrefix, path, variantPrefix, hashcode]
+	 * 
 	 */
 	public static String[] extractBundleInfoFromPath(String path) {
 
@@ -166,6 +184,37 @@ public final class PathNormalizer {
 			result = null;
 		}
 		return result;
+	}
+	
+	/**
+	 * Returns the binary resource info from the path 
+	 * @param path the path
+	 * @return the binary resource info from the path
+	 */
+	public static String[] extractBinaryResourceInfo(String path){
+		
+		String[] resourceInfo = new String[2];
+		String resourcePath = path;
+		if (resourcePath.startsWith(JawrConstant.URL_SEPARATOR)) {
+			resourcePath = resourcePath.substring(1);
+		}
+
+		Matcher matcher = cacheBusterPattern.matcher(resourcePath);
+		StringBuffer result = new StringBuffer();
+		if (matcher.find()) {
+			matcher.appendReplacement(
+					result,
+					StringUtils.isEmpty(matcher
+							.group(GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX)) ? CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN
+							: CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN);
+			resourcePath = result.toString();
+			resourceInfo[0] = result.toString();
+			resourceInfo[1] = matcher.group(1);
+		}else{
+			resourceInfo[0] = path;
+		}
+		
+		return resourceInfo;
 	}
 
 	/**

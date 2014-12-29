@@ -9,7 +9,6 @@ import net.jawr.web.test.AbstractPageTest;
 import net.jawr.web.test.JawrTestConfigFiles;
 import net.jawr.web.test.utils.Utils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.JavaScriptPage;
@@ -24,7 +23,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
  * 
  * @author ibrahim Chaehoi
  */
-@Ignore
 @JawrTestConfigFiles(webXml = "net/jawr/web/servlet/mapping/config/web-js-img-servlet-mapping.xml", jawrConfig = "net/jawr/web/servlet/mapping/config/jawr.properties")
 public class MainPageJsImgServletMappingTest extends AbstractPageTest {
 
