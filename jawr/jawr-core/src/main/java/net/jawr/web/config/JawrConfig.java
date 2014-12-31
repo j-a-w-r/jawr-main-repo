@@ -44,7 +44,6 @@ import net.jawr.web.resource.bundle.variant.VariantResolver;
 import net.jawr.web.resource.bundle.variant.resolver.BrowserResolver;
 import net.jawr.web.resource.bundle.variant.resolver.ConnectionTypeResolver;
 import net.jawr.web.servlet.util.MIMETypesSupport;
-import net.jawr.web.util.LineSeparator;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -75,11 +74,6 @@ public class JawrConfig implements Serializable {
 	public static final Pattern JAWR_PROPERY_PLACEHOLDER_PATTERN = Pattern
 			.compile("\\$\\{([a-zA-Z0-9_\\.\\-]+)}");
 
-	/**
-	 * The property name for the line separator between bundle
-	 */
-	public static final String JAWR_BUNDLE_LINE_SEPARATOR = "jawr.bundle.line.separator";
-	
 	/**
 	 * The property name for the css link flavor
 	 */
@@ -276,11 +270,6 @@ public class JawrConfig implements Serializable {
 	 */
 	private Charset resourceCharset;
 
-	/**
-	 * The lineseparator to use when concatenating bundle
-	 */
-	private LineSeparator jawrLineSeparator;
-	
 	/**
 	 * Flag to switch on the strict mode. defaults to false. In strict mode,
 	 * Jawr checks that the hashcode of the bundle requested is the right one or
@@ -488,12 +477,6 @@ public class JawrConfig implements Serializable {
 
 		this.strictMode = getBooleanProperty(JAWR_STRICT_MODE, false);
 
-		String jawrLineFeedProperty = getProperty(JAWR_BUNDLE_LINE_SEPARATOR, "AUTO").toUpperCase();
-		jawrLineSeparator = LineSeparator.valueOf(jawrLineFeedProperty);
-		if(jawrLineSeparator == null){
-			jawrLineSeparator = LineSeparator.AUTO;
-		}
-
 		if (null != props.getProperty("jawr." + resourceType
 				+ ".allowed.extensions")) {
 			String[] strExtensions = props.getProperty(
@@ -636,14 +619,6 @@ public class JawrConfig implements Serializable {
 
 	}
 
-	/**
-	 * Returns the line separator
-	 * @return the line separator
-	 */
-	public String getLineSeparator(){
-		return jawrLineSeparator.getLineSeparator();
-	}
-	
 	/**
 	 * Returns the client side hanlder generator class name
 	 * 
