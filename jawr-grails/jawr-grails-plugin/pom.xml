@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.grails</groupId>
 	<artifactId>jawr</artifactId>
-	<version>3.7</version>
+	<version>3.7-SNAPSHOT</version>
 	<packaging>grails-plugin</packaging>
 	<name>jawr Grails plugin</name>
 	<description>jawr grails plugin</description>
@@ -244,8 +244,7 @@
 				</executions>
 				<configuration>
 					<file>JawrGrailsPlugin.groovy</file>
-					<replacements>        def version = "3.7-SNAPSHOT"
-
+					<replacements>
 						<replacement>
 							<token>def version\s*=\s*".*"</token>
 							<value>def version = "${project.version}"</value>
