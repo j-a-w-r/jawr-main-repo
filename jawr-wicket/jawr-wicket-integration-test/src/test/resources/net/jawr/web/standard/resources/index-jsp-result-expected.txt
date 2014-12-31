@@ -1,7 +1,7 @@
 <html
 	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
-	<link rel="stylesheet" type="text/css" media="all" href="/jawr-wicket-integration-test/jawrCss/N859397245/fwk/core/component.css" >
+	<link rel="stylesheet" type="text/css" media="all" href="/jawr-wicket-integration-test/jawrCss/2010983555/fwk/core/component.css" >
 
 	<script type="text/javascript" src="/jawr-wicket-integration-test/jawrJs/983504194/bundles/global.js" ></script>
 <script type="text/javascript" src="/jawr-wicket-integration-test/jawrJs/690372103.en_US/js/bundle/msg.js" ></script>

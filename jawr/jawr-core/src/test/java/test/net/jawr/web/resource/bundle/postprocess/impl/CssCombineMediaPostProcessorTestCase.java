@@ -13,6 +13,8 @@
  */
 package test.net.jawr.web.resource.bundle.postprocess.impl;
 
+import static test.net.jawr.web.TestUtils.assertContentEquals;
+
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -95,7 +97,7 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		status.setLastPathAdded(filePath);
 
 		String result = processor.postProcessBundle(status, data).toString();
-		assertEquals("Content was not rewritten properly", expectedResult,
+		assertContentEquals("Content was not rewritten properly", expectedResult,
 				result);
 	}
 
@@ -118,7 +120,7 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		status.setLastPathAdded(filePath);
 
 		String result = processor.postProcessBundle(status, data).toString();
-		assertEquals("Content was not rewritten properly", expectedResult,
+		assertContentEquals("Content was not rewritten properly", expectedResult,
 				result);
 	}
 	

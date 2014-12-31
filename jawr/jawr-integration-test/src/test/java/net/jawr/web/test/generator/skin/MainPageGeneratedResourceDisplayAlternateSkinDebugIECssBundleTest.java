@@ -50,12 +50,12 @@ public class MainPageGeneratedResourceDisplayAlternateSkinDebugIECssBundleTest e
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN101424371.en_US%40summer%2Ffwk%2Fcore%2Fcomponent.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN260625447.en_US%40summer%2Ffwk%2Fcore%2Fcomponent.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN1715014092.en_US%40winter%2Ffwk%2Fcore%2Fcomponent.css",css.getHrefAttribute());
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2F1535478428.en_US%40winter%2Ffwk%2Fcore%2Fcomponent.css",css.getHrefAttribute());
 		checkAlternateStyle(css, "winter");
 	}
 

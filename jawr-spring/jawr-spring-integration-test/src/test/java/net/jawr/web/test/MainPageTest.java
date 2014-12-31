@@ -74,7 +74,7 @@ public class MainPageTest extends AbstractSpringPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/spring/jawr/N33754198/fwk/core/component.css",
+				getUrlPrefix()+"/spring/jawr/497434506/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

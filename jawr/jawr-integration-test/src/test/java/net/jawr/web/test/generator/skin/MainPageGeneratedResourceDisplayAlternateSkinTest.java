@@ -75,12 +75,12 @@ public class MainPageGeneratedResourceDisplayAlternateSkinTest extends AbstractP
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N101424371.en_US@summer/fwk/core/component.css",
+				getUrlPrefix()+"/N260625447.en_US@summer/fwk/core/component.css",
 				css.getHrefAttribute());
 		
 		css = styleSheets.get(1);
 		assertEquals(
-				getUrlPrefix()+"/N1715014092.en_US@winter/fwk/core/component.css",
+				getUrlPrefix()+"/1535478428.en_US@winter/fwk/core/component.css",
 				css.getHrefAttribute());
 		
 		checkAlternateStyle(css, "winter");

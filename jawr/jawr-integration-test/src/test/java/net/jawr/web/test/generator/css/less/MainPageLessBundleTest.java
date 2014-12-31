@@ -73,7 +73,7 @@ public class MainPageLessBundleTest extends MainPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
-		assertEquals(getUrlPrefix()+"/N1857396994/fwk/core/component.css",
+		assertEquals(getUrlPrefix()+"/828705950/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

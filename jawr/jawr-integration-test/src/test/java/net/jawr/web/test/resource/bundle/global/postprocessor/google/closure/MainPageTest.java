@@ -48,7 +48,7 @@ public class MainPageTest extends AbstractPageTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = scripts.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N535363516/js/jquery.js",
+				getUrlPrefix()+"/N270567413/js/jquery.js",
 				script.getSrcAttribute());
 		
 		script = scripts.get(1);
@@ -73,7 +73,7 @@ public class MainPageTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N33754198/fwk/core/component.css",
+				getUrlPrefix()+"/497434506/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

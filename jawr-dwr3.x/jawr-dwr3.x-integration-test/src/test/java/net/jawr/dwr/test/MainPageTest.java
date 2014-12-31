@@ -96,7 +96,7 @@ public class MainPageTest extends AbstractDwrPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/css/61573181/fwk/core/component.css",
+				getUrlPrefix()+"/css/2049149885/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

@@ -97,7 +97,7 @@ public class MainPageGeneratedResourceWinterSkinTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N1715014092.en_US@winter/fwk/core/component.css",
+				getUrlPrefix()+"/1535478428.en_US@winter/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

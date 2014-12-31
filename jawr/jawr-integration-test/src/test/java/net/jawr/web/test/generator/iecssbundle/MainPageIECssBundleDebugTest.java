@@ -81,12 +81,12 @@ public class MainPageIECssBundleDebugTest extends MainPageIECssBundleTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN541884743%2Fbundles%2FglobalStyleBundle.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN1545881524%2Fbundles%2FglobalStyleBundle.css",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN33754198%2Ffwk%2Fcore%2Fcomponent.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2F497434506%2Ffwk%2Fcore%2Fcomponent.css",
 				css.getHrefAttribute());
 	}
 

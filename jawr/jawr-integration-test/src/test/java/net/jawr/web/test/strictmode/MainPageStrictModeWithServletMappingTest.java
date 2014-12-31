@@ -80,7 +80,7 @@ public class MainPageStrictModeWithServletMappingTest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
-		assertEquals(getUrlPrefix() + "/jawrCSS/N480088113/fwk/core/component.css",
+		assertEquals(getUrlPrefix() + "/jawrCSS/N672945201/fwk/core/component.css",
 				css.getHrefAttribute());
 
 		// Check access to link with wrong hashcode
