@@ -70,7 +70,7 @@ public class MainPageGeneratedResourceSkinLocaleFrTest extends MainPageGenerated
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N701235125.fr_FR@summer/fwk/core/component.css",
+				getUrlPrefix()+"/49985944.fr_FR@summer/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

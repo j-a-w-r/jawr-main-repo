@@ -57,7 +57,7 @@ public class MainPageNoStrictModeTest extends MainPageStrictModeTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
-		assertEquals(getUrlPrefix() + "/N33754198/fwk/core/component.css",
+		assertEquals(getUrlPrefix() + "/497434506/fwk/core/component.css",
 				css.getHrefAttribute());
 
 		// Check access to link with wrong hashcode

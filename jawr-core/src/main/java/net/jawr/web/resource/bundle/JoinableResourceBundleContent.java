@@ -13,6 +13,8 @@
  */
 package net.jawr.web.resource.bundle;
 
+import net.jawr.web.util.StringUtils;
+
 
 /**
  * This class defines the content of a joinable resource bundle.
@@ -42,7 +44,7 @@ public class JoinableResourceBundleContent {
 	 */
 	public JoinableResourceBundleContent(StringBuffer content) {
 		
-		this.content = content;
+		setContent(content);
 	}
 
 	// ~---------- Getters & Setters ----------
@@ -60,7 +62,7 @@ public class JoinableResourceBundleContent {
 	 * @param content the content to set
 	 */
 	public void setContent(StringBuffer content) {
-		this.content = content;
+		this.content = new StringBuffer(StringUtils.normalizeLineFeed(content.toString()));
 	}
 	
 	// ~---------- Methods ----------
@@ -71,7 +73,7 @@ public class JoinableResourceBundleContent {
 	 * @return the stringBuffer content
 	 */
 	public StringBuffer append(String value){
-		return this.content.append(content);
+		return this.content.append(StringUtils.normalizeLineFeed(value));
 	}
 	
 	/**
@@ -80,8 +82,9 @@ public class JoinableResourceBundleContent {
 	 */
 	public void append(JoinableResourceBundleContent bundleContent){
 		
-		this.content.append(bundleContent.content);
+		this.append(bundleContent.content.toString());
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

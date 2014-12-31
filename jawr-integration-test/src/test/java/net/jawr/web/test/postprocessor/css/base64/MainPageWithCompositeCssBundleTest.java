@@ -75,12 +75,12 @@ public class MainPageWithCompositeCssBundleTest extends AbstractPageTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N795576850.@/fwk/core/component.css",
+				getUrlPrefix()+"/632996153.@/fwk/core/component.css",
 				css.getHrefAttribute());
 
 		css = styleSheets.get(1);
 		assertEquals(
-				getUrlPrefix()+"/70545232.@/css/compositeBundle.css",
+				getUrlPrefix()+"/N288529327.@/css/compositeBundle.css",
 				css.getHrefAttribute());
 
 	}

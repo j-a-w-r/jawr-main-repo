@@ -90,7 +90,7 @@ public class MainPageIETest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/1457264041.ie6@/fwk/core/component.css",
+				getUrlPrefix()+"/1109471991.ie6@/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

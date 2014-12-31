@@ -97,7 +97,7 @@ public class MainPageGeneratedResourceSkinDebugIECssBundleTest extends AbstractP
 		assertEquals(1, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN101424371.en_US%40summer%2Ffwk%2Fcore%2Fcomponent.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=ieCssGen%3A%2FN260625447.en_US%40summer%2Ffwk%2Fcore%2Fcomponent.css",
 				css.getHrefAttribute());
 	}
 

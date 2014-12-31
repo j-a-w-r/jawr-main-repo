@@ -73,7 +73,7 @@ public class PageCssCharsetPostProcessorTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N1497743292/fwk/core/component.css",
+				getUrlPrefix()+"/1782401942/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
