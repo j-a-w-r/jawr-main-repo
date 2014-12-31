@@ -27,11 +27,6 @@
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/asset-pipeline-1.9.6/grails-app/i18n">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/asset-pipeline-1.9.6/grails-app/services">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>

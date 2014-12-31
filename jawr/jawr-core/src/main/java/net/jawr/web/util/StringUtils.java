@@ -270,4 +270,14 @@ public class StringUtils {
     
     	return Pattern.compile(separator).split(str, -1);
     }
+    
+    /**
+     * Normalize the line feed of the String. "\r\n" is replaced by "\n"
+     * @param value the value to normalized
+     * @return the normalized value
+     */
+    public static String normalizeLineFeed(String value){
+    	return value.replace("\r\n", "\n");
+    }
+    
 }

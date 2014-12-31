@@ -75,7 +75,7 @@ public class MainPageGeneratedResourceSkinTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N101424371.en_US@summer/fwk/core/component.css",
+				getUrlPrefix()+"/N260625447.en_US@summer/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

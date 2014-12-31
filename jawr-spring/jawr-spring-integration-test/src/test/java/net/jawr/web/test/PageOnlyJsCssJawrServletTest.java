@@ -69,7 +69,7 @@ public class PageOnlyJsCssJawrServletTest extends AbstractSpringPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = (HtmlLink) styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/spring/jawr/N762509788/fwk/core/component.css",
+				getUrlPrefix()+"/spring/jawr/N1529412158/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

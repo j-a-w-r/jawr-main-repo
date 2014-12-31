@@ -74,11 +74,11 @@ public class MainPageIECssBundleTest extends MainPageTest {
 		assertEquals(2, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N541884743/bundles/globalStyleBundle.css",
+				getUrlPrefix()+"/N1545881524/bundles/globalStyleBundle.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(1);
 		assertEquals(
-				getUrlPrefix()+"/N33754198/fwk/core/component.css",
+				getUrlPrefix()+"/497434506/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

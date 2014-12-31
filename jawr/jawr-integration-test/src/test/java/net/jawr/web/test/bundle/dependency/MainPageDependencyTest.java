@@ -74,23 +74,23 @@ public class MainPageDependencyTest extends AbstractPageTest {
 		assertEquals(5, styleSheets.size());
 		HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N541884743/bundles/globalStyleBundle.css",
+				getUrlPrefix()+"/N1545881524/bundles/globalStyleBundle.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(1);
 		assertEquals(
-				getUrlPrefix()+"/2145416155/fwk/core/component3.css",
+				getUrlPrefix()+"/N214611420/fwk/core/component3.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(2);
 		assertEquals(
-				getUrlPrefix()+"/2145416155/fwk/core/component4.css",
+				getUrlPrefix()+"/N214611420/fwk/core/component4.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(3);
 		assertEquals(
-				getUrlPrefix()+"/N1951876463/fwk/core/component2.css",
+				getUrlPrefix()+"/1570160091/fwk/core/component2.css",
 				css.getHrefAttribute());
 		css = styleSheets.get(4);
 		assertEquals(
-				getUrlPrefix()+"/1581531432/fwk/core/component.css",
+				getUrlPrefix()+"/N1041692057/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

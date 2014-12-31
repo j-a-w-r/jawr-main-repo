@@ -71,7 +71,7 @@ public class MainPageJsCssServletMappingTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = (HtmlLink) styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/cssJawr/61573181/fwk/core/component.css",
+				getUrlPrefix()+"/cssJawr/2049149885/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
