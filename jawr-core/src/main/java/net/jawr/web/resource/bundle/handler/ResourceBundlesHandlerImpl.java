@@ -1023,7 +1023,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				StringBuffer buffer = writer.getBuffer();
 
 				if (!buffer.toString().endsWith(StringUtils.STR_LINE_FEED)) {
-					buffer.append(config.getLineSeparator());
+					buffer.append(StringUtils.STR_LINE_FEED);
 				}
 
 				// Do unitary postprocessing.
