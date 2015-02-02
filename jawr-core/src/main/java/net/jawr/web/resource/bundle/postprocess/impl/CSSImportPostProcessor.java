@@ -108,7 +108,7 @@ public class CSSImportPostProcessor extends
 			return "";
 		}
 		
-		if(!cssPathToImport.startsWith("/") && !jawrConfig.getGeneratorRegistry().isPathGenerated(path)){ // relative URL
+		if(!cssPathToImport.startsWith("/")) { // relative URL
 			path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 		}
 		
