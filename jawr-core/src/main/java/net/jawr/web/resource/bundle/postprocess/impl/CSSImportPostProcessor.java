@@ -117,7 +117,7 @@ public class CSSImportPostProcessor extends
 		try {
 			reader = status.getRsReader().getResource(path, true);
 		} catch (ResourceNotFoundException e) {
-			throw new IOException("Css to import '"+path+"' was not found");
+			throw new IOException("Css to import '"+path+"' was not found", e);
 		}
 		
 		StringWriter content = new StringWriter();
