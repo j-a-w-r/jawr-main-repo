@@ -25,7 +25,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSCombineMediaPostProcessor;
-import net.jawr.web.util.LineSeparator;
+import net.jawr.web.util.StringUtils;
 import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
@@ -92,8 +92,8 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		// Css path
 		String filePath = "style/default/assets/someCSS.css";
 
-		String expectedResult = "@media print {"+LineSeparator.CRLF
-				+ ".style { background-image:url(../../images/logo.png); }}"+LineSeparator.CRLF + LineSeparator.CRLF;
+		String expectedResult = "@media print {"+StringUtils.LF
+				+ ".style { background-image:url(../../images/logo.png); }}"+StringUtils.LF + StringUtils.LF;
 		status.setLastPathAdded(filePath);
 
 		String result = processor.postProcessBundle(status, data).toString();
@@ -115,8 +115,8 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		// Css path
 		String filePath = "style/default/assets/someCSS.css";
 
-		String expectedResult = "@media screen {"+LineSeparator.CRLF
-				+ ".style { background-image:url(../../images/logo.png); }}"+LineSeparator.CRLF + LineSeparator.CRLF;
+		String expectedResult = "@media screen {"+StringUtils.LF
+				+ ".style { background-image:url(../../images/logo.png); }}"+StringUtils.LF + StringUtils.LF;
 		status.setLastPathAdded(filePath);
 
 		String result = processor.postProcessBundle(status, data).toString();

@@ -19,6 +19,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
+import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,10 +86,10 @@ public class CSSCombineMediaPostProcessor extends
 
 		StringBuffer sb = new StringBuffer(CSS_MEDIA_RULE + " "
 				+ bundleMediaType + " " + CSS_MEDIA_RULE_OPEN
-				+ config.getLineSeparator());
+				+ StringUtils.STR_LINE_FEED);
 		sb.append(bundleData);
-		sb.append(CSS_MEDIA_RULE_CLOSE + config.getLineSeparator()
-				+ config.getLineSeparator());
+		sb.append(CSS_MEDIA_RULE_CLOSE + StringUtils.STR_LINE_FEED
+				+ StringUtils.STR_LINE_FEED);
 
 		LOGGER.info("Postprocessing finished");
 		return sb;
