@@ -67,6 +67,7 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.bundle.ServletContextResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
+import net.jawr.web.servlet.util.ClientAbortExceptionReoslver;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -822,7 +823,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					&& !JawrConstant.CSS_TYPE
 							.equals(getExtension(requestedPath))) {
 
-				if (null == bundlesHandler.resolveBundleForPath(requestedPath) && isValidRequestedPath(requestedPath)) {
+				if (null == bundlesHandler.resolveBundleForPath(requestedPath)
+						&& isValidRequestedPath(requestedPath)) {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Path '"
 								+ requestedPath
@@ -930,6 +932,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			}
 		} catch (EOFException eofex) {
 			LOGGER.info("Browser cut off response", eofex);
+		} catch (IOException e) {
+			if (ClientAbortExceptionReoslver.isClientAbortException(e)) {
+				LOGGER.debug("Browser cut off response", e);
+			} else {
+				throw e;
+			}
 		} catch (ResourceNotFoundException e) {
 			logBundleNotFound(requestedPath);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);

@@ -47,6 +47,7 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+import net.jawr.web.servlet.util.ClientAbortExceptionReoslver;
 import net.jawr.web.servlet.util.MIMETypesSupport;
 
 import org.slf4j.Logger;
@@ -458,7 +459,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		} catch (EOFException eofex) {
 			LOGGER.info("Browser cut off response", eofex);
 		} catch (Exception ex) {
-			LOGGER.error("Unable to write resource "+ request.getRequestURI(), ex);
+			LOGGER.error("Unable to write resource " + request.getRequestURI(),
+					ex);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 
@@ -562,8 +564,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String contentType = (String) binaryMimeTypeMap.get(extension);
 		if (contentType == null) {
 
-			LOGGER.error("No binary extension match the extension '" + extension
-					+ "' for the request URI : " + requestUri);
+			LOGGER.error("No binary extension match the extension '"
+					+ extension + "' for the request URI : " + requestUri);
 			return null;
 		}
 		return contentType;
@@ -615,6 +617,12 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			IOUtils.copy(is, os);
 		} catch (EOFException eofex) {
 			LOGGER.debug("Browser cut off response", eofex);
+		} catch (IOException e) {
+			if (ClientAbortExceptionReoslver.isClientAbortException(e)) {
+				LOGGER.debug("Browser cut off response", e);				
+			} else {
+				throw e;
+			}
 		} finally {
 			IOUtils.close(is);
 		}
@@ -637,7 +645,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 				realFilePath = realFilePath.substring(idx);
 			}
 		} else {
-			String[] resourceInfo = PathNormalizer.extractBinaryResourceInfo(realFilePath);
+			String[] resourceInfo = PathNormalizer
+					.extractBinaryResourceInfo(realFilePath);
 			realFilePath = resourceInfo[0];
 		}
 
