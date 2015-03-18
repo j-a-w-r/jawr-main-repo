@@ -458,9 +458,11 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			}
 		} catch (EOFException eofex) {
 			LOGGER.info("Browser cut off response", eofex);
+		} catch (ResourceNotFoundException e) {
+			LOGGER.info("Unable to write resource " + request.getRequestURI(),	e);
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} catch (Exception ex) {
-			LOGGER.error("Unable to write resource " + request.getRequestURI(),
-					ex);
+			LOGGER.error("Unable to write resource " + request.getRequestURI(),	ex);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 
@@ -556,7 +558,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String extension = getExtension(filePath);
 		if (extension == null) {
 
-			LOGGER.error("No extension found for the request URI : "
+			LOGGER.info("No extension found for the request URI : "
 					+ requestUri);
 			return null;
 		}
@@ -564,7 +566,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String contentType = (String) binaryMimeTypeMap.get(extension);
 		if (contentType == null) {
 
-			LOGGER.error("No binary extension match the extension '"
+			LOGGER.info("No binary extension match the extension '"
 					+ extension + "' for the request URI : " + requestUri);
 			return null;
 		}
