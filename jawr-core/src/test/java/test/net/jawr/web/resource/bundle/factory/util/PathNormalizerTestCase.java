@@ -4,10 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.junit.Test;
-
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Test case class for PathNormalizer utility class
@@ -126,4 +127,11 @@ public class PathNormalizerTestCase {
 		assertEquals("/img/logo.png", PathNormalizer.concatWebPath("/css/generator/one.css", "../../img/logo.png"));
 	}
 	
+	@Test
+	public void checkNormalizePath(){
+		
+		Assert.assertTrue(PathNormalizer.isNormalized("/webapp/js/gzip_8762387/bundle/commonBundle.js"));
+		Assert.assertFalse(PathNormalizer.isNormalized("/webapp/js/gzip_8762387/bundle/commonBundle.js/../../temp"));
+		Assert.assertFalse(PathNormalizer.isNormalized("/webapp/js/gzip_8762387/bundle/commonBundle.js/./temp"));
+	}
 }

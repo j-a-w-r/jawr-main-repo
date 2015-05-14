@@ -1015,4 +1015,39 @@ public final class PathNormalizer {
 
 		return result.toString();
 	}
+	
+	/**
+	 * Checks whether a path is normalized (doesn't contain path traversal sequences like
+	 * "./", "/../" or "/.")
+	 * 
+	 * @author Luke Taylor (Spring security)
+	 *  
+	 * @param path the path to test
+	 * @return true if the path doesn't contain any path-traversal character sequences.
+	 */
+	public static boolean isNormalized(String path) {
+		
+		if (path == null) {
+			return true;
+		}
+
+		for (int j = path.length(); j > 0;) {
+			int i = path.lastIndexOf('/', j - 1);
+			int gap = j - i;
+
+			if (gap == 2 && path.charAt(i + 1) == '.') {
+				// ".", "/./" or "/."
+				return false;
+			}
+			else if (gap == 3 && path.charAt(i + 1) == '.' && path.charAt(i + 2) == '.') {
+				return false;
+			}
+
+			j = i;
+		}
+
+		return true;
+	}
+
+
 }
