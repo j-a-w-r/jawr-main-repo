@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,9 +33,7 @@ public class CSSMinifier {
 	private static final String COMMENT_REGEX = "(/\\*[^*]*\\*+([^/][^*]*\\*+)*/)";
 
 	// Captures CSS strings
-	// private static final String QUOTED_CONTENT_REGEX =
-	// "('(\\\\'|[^'])*?')|(\"(\\\\\"|[^\"])*?\")";
-	private static final String QUOTED_CONTENT_REGEX = "([\"']).*?\\1"; 
+	private static final String QUOTED_CONTENT_REGEX = "([\"']).*?\\1";
 
 	// A placeholder string to replace and restore CSS strings
 	private static final String STRING_PLACEHOLDER = "______'JAWR_STRING'______";
@@ -47,19 +45,13 @@ public class CSSMinifier {
 	// Captures newlines and tabs
 	private static final String NEW_LINE_TABS_REGEX = "\\r|\\n|\\t|\\f";
 
-	// This regex captures, in order:
-	// (\\s*\\{\\s*)|(\\s*\\}\\s*)|(\\s*\\(\\s*)|(\\s*;\\s*)|(\\s*\\))
-	// brackets, parentheses,colons and semicolons and any spaces around them
-	// (except spaces AFTER a parentheses closing
-	// symbol),
-	// and ( +) occurrences of one or more spaces.
 	/**
 	 * There is a special case when the space should not be removed when
 	 * preceeded by and keyword. Ex: <code>
 	 * 
 	 * @media only screen and (max-width:767px){ } </code>
 	 */
-	private static final String SPACES_REGEX = "(?ims)(\\s*\\{\\s*)|(\\s*\\}\\s*)|((?<!\\sand)\\s*\\(\\s*)|(\\s*;\\s*)|(\\s*:\\s*)|(\\s*\\))|( +)";
+	private static final String SPACES_REGEX = "(?ims)(\\s*\\{\\s*)|(\\s+\\-\\s+)|(\\s+\\+\\s+)|(\\s+\\*\\s+)|(\\s+\\/\\s+)|(\\s*\\}\\s*)|((?<!\\sand)\\s*\\(\\s*)|(\\s*;\\s*)|(\\s*:\\s*)|(\\s*\\))|( +)";
 
 	private static final Pattern COMMENTS_PATTERN = Pattern.compile(
 			COMMENT_REGEX, Pattern.DOTALL);
@@ -80,7 +72,15 @@ public class CSSMinifier {
 	private static final String BRACKET_CLOSE = "}";
 	private static final String PAREN_OPEN = "(";
 	private static final String PAREN_CLOSE = ")";
-
+	private static final String PLUS_OPERATOR = "+";
+	private static final String PLUS_OPERATOR_REPLACEMENT = " + ";
+	private static final String MINUS_OPERATOR = "-";
+	private static final String MINUS_OPERATOR_REPLACEMENT = " - ";
+	private static final String MULTIPLICATION_OPERATOR = "*";
+	private static final String MULTIPLICATION_OPERATOR_REPLACEMENT = " * ";
+	private static final String DIVISION_OPERATOR = "/";
+	private static final String DIVISION_OPERATOR_REPLACEMENT = " / ";
+	
 	private static final String COLON = ":";
 	private static final String SEMICOLON = ";";
 
@@ -92,8 +92,8 @@ public class CSSMinifier {
 		String processWithMatcher(final Matcher matcher) {
 			final StringBuffer sb = new StringBuffer();
 			while (matcher.find()) {
-				matcher.appendReplacement(sb,
-						RegexUtil.adaptReplacementToMatcher(matchCallback(matcher)));
+				matcher.appendReplacement(sb, RegexUtil
+						.adaptReplacementToMatcher(matchCallback(matcher)));
 			}
 			matcher.appendTail(sb);
 			return sb.toString();
@@ -146,19 +146,29 @@ public class CSSMinifier {
 				String replacement = SPACE;
 				final String match = matcher.group();
 
-				if (match.indexOf(BRACKET_OPEN) != -1)
+				if (match.indexOf(PLUS_OPERATOR) != -1) {
+					replacement = PLUS_OPERATOR_REPLACEMENT;
+				}else if (match.indexOf(MINUS_OPERATOR) != -1) {
+					replacement = MINUS_OPERATOR_REPLACEMENT;
+				}else if (match.indexOf(MULTIPLICATION_OPERATOR) != -1) {
+					replacement = MULTIPLICATION_OPERATOR_REPLACEMENT;
+				}else if (match.indexOf(DIVISION_OPERATOR) != -1) {
+					replacement = DIVISION_OPERATOR_REPLACEMENT;
+				}else if (match.indexOf(PLUS_OPERATOR) != -1) {
+					replacement = PLUS_OPERATOR_REPLACEMENT;
+				}else if (match.indexOf(BRACKET_OPEN) != -1) {
 					replacement = BRACKET_OPEN;
-				else if (match.indexOf(BRACKET_CLOSE) != -1)
+				} else if (match.indexOf(BRACKET_CLOSE) != -1) {
 					replacement = BRACKET_CLOSE;
-				else if (match.indexOf(PAREN_OPEN) != -1)
+				} else if (match.indexOf(PAREN_OPEN) != -1) {
 					replacement = PAREN_OPEN;
-				else if (match.indexOf(COLON) != -1)
+				} else if (match.indexOf(COLON) != -1) {
 					replacement = COLON;
-				else if (match.indexOf(SEMICOLON) != -1)
+				} else if (match.indexOf(SEMICOLON) != -1) {
 					replacement = SEMICOLON;
-				else if (match.indexOf(PAREN_CLOSE) != -1)
+				} else if (match.indexOf(PAREN_CLOSE) != -1) {
 					replacement = PAREN_CLOSE;
-
+				}
 				return replacement;
 			}
 		}.processWithMatcher(matcher);
@@ -177,5 +187,5 @@ public class CSSMinifier {
 
 		return new StringBuffer(compressed);
 	}
-	
+
 }

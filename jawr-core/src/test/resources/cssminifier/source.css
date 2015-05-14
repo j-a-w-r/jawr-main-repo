@@ -10,6 +10,7 @@
 }
 
 someRule 	.someSelector {
+	height : calc((100% - (15px + (3px * 5))) / 6);
 	text-align :center ; 
 	background: url( '  this {quoted text } should remain just   as badly spaced ') no-repeat;
 	background: url( 'someURL') ;
