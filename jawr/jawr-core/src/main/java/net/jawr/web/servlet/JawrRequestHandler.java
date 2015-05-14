@@ -686,6 +686,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			throws ServletException, IOException {
 
 		try {
+			// Checks that the requested Path is a normalized one. If not don't
+			// treat the request
+			if (!PathNormalizer.isNormalized(requestedPath)) {
+				LOGGER.warn("Un-normalized paths are not supported: "
+						+ requestedPath);
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+
 			// Initialize the Thread local for the Jawr context
 			initThreadLocalJawrContext(request);
 
@@ -700,8 +709,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				this.configChanged(propertiesSource.getConfigProperties());
 			}
 
-			if (LOGGER.isDebugEnabled())
+			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Request received for path:" + requestedPath);
+			}
 
 			if (handleSpecificRequest(requestedPath, request, response)) {
 				return;
@@ -761,7 +771,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * @param response
 	 *            the response
 	 * @param contentType
-	 *            teh ontentt type
+	 *            the content type
 	 * @return true if the resource exists and has been copied in the response
 	 * @throws IOException
 	 *             if an IO exception occurs
@@ -822,7 +832,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					&& !JawrConstant.CSS_TYPE
 							.equals(getExtension(requestedPath))) {
 
-				if (null == bundlesHandler.resolveBundleForPath(requestedPath) && isValidRequestedPath(requestedPath)) {
+				if (null == bundlesHandler.resolveBundleForPath(requestedPath)
+						&& isValidRequestedPath(requestedPath)) {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Path '"
 								+ requestedPath
