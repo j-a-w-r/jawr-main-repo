@@ -23,8 +23,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
  * 
  * @author ibrahim Chaehoi
  */
-@JawrTestConfigFiles(webXml = "net/jawr/web/sprite/smartsprites/standard/config/web.xml", jawrConfig = "net/jawr/web/sprite/smartsprites/standard/config/jawr.properties")
-public class MainPageSmartSpritesTest extends AbstractPageTest {
+@JawrTestConfigFiles(webXml = "net/jawr/web/sprite/smartsprites/standard/config/web.xml", jawrConfig = "net/jawr/web/sprite/smartsprites/standard/config/jawr-with-base64-sprite.properties")
+public class MainPageSmartSpritesWithBase64SpritesTest extends AbstractPageTest {
 
 	/* (non-Javadoc)
 	 * @see net.jawr.web.AbstractPageTest#createWebClient()
@@ -46,7 +46,7 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 	@Test
 	public void testPageLoad() throws Exception {
 		
-		assertContentEquals("/net/jawr/web/sprite/smartsprites/standard/resources/index-jsp-result-expected.txt", page);
+		assertContentEquals("/net/jawr/web/sprite/smartsprites/standard/resources/index-jsp-with-base64-sprite-result-expected.txt", page);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N61528498/fwk/core/component.css",
+				getUrlPrefix()+"/N666580988.@/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -87,7 +87,7 @@ public class MainPageSmartSpritesTest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		final HtmlLink css = styleSheets.get(0);
 		final TextPage page = getCssPage(css);
-		assertContentEquals("/net/jawr/web/sprite/smartsprites/standard/resources/component-expected.css", page);
+		assertContentEquals("/net/jawr/web/sprite/smartsprites/standard/resources/component-with-base64-sprite-expected.css", page);
 	}
 
 	@Test

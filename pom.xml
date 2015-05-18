@@ -81,13 +81,12 @@
 		<commons-validator.version>1.2.0</commons-validator.version>
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
 		<ehcache.version>2.7.4</ehcache.version>
-		<smartsprites.version>0.2.10</smartsprites.version>
-		<google-closure.version>v20140814</google-closure.version>
+		<smartsprites.version>0.2.11</smartsprites.version>
+		<google-closure.version>v20150505</google-closure.version>
 		<lesscss-engine.version>1.5.1</lesscss-engine.version>
 		<jackson-json.version>2.4.2</jackson-json.version>
 		<jmagick.version>6.6.9</jmagick.version>
 		<im4java.version>1.4.0</im4java.version>
-		<jetty.groupId>org.eclipse.jetty</jetty.groupId>
 		<jetty.version>9.2.6.v20141205</jetty.version>
 		<htmlunit.version>2.5</htmlunit.version>
 		<jquery-version>1.11.1</jquery-version>

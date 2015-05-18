@@ -44,7 +44,7 @@
 			<artifactId>jawr-integration-test-utils</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${jetty.groupId}</groupId>
+			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<version>${jetty.version}</version>
 			<scope>test</scope>
