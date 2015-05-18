@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2012 Ibrahim Chaehoi
+ * Copyright 2010-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -69,8 +69,7 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 			.compile("jawr(?:\\s)*:(?:\\s)*(base64)(-skip)?");
 
 	/**
-	 * The annotation to skip or force the base64 encoding (jawr:base64 or
-	 * jawr:base64-skip )
+	 * The annotation for sprite image (sprite:sprite)
 	 */
 	private static final Pattern ANNOTATION_SPRITE_PATTERN = Pattern
 			.compile("sprite(?:\\s)*:(?:\\s)*?");
@@ -189,7 +188,7 @@ public class Base64PostProcessorCssImageUrlRewriter extends
 				} else {
 					annotationMatcher = ANNOTATION_SPRITE_PATTERN
 							.matcher(annotation);
-					if (annotationMatcher.find()) {
+					if (annotationMatcher.find()) { // Encode sprite depending on jawr configuration
 						skipBase64Encoding = !encodeSprite;
 					}
 				}

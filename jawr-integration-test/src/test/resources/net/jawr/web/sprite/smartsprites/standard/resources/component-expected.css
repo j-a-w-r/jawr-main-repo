@@ -1,7 +1,7 @@
 
 .mandatory { 
 	color:black;
-  background-image: url('../../../sprite_cbbce020e6bfcd7ceaf3202fa3c09e3f6d/img/myCpSprite.png');
+  background-image: url('../../../sprite_cbbce020e6bfcd7ceaf3202fa3c09e3f6d/img/myCpSprite.png'); /** sprite:sprite */
   background-position: left -0px;
 	background-repeat: no-repeat;
 	padding-left : 20px;
@@ -11,7 +11,7 @@
 
 .info { 
 	color:black;
-  background-image: url('../../../sprite_cbbce020e6bfcd7ceaf3202fa3c09e3f6d/img/myCpSprite.png');
+  background-image: url('../../../sprite_cbbce020e6bfcd7ceaf3202fa3c09e3f6d/img/myCpSprite.png'); /** sprite:sprite */
   background-position: left -0px;
 	background-repeat: no-repeat;
 	padding-left : 20px;
@@ -21,7 +21,7 @@
 
 .tools { 
 	color:black;
-  background-image: url('../../../sprite_cbbce020e6bfcd7ceaf3202fa3c09e3f6d/img/myCpSprite.png');
+  background-image: url('../../../sprite_cbbce020e6bfcd7ceaf3202fa3c09e3f6d/img/myCpSprite.png'); /** sprite:sprite */
   background-position: left -26px;
 	background-repeat: no-repeat;
 	padding-left : 20px;
@@ -30,7 +30,7 @@
 }
 
 .header {
-  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png'); /** sprite:sprite */
   background-position: left -0px;
 	background-repeat: no-repeat;
 	height : 74px;
@@ -44,14 +44,14 @@ div {
 .calendar {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png'); /** sprite:sprite */
   background-position: left -82px;
 }
 
 .clock {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png'); /** sprite:sprite */
   background-position: left -108px;
 	 
 }
@@ -60,13 +60,13 @@ div {
 .calendar_edit {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png'); /** sprite:sprite */
   background-position: left -124px;
 }
 
 .tools {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png');
+  background-image: url('../../../cb32e101df3b8a8df5a13fdb7fb1606eb7/img/mysprite.png'); /** sprite:sprite */
   background-position: left -140px;
 }

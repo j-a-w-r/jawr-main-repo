@@ -73,12 +73,6 @@
 			<!-- TODO : replace by version 0.2.11 containing the feature to track 
 				sprite images when available -->
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.google.collections</groupId>
-					<artifactId>google-collections</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<!-- Google closure dependency -->
 		<dependency>

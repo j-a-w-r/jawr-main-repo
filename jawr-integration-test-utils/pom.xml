@@ -11,7 +11,7 @@
 	<description>Utilities for Jawr integration tests</description>
 	<dependencies>
 		<dependency>
-			<groupId>${jetty.groupId}</groupId>
+			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>

@@ -175,13 +175,8 @@ public class CssSmartSpritesGlobalPreprocessor extends
 
 		SmartSpritesParameters params = new SmartSpritesParameters("/", null,
 				outDir, null, msgLevel, "", PngDepth.valueOf("AUTO"), false,
-				charset.toString());
-		// TODO : use below parameters when Smartsprites will handle
-		// keepingSpriteTrack parameter
-		// SmartSpritesParameters params = new SmartSpritesParameters("/", null,
-		// outDir, null, msgLevel, "", PngDepth.valueOf("AUTO"), false,
-		// charset.toString(), true);
-
+				charset.toString(), true);
+		
 		SpriteBuilder spriteBuilder = new SpriteBuilder(params, messageLog,
 				smartSpriteRsHandler);
 		try {
@@ -244,14 +239,23 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		 */
 		public void add(Message message) {
 			
-			if(LOGGER.isInfoEnabled() && logLevel.equals(INFO_LEVEL)){
+			if(LOGGER.isInfoEnabled() && logLevel.equals(INFO_LEVEL) && logLevelGreaterOrEqualThan(message.level, MessageLevel.INFO)){
 				LOGGER.info(message.getFormattedMessage());
-			}else if(LOGGER.isWarnEnabled() && logLevel.equals(WARN_LEVEL)){
+			}else if(LOGGER.isWarnEnabled() && logLevel.equals(WARN_LEVEL) && logLevelGreaterOrEqualThan(message.level, MessageLevel.WARN)){
 				LOGGER.warn(message.getFormattedMessage());
-			}else if(LOGGER.isErrorEnabled() && logLevel.equals(ERROR_LEVEL)){
+			}else if(LOGGER.isErrorEnabled() && logLevel.equals(ERROR_LEVEL)  && logLevelGreaterOrEqualThan(message.level, MessageLevel.ERROR)){
 				LOGGER.error(message.getFormattedMessage());
 			}
-			
+		}
+		
+		/**
+		 * Checks if the first messsage level is greater than the second one.
+		 * @param msgLevel1 the first messsage
+		 * @param msgLevel2 the second messsage
+		 * @return true if if the first messsage level is greater than the second one
+		 */
+		private boolean logLevelGreaterOrEqualThan(MessageLevel msgLevel1, MessageLevel msgLevel2){
+			return MessageLevel.COMPARATOR.compare(msgLevel1, msgLevel2) >= 0;
 		}
 	}
 }
