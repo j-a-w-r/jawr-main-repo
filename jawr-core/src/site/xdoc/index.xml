@@ -44,7 +44,7 @@
 	<img src="./images/index/logo.png" style="border:0 !important" id="mainJawrLogo"  alt="Logo" />
 	
 	<div id="jawrlinks">
-		<b>Latest version : 3.6</b><br/>
+		<b>Latest version : 3.7</b><br/>
 		<a href="https://java.net/projects/jawr/downloads/directory/release">
 			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr" alt="Download" /></a> 
 		<a href="https://jawr.java.net/tutorials/quickstart.html" >
@@ -167,12 +167,83 @@
       <subsection name="Requirements">
       	<p>
       		You can use Jawr with any compliant Java Servlet 2.5 or higher container implementation (i.e. Tomcat, Jetty, BEA Weblogic etc.), as long as the 
-			virtual machine it runs on is 1.6 or higher. There are no other requirements.  
+			virtual machine it runs on is 1.7 or higher. There are no other requirements.  
       	</p>
       </subsection>
       <subsection name="Announcements">
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
+      <ul>
+      	  <li> <strong>19th May 2015</strong>: Version 3.7 released:<br/>
+	      This version is containing bug fixes and some new features.<br/><br/>
+	  	  <strong>Important note : </strong>
+	  	  The version 3.7 of Jawr requires Java 1.7.<br/>
+	  	  This relase contains the fix for a security issue. It is highly recommended to upgrade to this new version.
+	  	  <br/><br/>
+	  	  <strong>New features: </strong>
+	  	  	<ul>
+      		 	<li>
+      		 	The Jawr binary servlet to handle ".cur" and ".woff2" files  
+      			</li>
+      			<li>
+      			The Jawr servlet allows you to access resources which is not directly handle by Jawr.
+				For instance, if your Jawr JS servlet is mapped to "*.js" resources, you can access the JS resources, which are not part of the bundles.
+      			</li>	
+      		</ul>
+      	  <strong>Fixed issues : </strong>
+	    	<ul>   
+	    		 <li>
+	      		 	<strong>Issue #334 fixed:</strong> Path traversal vulnerability
+	    		 </li>
+	    		 <li>
+	      		 	<strong>Issue #333 fixed:</strong> Default CSS compressor is compressing calc functions incorrectly
+				 </li>
+	    		 <li>
+	      		 	<strong>Issue #333 fixed:</strong> Default CSS compressor is compressing calc functions incorrectly
+				 </li>
+	    		 <li>
+	      		 	<strong>Issue #332 fixed:</strong> Logging Level should be WARN for ResourceNotFound and missing binary extension    
+				 </li>
+				 <li>
+	      		 	<strong>Issue #326 fixed:</strong> Licensing issue with UnicodeBOMInputStream    
+				 </li>
+				 <li>
+	      		 	<strong>Issue #323 fixed:</strong> Issue with line ending in generated bundles, which should not be different depending on the platform
+				 </li>
+				 <li>
+	      		 	<strong>Issue #321 fixed:</strong> Improve execution time of integration tests
+				 </li>
+				 <li>
+	      		 	<strong>Issue #320 fixed:</strong> With strictMode off and debugMode off image request which are not registered in jawr.properties results in 404
+				 </li>
+				 <li>
+	      		 	<strong>Issue #318 fixed:</strong> JawrBinaryResourceRequestHandler doesn't handle properly browser disconnection
+				 </li>
+				 <li>
+	      		 	<strong>Issue #317 fixed:</strong> ResourceReaderHandler doesn't handle properly exception when retrieving stream
+				 </li>
+				 <li>
+	      		 	<strong>Issue #311 fixed:</strong> Invalid ressource path generated for CSS with IE11 in SSL mode
+				 </li>
+				 <li>
+	      		 	<strong>Issue #308 fixed:</strong> Issue in debug mode for CSS resources where URL reference an HTTP resource
+				 </li>
+				 <li>
+	      		 	<strong>Issue #304 fixed:</strong> StringIndexOutOfBoundsException occurs when Jawr tries to handle a request without prefix
+			  	 </li>
+			  	 <li>
+	      		 	<strong>Issue #246 fixed:</strong> Issue with bas64 postprocessor with sprite image
+	      		 </li>
+			  </ul>
+	    	</li>
+	    	<li>
+	    	Thanks to shoot_the_moon, damartin, paranoiabla, H.Schulz for reporting the issues.
+	    	Thanks to farethewell, janningvygen, frabasic, for reporting the issues and providing patches.
+	    	</li>
+	    	<li>
+	    	A special thank to janningvygen for his great contribution in this release.
+	    	</li>  
+      </ul>
       <ul>
       	  <li> <strong>06th October 2014</strong>: Version 3.6 released:<br/>
 	      This version is containing bug fixes and some new features.<br/>
