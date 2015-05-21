@@ -142,7 +142,7 @@ jawr.js.bundle.one.id='/js/bundle/main.js'
 jawr.js.bundle.one.mappings='/js/global/**,/js/index/'
 
 jawr.js.bundle.two.id='/js/bundle/msg.js'
-jawr.js.bundle.two.mappings='messages:/plugins/asset-pipeline-1.9.6/grails-app/i18n/errors|grails-app.i18n.messages[ui]'
+jawr.js.bundle.two.mappings='messages:grails-app.i18n.messages[ui]'
 
 jawr.js.bundle.common.id='/js/common.js'
 jawr.js.bundle.common.mappings='/js/yui/yahoo-dom-event/yahoo-dom-event.js,/js/yui/element/element.js,/js/yui/tabview/tabview.js,/js/yui/container/container.js,skinSwitcher:switcher.js'

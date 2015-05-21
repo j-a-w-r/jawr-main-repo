@@ -3,9 +3,11 @@ grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
+grails.project.target.level = 1.7
+grails.project.source.level = 1.7
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
+
+//grails.plugin.location.jawr = "../jawr-grails-plugin"
 
 grails.project.fork = [
     // configure settings for compilation JVM, note that if you alter the Groovy version forked compilation is required
@@ -50,7 +52,9 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         // runtime 'mysql:mysql-connector-java:5.1.29'
         // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
-        compile ('com.carrotsearch:smartsprites:0.2.10')
+		//runtime 'org.springframework:spring-expression:4.0.6.RELEASE'
+		//runtime 'org.springframework:spring-aop:4.0.6.RELEASE'
+		compile ('com.carrotsearch:smartsprites:0.2.11')
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
     }
 
@@ -60,7 +64,7 @@ grails.project.dependency.resolution = {
 
         // plugins for the compile step
         compile ":scaffolding:2.1.2"
-        compile ':cache:1.1.7'
+        //compile ':cache:1.1.7'
         compile ":asset-pipeline:1.9.6"
 
         // plugins needed at runtime but not for compilation
@@ -68,7 +72,7 @@ grails.project.dependency.resolution = {
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
 		
-		runtime ":jawr:3.7-SNAPSHOT"
+		compile ":jawr:3.7-SNAPSHOT"
 
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"

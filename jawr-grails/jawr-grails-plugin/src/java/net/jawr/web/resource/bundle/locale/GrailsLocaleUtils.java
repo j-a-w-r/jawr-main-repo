@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -199,7 +199,7 @@ public final class GrailsLocaleUtils {
 				+ fileSuffix;
 
 		boolean isFileSystemResourcePath = rsReader
-				.isFileSystemPath(messageBundlePath);
+				.isFileSystemPath(localMsgResourcePath);
 
 		boolean resourceFound = false;
 		if (!isFileSystemResourcePath) {

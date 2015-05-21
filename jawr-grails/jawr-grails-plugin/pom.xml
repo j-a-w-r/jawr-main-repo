@@ -8,7 +8,7 @@
 		<relativePath>../../</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.grails</groupId>
+	<groupId>org.grails.plugins</groupId>
 	<artifactId>jawr</artifactId>
 	<version>3.7-SNAPSHOT</version>
 	<packaging>grails-plugin</packaging>

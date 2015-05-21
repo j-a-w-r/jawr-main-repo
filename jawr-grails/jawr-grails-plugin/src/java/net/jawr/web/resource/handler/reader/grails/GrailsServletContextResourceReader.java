@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2014 Ibrahim Chaehoi
+ * Copyright 2010-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -288,8 +288,9 @@ public class GrailsServletContextResourceReader extends
 	 * @param realPath the real path
 	 * @return true if the path given in parameter are file system path or not
 	 */
-	private boolean isFileSystemPath(String path, String realPath) {
-		return !realPath.equals(path) &&  !warDeployed;
+	private boolean isFileSystemPath(String realPath, String path) {
+		
+		return !warDeployed && new File(realPath).exists();
 	}
 
 }
