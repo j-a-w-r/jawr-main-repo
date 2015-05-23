@@ -209,7 +209,7 @@ public final class GrailsLocaleUtils {
 		}
 		InputStream is = null;
 		try{
-			InputStream is = rsReader.getResourceAsStream(path);
+			is = rsReader.getResourceAsStream(path);
 			resourceFound =  is != null;
 		}finally{
 			IOUtils.close(is);
