@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>net.jawr.tools</groupId>
 		<artifactId>jawr-tools-parent</artifactId>
-		<version>3.7-SNAPSHOT</version>
+		<version>3.7</version>
 	</parent>
 	<artifactId>jawr-bundle-processor</artifactId>
 	<packaging>jar</packaging>
