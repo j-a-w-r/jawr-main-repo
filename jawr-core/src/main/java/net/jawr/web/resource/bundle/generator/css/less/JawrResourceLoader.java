@@ -50,9 +50,11 @@ public class JawrResourceLoader implements ResourceLoader {
 	public boolean exists(String resource, String[] paths) throws IOException {
 		boolean exists = false;
 		Reader rd = null;
-		String resourcePath = PathNormalizer.concatWebPath(paths[0], resource);
+		if(!resource.startsWith("/")) { // relative URL
+			resource = PathNormalizer.concatWebPath(paths[0], resource);
+		}
 		try {
-			rd = getResourceReader(resourcePath);
+			rd = getResourceReader(resource);
 			exists = (rd != null);
 		} catch (ResourceNotFoundException e) {
 			// Nothing to do : exists is already equals to false
@@ -70,9 +72,11 @@ public class JawrResourceLoader implements ResourceLoader {
 			throws IOException {
 		
 		String result = null;
-		String resourcePath = PathNormalizer.concatWebPath(paths[0], resource);
+		if(!resource.startsWith("/")) { // relative URL
+			resource = PathNormalizer.concatWebPath(paths[0], resource);
+		}
 		try {
-			Reader rd = getResourceReader(resourcePath);
+			Reader rd = getResourceReader(resource);
 			result = IOUtils.toString(rd);
 		} catch (ResourceNotFoundException e) {
 			throw new IOException(e);
