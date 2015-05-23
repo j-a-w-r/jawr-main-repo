@@ -202,17 +202,19 @@ public final class GrailsLocaleUtils {
 				.isFileSystemPath(localMsgResourcePath);
 
 		boolean resourceFound = false;
+		String path = localMsgResourcePath;
 		if (!isFileSystemResourcePath) {
 			// Try to retrieve the resource from the servlet context (used in war mode)
-			String path = WEB_INF_DIR + localMsgResourcePath;
+			path = WEB_INF_DIR + localMsgResourcePath;
+		}
+		InputStream is = null;
+		try{
 			InputStream is = rsReader.getResourceAsStream(path);
 			resourceFound =  is != null;
+		}finally{
 			IOUtils.close(is);
-		} else {
-			// Try to retrieve the resource from the filesystem
-			resourceFound = rsReader.getResourceAsStream(localMsgResourcePath) != null;
 		}
-
+		
 		if (resourceFound) {
 
 			String suffix = localMsgResourcePath.substring(messageBundlePath
