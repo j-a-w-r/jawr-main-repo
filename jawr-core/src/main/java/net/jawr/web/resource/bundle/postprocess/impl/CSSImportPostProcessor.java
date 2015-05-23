@@ -31,6 +31,8 @@ import net.jawr.web.resource.bundle.css.CssImageUrlRewriter;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.ResourceGenerator;
+import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
@@ -108,7 +110,13 @@ public class CSSImportPostProcessor extends
 			return "";
 		}
 		
-		if(!cssPathToImport.startsWith("/")) { // relative URL
+		if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
+			
+			ResourceGenerator generator =  jawrConfig.getGeneratorRegistry().getResourceGenerator(path);
+			if(generator != null && generator.getResolver() instanceof SuffixedPathResolver){
+				path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
+			}
+		}else if(!cssPathToImport.startsWith("/")) { // relative URL
 			path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 		}
 		
