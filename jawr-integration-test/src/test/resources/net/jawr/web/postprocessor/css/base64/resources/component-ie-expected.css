@@ -41,7 +41,7 @@ iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
 
 .mandatory { 
 	color:black;
-	background: #fff url(mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img-1159798839) no-repeat left;
+	background: #fff url(mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img-1159798839) no-repeat left;
 	padding-left : 20px;
 	margin-top : 80px;
 	border : thin solid rgb(250,0,255);
@@ -49,13 +49,13 @@ iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
 
 .info { 
 	color:black;
-	background: #fff url(mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img-1159798839) no-repeat left;
+	background: #fff url(mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img-1159798839) no-repeat left;
 	padding-left : 20px;
 	margin-top : 80px;
 	border : thin solid rgb(250,0,255);
 }
 body {
-	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img1378916833");
+	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img1378916833");
 	background-repeat: no-repeat;
 }
 
@@ -67,16 +67,16 @@ div {
 .calendar {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img1794384359");
+	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img1794384359");
 }
 
 .clock {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img1320734193");
+	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img1320734193");
 }
 body {
-	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img1378916833");
+	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img1378916833");
 	background-repeat: no-repeat;
 }
 
@@ -88,11 +88,11 @@ div {
 .calendar {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img1794384359");
+	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img1794384359");
 }
 
 .clock {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1457264041.ie6@/fwk/core/component.css!img1921661629");
+	background-image: url("mhtml:http://localhost:8080/jawr-integration-test/1109471991.ie6@/fwk/core/component.css!img1921661629");
 }

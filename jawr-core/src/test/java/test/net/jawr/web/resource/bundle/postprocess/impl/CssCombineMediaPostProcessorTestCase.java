@@ -13,6 +13,8 @@
  */
 package test.net.jawr.web.resource.bundle.postprocess.impl;
 
+import static test.net.jawr.web.TestUtils.assertContentEquals;
+
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -90,12 +92,12 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		// Css path
 		String filePath = "style/default/assets/someCSS.css";
 
-		String expectedResult = "@media print {"+StringUtils.LINE_SEPARATOR
-				+ ".style { background-image:url(../../images/logo.png); }}"+StringUtils.LINE_SEPARATOR + StringUtils.LINE_SEPARATOR;
+		String expectedResult = "@media print {"+StringUtils.LF
+				+ ".style { background-image:url(../../images/logo.png); }}"+StringUtils.LF + StringUtils.LF;
 		status.setLastPathAdded(filePath);
 
 		String result = processor.postProcessBundle(status, data).toString();
-		assertEquals("Content was not rewritten properly", expectedResult,
+		assertContentEquals("Content was not rewritten properly", expectedResult,
 				result);
 	}
 
@@ -113,12 +115,12 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		// Css path
 		String filePath = "style/default/assets/someCSS.css";
 
-		String expectedResult = "@media screen {"+StringUtils.LINE_SEPARATOR
-				+ ".style { background-image:url(../../images/logo.png); }}"+StringUtils.LINE_SEPARATOR + StringUtils.LINE_SEPARATOR;
+		String expectedResult = "@media screen {"+StringUtils.LF
+				+ ".style { background-image:url(../../images/logo.png); }}"+StringUtils.LF + StringUtils.LF;
 		status.setLastPathAdded(filePath);
 
 		String result = processor.postProcessBundle(status, data).toString();
-		assertEquals("Content was not rewritten properly", expectedResult,
+		assertContentEquals("Content was not rewritten properly", expectedResult,
 				result);
 	}
 	

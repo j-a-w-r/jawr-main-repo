@@ -15,6 +15,7 @@ package net.jawr.web.resource.bundle.postprocess.impl;
 
 import java.io.IOException;
 
+import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
@@ -73,7 +74,8 @@ public class CSSCombineMediaPostProcessor extends
 
 		String bundleMediaTypePropertyName = "jawr.css.bundle."
 				+ status.getCurrentBundle().getName() + ".media";
-		String bundleMediaType = (String) status.getJawrConfig().getProperty(
+		JawrConfig config = status.getJawrConfig();
+		String bundleMediaType = (String) config.getProperty(
 				bundleMediaTypePropertyName);
 		if (bundleMediaType == null) {
 			LOGGER.warn("no bundle media type provided; use 'screen'");
@@ -84,12 +86,13 @@ public class CSSCombineMediaPostProcessor extends
 
 		StringBuffer sb = new StringBuffer(CSS_MEDIA_RULE + " "
 				+ bundleMediaType + " " + CSS_MEDIA_RULE_OPEN
-				+ StringUtils.LINE_SEPARATOR);
+				+ StringUtils.STR_LINE_FEED);
 		sb.append(bundleData);
-		sb.append(CSS_MEDIA_RULE_CLOSE + StringUtils.LINE_SEPARATOR
-				+ StringUtils.LINE_SEPARATOR);
+		sb.append(CSS_MEDIA_RULE_CLOSE + StringUtils.STR_LINE_FEED
+				+ StringUtils.STR_LINE_FEED);
 
 		LOGGER.info("Postprocessing finished");
 		return sb;
 	}
 }
+

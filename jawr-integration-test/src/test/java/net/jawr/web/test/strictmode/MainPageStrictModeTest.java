@@ -80,7 +80,7 @@ public class MainPageStrictModeTest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
-		assertEquals(getUrlPrefix() + "/N33754198/fwk/core/component.css",
+		assertEquals(getUrlPrefix() + "/497434506/fwk/core/component.css",
 				css.getHrefAttribute());
 
 		// Check access to link with wrong hashcode
@@ -104,12 +104,20 @@ public class MainPageStrictModeTest extends AbstractPageTest {
 						+ "/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
-		// Check access to link with wrong hashcode
+		// Check access to link with wrong hashcode of resources already referenced in img tag
 		WebClient webClient = new WebClient();
 		webClient.setThrowExceptionOnFailingStatusCode(false);
 		int status = webClient
 				.getPage(getServerUrlPrefix() + getUrlPrefix()
-						+ "/7777777/img/appIcons/application.png")
+						+ "/cb7777777/img/appIcons/application.png")
+				.getWebResponse().getStatusCode();
+
+		assertEquals(404, status);
+		
+		// Check access to resource with wrong hashcode and not referenced by jawr
+		status = webClient
+				.getPage(getServerUrlPrefix() + getUrlPrefix()
+						+ "/cb7777777/img/calendarIcons/clock/clock_add.png")
 				.getWebResponse().getStatusCode();
 
 		assertEquals(404, status);
@@ -144,7 +152,7 @@ public class MainPageStrictModeTest extends AbstractPageTest {
 	}
 	
 	@Test
-	public void checkAccessToBinaryResourceNotHandlerByJawr() throws FailingHttpStatusCodeException,
+	public void checkAccessToBinaryResourceNotHandledByJawr() throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
 
 		WebClient webClient = new WebClient();

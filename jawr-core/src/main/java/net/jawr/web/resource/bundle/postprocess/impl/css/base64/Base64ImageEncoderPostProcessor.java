@@ -165,7 +165,7 @@ public class Base64ImageEncoderPostProcessor extends
 		Iterator<Entry<String, Base64EncodedResource>> it = encodedImages
 				.entrySet().iterator();
 		StringBuffer mhtml = new StringBuffer();
-		String lineSeparator = net.jawr.web.util.StringUtils.LINE_SEPARATOR;
+		String lineSeparator = StringUtils.STR_LINE_FEED;
 		mhtml.append("/*!" + lineSeparator);
 		mhtml.append("Content-Type: multipart/related; boundary=\""
 				+ BOUNDARY_SEPARATOR + "\"" + lineSeparator + lineSeparator);

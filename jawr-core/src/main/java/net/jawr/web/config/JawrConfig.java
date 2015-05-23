@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi, Matt Ruby
+ * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi, Matt Ruby
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -244,7 +244,9 @@ public class JawrConfig implements Serializable {
 	 */
 	private LocaleResolver localeResolver;
 
-	/** The bundle hashcode generator */
+	/** 
+	 * The bundle hashcode generator 
+	 */
 	private BundleHashcodeGenerator bundleHashcodeGenerator;
 
 	/**

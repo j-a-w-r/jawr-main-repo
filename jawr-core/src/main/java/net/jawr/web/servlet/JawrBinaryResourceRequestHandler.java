@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014  Ibrahim Chaehoi
+ * Copyright 2009-2015  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,8 +27,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -49,8 +47,8 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.servlet.util.MIMETypesSupport;
-import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,23 +68,6 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JawrBinaryResourceRequestHandler.class);
-
-	/** The cache buster pattern */
-	private static Pattern cacheBusterPattern = Pattern.compile("("
-			+ "(([a-zA-Z0-9]+)_)?" + JawrConstant.CACHE_BUSTER_PREFIX
-			+ ")[a-zA-Z0-9]+(/.*)$");
-
-	/**
-	 * The index of the generated web resource prefix in the cache buster
-	 * pattern
-	 */
-	private static final int GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX = 3;
-
-	/** The cache buster replace pattern for standard web resource */
-	private static final String CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN = "$4";
-
-	/** The cache buster replace pattern for generated web resource */
-	private static final String CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN = "$3:$4";
 
 	/** The resource handler */
 	private ResourceReaderHandler rsReaderHandler;
@@ -475,10 +456,13 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
 			}
+		} catch (EOFException eofex) {
+			LOGGER.info("Browser cut off response", eofex);
+		} catch (ResourceNotFoundException e) {
+			LOGGER.info("Unable to write resource " + request.getRequestURI(),	e);
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		} catch (Exception ex) {
-
-			LOGGER.error("Unable to load the image for the request URI : "
-					+ request.getRequestURI(), ex);
+			LOGGER.error("Unable to write resource " + request.getRequestURI(),	ex);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 
@@ -574,7 +558,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String extension = getExtension(filePath);
 		if (extension == null) {
 
-			LOGGER.error("No extension found for the request URI : "
+			LOGGER.info("No extension found for the request URI : "
 					+ requestUri);
 			return null;
 		}
@@ -582,8 +566,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String contentType = (String) binaryMimeTypeMap.get(extension);
 		if (contentType == null) {
 
-			LOGGER.error("No binary extension match the extension '" + extension
-					+ "' for the request URI : " + requestUri);
+			LOGGER.info("No binary extension match the extension '"
+					+ extension + "' for the request URI : " + requestUri);
 			return null;
 		}
 		return contentType;
@@ -635,6 +619,12 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			IOUtils.copy(is, os);
 		} catch (EOFException eofex) {
 			LOGGER.debug("Browser cut off response", eofex);
+		} catch (IOException e) {
+			if (ClientAbortExceptionResolver.isClientAbortException(e)) {
+				LOGGER.debug("Browser cut off response", e);				
+			} else {
+				throw e;
+			}
 		} finally {
 			IOUtils.close(is);
 		}
@@ -657,20 +647,9 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 				realFilePath = realFilePath.substring(idx);
 			}
 		} else {
-			if (realFilePath.startsWith(JawrConstant.URL_SEPARATOR)) {
-				realFilePath = realFilePath.substring(1);
-			}
-
-			Matcher matcher = cacheBusterPattern.matcher(realFilePath);
-			StringBuffer result = new StringBuffer();
-			if (matcher.find()) {
-				matcher.appendReplacement(
-						result,
-						StringUtils.isEmpty(matcher
-								.group(GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX)) ? CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN
-								: CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN);
-				realFilePath = result.toString();
-			}
+			String[] resourceInfo = PathNormalizer
+					.extractBinaryResourceInfo(realFilePath);
+			realFilePath = resourceInfo[0];
 		}
 
 		return realFilePath;

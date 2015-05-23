@@ -45,7 +45,11 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
 	/** The new line separator */
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	public static final String LINE_SEPARATOR = "\r\n"; 
+	//public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+	/** The string value for line feed */
+	public static final String STR_LINE_FEED= "\n"; 
 	
 	/**
 	 * <code>\u000a</code> linefeed LF ('\n').
@@ -266,4 +270,14 @@ public class StringUtils {
     
     	return Pattern.compile(separator).split(str, -1);
     }
+    
+    /**
+     * Normalize the line feed of the String. "\r\n" is replaced by "\n"
+     * @param value the value to normalized
+     * @return the normalized value
+     */
+    public static String normalizeLineFeed(String value){
+    	return value.replace("\r\n", "\n");
+    }
+    
 }

@@ -2,7 +2,7 @@
 
 <html>
 <head>    
- <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/cssJawr/N2077757969/fwk/core/component.css" >
+ <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/cssJawr/654815727/fwk/core/component.css" >
 
  <script type="text/javascript" src="/jawr-integration-test/690372103.en_US/js/bundle/msg.js" ></script>
 

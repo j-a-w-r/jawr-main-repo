@@ -1022,8 +1022,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				// Add new line at the end if it doesn't exist
 				StringBuffer buffer = writer.getBuffer();
 
-				if (!buffer.toString().endsWith(StringUtils.LINE_SEPARATOR)) {
-					buffer.append(StringUtils.LINE_SEPARATOR);
+				if (!buffer.toString().endsWith(StringUtils.STR_LINE_FEED)) {
+					buffer.append(StringUtils.STR_LINE_FEED);
 				}
 
 				// Do unitary postprocessing.

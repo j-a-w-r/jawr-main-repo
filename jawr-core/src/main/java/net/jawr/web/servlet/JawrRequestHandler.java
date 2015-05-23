@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012  Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2015  Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -67,6 +67,7 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.bundle.ServletContextResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
+import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -686,6 +687,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			throws ServletException, IOException {
 
 		try {
+			// Checks that the requested Path is a normalized one. If not don't
+			// treat the request
+			if (!PathNormalizer.isNormalized(requestedPath)) {
+				LOGGER.warn("Un-normalized paths are not supported: "
+						+ requestedPath);
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+
 			// Initialize the Thread local for the Jawr context
 			initThreadLocalJawrContext(request);
 
@@ -700,8 +710,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				this.configChanged(propertiesSource.getConfigProperties());
 			}
 
-			if (LOGGER.isDebugEnabled())
+			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Request received for path:" + requestedPath);
+			}
 
 			if (handleSpecificRequest(requestedPath, request, response)) {
 				return;
@@ -761,7 +772,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * @param response
 	 *            the response
 	 * @param contentType
-	 *            teh ontentt type
+	 *            the content type
 	 * @return true if the resource exists and has been copied in the response
 	 * @throws IOException
 	 *             if an IO exception occurs
@@ -822,7 +833,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					&& !JawrConstant.CSS_TYPE
 							.equals(getExtension(requestedPath))) {
 
-				if (null == bundlesHandler.resolveBundleForPath(requestedPath) && isValidRequestedPath(requestedPath)) {
+				if (null == bundlesHandler.resolveBundleForPath(requestedPath)
+						&& isValidRequestedPath(requestedPath)) {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Path '"
 								+ requestedPath
@@ -929,7 +941,13 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				}
 			}
 		} catch (EOFException eofex) {
-			LOGGER.debug("Browser cut off response", eofex);
+			LOGGER.info("Browser cut off response", eofex);
+		} catch (IOException e) {
+			if (ClientAbortExceptionResolver.isClientAbortException(e)) {
+				LOGGER.debug("Browser cut off response", e);
+			} else {
+				throw e;
+			}
 		} catch (ResourceNotFoundException e) {
 			logBundleNotFound(requestedPath);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);

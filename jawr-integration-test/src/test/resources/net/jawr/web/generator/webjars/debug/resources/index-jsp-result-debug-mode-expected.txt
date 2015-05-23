@@ -11,7 +11,7 @@
 <script type="text/javascript">/* Finished adding members resolved by /fwk/core/component.css */</script>
 
  <script type="text/javascript">/* Start adding global members. */</script>
-<script type="text/javascript" src="/jawr-integration-test/jawr_generator.js?d=11111&generationConfigParam=webjars%3A%2Fjquery%2F1.10.2%2Fjquery.js" ></script>
+<script type="text/javascript" src="/jawr-integration-test/jawr_generator.js?d=11111&generationConfigParam=webjars%3A%2Fjquery%2F1.11.1%2Fjquery.js" ></script>
 <script type="text/javascript" src="/jawr-integration-test/jawr_generator.js?d=11111&generationConfigParam=webjars%3A%2Fbootstrap%2F3.2.0%2Fjs%2Fbootstrap.js" ></script>
 <script type="text/javascript">/* Finished adding global members. */</script>
 <script type="text/javascript">/* Start adding members resolved by '/js/bundle/msg.js'. Bundle id is: '/js/bundle/msg.js' */</script>

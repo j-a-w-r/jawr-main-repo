@@ -68,7 +68,6 @@ public abstract class AbstractPageTest {
 	public void setup() throws Exception {
 
 		LOGGER.debug("****** Start Test "+getClass()+" *********");
-		
 		initConfigFile();
 		JawrIntegrationServer.getInstance().setup();
 

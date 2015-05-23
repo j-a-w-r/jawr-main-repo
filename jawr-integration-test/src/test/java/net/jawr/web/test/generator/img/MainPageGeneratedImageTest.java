@@ -76,7 +76,7 @@ public class MainPageGeneratedImageTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/1975565861/fwk/core/component.css",
+				getUrlPrefix()+"/1919128185/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

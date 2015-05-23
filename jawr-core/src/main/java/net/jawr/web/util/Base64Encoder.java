@@ -30,8 +30,7 @@ package net.jawr.web.util;
 public class Base64Encoder {
 
 	// The line separator string of the operating system.
-	private static final String systemLineSeparator = System
-			.getProperty("line.separator");
+	private static final String systemLineSeparator = System.getProperty("line.separator");
 
 	// Mapping table from 6-bit nibbles to Base64 characters.
 	private static char[] map1 = new char[64];

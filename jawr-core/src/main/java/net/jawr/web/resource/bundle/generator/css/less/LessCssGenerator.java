@@ -254,7 +254,7 @@ public class LessCssGenerator extends AbstractCSSGenerator implements
 
 		} catch (LessException e) {
 			throw new RuntimeException(
-					"Problem compiling Less CSS from Resource '" + path + "'",
+					"Problem compiling Less CSS from Resource '" + e.getFilename() + "'",
 					e);
 		}
 	}

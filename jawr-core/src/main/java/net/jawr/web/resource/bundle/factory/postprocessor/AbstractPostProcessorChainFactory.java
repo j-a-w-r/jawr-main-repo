@@ -74,7 +74,7 @@ public abstract class AbstractPostProcessorChainFactory implements	PostProcessor
 		
 		AbstractChainedResourceBundlePostProcessor chain = null;
 		while(tk.hasMoreTokens())
-			chain = addOrCreateChain(chain,tk.nextToken());
+			chain = addOrCreateChain(chain,tk.nextToken().trim());
 		
 		return chain;
 	}

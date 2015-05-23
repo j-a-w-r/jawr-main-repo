@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2009-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -283,7 +283,9 @@ public class ServletContextResourceReaderHandler implements
 							rd = rsReader.getResource(resourceName,
 									processingBundle);
 						} catch (Exception e) {
-							throw new ResourceNotFoundException(resourceName, e);
+							LOGGER.info("An exception occured while trying to read resource '"
+									+ resourceName
+									+ "'. Continuing with other readers.", e);
 						}
 						if (rd != null) {
 							break;
@@ -356,8 +358,13 @@ public class ServletContextResourceReaderHandler implements
 				if (!(rsReader instanceof ResourceGenerator)
 						|| ((ResourceGenerator) rsReader).getResolver()
 								.matchPath(resourceName)) {
-
-					is = rsReader.getResourceAsStream(resourceName);
+					try{
+						is = rsReader.getResourceAsStream(resourceName);
+					}catch(Exception e){
+						LOGGER.info("An exception occured while trying to read resource '"
+								+ resourceName
+								+ "'. Continuing with other readers.", e);
+					}
 					if (is != null) {
 						break;
 					}

@@ -17,7 +17,8 @@ public class SampleImageGenerator implements StreamResourceGenerator {
 	public InputStream createResourceAsStream(GeneratorContext context) {
 		
 		ServletContext servletContext = context.getConfig().getContext();
-		return servletContext.getResourceAsStream("/img/"+context.getPath());
+		String path = "/img" + context.getPath();
+		return servletContext.getResourceAsStream(path);
 	}
 
 	/* (non-Javadoc)

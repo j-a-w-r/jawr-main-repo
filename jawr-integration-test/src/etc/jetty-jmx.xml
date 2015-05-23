@@ -1,15 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 
-
-<!-- =============================================================== -->
-<!-- Configure the JVM JMX Server                                    -->
-<!-- this configuration file should be used in combination with      -->
-<!-- other configuration files.  e.g.                                -->
-<!--    java -jar start.jar etc/jetty-jmx.xml etc/jetty.xml          -->
-<!-- See jetty-jmx-mx4j.xml for a non JVM server solution            -->
-<!-- =============================================================== -->
-<Configure id="Server" class="org.mortbay.jetty.Server">
+<Configure id="Server" class="org.eclipse.jetty.Server">
 
     <!-- =========================================================== -->
     <!-- Initialize an mbean server                                  -->
@@ -38,7 +30,7 @@
     <Get id="Container" name="container">
       <Call name="addEventListener">
         <Arg>
-          <New class="org.mortbay.management.MBeanContainer">
+          <New class="org.eclipse.jetty.jmx.MBeanContainer">
             <Arg><Ref id="MBeanServer"/></Arg>
             <!-- If using < jdk1.5 uncomment to start http adaptor -->
             <Set name="managementPort">8082</Set>
