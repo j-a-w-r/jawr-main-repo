@@ -9,34 +9,8 @@
 	
 	<head>
 		<title></title>
-		<style type="">
-			h2{display:none}
-			#firstPara{
-				clear:right;
-				margin-top:100px
-			}
-			#mainJawrLogo {
-				border:0 !important;
-				margin:auto 0 auto;
-				float:left;
-			}
-			#jawrlinks {
-				float:right;
-				width:45%;
-				text-align:right;
-				margin-right:-20px;
-			}
-			#jawrlinks img {
-				margin-bottom:10px;
-			}
-			#badges{
-				float:right;
-				clear:right;
-			}
-			#badges img  { border:0 !important;}
-		</style>
+		<link rel="stylesheet" href="./css/specific.css" />
 	</head>
-	
   <body>
 	
     <section name="jawr">
@@ -174,7 +148,7 @@
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
-      	  <li> <strong>23nd May 2015</strong>: Version 3.7 released:<br/>
+      	  <li> <strong>23rd May 2015</strong>: Version 3.7 released:<br/>
 	      This version is containing bug fixes and some new features.<br/><br/>
 	  	  <strong>Important note : </strong>
 	  	  The version 3.7 of Jawr requires Java 1.7.<br/>

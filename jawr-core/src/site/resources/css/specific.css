@@ -1,0 +1,24 @@
+h2{display:none}
+#firstPara{
+	clear:right;
+	margin-top:100px
+}
+#mainJawrLogo {
+	border:0 !important;
+	margin:auto 0 auto;
+	float:left;
+}
+#jawrlinks {
+	float:right;
+	width:45%;
+	text-align:center;
+	margin-right:-20px;
+}
+#jawrlinks img {
+	margin-bottom:10px;
+}
+#badges{
+	float:right;
+	clear:right;
+}
+#badges img  { border:0 !important;}
