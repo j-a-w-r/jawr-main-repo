@@ -23,15 +23,15 @@ class JawrTagLib {
 	 * script Tag: generates javascript script tags. 
 	 * Attributes: 
 	 * src (required): Set the source of the resource or bundle to retrieve. 
-	 * useRandomParam (optional, default true): Set wether random param will be added in development mode to generated urls. 
+	 * useRandomParam (optional, default ''): Set wether random param will be added in development mode to generated urls. 
 	 */
 	def script = { attrs ->
-		boolean useRandomParam = null == attrs['useRandomParam'] ? true : attrs['useRandomParam'];
+		
 		boolean async = null == attrs['async'] ? false : attrs['async'];
 		boolean defer = null == attrs['defer'] ? false : attrs['defer'];
 		
 		def jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(servletContext[JawrConstant.JS_CONTEXT_ATTRIBUTE],useRandomParam, async, defer);
+		jsRenderer.init(servletContext[JawrConstant.JS_CONTEXT_ATTRIBUTE],attrs['useRandomParam'], async, defer);
 		
 		// set the debug override
 		RendererRequestUtils.setRequestDebuggable(request,jsRenderer.getBundler().getConfig());
@@ -46,18 +46,18 @@ class JawrTagLib {
 	 * Attributes: 
 	 * src (required): Set the source of the resource or bundle to retrieve. 
 	 * media(optional, default 'screen'):Set the media attribute to use in the link tag. 
-	 * useRandomParam (optional, default true): Set wether random param will be added in development mode to generated urls. 
+	 * useRandomParam (optional, default ''): Set wether random param will be added in development mode to generated urls. 
 	 * alternate (optional, default false): Sets the link as alternate stysheet. 
  	 * displayAlternate (optional, default false): Displays all the variant CSS bundle of the CSS bundle defined in src. 
  	 * title (optional, default ''): Sets the title of the link. 
 	 */ 
 	def style = { attrs ->
-		boolean useRandomParam = attrs['useRandomParam'] == null ? true : attrs['useRandomParam'];
+		
 		boolean alternate = attrs['alternate'] == null ? false : attrs['alternate'];
 		boolean displayAlternate = attrs['displayAlternate'] == null ? false : attrs['displayAlternate'];
 		
 		def cssRenderer = new CSSHTMLBundleLinkRenderer();
-		cssRenderer.init(servletContext[JawrConstant.CSS_CONTEXT_ATTRIBUTE],useRandomParam, attrs['media'], alternate, displayAlternate, attrs['title']);
+		cssRenderer.init(servletContext[JawrConstant.CSS_CONTEXT_ATTRIBUTE],attrs['useRandomParam'], attrs['media'], alternate, displayAlternate, attrs['title']);
 		
 		// set the debug override
 		RendererRequestUtils.setRequestDebuggable(request,cssRenderer.getBundler().getConfig());
