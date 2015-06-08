@@ -49,6 +49,12 @@ public class RendererRequestUtils {
 	/** The IE user agent pattern */
 	private static Pattern IE_USER_AGENT_PATTERN = Pattern.compile("MSIE (\\d+)");
 	
+	/** The attribute name of the exception in the request when a dispatch error happens */
+	private static final String ERROR_EXCEPTION = "javax.servlet.error.exception";
+	
+	/** The attribute name of the flag indicating if Jawr is handling a error dispatch */
+	private static final String JAWR_ERROR_DISPATCH = "net.jawr.error.dispatch";
+	
 	/**
 	 * Returns the bundle renderer context.
 	 * 
@@ -58,6 +64,12 @@ public class RendererRequestUtils {
 	 */
 	public static BundleRendererContext getBundleRendererContext(HttpServletRequest request, BundleRenderer renderer) {
 		String bundleRendererCtxAttributeName = BUNDLE_RENDERER_CONTEXT_ATTR_PREFIX+renderer.getResourceType();
+		
+		// If we are handling a error dispatch, we should remove the current RendererContext to use a new one 
+		if(request.getAttribute(ERROR_EXCEPTION) != null && request.getAttribute(JAWR_ERROR_DISPATCH) == null){
+				request.removeAttribute(bundleRendererCtxAttributeName);
+				request.setAttribute(JAWR_ERROR_DISPATCH, Boolean.TRUE);
+		}
 		
 		BundleRendererContext ctx = (BundleRendererContext) request.getAttribute(bundleRendererCtxAttributeName);
 		if(ctx == null){
