@@ -144,6 +144,24 @@ public class CSSImportPostProcessorTest {
 	}
 	
 	@Test
+	public void testBasicRelativeURLImport1() {
+		// basic test
+		StringBuffer data = new StringBuffer("@import url(temp.css);\n" +
+				".blue { color : rgb(0, 0, 255) } ");
+
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		String expectedContent = ".test { align : left; \n" +
+						"padding : 0 7px; \n" +
+						"background : url('../img/rainbow.png'); \n"+
+				"}\n" +
+				".blue { color : rgb(0, 0, 255) } ";
+
+		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
+		String result = processor.postProcessBundle(status, data).toString();
+		assertEquals("Content was not rewritten properly",expectedContent, result);
+	}
+
+	@Test
 	public void testRelativeURLImportWithSpaceAndSimpleQuote() {
 		// basic test
 		StringBuffer data = new StringBuffer("@import url( \n 'temp.css' \n );\n" +
