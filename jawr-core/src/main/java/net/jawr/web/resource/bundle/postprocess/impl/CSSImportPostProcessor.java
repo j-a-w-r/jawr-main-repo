@@ -52,7 +52,7 @@ public class CSSImportPostProcessor extends
 	
 	/** The url pattern */
 	private static final Pattern IMPORT_PATTERN = Pattern.compile(	"@import\\s*url\\(\\s*" // 'url(' and any number of whitespaces 
-																+ "[\"']?([^\"']*)[\"']?" // any sequence of characters, except an unescaped ')'
+																+ "[\"']?([^\"')]*)[\"']?" // any sequence of characters, except an unescaped ')'
 																+ "\\s*\\)\\s*(\\w+)?\\s*;?",  // Any number of whitespaces, then ')'
 																Pattern.CASE_INSENSITIVE); // works with 'URL('
 	
