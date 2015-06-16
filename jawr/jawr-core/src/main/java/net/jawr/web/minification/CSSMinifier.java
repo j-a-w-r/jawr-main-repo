@@ -30,13 +30,19 @@ import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 public class CSSMinifier {
 
 	// This regex captures comments
-	private static final String COMMENT_REGEX = "(/\\*[^*]*\\*+([^/][^*]*\\*+)*/)";
+	private static final String COMMENT_REGEX = "(/\\*(?!(!))[^*]*\\*+([^/][^*]*\\*+)*/)";
+
+	// This regex captures licence (ex : /*! My licence content */
+	private static final String LICENCE_REGEX = "(/\\*(?=(!))[^*]*\\*+([^/][^*]*\\*+)*/)";
 
 	// Captures CSS strings
 	private static final String QUOTED_CONTENT_REGEX = "([\"']).*?\\1";
 
 	// A placeholder string to replace and restore CSS strings
 	private static final String STRING_PLACEHOLDER = "______'JAWR_STRING'______";
+
+	// A placeholder string to replace and restore licence comments
+	private static final String LICENCE_PLACEHOLDER = "______'LICENCE'______";
 
 	// Captured CSS rules (requires replacing CSS strings with a placeholder, or
 	// quoted braces will fool it.
@@ -55,6 +61,8 @@ public class CSSMinifier {
 
 	private static final Pattern COMMENTS_PATTERN = Pattern.compile(
 			COMMENT_REGEX, Pattern.DOTALL);
+	private static final Pattern LICENCE_PATTERN = Pattern.compile(
+			LICENCE_REGEX, Pattern.DOTALL);
 	private static final Pattern SPACES_PATTERN = Pattern.compile(SPACES_REGEX,
 			Pattern.DOTALL);
 
@@ -64,8 +72,11 @@ public class CSSMinifier {
 			Pattern.DOTALL);
 	private static final Pattern NEW_LINES_TAB_PATTERN = Pattern.compile(
 			NEW_LINE_TABS_REGEX, Pattern.DOTALL);
-	private static final Pattern STRING_PLACE_HOLDE_PATTERN = Pattern.compile(
+	private static final Pattern STRING_PLACEHOLDER_PATTERN = Pattern.compile(
 			STRING_PLACEHOLDER, Pattern.DOTALL);
+
+	private static final Pattern LICENCE_PLACEHOLDER_PATTERN = Pattern.compile(
+			LICENCE_PLACEHOLDER, Pattern.DOTALL);
 
 	private static final String SPACE = " ";
 	private static final String BRACKET_OPEN = "{";
@@ -84,6 +95,9 @@ public class CSSMinifier {
 	private static final String COLON = ":";
 	private static final String SEMICOLON = ";";
 
+	/** The flag indicating if the licence info should be kept */
+	private boolean keepLicence;
+	
 	/**
 	 * Template class to abstract the pattern of iterating over a Matcher and
 	 * performing string replacement.
@@ -102,6 +116,22 @@ public class CSSMinifier {
 		abstract String matchCallback(Matcher matcher);
 	}
 
+	
+	/**
+	 * Constructor 
+	 */
+	public CSSMinifier() {
+		this(false);
+	}
+	
+	/**
+	 * Constructor 
+	 * @param keepLicence the flag indicating if we should kept the licence
+	 */
+	public CSSMinifier(boolean keepLicence){
+		this.keepLicence = keepLicence;
+	}
+	
 	/**
 	 * @param data
 	 *            CSS to minify
@@ -113,16 +143,33 @@ public class CSSMinifier {
 				.replaceAll("");
 
 		// Temporarily replace the strings with a placeholder
-		final List<String> strings = new ArrayList<String>();
-		final Matcher stringMatcher = QUOTED_CONTENT_PATTERN
+		final List<String> licences = new ArrayList<String>();
+		final Matcher licenceMatcher = LICENCE_PATTERN
 				.matcher(compressed);
 
 		compressed = new MatcherProcessorCallback() {
 			String matchCallback(final Matcher matcher) {
 				final String match = matcher.group();
-				strings.add(match);
-				return STRING_PLACEHOLDER;
+				String replacement = "";
+				if(keepLicence){
+					licences.add(match);
+					replacement = LICENCE_PLACEHOLDER;
+				}
+				return replacement;
 			}
+		}.processWithMatcher(licenceMatcher);
+
+		// Temporarily replace the strings with a placeholder
+		final List<String> strings = new ArrayList<String>();
+		final Matcher stringMatcher = QUOTED_CONTENT_PATTERN
+					.matcher(compressed);
+
+			compressed = new MatcherProcessorCallback() {
+				String matchCallback(final Matcher matcher) {
+						final String match = matcher.group();
+						strings.add(match);
+						return STRING_PLACEHOLDER;
+					}
 		}.processWithMatcher(stringMatcher);
 
 		// Grab all rules and replace whitespace in selectors
@@ -174,17 +221,29 @@ public class CSSMinifier {
 		}.processWithMatcher(matcher);
 
 		// Restore all Strings
-		final Matcher restoreMatcher = STRING_PLACE_HOLDE_PATTERN
+		final Matcher restoreStringMatcher = STRING_PLACEHOLDER_PATTERN
 				.matcher(compressed);
-		final Iterator<String> it = strings.iterator();
+		final Iterator<String> itStr = strings.iterator();
 		compressed = new MatcherProcessorCallback() {
 			String matchCallback(final Matcher matcher) {
 
-				final String replacement = it.next();
+				final String replacement = itStr.next();
 				return replacement;
 			}
-		}.processWithMatcher(restoreMatcher);
+		}.processWithMatcher(restoreStringMatcher);
 
+		// Restore all licences
+		final Matcher restoreLicenceMatcher = LICENCE_PLACEHOLDER_PATTERN
+				.matcher(compressed);
+		final Iterator<String> itLicence = licences.iterator();
+		compressed = new MatcherProcessorCallback() {
+			String matchCallback(final Matcher matcher) {
+
+				final String replacement = itLicence.next();
+				return replacement;
+			}
+		}.processWithMatcher(restoreLicenceMatcher);
+		
 		return new StringBuffer(compressed);
 	}
 

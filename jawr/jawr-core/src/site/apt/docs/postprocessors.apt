@@ -280,6 +280,9 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	
 	This processor removes comments and unneeded whitespace using search and replace with regular expressions. It is on by default 
 	and is almost as efficient as the YUI compressor. 
+	
+	The user can define if the licence comment (/*! ... */) should be kept or not by using the following attribute 
+	*jawr.css.postprocessor.cssmin.keepLicence* in the configuration file. 
 		  
 ***<<CSS combine Media>>
 	

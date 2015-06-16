@@ -21,6 +21,16 @@ public class CSSMinifierTest extends TestCase {
 		assertEquals("Error in minifier",expected.toString(), actual.toString());
 	}
 	
+	public void testMinifyCSSWithLicence() throws Exception {
+		
+		source = FileUtils.readFile(new File(FileUtils.getClasspathRootDir() + TEST_FOLDER + "/source.css"));
+		expected = FileUtils.readFile(new File(FileUtils.getClasspathRootDir() +  TEST_FOLDER +"/expected_withLicence.css"));
+		
+		CSSMinifier minifier = new CSSMinifier(true);
+		StringBuffer actual = minifier.minifyCSS(new StringBuffer(source));
+		assertEquals("Error in minifier",expected.toString(), actual.toString());
+	}
+
 	public void test2MinifyCSS() throws Exception {
 		
 		source = FileUtils.readFile(new File(FileUtils.getClasspathRootDir() + TEST_FOLDER + "/source2.css"));
