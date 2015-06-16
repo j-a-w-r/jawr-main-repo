@@ -74,7 +74,7 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 			LOGGER.error(fatal, "Cause:");
 			LOGGER.error(fatal, e.getMessage(), e);
 			throw e;
-		} catch (RuntimeException e) {
+		} catch (Throwable e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
 			LOGGER.error(fatal, "Jawr servlet with name "
 					+ getServletConfig().getServletName()
