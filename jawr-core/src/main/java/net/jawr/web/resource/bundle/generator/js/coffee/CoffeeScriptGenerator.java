@@ -57,7 +57,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION = "jawr.js.generator.coffee.script.location";
 
 	/** The default coffee script JS location */
-	private static final String DEFAULT_COFFEE_SCRIPT_JS_LOCATION = "net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js";
+	private static final String DEFAULT_COFFEE_SCRIPT_JS_LOCATION = "/net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js";
 
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
