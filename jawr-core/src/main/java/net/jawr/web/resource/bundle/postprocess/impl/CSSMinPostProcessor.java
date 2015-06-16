@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,6 +28,9 @@ import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
  */
 public class CSSMinPostProcessor extends AbstractChainedResourceBundlePostProcessor {
 	
+	/** The property name of the flag indicating if the licence information should be kept */
+	private static final String JAWR_CSS_POSTPROCESSOR_CSSMIN_KEEP_LICENCE = "jawr.css.postprocessor.cssmin.keepLicence";
+	
 	/** The CSS minifier */
 	private CSSMinifier minifier;
 	
@@ -36,13 +39,19 @@ public class CSSMinPostProcessor extends AbstractChainedResourceBundlePostProces
 	 */
 	public CSSMinPostProcessor() {
 		super(PostProcessFactoryConstant.CSS_MINIFIER);
-		this.minifier = new CSSMinifier();
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.postprocess.impl.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus, java.lang.StringBuffer)
 	 */
 	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) throws IOException {
+	
+		if(minifier == null){
+	
+			boolean keepLicence = status.getJawrConfig().getBooleanProperty(JAWR_CSS_POSTPROCESSOR_CSSMIN_KEEP_LICENCE, false);
+			this.minifier = new CSSMinifier(keepLicence);
+		}
+		
 		try{
 			return minifier.minifyCSS(bundleData);
 		}catch(StackOverflowError e){

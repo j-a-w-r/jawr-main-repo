@@ -91,6 +91,8 @@ Descriptor file syntax
 *---------------*---------*--------------+----------------+
 | jawr.css.postprocessor.base64ImageEncoder.encode.sprite | Boolean | Enable/disable the base64 image encode on generated sprite image.  | False| 
 *---------------*---------*--------------+----------------+
+| jawr.css.postprocessor.cssmin.keepLicence | Boolean | Flag indicating if the licence comments (/*! ... */) should be kept or not. | False| 
+*---------------*---------*--------------+----------------+
 | jawr.css.skin.type.mapping | String | The type of mapping for the skin directory structure. The acceptable values are : <skin_locale> and <locale_skin>.  | skin_locale | 
 *---------------*---------*--------------+----------------+
 | jawr.css.skin.default.root.dirs | String | The comma separated list of skin base directory.  | none| 
