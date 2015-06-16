@@ -366,7 +366,7 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected final void addComment(String commentText, Writer out)
+	protected void addComment(String commentText, Writer out)
 			throws IOException {
 		StringBuffer sb = new StringBuffer(
 				"<script type=\"text/javascript\">/* ");
