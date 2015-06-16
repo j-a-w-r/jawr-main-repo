@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -366,7 +366,7 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected final void addComment(String commentText, Writer out)
+	protected void addComment(String commentText, Writer out)
 			throws IOException {
 		StringBuffer sb = new StringBuffer(
 				"<script type=\"text/javascript\">/* ");
