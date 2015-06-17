@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -149,17 +149,14 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 		this.workingDir = workingDir;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#generateResourceForBundle(net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
 	@Override
 	protected Reader generateResourceForBundle(GeneratorContext context) {
-
+		
 		Reader reader = helper.createResource(context);
+		
 		if (reader != null) {
 			reader = createTempResource(context, reader);
 		}

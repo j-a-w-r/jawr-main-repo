@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2014 Ibrahim Chaehoi
+ * Copyright 2012-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,6 @@ package net.jawr.web.resource.bundle.generator.css.less;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -209,21 +208,24 @@ public class LessCssGenerator extends AbstractCSSGenerator implements
 	protected Reader generateResourceForBundle(GeneratorContext context) {
 
 		String path = context.getPath();
-
+		String content = null;
 		Reader rd = null;
 		try {
-			List<Class<?>> excluded = new ArrayList<Class<?>>();
-			excluded.add(ILessCssResourceGenerator.class);
-			rd = context.getResourceReaderHandler().getResource(path, false,
-					excluded);
+			if(context.isContentProvided()){
+				content = context.getProvidedSourceContent();
+			}else{
+				List<Class<?>> excluded = new ArrayList<Class<?>>();
+				excluded.add(ILessCssResourceGenerator.class);
+				rd = context.getResourceReaderHandler().getResource(path, false,
+						excluded);
 
-			if (rd == null) {
-				throw new ResourceNotFoundException(path);
+				if (rd == null) {
+					throw new ResourceNotFoundException(path);
+				}
+				content = IOUtils.toString(rd);
 			}
-			StringWriter swr = new StringWriter();
-			IOUtils.copy(rd, swr);
-
-			String result = compile(swr.toString(), path);
+						
+			String result = compile(content, path);
 			rd = new StringReader(result);
 
 		} catch (ResourceNotFoundException e) {

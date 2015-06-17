@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,15 +14,19 @@
 package net.jawr.web.resource.bundle.generator.classpath;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
+import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.TextResourceGenerator;
 
 /**
  * Abstract common functionality to retrieve resources (js and css) from the classpath. 
@@ -33,7 +37,7 @@ import net.jawr.web.resource.bundle.generator.GeneratorContext;
 public class ClassPathGeneratorHelper {
 	
 	/** The prefix to preppend before searching resource in classpath */
-	private final String prefix;
+	private final String classpathPrefix;
 	
 	/**
 	 * Constructor
@@ -44,9 +48,10 @@ public class ClassPathGeneratorHelper {
 	
 	/**
 	 * Constructor
+	 * @param classpathPrefix the classpath prefix
 	 */
-	public ClassPathGeneratorHelper(String prefix) {
-		this.prefix = prefix;
+	public ClassPathGeneratorHelper(String classpathPrefix) {
+		this.classpathPrefix = classpathPrefix;
 	}
 	
 	/**
@@ -58,7 +63,23 @@ public class ClassPathGeneratorHelper {
 		
 		InputStream is = createStreamResource(context);
 		ReadableByteChannel chan = Channels.newChannel(is);
-		return Channels.newReader(chan,context.getCharset().newDecoder (),-1);
+		Reader reader = Channels.newReader(chan,context.getCharset().newDecoder (),-1);
+		
+		GeneratorRegistry generatorRegistry = context.getConfig().getGeneratorRegistry();
+		if(generatorRegistry.isPathGenerated(context.getPath())){
+			
+			String content = null;
+			try {
+				content = IOUtils.toString(reader);
+			} catch (IOException e) {
+				throw new BundlingProcessException(e);
+			}
+			context.setProvidedSourceContent(content);
+			TextResourceGenerator generator = (TextResourceGenerator) generatorRegistry.getResourceGenerator(context.getPath());
+			reader = generator.createResource(context);
+		}
+		
+		return reader;
 	}
 	
 	/**
@@ -67,12 +88,15 @@ public class ClassPathGeneratorHelper {
 	 * @return the input stream
 	 */
 	public InputStream createStreamResource(GeneratorContext context) {
+		InputStream is = null; 
 		try {
 			
-			String path = PathNormalizer.normalizePath(prefix+context.getPath());
-			return ClassLoaderResourceUtils.getResourceAsStream(path, this);
+			String resourcePath = context.getPath();
+			String path = PathNormalizer.normalizePath(classpathPrefix+resourcePath);
+			is = ClassLoaderResourceUtils.getResourceAsStream(path, this);
 		} catch (FileNotFoundException e) {
 			throw new BundlingProcessException(e);
 		}
+		return is;
 	}
 }
