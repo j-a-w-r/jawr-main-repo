@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -45,10 +45,10 @@ public class GeneratorContext {
 
 	/** The variant map */
 	private Map<String, String> variantMap;
-	
+
 	/** The variant sets for the current path */
 	private Map<String, VariantSet> variantSets;
-	
+
 	/** The locale */
 	private Locale locale;
 
@@ -62,20 +62,32 @@ public class GeneratorContext {
 	private ResourceReaderHandler resourceReaderHandler;
 
 	/**
-	 * This flag indicates if we are currently processing the bundle or not. This flag has been added so the generator have different behavior
-	 * depending on this flag. It is used in the ClassPathCSSGenerator to know where to retrieve the resources.
+	 * The provided content from which the generator should generate the
+	 * resource
+	 */
+	private String providedSourceContent;
+
+	/**
+	 * This flag indicates if we are currently processing the bundle or not.
+	 * This flag has been added so the generator have different behavior
+	 * depending on this flag. It is used in the ClassPathCSSGenerator to know
+	 * where to retrieve the resources.
 	 * <ul>
-	 * <li>If we are processing the bundle, the resource will be retrieve from the classpath</li>
-	 * <li>If we are not in processing mode, and we are using the CSS image servlet, in that case the resource will be retrieved if we are in in debug
-	 * mode from the temporary folder for the CSS classpath resources.</li>
+	 * <li>If we are processing the bundle, the resource will be retrieve from
+	 * the classpath</li>
+	 * <li>If we are not in processing mode, and we are using the CSS image
+	 * servlet, in that case the resource will be retrieved if we are in in
+	 * debug mode from the temporary folder for the CSS classpath resources.</li>
 	 */
 	private boolean processingBundle;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param config the Jawr config
-	 * @param path the requested path
+	 * @param config
+	 *            the Jawr config
+	 * @param path
+	 *            the requested path
 	 */
 	public GeneratorContext(JawrConfig config, String requestedPath) {
 
@@ -83,14 +95,18 @@ public class GeneratorContext {
 		this.path = requestedPath;
 		// init parameters, if any
 		if (path.matches(PARENFINDER_REGEXP)) {
-			parenthesesParam = path.substring(path.indexOf('(') + 1, path.indexOf(')'));
+			parenthesesParam = path.substring(path.indexOf('(') + 1,
+					path.indexOf(')'));
 
-			path = path.substring(0, path.indexOf('(')) + path.substring(path.indexOf(')') + 1);
+			path = path.substring(0, path.indexOf('('))
+					+ path.substring(path.indexOf(')') + 1);
 		}
 		if (path.matches(BRACKFINDER_REGEXP)) {
-			bracketsParam = path.substring(path.indexOf('[') + 1, path.indexOf(']'));
+			bracketsParam = path.substring(path.indexOf('[') + 1,
+					path.indexOf(']'));
 
-			path = path.substring(0, path.indexOf('[')) + path.substring(path.indexOf(']') + 1);
+			path = path.substring(0, path.indexOf('['))
+					+ path.substring(path.indexOf(']') + 1);
 		}
 	}
 
@@ -106,7 +122,8 @@ public class GeneratorContext {
 	/**
 	 * Set the locale.
 	 * 
-	 * @param locale the locale to set
+	 * @param locale
+	 *            the locale to set
 	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
@@ -114,24 +131,27 @@ public class GeneratorContext {
 
 	/**
 	 * Returns the variant map
+	 * 
 	 * @return the variant map
 	 */
-	public Map<String, String> getVariantMap(){
-		
+	public Map<String, String> getVariantMap() {
+
 		return variantMap;
 	}
-	
+
 	/**
 	 * Returns the variant map
+	 * 
 	 * @return the variant map
 	 */
-	public void setVariantMap(Map<String, String> variantMap){
-		
+	public void setVariantMap(Map<String, String> variantMap) {
+
 		this.variantMap = variantMap;
 	}
-	
+
 	/**
 	 * Returns the variant sets for the current path
+	 * 
 	 * @return the variantSets
 	 */
 	public Map<String, VariantSet> getVariantSets() {
@@ -140,7 +160,9 @@ public class GeneratorContext {
 
 	/**
 	 * Sets the variant sets for the current path
-	 * @param variantSets the variantSets to set
+	 * 
+	 * @param variantSets
+	 *            the variantSets to set
 	 */
 	public void setVariantSets(Map<String, VariantSet> variantSets) {
 		this.variantSets = variantSets;
@@ -176,7 +198,8 @@ public class GeneratorContext {
 	/**
 	 * Sets the resource handler
 	 * 
-	 * @param resourceHandler the resourceHandler to set
+	 * @param resourceHandler
+	 *            the resourceHandler to set
 	 */
 	public void setResourceReaderHandler(ResourceReaderHandler resourceHandler) {
 		this.resourceReaderHandler = resourceHandler;
@@ -194,7 +217,8 @@ public class GeneratorContext {
 	/**
 	 * Sets the processing bundle flag
 	 * 
-	 * @param processingBundle the flag to set
+	 * @param processingBundle
+	 *            the flag to set
 	 */
 	public void setProcessingBundle(boolean processingBundle) {
 		this.processingBundle = processingBundle;
@@ -235,4 +259,33 @@ public class GeneratorContext {
 	public String getBracketsParam() {
 		return bracketsParam;
 	}
+
+	/**
+	 * Checks if the source content is provided
+	 * 
+	 * @return true if the source content is provided
+	 */
+	public boolean isContentProvided() {
+		return providedSourceContent != null;
+	}
+
+	/**
+	 * Gets the provided source content
+	 * 
+	 * @return the provided source content
+	 */
+	public String getProvidedSourceContent() {
+		return providedSourceContent;
+	}
+
+	/**
+	 * Sets the provided source content
+	 * 
+	 * @param providedSourceContent
+	 *            the provided source content to set
+	 */
+	public void setProvidedSourceContent(String providedSourceContent) {
+		this.providedSourceContent = providedSourceContent;
+	}
+
 }

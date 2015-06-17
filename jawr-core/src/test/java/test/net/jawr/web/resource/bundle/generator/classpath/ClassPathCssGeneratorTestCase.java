@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -28,6 +29,7 @@ import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.TextResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -126,6 +128,31 @@ private static final String WORK_DIR = "workDirClasspathCss";
 		
 		ctx = new GeneratorContext(config, "/generator/classpath/temp.css");
 		ctx.setResourceReaderHandler(rsReaderHandler);
+		
+		// Check result in Production mode
+		ctx.setProcessingBundle(true);
+		Reader rd = generator.createResource(ctx);
+		String result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_expected.css"), result);
+		
+		// Check result in debug mode
+		ctx.setProcessingBundle(false);
+		rd = generator.createResource(ctx);
+		result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_debug_expected.css"), result);
+		
+	}
+	
+	@Test
+	public void testClasspathGeneratorWithLessBundle() throws Exception{
+		
+		ctx = new GeneratorContext(config, "/generator/classpath/temp.less");
+		ctx.setResourceReaderHandler(rsReaderHandler);
+		Reader strReader = new StringReader(FileUtils.readClassPathFile("generator/classpath/temp.css"));
+		when(generatorRegistry.isPathGenerated("/generator/classpath/temp.less")).thenReturn(true);
+		TextResourceGenerator lessGenerator = Mockito.mock(TextResourceGenerator.class);
+		when(lessGenerator.createResource(Matchers.any(GeneratorContext.class))).thenReturn(strReader);
+		when(generatorRegistry.getResourceGenerator("/generator/classpath/temp.less")).thenReturn(lessGenerator);
 		
 		// Check result in Production mode
 		ctx.setProcessingBundle(true);
