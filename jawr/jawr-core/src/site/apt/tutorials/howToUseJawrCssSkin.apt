@@ -125,7 +125,7 @@ Introduction
 		* <<displayAlternate>>
 		This attribute allows you to render all the skin variants of the CSS bundle as alternate styles. 
 		
-	Please take a look at the Jawr style tag {{{../dos/taglibs.html}documentation}} for more detail.
+	Please take a look at the Jawr style tag {{{../docs/taglibs.html}documentation}} for more detail.
 	
 * Set up Jawr in your project
 
