@@ -18,7 +18,7 @@ Facelets tag library
 ** 1. Configure the Jawr servlet
 
 	The first step is to declare the Jawr servlet in the web.xml descriptor. This works exactly the same as in a regular web application, so the 
-	{{{./servlet.html}Jawr Servlet Documentation page}} has all the info you need to do it. You can create the properties file normally, since the 
+	{{{../docs/servlet.html}Jawr Servlet Documentation page}} has all the info you need to do it. You can create the properties file normally, since the 
 	only difference in using Facelets with Jawr has to do with the taglibs. 
 	
 ** 2. Edit faces-config.xml
@@ -78,7 +78,7 @@ Facelets tag library
 +------------------------------------------+
 	
 	That's it. As you can see in the example, the taglib was imported with the namespace <<jawr:>>, using the url <<https://jawr.java.net/jsf/facelets>>. 
-	The syntax for the taglibs is exactly the same as that of the JSP taglib, so check its {{{./taglibs.html}documentation page}} for details on 
+	The syntax for the taglibs is exactly the same as that of the JSP taglib, so check its {{{../docs/taglibs.html}documentation page}} for details on 
 	the attributes that you can/must use. 
 		
 	

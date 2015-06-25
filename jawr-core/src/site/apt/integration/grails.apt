@@ -40,7 +40,7 @@ Jawr plugin for Grails
 
 	To configure Jawr you must add properties to the Config.groovy file located at the /conf folder of your application. The syntax you must use 
 	is exactly the same described for the .properties file used in standard java web applications. Check the 
-	{{{./descriptor_syntax.html}config file syntax page}} for details. Of course, the property values must be quoted in order to avoid syntax errors. 
+	{{{../docs/descriptor_syntax.html}config file syntax page}} for details. Of course, the property values must be quoted in order to avoid syntax errors. 
 	Keep in mind that there are a few property keys that don't apply when using 
 	Jawr with Grails. Those are: 
 	

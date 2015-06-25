@@ -458,7 +458,7 @@
       		 	It is now possible to set custom link renderer using the following properties <strong>jawr.js.bundle.link.renderer.class</strong>, <strong>jawr.css.bundle.link.renderer.class</strong>, <strong>jawr.img.bundle.link.renderer.class</strong>. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.
       			</li>
       			<li>
-      			Jawr adds support to JS compression with Google Compiler. Please check <a href="./tutorial/howToUseGoogleClosureCompiler.html">this tutorial</a> for more detail.
+      			Jawr adds support to JS compression with Google Compiler. Please check <a href="./tutorials/howToUseGoogleClosureCompiler.html">this tutorial</a> for more detail.
       			</li>
       			<li>
       			Jawr adds new <strong>jawr.locale.generator.fallbackToSystemLocale</strong> property for i18n message resource generator, to use System locale if no locale is found. Please check <a href="./docs/descriptor_syntax.html">descriptor syntax doc</a> for more detail.

@@ -612,7 +612,7 @@
       		 	This may lead to strange behaviors.<br/>
       		 	To overcome this issue, Jawr introduces the <b>strict mode</b>. In this mode, Jawr will allow you to define how you want to handle such requests by defining your own <b>IllegalBundleRequestHandler</b>.
       		 	Jawr also provides a default implementation whch returns a "404" if it receive a such request.  
-      		 	Take a look at the documentation about <a href="./docs/illegalBundleRequestHandler.html">strict mode and illegal bundle request handler</a>.
+      		 	Take a look at the documentation about <a href="./docs/illegalBundleRequestHander.html">strict mode and illegal bundle request handler</a>.
       		 	Jawr provides just a default implementation, if you want to contribute and share your own implementation with the community,
       		 	feel free to create and attach a patch in the issue tracker. 
       		 </li>

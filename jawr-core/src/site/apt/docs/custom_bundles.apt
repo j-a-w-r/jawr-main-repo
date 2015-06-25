@@ -307,7 +307,7 @@ jawr.js.bundle.comp.child.names=foo, bar
 	
 	It is unnecessary to reference a global bundle in your dependencies, because it will be automatically be added in any case.
 	It is also important to note that you can't define dependencies for global bundles. This property is not allowed for this kind of bundle.
-	To define the order of the global bundle, you can use the <order> property. Please check {{{../descriptor_syntax.html}the descriptor syntax doc}} for more information.
+	To define the order of the global bundle, you can use the <order> property. Please check {{{./descriptor_syntax.html}the descriptor syntax doc}} for more information.
 	
 	* Circular dependencies
 	
