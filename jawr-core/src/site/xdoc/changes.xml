@@ -45,6 +45,9 @@
 	      		 	<strong>Issue #332 fixed:</strong> Logging Level should be WARN for ResourceNotFound and missing binary extension    
 				 </li>
 				 <li>
+	      		 	<strong>Issue #328 fixed:</strong> Jawr doesn't handle properly exception while retrieving resource using ResourceReader    
+				 </li>
+				 <li>
 	      		 	<strong>Issue #326 fixed:</strong> Licensing issue with UnicodeBOMInputStream    
 				 </li>
 				 <li>
