@@ -143,7 +143,7 @@ jawr.js.bundle.common.mappings='/plugins/jquery-1.11.1/js/jquery/jquery-1.11.1.j
 * Using the tag library
 
 	The tag library for grails works exactly the same as the JSP version, so you will find all the details in the 
-	{{{./taglibs.html}JSP taglib documentation page}}. 
+	{{{../docs/taglibs.html}JSP taglib documentation page}}. 
 	
 	The only difference is that in GSP pages there is no need to import the tags at all. Also, keep in mind that the namespace for the 
 	Jawr taglib is <<jawr:>>. 
