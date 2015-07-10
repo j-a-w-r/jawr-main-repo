@@ -280,5 +280,19 @@ while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
 *---------------+---------------------------+	
 | public String nextPath()	| public BundlePath nextPath() |
 *---------------+---------------------------+
-	
- 
+
+	* JSF namespace :
+
+	From version 3.3.x to 3.5 the jsf namespace has changed.
+
+	Namespace until 3.3.x :
+
++------------------------------------------+ 
+	xmlns:jawr="https://jawr.dev.java.net/jsf/facelets"
++------------------------------------------+
+
+	Namespace from 3.5 :
+
++------------------------------------------+ 
+	xmlns:jawr="https://jawr.java.net/jsf/facelets"
++------------------------------------------+
