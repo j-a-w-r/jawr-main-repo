@@ -40,7 +40,7 @@ Jawr plugin for Grails
 
 	To configure Jawr you must add properties to the Config.groovy file located at the /conf folder of your application. The syntax you must use 
 	is exactly the same described for the .properties file used in standard java web applications. Check the 
-	{{{./descriptor_syntax.html}config file syntax page}} for details. Of course, the property values must be quoted in order to avoid syntax errors. 
+	{{{../docs/descriptor_syntax.html}config file syntax page}} for details. Of course, the property values must be quoted in order to avoid syntax errors. 
 	Keep in mind that there are a few property keys that don't apply when using 
 	Jawr with Grails. Those are: 
 	
@@ -143,7 +143,7 @@ jawr.js.bundle.common.mappings='/plugins/jquery-1.11.1/js/jquery/jquery-1.11.1.j
 * Using the tag library
 
 	The tag library for grails works exactly the same as the JSP version, so you will find all the details in the 
-	{{{./taglibs.html}JSP taglib documentation page}}. 
+	{{{../docs/taglibs.html}JSP taglib documentation page}}. 
 	
 	The only difference is that in GSP pages there is no need to import the tags at all. Also, keep in mind that the namespace for the 
 	Jawr taglib is <<jawr:>>. 

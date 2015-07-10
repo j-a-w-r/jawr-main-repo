@@ -11,7 +11,7 @@
 	
     <section name="Announcements and change log">
     <ul>
-      	  <li> <strong>22nd May 2015</strong>: Version 3.7 released:<br/>
+      	  <li> <strong>23rd May 2015</strong>: Version 3.7 released:<br/>
 	      This version is containing bug fixes and some new features.<br/><br/>
 	  	  <strong>Important note : </strong>
 	  	  The version 3.7 of Jawr requires Java 1.7.<br/>
@@ -30,11 +30,14 @@
       	  <strong>Fixed issues : </strong>
 	    	<ul>   
 	    		 <li>
+	      		 	<strong>Issue #336 fixed:</strong> Issue in Less generator when importing resource using absolute URL
+				 </li>
+	    		 <li>
+	      		 	<strong>Issue #335 fixed:</strong> Issue with grails plugin in development mode (using run-app command)
+				 </li>
+	    		 <li>
 	      		 	<strong>Issue #334 fixed:</strong> Path traversal vulnerability
 	    		 </li>
-	    		 <li>
-	      		 	<strong>Issue #333 fixed:</strong> Default CSS compressor is compressing calc functions incorrectly
-				 </li>
 	    		 <li>
 	      		 	<strong>Issue #333 fixed:</strong> Default CSS compressor is compressing calc functions incorrectly
 				 </li>
@@ -75,7 +78,7 @@
 	    	</li>
 	    	<li>
 	    	Thanks to shoot_the_moon, damartin, paranoiabla, H.Schulz for reporting the issues.
-	    	Thanks to farethewell, janningvygen, frabasic, for reporting the issues and providing patches.
+	    	Thanks to farethewell, janningvygen, frabasic, diocerty for reporting the issues and providing patches.
 	    	</li>
 	    	<li>
 	    	A special thank to janningvygen for his great contribution in this release.

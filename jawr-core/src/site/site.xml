@@ -2,16 +2,28 @@
 <project name="Jawr" xmlns="http://maven.apache.org/DECORATION/1.4.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd">
-	<bannerRight>
-	    <name/>
+	<bannerLeft>
+	    <name></name>
+	</bannerLeft>
+	
+	<custom>
+	    <fluidoSkin>
+	      <gitHub>
+	        <projectId>ic3fox/jawr-main-repo</projectId>
+	        <ribbonOrientation>right</ribbonOrientation>
+	        <ribbonColor>orange</ribbonColor>
+      		</gitHub>
+    	</fluidoSkin>
+  	</custom>
+  
+	<!-- bannerRight>
 	    <src>https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67</src>
 	    <alt>Fork me on GitHub</alt>
-	    <href>https://github.com/ic3fox/jawr-core"</href>
+	    <href>https://github.com/ic3fox/jawr-main-repo</href>
 	    <border/>
 	    <width/>
 	    <height/>
-	    <title/>
-	  </bannerRight>
+	  </bannerRight -->
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
@@ -97,6 +109,7 @@
 		</menu>
 
 		<menu name="Github repositories">
+			<item name="Jawr main repository" href="https://github.com/ic3fox/jawr-main-repo" />
 			<item name="Jawr core repository" href="https://github.com/ic3fox/jawr-core" />
 			<item name="Jawr spring repository" href="https://github.com/ic3fox/jawr-spring" />
 			<item name="Jawr wicket repository" href="https://github.com/ic3fox/jawr-wicket" />

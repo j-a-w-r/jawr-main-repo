@@ -282,9 +282,11 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	private void updateRegistries(ResourceGenerator generator) {
 
+		resourceGeneratorRegistry.add(generator);
+		
 		resolverRegistry.add(new ResourceGeneratorResolverWrapper(generator,
 				generator.getResolver()));
-
+		
 		if (generator instanceof StreamResourceGenerator) {
 			binaryResourceGeneratorRegistry.add(generator);
 		}
