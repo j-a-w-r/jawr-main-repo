@@ -32,11 +32,17 @@ public class WebJarsBinaryGeneratorTestCase {
 	@Before
 	public void setUp() throws Exception {
 
-		final String resourcePath = "/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.eot";
-
-		generator = new WebJarsBinaryResourceGenerator();
-		ctx = new GeneratorContext(config, resourcePath);
+		generator = createGenerator();
+		ctx = new GeneratorContext(config, generator.getResolver().getResourcePath(getResourceName()));
 		ctx.setResourceReaderHandler(rsReaderHandler);
+	}
+
+	protected String getResourceName() {
+		return "webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.eot";
+	}
+
+	protected WebJarsBinaryResourceGenerator createGenerator() {
+		return new WebJarsBinaryResourceGenerator();
 	}
 
 	@Test

@@ -94,6 +94,12 @@
 			<artifactId>im4java</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- optional webjars locator dependency -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<!-- webjars dependencies used for webjars generator test -->
 		<dependency>
 			<groupId>org.webjars</groupId>
