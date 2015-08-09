@@ -14,9 +14,7 @@
 package net.jawr.web.resource.bundle.generator.classpath.webjars;
 
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.classpath.ClassPathGeneratorHelper;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
-import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 
 /**
  * This class defines the generator for webjar JS resources
@@ -29,9 +27,7 @@ public class WebJarsJSGenerator extends ClasspathJSGenerator {
 	 * Constructor
 	 */
 	public WebJarsJSGenerator() {
-		helper = new ClassPathGeneratorHelper(getClassPathGeneratorHelperPrefix());
-		resolver = ResourceGeneratorResolverFactory
-				.createPrefixResolver(getGeneratorPrefix());
+
 	}
 
 	/* (non-Javadoc)
