@@ -39,8 +39,6 @@ public class WebJarsJsGeneratorTestCase {
 	@Before
 	public void setUp() throws Exception {
 
-		final String bundlePath = "/bootstrap/3.2.0/js/bootstrap.js";
-
 		config = new JawrConfig(JawrConstant.JS_TYPE, new Properties());
 		ServletContext servletContext = new MockServletContext();
 
@@ -50,9 +48,17 @@ public class WebJarsJsGeneratorTestCase {
 
 		config.setGeneratorRegistry(generatorRegistry);
 
-		generator = new WebJarsJSGenerator();
-		ctx = new GeneratorContext(config, bundlePath);
+		generator = createGenerator();
+		ctx = new GeneratorContext(config, generator.getResolver().getResourcePath(getResourceName()));
 		ctx.setResourceReaderHandler(rsReaderHandler);
+	}
+
+	protected String getResourceName() {
+		return "webjars:/bootstrap/3.2.0/js/bootstrap.js";
+	}
+
+	protected WebJarsJSGenerator createGenerator() {
+		return new WebJarsJSGenerator();
 	}
 
 	@Test

@@ -47,8 +47,17 @@ public class ClassPathImgResourceGenerator implements StreamResourceGenerator {
 	public ClassPathImgResourceGenerator() {
 		helper = new ClassPathGeneratorHelper(
 				getClassPathGeneratorHelperPrefix());
-		resolver = ResourceGeneratorResolverFactory
-				.createPrefixResolver(getGeneratorPrefix());
+		resolver = createResolver(getGeneratorPrefix());
+	}
+
+	/**
+	 * create the resource generator resolver
+	 *
+	 * @param  generatorPrefix the generator prefix
+	 * @return the resource generator resolver
+	 */
+	protected ResourceGeneratorResolver createResolver(String generatorPrefix) {
+		return ResourceGeneratorResolverFactory.createPrefixResolver(generatorPrefix);
 	}
 
 	/**
