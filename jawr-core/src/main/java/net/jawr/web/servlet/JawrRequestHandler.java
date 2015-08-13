@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1219,6 +1220,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				props.putAll(overrideProperties);
 			}
 			props.putAll(newConfig);
+			// clears resource bundle cache for the refresh
+			ResourceBundle.clearCache();
 			initializeJawrContext(props);
 		} catch (Exception e) {
 			throw new BundlingProcessException("Error reloading Jawr config: "
