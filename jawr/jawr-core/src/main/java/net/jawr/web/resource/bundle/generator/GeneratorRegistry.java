@@ -37,6 +37,9 @@ import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsCssGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsJSGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorBinaryResourceGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
@@ -88,6 +91,9 @@ public class GeneratorRegistry implements Serializable {
 
 	/** The webjars generator prefix */
 	public static final String WEBJARS_GENERATOR_PREFIX = "webjars";
+
+	/** The webjars asset locator classname*/
+	public static final String WEBJARS_LOCATOR_CLASSNAME = "org.webjars.WebJarAssetLocator";
 
 	/** The commons validator bundle prefix */
 	public static final String COMMONS_VALIDATOR_PREFIX = "acv";
@@ -160,15 +166,34 @@ public class GeneratorRegistry implements Serializable {
 				ResourceBundleMessagesGenerator.class);
 		Class<?> classPathGeneratorClass = null;
 		Class<?> webJarsGeneratorClass = null;
+
+		boolean isWebJarsLocatorPresent = ClassLoaderResourceUtils
+				.isClassPresent(WEBJARS_LOCATOR_CLASSNAME);
+
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
 			classPathGeneratorClass = ClasspathJSGenerator.class;
-			webJarsGeneratorClass = WebJarsJSGenerator.class;
+			if (isWebJarsLocatorPresent) {
+				webJarsGeneratorClass = WebJarsLocatorJSGenerator.class;
+			}
+			else {
+				webJarsGeneratorClass = WebJarsJSGenerator.class;
+			}
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			classPathGeneratorClass = ClassPathCSSGenerator.class;
-			webJarsGeneratorClass = WebJarsCssGenerator.class;
+			if (isWebJarsLocatorPresent) {
+				webJarsGeneratorClass = WebJarsLocatorCssGenerator.class;
+			}
+			else {
+				webJarsGeneratorClass = WebJarsCssGenerator.class;
+			}
 		} else {
 			classPathGeneratorClass = ClassPathImgResourceGenerator.class;
-			webJarsGeneratorClass = WebJarsBinaryResourceGenerator.class;
+			if (isWebJarsLocatorPresent) {
+				webJarsGeneratorClass = WebJarsLocatorBinaryResourceGenerator.class;
+			}
+			else {
+				webJarsGeneratorClass = WebJarsBinaryResourceGenerator.class;
+			}
 		}
 
 		commonGenerators.put(new PrefixedPathResolver(
