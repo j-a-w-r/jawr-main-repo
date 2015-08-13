@@ -61,9 +61,6 @@ public class WebJarsCssGeneratorTestCase {
 		FileUtils.clearDirectory(FileUtils.getClasspathRootDir()+"/"+WORK_DIR);
 		FileUtils.createDir(WORK_DIR);
 		
-		// Bundle path (full url would be: /servletMapping/prefix/css/bundle.css
-		final String bundlePath = "/bootstrap/3.2.0/css/bootstrap.css";
-		
 		Properties props = new Properties();
 		props.put("jawr.css.classpath.handle.image", "true");
 		config = new JawrConfig(JawrConstant.CSS_TYPE, props);
@@ -76,8 +73,8 @@ public class WebJarsCssGeneratorTestCase {
 		
 		config.setGeneratorRegistry(generatorRegistry);
 		
-		generator = new WebJarsCssGenerator();
-		ctx = new GeneratorContext(config, bundlePath);
+		generator = createGenerator();
+		ctx = new GeneratorContext(config, generator.getResolver().getResourcePath(getResourceName()));
 		ctx.setResourceReaderHandler(rsReaderHandler);
 		
 		// Set up the Image servlet Jawr config
@@ -106,12 +103,20 @@ public class WebJarsCssGeneratorTestCase {
 		
 		generator.setWorkingDirectory(FileUtils.getClasspathRootDir()+"/"+WORK_DIR);
 	}
-	
+
+	protected String getResourceName() {
+		return "webjars:/bootstrap/3.2.0/css/bootstrap.css";
+	}
+
+	protected WebJarsCssGenerator createGenerator() {
+		return new WebJarsCssGenerator();
+	}
+
 	@After
 	public void tearDown() throws Exception{
 		FileUtils.deleteDirectory(FileUtils.getClasspathRootDir()+"/"+WORK_DIR);
 	}
-	
+
 	@Test
 	public void testWebJarsCssBundleGenerator() throws Exception{
 		
