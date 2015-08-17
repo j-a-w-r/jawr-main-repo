@@ -17,6 +17,7 @@ import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePos
 import net.jawr.web.resource.bundle.postprocess.ChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
+import net.jawr.web.resource.bundle.postprocess.impl.AutoPrefixerPostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSCombineMediaPostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSImportPostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSMinPostProcessor;
@@ -77,6 +78,8 @@ public class CSSPostProcessorChainFactory extends
 			return new Base64ImageEncoderPostProcessor();
 		else if (PostProcessFactoryConstant.YUI_COMPRESSOR.equals(processorKey))
 			return new YUICSSCompressor();
+		else if(PostProcessFactoryConstant.AUTOPREFIXER.equals(processorKey))
+			return new AutoPrefixerPostProcessor();
 		
 		else throw new IllegalArgumentException("The supplied key [" + processorKey + "] is not bound to any ResourceBundlePostProcessor. Please check the documentation for valid keys. ");
 	}

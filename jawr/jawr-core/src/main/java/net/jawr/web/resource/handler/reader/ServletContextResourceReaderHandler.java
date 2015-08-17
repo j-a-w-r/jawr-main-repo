@@ -285,7 +285,7 @@ public class ServletContextResourceReaderHandler implements
 						} catch (Exception e) {
 							LOGGER.info("An exception occured while trying to read resource '"
 									+ resourceName
-									+ "'. Continuing with other readers.", e);
+									+ "'. Continuing with other readers. Error : "+e.getMessage());
 						}
 						if (rd != null) {
 							break;
@@ -307,8 +307,14 @@ public class ServletContextResourceReaderHandler implements
 		return rd;
 	}
 
+	/**
+	 * Checks if an object is an instance of on interface from a list of interface
+	 * @param rd the object
+	 * @param interfacesthe list of interfaces
+	 * @return true if the object is an instance of on interface from a list of interface
+	 */
 	private boolean isInstanceOf(Object rd, List<Class<?>> interfaces) {
-
+		
 		boolean result = false;
 
 		for (Class<?> class1 : interfaces) {
@@ -363,7 +369,7 @@ public class ServletContextResourceReaderHandler implements
 					}catch(Exception e){
 						LOGGER.info("An exception occured while trying to read resource '"
 								+ resourceName
-								+ "'. Continuing with other readers.", e);
+								+ "'. Continuing with other readers. Error : "+e.getMessage());
 					}
 					if (is != null) {
 						break;

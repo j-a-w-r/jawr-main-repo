@@ -1,0 +1,20 @@
+:fullscreen a {
+    display: flex
+}
+
+a {
+	background: -o-linear-gradient(top, white, black);
+	background: linear-gradient(top,white,black)
+}
+
+h1 {
+    -o-transition: all 1s;
+       transition: all 1s
+}
+
+#image {
+	-o-animation-name: spin;
+	   animation-name: spin;
+	-o-animation-duration: 3s;
+	   animation-duration: 3s;
+}

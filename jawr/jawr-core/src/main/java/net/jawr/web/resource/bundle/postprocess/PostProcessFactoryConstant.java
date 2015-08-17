@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -58,6 +58,8 @@ public class PostProcessFactoryConstant {
 	
 	/** The ID of the "no postprocessing" post processor */
 	public static final String NO_POSTPROCESSING_KEY = "none";
-	
+
+	/** The ID of the Autoprefixer postprocessor */
+	public static final String AUTOPREFIXER = "autoprefixer";
 	
 }
