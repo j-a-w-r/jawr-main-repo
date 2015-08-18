@@ -73,6 +73,14 @@
 				sprite images when available -->
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Optional Webjars Locator dependency -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- Google closure dependency -->
 		<dependency>
 			<groupId>com.google.javascript</groupId>
