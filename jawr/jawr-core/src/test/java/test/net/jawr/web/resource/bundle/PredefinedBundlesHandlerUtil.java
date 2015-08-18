@@ -182,6 +182,13 @@ public class PredefinedBundlesHandlerUtil {
 		def.setDependencies(Arrays.asList("depOne", "depTwo"));
 		customBundles.add(def);
 		
+		def = new ResourceBundleDefinition();
+		def.setBundleName("externalAssetBundle");
+		def.setBundleId("/externalAssetBundle." + type);
+		def.setAlternateProductionURL("http://mycompany.com/externalAssetBundle.min." + type);
+		def.setDebugURL("http://mycompany.com/externalAssetBundle." + type);
+		customBundles.add(def);
+		
 		factory.setBundleDefinitions(customBundles);
 		factory.setUseDirMapperFactory(true);
 		

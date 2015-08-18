@@ -27,8 +27,8 @@ public class BundlePath {
 	/** The bundle path */
 	private String path;
 	
-	/** The flag indicating if it's a production URL or not */
-	private boolean productionURL;
+	/** The flag indicating if it's an external URL or not */
+	private boolean externalURL;
 
 	/**
 	 * Constructor
@@ -43,13 +43,13 @@ public class BundlePath {
 	 * Constructor
 	 * @param bundlePrefix the bundle prefix
 	 * @param path the bundle path 
-	 * @param isProductionURL flag indicating if it's a production URL or not
+	 * @param isExternalURL flag indicating if it's an external URL or not
 	 */
-	public BundlePath(String prefix, String path, boolean isProductionURL) {
+	public BundlePath(String prefix, String path, boolean isExternalURL) {
 		super();
 		this.bundlePrefix = prefix;
 		this.path = path;
-		this.productionURL = isProductionURL;
+		this.externalURL = isExternalURL;
 	}
 
 	/**
@@ -85,15 +85,19 @@ public class BundlePath {
 	}
 
 	/**
-	 * Returns true if the path is the path for a production URL
-	 * @return true if the path is the path for a production URL
+	 * Returns true if the path is the path for an external URL
+	 * @return true if the path is the path for a external URL
 	 */
-	public boolean isProductionURL() {
-		return productionURL;
+	public boolean isExternalURL() {
+		return externalURL;
 	}
 
-	public void setProductionURL(boolean productionURL) {
-		this.productionURL = productionURL;
+	/**
+	 * Sets the production URL
+	 * @param externalURL the flag indicating if it's an external URL
+	 */
+	public void setExternalURL(boolean externalURL) {
+		this.externalURL = externalURL;
 	}
 
 	
@@ -103,7 +107,7 @@ public class BundlePath {
 	 */
 	@Override
 	public String toString() {
-		return "Bundle Path : ["+bundlePrefix+"; "+path+" ; "+(productionURL? "alternale production URL" : "No alternate production URL")+"]";
+		return "Bundle Path : ["+bundlePrefix+"; "+path+" ; "+(externalURL? "alternale external URL" : "Not external URL")+"]";
 	}
 
 	/* (non-Javadoc)
@@ -116,7 +120,7 @@ public class BundlePath {
 		result = prime * result
 				+ ((bundlePrefix == null) ? 0 : bundlePrefix.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + (productionURL ? 1231 : 1237);
+		result = prime * result + (externalURL ? 1231 : 1237);
 		return result;
 	}
 
@@ -142,7 +146,7 @@ public class BundlePath {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
-		if (productionURL != other.productionURL)
+		if (externalURL != other.externalURL)
 			return false;
 		return true;
 	}

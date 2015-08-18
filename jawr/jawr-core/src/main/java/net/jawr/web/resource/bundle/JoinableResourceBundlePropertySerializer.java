@@ -100,6 +100,10 @@ public class JoinableResourceBundlePropertySerializer {
 			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PRODUCTION_ALT_URL, bundle
 					.getAlternateProductionURL());
 		}
+		if (StringUtils.isNotEmpty(bundle.getDebugURL())) {
+			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUG_URL, bundle
+					.getDebugURL());
+		}
 		
 		if (bundle.getBundlePostProcessor() != null) {
 			props

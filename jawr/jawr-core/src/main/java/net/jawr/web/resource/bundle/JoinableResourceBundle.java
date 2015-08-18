@@ -195,11 +195,17 @@ public interface JoinableResourceBundle {
 
 	/**
      * If set, it will force the tag libraries to render a static URL in production mode. 
-     * @return
+     * @return the production URL
      */
     public String getAlternateProductionURL();
-
-	/**
+    
+    /**
+     * If set, it will force the tag libraries to render a static URL in debug mode. 
+     * @return the production URL
+     */
+    public String getDebugURL();
+    
+    /**
 	 * Sets the bundle postprocessor
 	 * @param bundlePostProcessor the bundle postprocessor to set
 	 */

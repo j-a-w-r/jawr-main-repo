@@ -67,6 +67,9 @@ public class ResourceBundleDefinition {
 	/** The alternate production URL */
 	private String alternateProductionURL;
 	
+	/** The debug URL */
+	private String debugURL;
+	
 	/** The list of children for composite bundle */
 	private List<ResourceBundleDefinition> children;
 	
@@ -333,6 +336,22 @@ public class ResourceBundleDefinition {
 	 */
 	public void setAlternateProductionURL(String alternateProductionURL) {
 		this.alternateProductionURL = alternateProductionURL;
+	}
+
+	/**
+	 * Returns the debug URL
+	 * @return the debug URL
+	 */
+	public String getDebugURL() {
+		return debugURL;
+	}
+
+	/**
+	 * Sets the debug URL
+	 * @param debugURL the debugURL to set
+	 */
+	public void setDebugURL(String debugURL) {
+		this.debugURL = debugURL;
 	}
 
 }
