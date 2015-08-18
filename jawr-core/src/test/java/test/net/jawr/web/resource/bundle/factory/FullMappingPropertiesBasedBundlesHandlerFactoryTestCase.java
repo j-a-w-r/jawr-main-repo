@@ -1,8 +1,10 @@
 package test.net.jawr.web.resource.bundle.factory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,24 +15,28 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import junit.framework.TestCase;
 import net.jawr.web.JawrConstant;
-import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.DebugInclusion;
 import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.JoinableResourceBundlePropertySerializer;
 import net.jawr.web.resource.bundle.factory.FullMappingPropertiesBasedBundlesHandlerFactory;
+import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
 import net.jawr.web.resource.bundle.factory.postprocessor.PostProcessorChainFactory;
+import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
-import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
-import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
-import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Test case for FullMappingPropertiesBasedBundlesHandlerFactory
@@ -38,13 +44,32 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  * @author Ibrahim Chaehoi
  *
  */
-public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
-		TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
+	@Mock
+	private ResourceReaderHandler rsHandler;
+	
+	@Mock
+	private PostProcessorChainFactory chainFactory;
+	
+	@Mock
+	private AbstractChainedResourceBundlePostProcessor bundleProcessor;
+	
+	@Mock
+	private AbstractChainedResourceBundlePostProcessor fileProcessor;
+	
+	@Before
+	public void setUp(){
+		when(rsHandler.getResourceNames(Matchers.anyString())).thenReturn(new HashSet<String>(Arrays.asList("script1.js", "script2.js")));
+		when(chainFactory.buildPostProcessorChain("myBundlePostProcessor1,myBundlePostProcessor2")).thenReturn(bundleProcessor);
+		when(bundleProcessor.getId()).thenReturn("myBundlePostProcessor1,myBundlePostProcessor2");
+		when(chainFactory.buildPostProcessorChain("myFilePostProcessor1,myFilePostProcessor2")).thenReturn(fileProcessor);
+		when(fileProcessor.getId()).thenReturn("myFilePostProcessor1,myFilePostProcessor2");
+	}
+	
+	@Test
 	public void testGetGlobalResourceBundles() {
-		
-		ResourceReaderHandler rsHandler = new TestResourceReaderHandler();
-		PostProcessorChainFactory chainFactory = new TestPostProcessorChainFactory();
 		
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory("js", rsHandler, generatorRegistry, chainFactory);
@@ -68,6 +93,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		assertEquals("123456", bundle.getBundleDataHashCode(null));
 	}
 
+	@Test
 	public void testGetStdResourceBundles() {
 		
 		testGetStdResourceBundle(DebugInclusion.ALWAYS);
@@ -77,9 +103,6 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 
 	protected void testGetStdResourceBundle(DebugInclusion debugInclusion) {
 	
-		ResourceReaderHandler rsHandler = new TestResourceReaderHandler();
-		PostProcessorChainFactory chainFactory = new TestPostProcessorChainFactory();
-		
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory("js", rsHandler, generatorRegistry, chainFactory);
 		
@@ -119,6 +142,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		assertEquals("789", bundle.getBundleDataHashCode("en_US"));
 	}
 
+	@Test
 	public void testGetResourceBundlesWithDependencies() {
 		
 		testGetResourceBundlesWithDependencies(DebugInclusion.ALWAYS);
@@ -127,8 +151,6 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 	}
 
 	protected void testGetResourceBundlesWithDependencies(DebugInclusion inclusion) {
-		ResourceReaderHandler rsHandler = new TestResourceReaderHandler();
-		PostProcessorChainFactory chainFactory = new TestPostProcessorChainFactory();
 		
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory("js", rsHandler, generatorRegistry, chainFactory);
@@ -181,10 +203,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		}
 	}
 
+	@Test
 	public void testGetVariantResourceBundles() {
-		
-		ResourceReaderHandler rsHandler = new TestResourceReaderHandler();
-		PostProcessorChainFactory chainFactory = new TestPostProcessorChainFactory();
 		
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory("js", rsHandler, generatorRegistry, chainFactory);
@@ -228,10 +248,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		String bundleName = "myGlobalBundle";
 		List<String> mappings = Arrays.asList("/bundle/content/**", "/bundle/myScript.js");
 		
-		ResourceReaderHandler handler = new TestResourceReaderHandler();
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 0);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
-		JoinableResourceBundle bundle = new JoinableResourceBundleImpl("/bundle/myGlobalBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundle bundle = new JoinableResourceBundleImpl("/bundle/myGlobalBundle.js", bundleName, null, "js", inclusionPattern, rsHandler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setBundleDataHashCode(null, "123456");
 		
@@ -241,11 +260,10 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 	private JoinableResourceBundleImpl getStdBundle(String bundleName, DebugInclusion inclusion){		
 		List<String> mappings = Arrays.asList("/bundle/content/**", "/bundle/myScript.js");
 		
-		ResourceReaderHandler handler = new TestResourceReaderHandler();
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 3, inclusion);
 				
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/"+bundleName+".js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/"+bundleName+".js", bundleName, null, "js", inclusionPattern, rsHandler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/"+bundleName+".js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
@@ -258,27 +276,62 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		bundle.setBundleDataHashCode("fr", "123456");
 		bundle.setBundleDataHashCode("en_US", "789");
 		
-		ResourceBundlePostProcessor bundlePostProcessor = new AbstractChainedResourceBundlePostProcessor("myBundlePostProcessor1,myBundlePostProcessor2"){
-
-			protected StringBuffer doPostProcessBundle(
-					BundleProcessingStatus status, StringBuffer bundleData)
-					throws IOException {
-				return null;
-			}
-		};
-		bundle.setBundlePostProcessor(bundlePostProcessor);
-
-		ResourceBundlePostProcessor filePostProcessor = new AbstractChainedResourceBundlePostProcessor("myFilePostProcessor1,myFilePostProcessor2"){
-
-			protected StringBuffer doPostProcessBundle(
-					BundleProcessingStatus status, StringBuffer bundleData)
-					throws IOException {
-				return null;
-			}
-		};
-		bundle.setUnitaryPostProcessor(filePostProcessor);
-	
+		bundle.setBundlePostProcessor(bundleProcessor);
+		bundle.setUnitaryPostProcessor(fileProcessor);
+		
 		return bundle;
+	}
+	
+	@Test
+	public void testGetExternalResourceBundles() {
+		
+		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
+		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory("js", rsHandler, generatorRegistry, chainFactory);
+		
+		Properties props = new Properties();
+		
+		String bundleName = "myBundle";
+		String resourceType = "js";
+	
+		InclusionPattern inclusionPattern = new InclusionPattern(false, 3,
+				DebugInclusion.ALWAYS);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl(
+				"/bundle/myBundle.js", bundleName, null, "js",
+				inclusionPattern, rsHandler, generatorRegistry);
+		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.min.js");
+		bundle.setDebugURL("http://hostname/scripts/myBundle.js");
+
+		JoinableResourceBundlePropertySerializer.serializeInProperties(bundle, "js", props);
+		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
+		assertEquals(1, resourcesBundles.size());
+		
+		bundle = (JoinableResourceBundleImpl) resourcesBundles.get(0);
+			
+		PropertiesConfigHelper helper = new PropertiesConfigHelper(props,
+				resourceType);
+
+		assertEquals("/bundle/myBundle.js", helper.getCustomBundleProperty(
+				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID));
+		assertEquals(
+				"http://hostname/scripts/myBundle.min.js",
+				helper.getCustomBundleProperty(
+						bundleName,
+						PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PRODUCTION_ALT_URL));
+
+		assertEquals(
+				"http://hostname/scripts/myBundle.js",
+				helper.getCustomBundleProperty(
+						bundleName,
+						PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUG_URL));
+		assertEquals("3", helper.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ORDER));
+		assertEquals("false", helper.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGNEVER,
+				"false"));
+		assertEquals("false", helper.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGONLY,
+				"false"));
+		
 	}
 	
 	private List<BundlePath> asBundlePathList(String... paths){
@@ -309,10 +362,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		String bundleName = "myBundle";
 		List<String> mappings = Arrays.asList("/bundle/content/**", "/bundle/myScript.js");
 		
-		ResourceReaderHandler handler = new TestResourceReaderHandler();
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 3, inclusion);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, handler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null, "js", inclusionPattern, rsHandler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
@@ -329,126 +381,10 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase extends
 		bundle.setBundleDataHashCode("fr@winter", "123456");
 		bundle.setBundleDataHashCode("en_US@winter", "789");
 		
-		ResourceBundlePostProcessor bundlePostProcessor = new AbstractChainedResourceBundlePostProcessor("myBundlePostProcessor1,myBundlePostProcessor2"){
-
-			protected StringBuffer doPostProcessBundle(
-					BundleProcessingStatus status, StringBuffer bundleData)
-					throws IOException {
-				return null;
-			}
-		};
-		bundle.setBundlePostProcessor(bundlePostProcessor);
-
-		ResourceBundlePostProcessor filePostProcessor = new AbstractChainedResourceBundlePostProcessor("myFilePostProcessor1,myFilePostProcessor2"){
-
-			protected StringBuffer doPostProcessBundle(
-					BundleProcessingStatus status, StringBuffer bundleData)
-					throws IOException {
-				return null;
-			}
-		};
-		bundle.setUnitaryPostProcessor(filePostProcessor);
-	
+		bundle.setBundlePostProcessor(bundleProcessor);
+		bundle.setUnitaryPostProcessor(fileProcessor);
+		
 		return bundle;
 	}
-
-	private static class TestPostProcessorChainFactory implements PostProcessorChainFactory{
-
-		public ResourceBundlePostProcessor buildDefaultProcessorChain() {
-			return null;
-		}
-
-		public ResourceBundlePostProcessor buildDefaultUnitProcessorChain() {
-			return null;
-		}
-
-		public ResourceBundlePostProcessor buildPostProcessorChain(
-				String processorKeys) {
-			
-			return new TestChainedResourceBundlePostProcessor(processorKeys);
-		}
-
-		public void setCustomPostprocessors(Map<String, String> keysClassNames) {
-			
-		}
-
-		public ResourceBundlePostProcessor buildDefaultCompositeProcessorChain() {
-			return null;
-		}
-
-		public ResourceBundlePostProcessor buildDefaultUnitCompositeProcessorChain() {
-			return null;
-		}
-	}
 	
-	private static class TestChainedResourceBundlePostProcessor extends AbstractChainedResourceBundlePostProcessor{
-		
-		public TestChainedResourceBundlePostProcessor(String id) {
-			super(id);
-		}
-		
-		protected StringBuffer doPostProcessBundle(
-				BundleProcessingStatus status,
-				StringBuffer bundleData) throws IOException {
-			return null;
-		}
-	}
-	
-	private static class TestResourceReaderHandler implements ResourceReaderHandler{
-
-		public Set<String> getResourceNames(String path) {
-			
-			List<String> paths = Arrays.asList("script1.js", "script2.js");
-			return new HashSet<String>(paths);
-		}
-
-		public boolean isDirectory(String path) {
-			
-			return path.endsWith("/**");
-		}
-
-		public void addResourceReaderToEnd(ResourceReader rd) {
-			
-		}
-
-		public void addResourceReaderToStart(ResourceReader rd) {
-			
-		}
-
-		public Reader getResource(String resourceName)
-				throws ResourceNotFoundException {
-			return null;
-		}
-
-		public Reader getResource(String resourceName, boolean processingBundle)
-				throws ResourceNotFoundException {
-			return null;
-		}
-
-		public InputStream getResourceAsStream(String resourceName)
-				throws ResourceNotFoundException {
-				return null;
-		}
-
-		public InputStream getResourceAsStream(String resourceName,
-				boolean processingBundle) throws ResourceNotFoundException {
-			return null;
-		}
-
-		public String getWorkingDirectory() {
-			return null;
-		}
-
-		public void setWorkingDirectory(String workingDir) {
-
-		}
-
-		@Override
-		public Reader getResource(String resourceName,
-				boolean processingBundle, List<Class<?>> excludedReader)
-				throws ResourceNotFoundException {
-			return null;
-		}
-		
-	}
 }

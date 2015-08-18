@@ -321,22 +321,26 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 				String resourceName = bundlePath.getPath();
 				if (resourceName != null) {
 
-					// In debug mode, all the resources are included separately
-					// and
-					// use a random parameter to avoid caching.
-					// If useRandomParam is set to false, the links are created
-					// without the random parameter.
-					int random = -1;
-					if (debugOn && useRandomParam) {
-						random = randomSeed.nextInt();
+					// Handle external URL 
+					if (bundlePath.isExternalURL()) {
+						out.write(renderLink(resourceName));
+
+					} else if (debugOn && useRandomParam) {
+						// In debug mode, all the resources are included separately
+						// and
+						// use a random parameter to avoid caching.
+						// If useRandomParam is set to false, the links are created
+						// without the random parameter.
+						int random = -1;
+							random = randomSeed.nextInt();
 						if (random < 0) {
 							random *= -1;
 						}
 
 						out.write(createBundleLink(resourceName, bundlePath.getBundlePrefix(), "d=" + random,
 								contextPath, isSslRequest));
-					} else if (!debugOn && bundlePath.isProductionURL()) {
-						out.write(renderLink(resourceName));
+					//} else if (!debugOn && bundlePath.isProductionURL()) {
+					//	out.write(renderLink(resourceName));
 
 					} else if (!debugOn && useGzip) {
 						out.write(createGzipBundleLink(resourceName,

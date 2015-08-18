@@ -564,6 +564,10 @@ public class BundlesHandlerFactory {
 			newBundle.setAlternateProductionURL(definition
 					.getAlternateProductionURL());
 
+		if (null != definition.getDebugURL())
+			newBundle.setDebugURL(definition
+					.getDebugURL());
+
 		if (null != definition.getDependencies()
 				&& !definition.getDependencies().isEmpty()) {
 

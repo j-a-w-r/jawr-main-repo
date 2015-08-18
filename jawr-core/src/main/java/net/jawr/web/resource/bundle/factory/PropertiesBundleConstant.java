@@ -127,6 +127,9 @@ public class PropertiesBundleConstant {
 	/** The suffix for the property defining the alternate static URL for production mode */
 	public static final String BUNDLE_FACTORY_CUSTOM_PRODUCTION_ALT_URL = ".productionURL";
 
+	/** The suffix for the property defining the debug static URL for debug mode */
+	public static final String BUNDLE_FACTORY_CUSTOM_DEBUG_URL = ".debugURL";
+	
 	/** The suffix for the property defining the variants for a bundle */
 	public static final String BUNDLE_FACTORY_CUSTOM_VARIANTS = ".variants";
 	

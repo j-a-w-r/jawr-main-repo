@@ -13,11 +13,13 @@
  */
 package net.jawr.web.resource.bundle.iterator;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.util.StringUtils;
 
 /**
  * Debug mode implementation of ResourceBundlePathsIterator. Uses a ConditionalCommentCallbackHandler
@@ -60,10 +62,15 @@ public class DebugModePathsIteratorImpl extends AbstractPathsIterator implements
 		if(null == pathsIterator || !pathsIterator.hasNext()) {
 			currentBundle = (JoinableResourceBundle) bundlesIterator.next();
 			
-			if(null != currentBundle.getExplorerConditionalExpression())
+			if(null != currentBundle.getExplorerConditionalExpression()){
 				commentCallbackHandler.openConditionalComment(currentBundle.getExplorerConditionalExpression());
-
-			pathsIterator = currentBundle.getItemDebugPathList(variants).iterator();
+			}
+			
+			if(StringUtils.isNotEmpty(currentBundle.getDebugURL())){
+				pathsIterator = Arrays.asList(new BundlePath(currentBundle.getBundlePrefix(), currentBundle.getDebugURL(), true)).iterator();
+			}else{
+				pathsIterator = currentBundle.getItemDebugPathList(variants).iterator();
+			}
 		}
 		
 		

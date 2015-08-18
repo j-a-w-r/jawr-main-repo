@@ -103,6 +103,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	/** The alternate URL for the bundle */
 	private String alternateProductionURL;
 
+	/** The static URL to use in debug mode */
+	private String debugURL;
+
 	/** The prefix mapping for locale variant version */
 	private Map<String, String> prefixMap;
 
@@ -159,7 +162,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		this.itemDebugPathList = new CopyOnWriteArrayList<BundlePath>();
 		this.licensesPathList = new HashSet<String>();
 
-		if(bundlePrefix != null){
+		if (bundlePrefix != null) {
 			this.bundlePrefix = PathNormalizer.asDirPath(bundlePrefix);
 		}
 		if (fileExtension != null && fileExtension.length() > 0
@@ -224,37 +227,46 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			LOGGER.debug("Creating bundle path List for " + this.id);
 		}
 
-		for (Iterator<String> it = pathMappings.iterator(); it.hasNext();) {
-			String pathMapping = it.next();
-			boolean isGeneratedPath = generatorRegistry
-					.isPathGenerated(pathMapping);
+		if (pathMappings != null){
+			for (Iterator<String> it = pathMappings.iterator(); it.hasNext();) {
+				String pathMapping = it.next();
+				boolean isGeneratedPath = generatorRegistry
+						.isPathGenerated(pathMapping);
 
-			// Handle generated resources
-			// path ends in /, the folder is included without subfolders
-			if (pathMapping.endsWith("/")) {
-				addItemsFromDir(pathMapping, false);
+				// Handle generated resources
+				// path ends in /, the folder is included without subfolders
+				if (pathMapping.endsWith("/")) {
+					addItemsFromDir(pathMapping, false);
+				}
+				// path ends in /, the folder is included with all subfolders
+				else if (pathMapping.endsWith("/**")) {
+					addItemsFromDir(
+							pathMapping.substring(0,
+									pathMapping.lastIndexOf("**")), true);
+				} else if (pathMapping.endsWith(fileExtension)) {
+					addPathMapping(asPath(pathMapping, isGeneratedPath));
+				} else if (generatorRegistry.isPathGenerated(pathMapping)) {
+					addPathMapping(pathMapping);
+				} else if (pathMapping.endsWith(LICENSES_FILENAME)) {
+					licensesPathList.add(asPath(pathMapping, isGeneratedPath));
+				} else
+					throw new BundlingProcessException("Wrong mapping ["
+							+ pathMapping + "] for bundle [" + this.name
+							+ "]. Please check configuration. ");
 			}
-			// path ends in /, the folder is included with all subfolders
-			else if (pathMapping.endsWith("/**")) {
-				addItemsFromDir(
-						pathMapping.substring(0, pathMapping.lastIndexOf("**")),
-						true);
-			} else if (pathMapping.endsWith(fileExtension)) {
-				addPathMapping(asPath(pathMapping, isGeneratedPath));
-			} else if (generatorRegistry.isPathGenerated(pathMapping)) {
-				addPathMapping(pathMapping);
-			} else if (pathMapping.endsWith(LICENSES_FILENAME)) {
-				licensesPathList.add(asPath(pathMapping, isGeneratedPath));
-			} else
-				throw new BundlingProcessException("Wrong mapping ["
-						+ pathMapping + "] for bundle [" + this.name
-						+ "]. Please check configuration. ");
 		}
+
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Finished creating bundle path List for " + this.id);
 		}
 	}
 
+	/**
+	 * Adds a path mapping to the bundle
+	 * 
+	 * @param pathMapping
+	 *            the path mapping to add
+	 */
 	private void addPathMapping(String pathMapping) {
 		if (!getInclusionPattern().isIncludeOnlyOnDebug()) {
 			itemPathList.add(new BundlePath(bundlePrefix, pathMapping));
@@ -414,8 +426,11 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getBundlePrefix()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getBundlePrefix()
 	 */
 	public String getBundlePrefix() {
 		return bundlePrefix;
@@ -553,6 +568,26 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getDebugURL()
+	 */
+	@Override
+	public String getDebugURL() {
+		return this.debugURL;
+	}
+
+	/**
+	 * Sets the debug URL
+	 * 
+	 * @param debugURL
+	 *            the debugURL to set
+	 */
+	public void setDebugURL(String debugURL) {
+		this.debugURL = debugURL;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#belongsTobundle(java
 	 * .lang.String)
@@ -631,6 +666,10 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * .lang.String)
 	 */
 	public List<BundlePath> getItemDebugPathList(Map<String, String> variants) {
+		
+		if(StringUtils.isNotEmpty(debugURL)){
+			return itemDebugPathList;
+		}
 		return getItemPathList(itemDebugPathList, variants);
 	}
 
@@ -645,11 +684,18 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		return getItemPathList(itemPathList, variants);
 	}
 
+	/**
+	 * Filters the bundlePath list given in parameter using the specified variants
+	 * @param itemList the list of bundlePath
+	 * @param variants the variants
+	 * @return the filtered list of bundlePath
+	 */
 	private List<BundlePath> getItemPathList(List<BundlePath> itemList,
 			Map<String, String> variants) {
-		if (variants == null || variants.isEmpty())
+		if (variants == null || variants.isEmpty()){
 			return itemList;
-
+		}
+		
 		List<BundlePath> rets = new ArrayList<BundlePath>();
 
 		for (Iterator<BundlePath> it = itemList.iterator(); it.hasNext();) {
@@ -661,8 +707,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 				String variantKey = VariantUtils.getVariantKey(variants,
 						variantTypes);
 				if (StringUtils.isNotEmpty(variantKey)) {
-					rets.add(new BundlePath(bundlePath.getBundlePrefix(), VariantUtils.getVariantBundleName(
-							path, variantKey, true)));
+					rets.add(new BundlePath(bundlePath.getBundlePrefix(),
+							VariantUtils.getVariantBundleName(path, variantKey,
+									true)));
 				} else {
 					rets.add(bundlePath);
 				}

@@ -15,6 +15,9 @@
  */
 package net.jawr.web.resource.bundle.factory;
 
+import static net.jawr.web.resource.bundle.factory.PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUG_URL;
+import static net.jawr.web.resource.bundle.factory.PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -228,6 +231,27 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 									PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PRODUCTION_ALT_URL));
 		}
 		
+		boolean hasDebugURL  = false;
+		// Sets the debug URL for debug mode. 
+		if (null != props.getCustomBundleProperty(bundleName,
+				BUNDLE_FACTORY_CUSTOM_DEBUG_URL)){
+			bundle.setDebugURL(props.getCustomBundleProperty(bundleName,
+					BUNDLE_FACTORY_CUSTOM_DEBUG_URL));
+			hasDebugURL = true;
+			if(StringUtils.isEmpty(bundle.getAlternateProductionURL())){
+				throw new IllegalArgumentException(
+						"The bundle '"+bundleName+"', which use a static external resource in debug mode, must use an external resource in Production mode.\n"
+						+ "Please check your configuration. ");
+			}
+			
+			if(StringUtils.isNotEmpty(props.getCustomBundleProperty(bundleName,
+					BUNDLE_FACTORY_CUSTOM_MAPPINGS))){
+				throw new IllegalArgumentException(
+						"The bundle '"+bundleName+"', which use a static external resource in debug mode, can't have a bundle mapping.\n"
+						+ "Please check your configuration. ");
+			}
+		}
+		
 		// Sets the licence path lists.
 		Set<String> licencePathList = props
 				.getCustomBundlePropertyAsSet(
@@ -239,29 +263,32 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 
 		List<String> mappings = props.getCustomBundlePropertyAsList(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS);
-		if (mappings.isEmpty()) {
+		if (!hasDebugURL && mappings.isEmpty()) {
 			throw new IllegalArgumentException(
 					"No mappings were defined for the bundle with name:"
 							+ bundleName
 							+ ". Please specify at least one in configuration. ");
 		}
 		
-		// Add the mappings
-		bundle.setMappings(mappings);
-		
-		Map<String, VariantSet> variants = props.getCustomBundleVariantSets(bundleName);
-		bundle.setVariants(variants);
-		for (Iterator<String> iterator = bundle.getVariantKeys().iterator(); iterator.hasNext();) {
-			String variantKey = iterator.next();
-			if(StringUtils.isNotEmpty(variantKey)){
-				String hashcode = props.getCustomBundleProperty(bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE_VARIANT+variantKey);
-				bundle.setBundleDataHashCode(variantKey, hashcode);
+		if (!hasDebugURL){
+			
+			// Add the mappings
+			bundle.setMappings(mappings);
+			
+			Map<String, VariantSet> variants = props.getCustomBundleVariantSets(bundleName);
+			bundle.setVariants(variants);
+			for (Iterator<String> iterator = bundle.getVariantKeys().iterator(); iterator.hasNext();) {
+				String variantKey = iterator.next();
+				if(StringUtils.isNotEmpty(variantKey)){
+					String hashcode = props.getCustomBundleProperty(bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE_VARIANT+variantKey);
+					bundle.setBundleDataHashCode(variantKey, hashcode);
+				}
 			}
+			
+			String hashcode = props.getCustomBundleProperty(bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE);
+			bundle.setBundleDataHashCode(null, hashcode);
 		}
 		
-		String hashcode = props.getCustomBundleProperty(bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE);
-		bundle.setBundleDataHashCode(null, hashcode);
-	
 		return bundle;
 	}
 
