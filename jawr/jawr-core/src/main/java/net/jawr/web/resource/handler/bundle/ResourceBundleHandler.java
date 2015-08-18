@@ -88,4 +88,11 @@ public interface ResourceBundleHandler {
      * @return the path of the directory containing the generated text bundles
      */
     public String getBundleTextDirPath();
+
+	/**
+     * Returns the path of the directory containing the generated zipped bundles 
+     * @return the path of the directory containing the generated zipped bundles
+     */
+    public String getBundleZipDirPath();
+
 }

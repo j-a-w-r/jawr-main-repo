@@ -1,6 +1,7 @@
 package test.net.jawr.web.resource.bundle.global.postprocessor.google.closure;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class ClosureGlobalPostProcessorTestCase {
 	private GlobalPostProcessingContext ctx;
 	private ClosureGlobalPostProcessor processor;
 	private String srcDir;
-	private String tempDir;
+	private String srcZipDir;
 	private String destDir;
 	
 	@Before
@@ -112,17 +113,24 @@ public class ClosureGlobalPostProcessorTestCase {
 		when(variantBundle.getName()).thenReturn("variantBundle");
 		when(variantBundle.getInclusionPattern()).thenReturn(inclusionPattern);
 		
-		srcDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/";
-		tempDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/temp/";
-		destDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/result/";
-		processor = new ClosureGlobalPostProcessor(srcDir, tempDir, destDir);
+		srcDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/text/";
+		srcZipDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/gzip/";
+		String workingDir = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/work/";
+		destDir = workingDir + ClosureGlobalPostProcessor.GOOGLE_CLOSURE_RESULT_TEXT_DIR;
+		
+		when(rsBundlesHandler.getBundleTextDirPath()).thenReturn(srcDir);
+		when(rsBundlesHandler.getBundleZipDirPath()).thenReturn(srcZipDir);
+		when(rsHandler.getWorkingDirectory()).thenReturn(FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/work/");
+		when(rsHandler.getResource("extern.js")).thenReturn(new StringReader(FileUtils.readClassPathFile("global/postprocessor/google/closure/externs/extern.js")));
+		
+		processor = new ClosureGlobalPostProcessor();
 	}
 
 	private void initProcessingContext(Properties props)
 			throws Exception, ResourceNotFoundException {
 		
 		config = new JawrConfig("js",props);
-		bundleDirPath = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/";
+		bundleDirPath = FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/bundle/text/";
 		
 		Mockito.doAnswer(new Answer<Object>() {
 	        public Object answer(InvocationOnMock invocation) {
@@ -153,9 +161,6 @@ public class ClosureGlobalPostProcessorTestCase {
 		config.setContext(servletContext);
 		config.setCharsetName("UTF-8");		
 		addGeneratorRegistryToConfig(config, "js");
-		
-		when(rsHandler.getWorkingDirectory()).thenReturn(FileUtils.getClasspathRootDir()+"/global/postprocessor/google/closure/");
-		when(rsHandler.getResource("extern.js")).thenReturn(new StringReader(FileUtils.readClassPathFile("global/postprocessor/google/closure/externs/extern.js")));
 		
 		ctx = new GlobalPostProcessingContext(config, rsBundlesHandler, rsHandler, true);
 	}

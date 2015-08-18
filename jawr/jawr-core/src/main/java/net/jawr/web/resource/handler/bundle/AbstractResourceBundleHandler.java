@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -53,7 +53,7 @@ public abstract class AbstractResourceBundleHandler implements
 
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(AbstractResourceBundleHandler.class.getName());
+			.getLogger(AbstractResourceBundleHandler.class);
 
 	/** The name of the Jawr temp directory */
 	protected static final String TEMP_SUBDIR = "jawrTmp";
@@ -137,7 +137,7 @@ public abstract class AbstractResourceBundleHandler implements
 			Charset charset, final String resourceType,
 			final boolean createTempSubDir) {
 		super();
-		
+
 		this.resourceType = resourceType;
 		this.charset = charset;
 
@@ -240,13 +240,22 @@ public abstract class AbstractResourceBundleHandler implements
 		}
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.bundle.ResourceBundleHandler#getBundleTextDirPath()
 	 */
+	@Override
 	public String getBundleTextDirPath() {
 		return textDirPath;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.bundle.ResourceBundleHandler#getBundleZipDirPath()
+	 */
+	@Override
+	public String getBundleZipDirPath() {
+		return gzipDirPath;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -604,5 +613,6 @@ public abstract class AbstractResourceBundleHandler implements
 			LOGGER.debug("Created file: " + newFile.getCanonicalPath());
 		return newFile;
 	}
+
 
 }

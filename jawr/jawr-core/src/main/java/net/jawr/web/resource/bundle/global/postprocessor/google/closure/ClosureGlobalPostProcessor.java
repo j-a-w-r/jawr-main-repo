@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2014 Ibrahim Chaehoi
+ * Copyright 2011-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,6 +36,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPOutputStream;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
@@ -51,6 +52,7 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.util.FileUtils;
 import net.jawr.web.util.StringUtils;
+import net.jawr.web.util.io.TeeOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,10 +138,13 @@ public class ClosureGlobalPostProcessor extends
 					JAWR_JS_CLOSURE_DISABLE_THREAD, JAWR_JS_CLOSURE_MODULES);
 
 	/** The google closure temporary directory */
-	private static final String GOOGLE_CLOSURE_TEMP_DIR = "/googleClosure/temp/";
+	public static final String GOOGLE_CLOSURE_TEMP_DIR = "/googleClosure/temp/";
 
 	/** The google closure result directory */
-	private static final String GOOGLE_CLOSURE_RESULT_DIR = "/googleClosure/result/";
+	public static final String GOOGLE_CLOSURE_RESULT_TEXT_DIR = "/googleClosure/text/";
+
+	/** The google closure result zipped directory */
+	public static final String GOOGLE_CLOSURE_RESULT_ZIP_DIR = "/googleClosure/gzip/";
 
 	/** The JAWR root module file path */
 	private static final String JAWR_ROOT_MODULE_JS = "/JAWR_ROOT_MODULE.js";
@@ -150,8 +155,14 @@ public class ClosureGlobalPostProcessor extends
 	/** The source directory */
 	private String srcDir;
 
-	/** The destination directory */
+	/** The source directory of zipped bundle */
+	private String srcZipDir;
+
+	/** The destination directory for closure compiler compilation */
 	private String destDir;
+
+	/** The destination directory containing the zipped compiled bundle */
+	private String destZipDir;
 
 	/** The temporary directory */
 	private String tempDir;
@@ -163,16 +174,18 @@ public class ClosureGlobalPostProcessor extends
 		super(JawrConstant.GLOBAL_GOOGLE_CLOSURE_POSTPROCESSOR_ID);
 	}
 
-	/**
-	 * Constructor
-	 */
-	public ClosureGlobalPostProcessor(String srcDir, String tempDir,
-			String destDir) {
-		super(JawrConstant.GLOBAL_GOOGLE_CLOSURE_POSTPROCESSOR_ID);
-		this.srcDir = srcDir;
-		this.destDir = destDir;
-		this.tempDir = tempDir;
-	}
+//	/**
+//	 * Constructor
+//	 */
+//	public ClosureGlobalPostProcessor(String srcDir, String srcZipDir, String tempDir,
+//			String destDir, String destZipDir) {
+//		super(JawrConstant.GLOBAL_GOOGLE_CLOSURE_POSTPROCESSOR_ID);
+//		this.srcDir = srcDir;
+//		this.srcZipDir = srcZipDir;
+//		this.destDir = destDir;
+//		this.destZipDir = destZipDir;
+//		this.tempDir = tempDir;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -189,9 +202,12 @@ public class ClosureGlobalPostProcessor extends
 		if (ctx.hasBundleToBeProcessed()) {
 			String workingDir = ctx.getRsReaderHandler().getWorkingDirectory();
 
-			if (srcDir == null || destDir == null || tempDir == null) {
+			if (srcDir == null || destDir == null || tempDir == null
+					|| srcZipDir == null || destZipDir == null) {
 				srcDir = ctx.getBundleHandler().getBundleTextDirPath();
-				destDir = workingDir + GOOGLE_CLOSURE_RESULT_DIR;
+				srcZipDir = ctx.getBundleHandler().getBundleZipDirPath();
+				destDir = workingDir + GOOGLE_CLOSURE_RESULT_TEXT_DIR;
+				destZipDir = workingDir + GOOGLE_CLOSURE_RESULT_ZIP_DIR;
 				tempDir = workingDir + GOOGLE_CLOSURE_TEMP_DIR;
 			}
 
@@ -199,14 +215,21 @@ public class ClosureGlobalPostProcessor extends
 			File dir = new File(destDir);
 			if (!dir.exists() && !dir.mkdirs()) {
 				throw new BundlingProcessException(
-						"Impossible to create temprary directory :" + destDir);
+						"Impossible to create temporary directory :" + destDir);
+			}
+
+			// Create result directory
+			dir = new File(destZipDir);
+			if (!dir.exists() && !dir.mkdirs()) {
+				throw new BundlingProcessException(
+						"Impossible to create temporary directory :" + destZipDir);
 			}
 
 			// Create temporary directory
 			dir = new File(tempDir);
 			if (!dir.exists() && !dir.mkdirs()) {
 				throw new BundlingProcessException(
-						"Impossible to create temprary directory :" + tempDir);
+						"Impossible to create temporary directory :" + tempDir);
 			}
 
 			// Copy the bundle files in a temp directory
@@ -217,16 +240,20 @@ public class ClosureGlobalPostProcessor extends
 				JawrClosureCommandLineRunner cmdRunner = new JawrClosureCommandLineRunner(
 						ctx, bundles, resultBundleMapping);
 				cmdRunner.doRun();
+				// Copy compiled bundles
 				FileUtils.copyDirectory(new File(destDir), new File(srcDir));
-
+				
+				// Copy zipped compiled bundles
+				FileUtils.copyDirectory(new File(destZipDir), new File(srcZipDir));
+		
 			} catch (Exception e) {
 
 				throw new BundlingProcessException(e);
 			}
 		}
-
 	}
 
+	
 	/**
 	 * Returns the closure compiler arguments
 	 * 
@@ -794,7 +821,12 @@ public class ClosureGlobalPostProcessor extends
 			bundlePath = PathNormalizer.escapeToPhysicalPath(bundlePath);
 			File outFile = new File(destDir, bundlePath);
 			outFile.getParentFile().mkdirs();
-			return new FileOutputStream(outFile);
+			FileOutputStream fos = new FileOutputStream(outFile);
+			
+			File outZipFile = new File(destZipDir, bundlePath);
+			outZipFile.getParentFile().mkdirs();
+			GZIPOutputStream gzOs = new GZIPOutputStream(new FileOutputStream(outZipFile));
+			return new TeeOutputStream(fos, gzOs);
 		}
 
 		/*
@@ -807,6 +839,11 @@ public class ClosureGlobalPostProcessor extends
 			int result = super.doRun();
 			// Delete JAWR_ROOT_MODULE file
 			File jawrRootModuleFile = new File(destDir,
+					resultBundleMapping.get(JAWR_ROOT_MODULE_NAME));
+			if (!jawrRootModuleFile.delete()) {
+				LOGGER.warn("Enable to delete JAWR_ROOT_MODULE.js file");
+			}
+			jawrRootModuleFile = new File(destZipDir,
 					resultBundleMapping.get(JAWR_ROOT_MODULE_NAME));
 			if (!jawrRootModuleFile.delete()) {
 				LOGGER.warn("Enable to delete JAWR_ROOT_MODULE.js file");
