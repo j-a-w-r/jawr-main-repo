@@ -3,10 +3,13 @@
  */
 package test.net.jawr.web.resource.bundle.factory;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,34 +18,52 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import org.mockito.Mockito;
-
-import junit.framework.TestCase;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundleDependencyException;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.JoinableResourceBundleContent;
 import net.jawr.web.resource.bundle.factory.PropertiesBasedBundlesHandlerFactory;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
-import net.jawr.web.resource.handler.reader.ResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Ibrahim Chaehoi
  *
  */
-public class BundlesHandlerFactoryTestCase extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class BundlesHandlerFactoryTestCase {
 
+	@Mock
+	private ResourceBundleHandler resourceBundleHandler;
+	
+	@Mock 
+	private ResourceReaderHandler resourceReaderHandler;
+	
+	@Before
+	public void setup() throws ResourceNotFoundException{
+		when(resourceBundleHandler.getResourceType()).thenReturn("css");
+		when(resourceReaderHandler.getResourceNames(Matchers.anyString())).thenReturn(new HashSet<String>());
+		when(resourceReaderHandler.getResource(Matchers.anyString())).thenThrow(new ResourceNotFoundException(""));
+		when(resourceReaderHandler.getResource(Matchers.anyString(), Matchers.anyBoolean())).thenThrow(new ResourceNotFoundException(""));
+	}
+	
+	@Test
 	public void testBundleWithInvalidBundleId1() throws IOException, DuplicateBundlePathException, BundleDependencyException{
 		try{
 			getBundles("css", "/bundle/factory/bundleshandlerfactory/jawr-invalid-bundleId1.properties");
@@ -53,6 +74,7 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 		
 	}
 	
+	@Test
 	public void testBundleWithInvalidBundleId2() throws IOException, DuplicateBundlePathException, BundleDependencyException{
 		try{
 			getBundles("css", "/bundle/factory/bundleshandlerfactory/jawr-invalid-bundleId2.properties");
@@ -62,6 +84,7 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testBundleWithInvalidBundleId3() throws IOException, DuplicateBundlePathException, BundleDependencyException{
 		try{
 			getBundles("css", "/bundle/factory/bundleshandlerfactory/jawr-invalid-bundleId3.properties");
@@ -73,10 +96,8 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 	
 	/**
 	 * Test the dependency resolution
-	 * @throws DuplicateBundlePathException
-	 * @throws BundleDependencyException
-	 * @throws IOException
 	 */
+	@Test
 	public void testDependencyResolution() throws DuplicateBundlePathException, BundleDependencyException, IOException{
 		
 		List<JoinableResourceBundle> bundles = getBundles("css", "/bundle/factory/bundleshandlerfactory/jawr.properties");
@@ -105,6 +126,7 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 	 * @throws DuplicateBundlePathException
 	 * @throws IOException
 	 */
+	@Test
 	public void testDependencyResolutionWithCircularDependency() throws IOException, DuplicateBundlePathException{
 		
 		try {
@@ -120,6 +142,7 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 	 * @throws DuplicateBundlePathException
 	 * @throws IOException
 	 */
+	@Test
 	public void testDependencyResolutionWithDependencyInAGlobalBundle() throws IOException, DuplicateBundlePathException{
 		
 		try {
@@ -175,9 +198,8 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 		};
 		generatorRegistry.setConfig(config);
 		config.setGeneratorRegistry(generatorRegistry);
-		ResourceReaderHandler resourceReaderHandler = getResourceReaderHandler();
 		generatorRegistry.setResourceReaderHandler(resourceReaderHandler);
-		PropertiesBasedBundlesHandlerFactory propsBundlesHandlerFactory = new PropertiesBasedBundlesHandlerFactory(props, resourceType, resourceReaderHandler, getResourceBundleHandler(resourceType), config);
+		PropertiesBasedBundlesHandlerFactory propsBundlesHandlerFactory = new PropertiesBasedBundlesHandlerFactory(props, resourceType, resourceReaderHandler, resourceBundleHandler, config);
 		ResourceBundlesHandler handler = propsBundlesHandlerFactory.buildResourceBundlesHandler();
 		
 		List<JoinableResourceBundle> bundles = handler.getContextBundles();
@@ -199,108 +221,5 @@ public class BundlesHandlerFactoryTestCase extends TestCase {
 			}
 		}
 		return bundleNames;
-	}
-
-	
-	private ResourceReaderHandler getResourceReaderHandler(){
-		return new ResourceReaderHandler() {
-			
-			public void setWorkingDirectory(String workingDir) {
-				
-			}
-			
-			public boolean isDirectory(String resourcePath) {
-				return false;
-			}
-			
-			public String getWorkingDirectory() {
-				return null;
-			}
-			
-			public Set<String> getResourceNames(String dirPath) {
-				return new HashSet<String>();
-			}
-			
-			public InputStream getResourceAsStream(String resourceName,
-					boolean processingBundle) throws ResourceNotFoundException {
-				throw new ResourceNotFoundException(resourceName);
-			}
-			
-			public InputStream getResourceAsStream(String resourceName)
-					throws ResourceNotFoundException {
-				throw new ResourceNotFoundException(resourceName);
-			}
-			
-			public Reader getResource(String resourceName, boolean processingBundle)
-					throws ResourceNotFoundException {
-				throw new ResourceNotFoundException(resourceName);
-			}
-			
-			public Reader getResource(String resourceName)
-					throws ResourceNotFoundException {
-				throw new ResourceNotFoundException(resourceName);
-			}
-			
-			public void addResourceReaderToStart(ResourceReader rd) {
-				
-			}
-			
-			public void addResourceReaderToEnd(ResourceReader rd) {
-				
-			}
-
-			@Override
-			public Reader getResource(String resourceName,
-					boolean processingBundle, List<Class<?>> excludedReader)
-					throws ResourceNotFoundException {
-				return null;
-			}
-		};
-	}
-	
-	private ResourceBundleHandler getResourceBundleHandler(final String resourceType){
-		
-		return new ResourceBundleHandler(){
-
-			public Properties getJawrBundleMapping() {
-				return null;
-			}
-
-			public InputStream getResourceBundleAsStream(String bundleName)
-					throws ResourceNotFoundException {
-				return null;
-			}
-
-			public ReadableByteChannel getResourceBundleChannel(
-					String bundleName) throws ResourceNotFoundException {
-				return null;
-			}
-
-			public Reader getResourceBundleReader(String bundleName)
-					throws ResourceNotFoundException {
-				return null;
-			}
-
-			public String getResourceType() {
-				return resourceType;
-			}
-
-			public boolean isExistingMappingFile() {
-				return false;
-			}
-
-			public void storeBundle(String bundleName,
-					JoinableResourceBundleContent bundleResourcesContent) {
-				
-			}
-
-			public void storeJawrBundleMapping(Properties bundleMapping) {
-				
-			}
-
-			public String getBundleTextDirPath() {
-				return null;
-			}
-		};
 	}
 }

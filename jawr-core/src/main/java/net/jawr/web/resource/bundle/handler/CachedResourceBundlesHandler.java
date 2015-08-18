@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -74,6 +74,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getResourceType()
 	 */
+	@Override
 	public String getResourceType() {
 		
 		return rsHandler.getResourceType();
@@ -86,6 +87,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getGlobalBundles
 	 * ()
 	 */
+	@Override
 	public List<JoinableResourceBundle> getGlobalBundles() {
 		return rsHandler.getGlobalBundles();
 	}
@@ -97,6 +99,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getContextBundles
 	 * ()
 	 */
+	@Override
 	public List<JoinableResourceBundle> getContextBundles() {
 		return rsHandler.getContextBundles();
 	}
@@ -110,6 +113,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler,
 	 * java.util.Map)
 	 */
+	@Override
 	public ResourceBundlePathsIterator getBundlePaths(String bundleId,
 			ConditionalCommentCallbackHandler commentCallbackHandler,
 			Map<String, String> variants) {
@@ -124,6 +128,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.ResourceBundlesHandler#getBundlePaths(java
 	 * .lang.String)
 	 */
+	@Override
 	public ResourceBundlePathsIterator getBundlePaths(DebugMode debugMode,
 			String bundleId,
 			ConditionalCommentCallbackHandler commentCallbackHandler,
@@ -137,6 +142,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * 
 	 * @see net.jawr.web.resource.bundle.ResourceBundlesHandler#getConfig()
 	 */
+	@Override
 	public JawrConfig getConfig() {
 		return rsHandler.getConfig();
 	}
@@ -146,6 +152,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * 
 	 * @see net.jawr.web.resource.bundle.ResourceBundlesHandler#initAllBundles()
 	 */
+	@Override
 	public void initAllBundles() {
 		rsHandler.initAllBundles();
 	}
@@ -157,6 +164,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.ResourceBundlesHandler#resolveBundleForPath
 	 * (java.lang.String)
 	 */
+	@Override
 	public JoinableResourceBundle resolveBundleForPath(String path) {
 		return rsHandler.resolveBundleForPath(path);
 	}
@@ -168,6 +176,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.ResourceBundlesHandler#streamBundleTo(java
 	 * .lang.String, java.io.OutputStream)
 	 */
+	@Override
 	public void streamBundleTo(String bundlePath, OutputStream out)
 			throws ResourceNotFoundException {
 
@@ -187,7 +196,6 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 
 				// Cache the byte array
 				cacheMgr.put(ZIP_CACHE_PREFIX+bundlePath, gzip);
-				//gzipCache.put(bundlePath, gzip);
 			}
 
 			// Write bytes to the outputstream
@@ -208,6 +216,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.ResourceBundlesHandler#writeBundleTo(java
 	 * .lang.String, java.io.Writer)
 	 */
+	@Override
 	public void writeBundleTo(String bundlePath, Writer writer)
 			throws ResourceNotFoundException {
 		//String text = (String) textCache.get(bundlePath);
@@ -223,7 +232,6 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 				rsHandler.writeBundleTo(bundlePath, tempWriter);
 				text = baOs.toString(charsetName);
 				cacheMgr.put(TEXT_CACHE_PREFIX+bundlePath, text);
-				//textCache.put(bundlePath, text);
 			}
 
 			// Write the text to the outputstream
@@ -243,6 +251,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * @seenet.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * getClientSideHandler()
 	 */
+	@Override
 	public ClientSideHandlerGenerator getClientSideHandler() {
 		return rsHandler.getClientSideHandler();
 	}
@@ -255,6 +264,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler,
 	 * java.util.Map)
 	 */
+	@Override
 	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
 			String bundleId,
 			ConditionalCommentCallbackHandler commentCallbackHandler,
@@ -272,6 +282,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler,
 	 * java.util.Map)
 	 */
+	@Override
 	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
 			DebugMode debugMode,
 			ConditionalCommentCallbackHandler commentCallbackHandler,
@@ -289,6 +300,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * (net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler,
 	 * java.util.Map)
 	 */
+	@Override
 	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
 			ConditionalCommentCallbackHandler commentCallbackHandler,
 			Map<String, String> variants) {
@@ -302,6 +314,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * isGlobalResourceBundle(java.lang.String)
 	 */
+	@Override
 	public boolean isGlobalResourceBundle(String resourceBundleId) {
 		return rsHandler.isGlobalResourceBundle(resourceBundleId);
 	}
@@ -312,6 +325,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * getTypeBundleHashcode(java.lang.String)
 	 */
+	@Override
 	public BundleHashcodeType getBundleHashcodeType(String requestedPath) {
 		return rsHandler.getBundleHashcodeType(requestedPath);
 	}
@@ -322,8 +336,17 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * getBundleTextDirPath()
 	 */
+	@Override
 	public String getBundleTextDirPath() {
 		return rsHandler.getBundleTextDirPath();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getBundleZipDirPath()
+	 */
+	@Override
+	public String getBundleZipDirPath() {
+		return rsHandler.getBundleZipDirPath();
 	}
 
 }
