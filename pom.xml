@@ -81,6 +81,7 @@
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
 		<ehcache.version>2.7.4</ehcache.version>
 		<smartsprites.version>0.2.11</smartsprites.version>
+		<webjars-locator.version>0.27</webjars-locator.version>
 		<google-closure.version>v20150505</google-closure.version>
 		<lesscss-engine.version>1.5.1</lesscss-engine.version>
 		<jackson-json.version>2.4.2</jackson-json.version>
@@ -255,6 +256,12 @@
 				<!-- TODO : replace by version 0.2.11 containing the feature to track 
 					sprite images when available -->
 				<scope>provided</scope>
+			</dependency>
+			<!-- Webjars Locator dependency -->
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>webjars-locator-core</artifactId>
+				<version>${webjars-locator.version}</version>
 			</dependency>
 			<!-- Google closure dependency -->
 			<dependency>

@@ -40,6 +40,8 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsJSGenerat
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
+import net.jawr.web.resource.bundle.generator.locator.ResourceLocator;
+import net.jawr.web.resource.bundle.generator.locator.WebJarsResourceLocator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverWrapper;
@@ -89,6 +91,9 @@ public class GeneratorRegistry implements Serializable {
 	/** The webjars generator prefix */
 	public static final String WEBJARS_GENERATOR_PREFIX = "webjars";
 
+	/** The webjars asset locator classname*/
+	public static final String WEBJARS_LOCATOR_CLASSNAME = "org.webjars.WebJarAssetLocator";
+
 	/** The commons validator bundle prefix */
 	public static final String COMMONS_VALIDATOR_PREFIX = "acv";
 
@@ -127,6 +132,9 @@ public class GeneratorRegistry implements Serializable {
 
 	/** The binary resource prefix registry */
 	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
+
+	/** The resource locator registry */
+	private final List<ResourceLocator> resourceLocatorRegistry = new CopyOnWriteArrayList<ResourceLocator>();
 
 	/** The resource type */
 	private String resourceType;
@@ -202,6 +210,10 @@ public class GeneratorRegistry implements Serializable {
 				.equals(JawrConstant.BINARY_TYPE))) {
 			commonGenerators.put(new PrefixedPathResolver(
 					SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
+		}
+
+		if (ClassLoaderResourceUtils.isClassPresent(WEBJARS_LOCATOR_CLASSNAME)) {
+			resourceLocatorRegistry.add(new WebJarsResourceLocator());
 		}
 	}
 
@@ -725,5 +737,23 @@ public class GeneratorRegistry implements Serializable {
 			availableVariantMap.put(variantType, variant);
 		}
 		return availableVariantMap;
+	}
+
+	/**
+	 * Locate resource mapping
+	 *
+	 * @param mapping the mapping from bundle definition
+	 * @return a fully qualified mapping to the resource or the original mapping
+	 *         passed in if not supported
+	 */
+	public String locateResource(String mapping) {
+
+		for (ResourceLocator locator : resourceLocatorRegistry) {
+			if (locator.support(mapping)) {
+				mapping = locator.getFullMapping(mapping);
+				break;
+			}
+		}
+		return mapping;
 	}
 }

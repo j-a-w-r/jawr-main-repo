@@ -300,6 +300,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 			StringTokenizer tk = new StringTokenizer(mappingsProperty, JawrConstant.COMMA_SEPARATOR);
 			while (tk.hasMoreTokens()){
 				String mapping = tk.nextToken().trim();
+				mapping = generatorRegistry.locateResource(mapping);
 				mappings.add(mapping);
 				// Add local variants
 				variants = VariantUtils.concatVariants(variants, generatorRegistry.getAvailableVariants(mapping));

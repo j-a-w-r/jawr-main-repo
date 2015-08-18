@@ -272,6 +272,21 @@ public class ClassLoaderResourceUtils {
 	}
 
 	/**
+	 * Determine whether the Class identified by the supplied name is present.
+	 *
+	 * @param classname  the name of the class to check
+	 * @return whether the specified class is present
+	 */
+	public static boolean isClassPresent(String classname) {
+		try {
+			Class.forName(classname);
+			return true;
+		} catch (Throwable e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Returns the class associated to the class name given in parameter
 	 * 
 	 * @param classname
