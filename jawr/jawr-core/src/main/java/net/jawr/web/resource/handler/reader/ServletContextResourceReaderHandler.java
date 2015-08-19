@@ -95,6 +95,10 @@ public class ServletContextResourceReaderHandler implements
 			tempWorkingDirectory = jawrConfig.getJawrWorkingDirectory();
 		}
 
+		if(tempWorkingDirectory == null){
+			throw new IllegalStateException("There is no temporary directory configured for this web application.\n"
+					+ "The servlet context attribute '"+JawrConstant.SERVLET_CONTEXT_TEMPDIR+"' should contain the temporary directory attribute.");
+		}
 		this.servletContext = servletContext;
 		this.generatorRegistry = generatorRegistry;
 		this.generatorRegistry.setResourceReaderHandler(this);
