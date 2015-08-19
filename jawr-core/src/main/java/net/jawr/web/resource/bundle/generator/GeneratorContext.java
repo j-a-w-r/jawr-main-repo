@@ -31,15 +31,9 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  */
 public class GeneratorContext {
 
-	/** The parentheses regexp finder */
-	private static final String PARENFINDER_REGEXP = ".*(\\(.*\\)).*";
-
-	/** The brackets regexp finder */
-	private static final String BRACKFINDER_REGEXP = ".*(\\[.*\\]).*";
-
-	/** The path requested */
-	private String path;
-
+	/** The generator mapping helper */
+	private GeneratorMappingHelper helper;
+	
 	/** The current Jawr config */
 	private JawrConfig config;
 
@@ -51,12 +45,6 @@ public class GeneratorContext {
 
 	/** The locale */
 	private Locale locale;
-
-	/** The values in parentheses */
-	private String parenthesesParam;
-
-	/** The values in brackets */
-	private String bracketsParam;
 
 	/** The resource handler */
 	private ResourceReaderHandler resourceReaderHandler;
@@ -92,22 +80,7 @@ public class GeneratorContext {
 	public GeneratorContext(JawrConfig config, String requestedPath) {
 
 		this.config = config;
-		this.path = requestedPath;
-		// init parameters, if any
-		if (path.matches(PARENFINDER_REGEXP)) {
-			parenthesesParam = path.substring(path.indexOf('(') + 1,
-					path.indexOf(')'));
-
-			path = path.substring(0, path.indexOf('('))
-					+ path.substring(path.indexOf(')') + 1);
-		}
-		if (path.matches(BRACKFINDER_REGEXP)) {
-			bracketsParam = path.substring(path.indexOf('[') + 1,
-					path.indexOf(']'));
-
-			path = path.substring(0, path.indexOf('['))
-					+ path.substring(path.indexOf(']') + 1);
-		}
+		this.helper = new GeneratorMappingHelper(requestedPath);
 	}
 
 	/**
@@ -174,7 +147,7 @@ public class GeneratorContext {
 	 * @return the path
 	 */
 	public String getPath() {
-		return path;
+		return helper.getPath();
 	}
 
 	/**
@@ -248,7 +221,7 @@ public class GeneratorContext {
 	 * @return the values in parentheses.
 	 */
 	public String getParenthesesParam() {
-		return parenthesesParam;
+		return helper.getParenthesesParam();
 	}
 
 	/**
@@ -257,7 +230,7 @@ public class GeneratorContext {
 	 * @return the values in brackets.
 	 */
 	public String getBracketsParam() {
-		return bracketsParam;
+		return helper.getBracketsParam();
 	}
 
 	/**

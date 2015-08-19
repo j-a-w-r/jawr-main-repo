@@ -22,7 +22,11 @@ import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolve
  * the short path reference instead of the full path one. <br/>
  * For example : webjars:/fonts/glyphicons-halflings-regular.eot instead of
  * webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.eot
- *
+ * To avoid resource reference collision if there multiple resource with the same name in different webjars,
+ * like below :</br>
+ * webjars:/fonts/glyphicons-halflings-regular.eot[bootstrap]
+ *  
+ * @author (Original) Ted Liang (https://github.com/tedliang)
  * @author Ibrahim Chaehoi
  */
 public class WebJarsLocatorBinaryResourceGenerator extends

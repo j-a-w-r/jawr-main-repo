@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.jawr.web.resource.bundle.generator.GeneratorMappingHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webjars.WebJarAssetLocator;
@@ -32,8 +34,11 @@ import org.webjars.WebJarAssetLocator;
  * is in the classpath, 'webjars:jquery.js' will automatically locate the
  * resource instead of using the full ressource path
  * 'webjars:/jquery/2.1.4/jquery.js'
- * 
- * 
+ * To avoid resource reference collision if there multiple resource with the same name in different webjars,
+ * like below :</br>
+ * webjars:/jquery.js[jquery]
+ *
+ * @author (Original) Ted Liang (https://github.com/tedliang)
  * @author Ibrahim Chaehoi
  */
 public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
@@ -109,7 +114,14 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 	@Override
 	public String getResourcePath(String requestedPath) {
 		String resourcePath = super.getResourcePath(requestedPath);
-		String fullPath = locator.getFullPath(resourcePath);
+		GeneratorMappingHelper helper = new GeneratorMappingHelper(resourcePath);
+		String fullPath = null; 
+		if(StringUtils.isNotEmpty(helper.getBracketsParam())){
+			// Use the webjars reference stored in the bracket params
+			fullPath = locator.getFullPath(helper.getBracketsParam(), helper.getPath());
+		}else{
+			fullPath = locator.getFullPath(resourcePath);
+		}
 		if (checkResourcePathForInfo || checkResourcePathForWarning) {
 			checkResourcePath(resourcePath, fullPath);
 		}

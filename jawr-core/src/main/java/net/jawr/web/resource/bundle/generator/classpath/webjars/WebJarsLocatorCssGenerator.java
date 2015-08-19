@@ -13,9 +13,6 @@
  */
 package net.jawr.web.resource.bundle.generator.classpath.webjars;
 
-import java.io.Reader;
-
-import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolver;
 
@@ -25,7 +22,12 @@ import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolve
  * reference instead of the full path one. <br/>
  * For example : webjars:/css/bootstrap.css instead of
  * webjars:/bootstrap/3.2.0/css/bootstrap.css
+ * To avoid resource reference collision if there multiple resource with the same name in different webjars,
+ * you can specify the webjars in parameter between bracket.
+ * like below :</br>
+ * webjars:/css/bootstrap.css[bootstrap]
  *
+ * @author (Original) Ted Liang (https://github.com/tedliang)
  * @author Ibrahim Chaehoi
  */
 public class WebJarsLocatorCssGenerator extends WebJarsCssGenerator {
@@ -40,31 +42,5 @@ public class WebJarsLocatorCssGenerator extends WebJarsCssGenerator {
 	@Override
 	protected ResourceGeneratorResolver createResolver(String generatorPrefix) {
 		return new WebJarsLocatorPathResolver(generatorPrefix, true, true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator
-	 * #generateResourceForBundle
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
-	 */
-	@Override
-	protected Reader generateResourceForBundle(GeneratorContext context) {
-		return super.generateResourceForBundle(context);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator
-	 * #generateResourceForDebug
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
-	 */
-	@Override
-	protected Reader generateResourceForDebug(GeneratorContext context) {
-		return super.generateResourceForDebug(context);
 	}
 }
