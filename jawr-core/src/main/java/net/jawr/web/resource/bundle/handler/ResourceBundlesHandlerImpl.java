@@ -243,19 +243,11 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		for (Iterator<JoinableResourceBundle> it = bundles.iterator(); it
 				.hasNext();) {
 			JoinableResourceBundle bundle = it.next();
-
-			// Exclude/include debug only scripts
-			// if (config.isDebugModeOn()
-			// && bundle.getInclusionPattern().isExcludeOnDebug())
-			// continue;
-			// else if (!config.isDebugModeOn()
-			// && bundle.getInclusionPattern().isIncludeOnDebug())
-			// continue;
-
-			if (bundle.getInclusionPattern().isGlobal())
+			if (bundle.getInclusionPattern().isGlobal()){
 				tmpGlobal.add(bundle);
-			else
+			}else{
 				tmpContext.add(bundle);
+			}
 		}
 
 		// Sort the global bundles

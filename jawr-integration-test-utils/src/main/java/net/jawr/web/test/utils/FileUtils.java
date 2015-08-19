@@ -43,8 +43,11 @@ public class FileUtils {
 			throws Exception {
 		InputStream is = clazz.getResourceAsStream(path);
 		if (is == null) {
-			throw new Exception("File '" + clazz.getPackage().getName() + "."
-					+ path + "' doesn't exist");
+			is = FileUtils.class.getResourceAsStream(path);
+			if (is == null) {
+				throw new Exception("File '" + clazz.getPackage().getName()
+						+ "." + path + "' doesn't exist");
+			}
 		}
 		return readContent(is);
 	}

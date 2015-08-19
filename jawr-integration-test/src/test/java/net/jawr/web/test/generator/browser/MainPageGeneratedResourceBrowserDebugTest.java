@@ -35,6 +35,7 @@ public class MainPageGeneratedResourceBrowserDebugTest extends AbstractPageTest 
 		
 		// Update the webClient so it will not throw an exception when it will try to load the external JS file which doesn't exists
 		webClient.setThrowExceptionOnFailingStatusCode(false);
+		
 		return webClient;
 	}
 
