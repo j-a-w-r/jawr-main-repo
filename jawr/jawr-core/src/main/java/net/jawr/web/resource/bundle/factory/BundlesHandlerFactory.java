@@ -348,14 +348,7 @@ public class BundlesHandlerFactory {
 
 				// If this is a composite bundle
 				if (def.isComposite()) {
-					List<JoinableResourceBundle> childBundles = new ArrayList<JoinableResourceBundle>();
-					for (Iterator<ResourceBundleDefinition> childIterator = def
-							.getChildren().iterator(); childIterator.hasNext();) {
-						ResourceBundleDefinition child = childIterator.next();
-						childBundles.add(buildResourcebundle(child));
-					}
-					resourceBundles.add(buildCompositeResourcebundle(def,
-							childBundles));
+					resourceBundles.add(buildCompositeResourcebundle(def));
 				} else
 					resourceBundles.add(buildResourcebundle(def));
 			}
@@ -457,6 +450,35 @@ public class BundlesHandlerFactory {
 		return bundle;
 	}
 
+	/**
+	 * Build a Composite resource bundle using a ResourceBundleDefinition
+	 * 
+	 * @param def
+	 *            the bundle definition
+	 * @param childBundles
+	 *            the list of child bundles
+	 * @return a Composite resource bundle
+	 * @throws BundleDependencyException if a bundle dependency excption occurs
+	 */
+	private JoinableResourceBundle buildCompositeResourcebundle(
+			ResourceBundleDefinition def) throws BundleDependencyException {
+
+		List<JoinableResourceBundle> childBundles = new ArrayList<JoinableResourceBundle>();
+		for (Iterator<ResourceBundleDefinition> childIterator = def
+				.getChildren().iterator(); childIterator.hasNext();) {
+			ResourceBundleDefinition child = childIterator.next();
+			JoinableResourceBundle childBundle = null;
+			if(child.isComposite()){
+				childBundle = buildCompositeResourcebundle(child);
+			}else{
+				childBundle = buildResourcebundle(child);
+			}
+			childBundles.add(childBundle);
+		}
+		return buildCompositeResourcebundle(def,
+				childBundles);
+	}
+	
 	/**
 	 * Build a Composite resource bundle using a ResourceBundleDefinition
 	 * 
@@ -1007,14 +1029,6 @@ public class BundlesHandlerFactory {
 			this.excludedDirMapperDirs = PathNormalizer
 					.normalizePaths(exludedDirMapperDirs);
 	}
-
-	// /**
-	// * Sets the Jawr configuration
-	// * @param jawrConfig the configuration to set
-	// */
-	// public void setJawrConfig(JawrConfig jawrConfig) {
-	// this.jawrConfig = jawrConfig;
-	// }
 
 	/**
 	 * Sets the map of custom post processor

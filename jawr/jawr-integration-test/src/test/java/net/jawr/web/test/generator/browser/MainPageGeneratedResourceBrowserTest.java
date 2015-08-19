@@ -11,6 +11,8 @@ import net.jawr.web.test.utils.Utils;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.JavaScriptPage;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.StatusHandler;
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
@@ -34,9 +36,17 @@ public class MainPageGeneratedResourceBrowserTest extends AbstractPageTest {
 		WebClient webClient = super.createWebClient();
 		
 		// Update the webClient so it will not throw an exception when it will try to load the external JS file which doesn't exists
-		webClient.setThrowExceptionOnFailingStatusCode(false);
+		webClient.setStatusHandler(new StatusHandler() {
+			
+			@Override
+			public void statusMessageChanged(Page page, String message) {
+				// Do nothing
+			}
+		});
+		
 		return webClient;
 	}
+	
 
 	@Override
 	protected String getPageUrl() {
