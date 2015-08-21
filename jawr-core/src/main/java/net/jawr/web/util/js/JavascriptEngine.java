@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Ibrahim Chaehoi
+ * Copyright 2014-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,63 +13,65 @@
  */
 package net.jawr.web.util.js;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import net.jawr.web.exception.BundlingProcessException;
-import net.jawr.web.resource.bundle.IOUtils;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import net.jawr.web.exception.BundlingProcessException;
 
 /**
- * This class is intended to provide facility method for Rhino.
+ * This class is intended to provide facility method for JS script engine.
  * 
  * @author ibrahim Chaehoi
  */
-public class RhinoEngine {
+public class JavascriptEngine {
 
-	/** The current scope */
-	private final ScriptableObject scope;
+	/** The script engine */
+	private ScriptEngine scriptEngine;
 
 	/**
-	 * Constructor 
+	 * Constructor
+	 * @param scriptEngineName the name of the Javascript engine to use
 	 */
-	public RhinoEngine() {
-		
-		Context context = Context.enter();
-		context.setOptimizationLevel(-1); // Without this, Rhino hits a 64K
-											// bytecode limit and fails
-		scope = context.initStandardObjects();
+	public JavascriptEngine(String scriptEngineName) {
+		this(scriptEngineName, false);
 	}
 
 	/**
-	 * Initialize the context if it doesn't exists
-	 */
-	private void initContext() {
-		if (Context.getCurrentContext() == null) {
-			Context.enter();
-		}
-	}
-
-	/**
-	 * Returns the current context
+	 * Constructor
 	 * 
-	 * @return the current context
+	 * @param scriptEngineName the name of the Javascript engine to use
+	 * @param initGlobal
+	 *            the flag indicating that we must initialize the global object
+	 *            in the global variable
 	 */
-	private Context getContext() {
-		initContext();
-		return Context.getCurrentContext();
+	public JavascriptEngine(String scriptEngineName, boolean initGlobal) {
+
+		ScriptEngineManager manager = new ScriptEngineManager();
+		scriptEngine = manager.getEngineByName(scriptEngineName);
+		if (initGlobal) {
+
+			// get JavaScript "global" object and put it in the script engine scope
+			try {
+				Object global = scriptEngine.eval("eval(this)");
+				scriptEngine.put("global", global);
+			} catch (ScriptException e) {
+				throw new BundlingProcessException(e);
+			}
+		}
 	}
 
 	/**
 	 * @return the context
 	 */
-	public ScriptableObject getScope() {
-		return this.scope;
+	public ScriptContext getContext() {
+		return this.scriptEngine.getContext();
 	}
 
 	/**
@@ -84,15 +86,11 @@ public class RhinoEngine {
 	public Object evaluate(String scriptName, Reader reader) {
 
 		try {
-			return getContext().evaluateReader(scope, reader, scriptName, 0,
-					null);
-		} catch (IOException e) {
+			scriptEngine.put(ScriptEngine.FILENAME, scriptName);
+			return scriptEngine.eval(reader);
+		} catch (ScriptException e) {
 			throw new BundlingProcessException(
 					"Error while evaluating script : " + scriptName, e);
-		} finally {
-			if (Context.getCurrentContext() != null) {
-				Context.exit();
-			}
 		}
 	}
 
@@ -108,12 +106,11 @@ public class RhinoEngine {
 	public Object evaluate(String scriptName, String script) {
 
 		try {
-			return getContext().evaluateString(scope, script, scriptName, 0,
-					null);
-		} finally {
-			if (Context.getCurrentContext() != null) {
-				Context.exit();
-			}
+			scriptEngine.put(ScriptEngine.FILENAME, scriptName);
+			return scriptEngine.eval(script);
+		} catch (ScriptException e) {
+			throw new BundlingProcessException(
+					"Error while evaluating script : " + scriptName, e);
 		}
 	}
 
@@ -128,15 +125,14 @@ public class RhinoEngine {
 	 *            the script name
 	 * @return the result
 	 */
-	public Object evaluateString(Scriptable currentScope, String source,
+	public Object evaluateString(Bindings bindings, String source,
 			String scriptName) {
 		try {
-			return getContext().evaluateString(currentScope, source,
-					scriptName, 0, null);
-		} finally {
-			if (Context.getCurrentContext() != null) {
-				Context.exit();
-			}
+			scriptEngine.put(ScriptEngine.FILENAME, scriptName);
+			return scriptEngine.eval(source, bindings);
+		} catch (ScriptException e) {
+			throw new BundlingProcessException(
+					"Error while evaluating script : " + scriptName, e);
 		}
 	}
 
@@ -149,15 +145,7 @@ public class RhinoEngine {
 	 *            the name of the script to evaluate.
 	 */
 	public Object evaluate(String scriptName, InputStream stream) {
-		try {
-			return getContext().evaluateReader(scope,
-					new InputStreamReader(stream), scriptName, 1, null);
-		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"Error while evaluating script : " + scriptName, e);
-		} finally {
-			IOUtils.close(stream);
-		}
+		return evaluate(scriptName, new InputStreamReader(stream));
 	}
 
 	/**
@@ -170,7 +158,7 @@ public class RhinoEngine {
 	 *            the name of the script to evaluate.
 	 * @return the current RhinoEngine.
 	 */
-	public RhinoEngine evaluateInChain(String scriptName, InputStream stream) {
+	public JavascriptEngine evaluateInChain(String scriptName, InputStream stream) {
 		evaluate(scriptName, stream);
 		return this;
 	}
@@ -180,10 +168,10 @@ public class RhinoEngine {
 	 * 
 	 * @return a new Object from the current context
 	 */
-	public Scriptable newObject() {
-		Scriptable obj = getContext().newObject(scope);
-		obj.setParentScope(scope);
-		return obj;
+	public Bindings getBindings() {
+		Bindings bindings = getContext()
+				.getBindings(ScriptContext.ENGINE_SCOPE);
+		return bindings;
 	}
 
 }

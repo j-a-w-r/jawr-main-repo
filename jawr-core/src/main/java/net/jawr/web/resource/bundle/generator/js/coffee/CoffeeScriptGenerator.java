@@ -22,6 +22,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.script.Bindings;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -33,10 +39,8 @@ import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
-import net.jawr.web.util.js.RhinoEngine;
-
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Scriptable;
+import net.jawr.web.util.StopWatch;
+import net.jawr.web.util.js.JavascriptEngine;
 
 /**
  * This class defines the coffee script generator
@@ -47,6 +51,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		implements ConfigurationAwareResourceGenerator,
 		PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
 
+	/** The Logger */
+	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_LOGGER);
+	
 	/** The coffee script suffix */
 	private static final String COFFEE_SCRIPT_SUFFIX = "coffee";
 
@@ -69,7 +76,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	private String options;
 
 	/** The Rhino engine */
-	private RhinoEngine rhino;
+	private JavascriptEngine jsEngine;
 
 	/**
 	 * Constructor
@@ -98,6 +105,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	public void afterPropertiesSet() {
 
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("initializing JS engine for Coffeescript");
+		
 		options = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS,
 				"");
 
@@ -105,9 +115,13 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		String script = config.getProperty(
 				JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION,
 				DEFAULT_COFFEE_SCRIPT_JS_LOCATION);
-		rhino = new RhinoEngine();
+		jsEngine = new JavascriptEngine(config.getJavascriptEngineName());
 		InputStream inputStream = getResourceInputStream(script);
-		rhino.evaluate("coffee-script.js", inputStream);
+		jsEngine.evaluate("coffee-script.js", inputStream);
+		stopWatch.stop();
+		if(PERF_LOGGER.isDebugEnabled()){
+			PERF_LOGGER.debug(stopWatch.prettyPrint());
+		}
 	}
 
 	/**
@@ -160,7 +174,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 			StringWriter swr = new StringWriter();
 			IOUtils.copy(rd, swr);
 
-			String result = compile(swr.toString());
+			String result = compile(path, swr.toString());
 			rd = new StringReader(result);
 
 		} catch (ResourceNotFoundException e) {
@@ -179,18 +193,19 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 *            the CoffeeScript source
 	 * @return the JS source
 	 */
-	public String compile(String coffeeScriptSource) {
+	public String compile(String resourcePath, String coffeeScriptSource) {
 
-		Scriptable compileScope = rhino.newObject();
-		compileScope
-				.put("coffeeScriptSource", compileScope, coffeeScriptSource);
-		try {
-			return (String) rhino.evaluateString(compileScope,
-					String.format(
-							"CoffeeScript.compile(coffeeScriptSource, '%s');",
-							options), "JCoffeeScriptCompiler");
-		} catch (JavaScriptException e) {
-			throw new BundlingProcessException(e);
-		}
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("Compiling resource '"+resourcePath+"' with CoffeeScript");
+		Bindings bindings = jsEngine.getBindings();
+		bindings.put("coffeeScriptSource", coffeeScriptSource);
+		String result = (String) jsEngine.evaluateString(bindings, String.format(
+				"CoffeeScript.compile(coffeeScriptSource, '%s');", options),
+				"JCoffeeScriptCompiler");
+		stopWatch.stop();
+		if(PERF_LOGGER.isDebugEnabled()){
+			PERF_LOGGER.debug(stopWatch.prettyPrint());
+		}return result;
+
 	}
 }

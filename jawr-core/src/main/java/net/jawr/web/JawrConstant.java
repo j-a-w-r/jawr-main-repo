@@ -293,4 +293,13 @@ public class JawrConstant {
 	/** The Uglify scripts location */
 	public static final String UGLIFY_POSTPROCESSOR_OPTIONS = "jawr.js.postprocessor.uglify.options";
 
+	/** The Javascript engine property name */
+	public static final String JS_ENGINE_PROPERTY = "jawr.js.engine";
+	
+	/** The default Javascript engine */
+	public static final String JS_ENGINE_DEFAULT = "mozilla.rhino";
+
+	/** The performance logger */
+	public static final String PERF_LOGGER = "net.jawr.perf";
+	
 }
