@@ -62,7 +62,8 @@ public class JawrConfig implements Serializable {
 	private static final long serialVersionUID = -6243263853446050289L;
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory.getLogger(JawrConfig.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(JawrConfig.class);
 
 	/** The unauthorized resource extensions */
 	private static final List<String> UNAUTHORIZED_RESOURCE_EXTENSIONS = Arrays
@@ -244,8 +245,8 @@ public class JawrConfig implements Serializable {
 	 */
 	private LocaleResolver localeResolver;
 
-	/** 
-	 * The bundle hashcode generator 
+	/**
+	 * The bundle hashcode generator
 	 */
 	private BundleHashcodeGenerator bundleHashcodeGenerator;
 
@@ -493,8 +494,8 @@ public class JawrConfig implements Serializable {
 		}
 
 		if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
-			for (Object key : MIMETypesSupport.getSupportedProperties(
-					this).keySet()) {
+			for (Object key : MIMETypesSupport.getSupportedProperties(this)
+					.keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {
 					this.allowedExtensions.add((String) key);
 				}
@@ -586,7 +587,7 @@ public class JawrConfig implements Serializable {
 				"CRC32");
 
 		this.binaryResourcesDefinition = getProperty(JAWR_BINARY_RESOURCES);
-		
+
 		// TODO : remove the below section in the next major release
 		if (StringUtils
 				.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
@@ -594,28 +595,25 @@ public class JawrConfig implements Serializable {
 					"The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"
 							+ JAWR_CSS_CLASSPATH_HANDLE_IMAGE + "' instead.");
 		}
-		
+
 		if (StringUtils
 				.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
 			throw new BundlingProcessException(
 					"The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"
 							+ JAWR_CSS_CLASSPATH_HANDLE_IMAGE + "' instead.");
 		}
-		
-		if (StringUtils
-				.isNotEmpty(getProperty("jawr.image.hash.algorithm"))) {
+
+		if (StringUtils.isNotEmpty(getProperty("jawr.image.hash.algorithm"))) {
 			throw new BundlingProcessException(
 					"The property 'jawr.image.hash.algorithm' is not supported anymore, please use '"
 							+ JAWR_BINARY_HASH_ALGORITHM + "' instead.");
 		}
 
-		if (StringUtils
-				.isNotEmpty(getProperty("jawr.image.resources"))) {
+		if (StringUtils.isNotEmpty(getProperty("jawr.image.resources"))) {
 			throw new BundlingProcessException(
 					"The property 'jawr.image.resources' is not supported anymore, please use '"
 							+ JAWR_BINARY_RESOURCES + "' instead.");
 		}
-		
 
 	}
 
@@ -1350,6 +1348,15 @@ public class JawrConfig implements Serializable {
 				.append("'\nservletMapping:'").append(getServletMapping())
 				.append("' ]");
 		return sb.toString();
+	}
+
+	/**
+	 * Returns the name of JS engine to use
+	 * @return the name of JS engine to use
+	 */
+	public String getJavascriptEngineName() {
+		return getProperty(JawrConstant.JS_ENGINE_PROPERTY,
+				JawrConstant.JS_ENGINE_DEFAULT);
 	}
 
 }

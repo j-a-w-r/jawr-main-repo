@@ -63,6 +63,9 @@ public class UglifyPostProcessorTest {
 	@Before
 	public void setUp() throws Exception {
 		processor = new UglifyPostProcessor();
+		when(
+				config.getJavascriptEngineName()).thenReturn(
+				JawrConstant.JS_ENGINE_DEFAULT);
 		when(config.getContext()).thenReturn(context);
 		when(config.getConfigProperties()).thenReturn(new Properties());
 		when(bundle.getId()).thenReturn("/myJsBundle.js");

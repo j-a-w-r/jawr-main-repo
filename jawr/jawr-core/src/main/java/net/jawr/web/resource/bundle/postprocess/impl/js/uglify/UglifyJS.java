@@ -16,40 +16,46 @@ package net.jawr.web.resource.bundle.postprocess.impl.js.uglify;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import javax.script.Bindings;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.minification.CompressionResult;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
+import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.StringUtils;
-import net.jawr.web.util.js.RhinoEngine;
-
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Scriptable;
+import net.jawr.web.util.js.JavascriptEngine;
 
 /**
- * The Uglify JS engine.
- * This compressor is using UglifyJS (https://github.com/mishoo/UglifyJS2)
+ * The Uglify JS engine. This compressor is using UglifyJS
+ * (https://github.com/mishoo/UglifyJS2)
  * 
  * @author ibrahim Chaehoi
  */
 public class UglifyJS {
 
+	/** The logger */
+	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_LOGGER);
+	
 	/** The Uglify scripts to load */
 	private static final String[] UGLIFY_SCRIPTS = { "utils.js", "ast.js",
 			"parse.js", "transform.js", "scope.js", "output.js", "compress.js",
-			"sourcemap.js", "uglify.js"};
+			"sourcemap.js", "uglify.js" };
 
 	/** The rhino engine */
-	private RhinoEngine rhinoEngine = new RhinoEngine();
+	boolean baseEngine = true;
+	private JavascriptEngine jsEngine;
 
 	/** The Jawr configuration */
 	private final JawrConfig config;
 
 	/** The Uglify options in JSON format */
 	private String optionsInJson;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -63,13 +69,22 @@ public class UglifyJS {
 	public UglifyJS(JawrConfig config, String scriptDirLocation,
 			String optionsInJson) {
 
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("initializing JS engine for Uglify");
+		String jsEngineName = config.getJavascriptEngineName();
+		this.jsEngine = new JavascriptEngine(jsEngineName);
 		this.config = config;
 		this.optionsInJson = optionsInJson;
-		String baseJsLocation = StringUtils.isNotEmpty(scriptDirLocation) ? scriptDirLocation : JawrConstant.UGLIFY_POSTPROCESSOR_DEFAULT_JS_BASE_LOCATION;
+		String baseJsLocation = StringUtils.isNotEmpty(scriptDirLocation) ? scriptDirLocation
+				: JawrConstant.UGLIFY_POSTPROCESSOR_DEFAULT_JS_BASE_LOCATION;
 		for (String script : UGLIFY_SCRIPTS) {
-			rhinoEngine
-				.evaluate(script,
-					getResourceInputStream(baseJsLocation + script));
+			jsEngine.evaluate(script, getResourceInputStream(baseJsLocation
+					+ script));
+
+		}
+		stopWatch.stop();
+		if(PERF_LOGGER.isDebugEnabled()){
+			PERF_LOGGER.debug(stopWatch.prettyPrint());
 		}
 	}
 
@@ -101,21 +116,23 @@ public class UglifyJS {
 	 * @return the uglified code
 	 */
 	public CompressionResult compress(String scriptSource) {
-		
-		Scriptable compileScope = rhinoEngine.newObject();
-		compileScope.put("scriptSource", compileScope, scriptSource);
-		try {
-			Object result = rhinoEngine
-					.evaluateString(compileScope, String.format(
-							"minify(scriptSource, %s);", optionsInJson),
-							"uglify");
 
-			CompressionResult minifierResult = (CompressionResult) Context
-					.jsToJava(result, CompressionResult.class);
-			return minifierResult;
-		} catch (JavaScriptException e) {
-			throw new BundlingProcessException(e);
+		Object result = null;
+		Bindings bindings = jsEngine.getBindings();
+		bindings.put("scriptSource", scriptSource);
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("Compressing using Uglify");
+		
+		result = jsEngine.evaluateString(bindings,
+				String.format("minify(scriptSource, %s);", optionsInJson),
+				"uglify");
+
+		stopWatch.stop();
+		if(PERF_LOGGER.isDebugEnabled()){
+			PERF_LOGGER.debug(stopWatch.prettyPrint());
 		}
+	
+		return (CompressionResult) result;
 
 	}
 
