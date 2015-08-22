@@ -1359,4 +1359,23 @@ public class JawrConfig implements Serializable {
 				JawrConstant.JS_ENGINE_DEFAULT);
 	}
 
+	/**
+	 * Returns the name of JS engine to use
+	 * @return the name of JS engine to use
+	 */
+	public String getJavascriptEngineName(String defaultJsEnginePropName) {
+	
+		String jsEngineName = null;
+		if(StringUtils.isEmpty(defaultJsEnginePropName)){
+			jsEngineName = getJavascriptEngineName();
+		}else{
+			jsEngineName = getProperty(defaultJsEnginePropName);
+			if(StringUtils.isEmpty(jsEngineName)){
+				jsEngineName = getJavascriptEngineName();
+			}
+		}
+		
+		return jsEngineName;
+	}
+
 }
