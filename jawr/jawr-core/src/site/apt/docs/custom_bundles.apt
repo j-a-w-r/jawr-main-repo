@@ -222,6 +222,35 @@ jawr.js.bundle.comp.child.names=foo, bar
 	With such mapping, we specify that, when in development mode, the composite will not contain the files mapped by the <foo> bundle, and that the 
 	<baz> bundle will not use any postprocessor even if there were globally defined ones. 
 
+	Since version 3.8, it is possible to declare nested composite bundle. 
+	For example, you can reference a composite bundle inside another composite bundle, like below :
+	
++------------------------------------------+
+jawr.js.bundle.libs.id=/bundles/libs.js
+jawr.js.bundle.libs.composite=true
+jawr.js.bundle.libs.child.names=angular
+
+jawr.js.bundle.angular.id=/bundles/angular.js
+jawr.js.bundle.angular.composite=true
+jawr.js.bundle.angular.child.names=\
+	angular_prd,\
+	angular_dev
+
+jawr.js.bundle.angular_prd.debugnever=true
+jawr.js.bundle.angular_prd.mappings=\
+	/webjars/angularjs/*/angular.min.js,\
+	/webjars/angularjs/*/angular-animate.min.js,\
+	/webjars/angularjs/*/angular-cookies.min.js,\
+	/webjars/angularjs/*/angular-route.min.js
+	
+jawr.js.bundle.angular_dev.debugonly=true
+jawr.js.bundle.angular_dev.mappings=\
+	/webjars/angularjs/*/angular.js,\
+	/webjars/angularjs/*/angular-animate.js,\
+	/webjars/angularjs/*/angular-cookies.js,\
+	/webjars/angularjs/*/angular-route.js
++------------------------------------------+
+	
 * Bundle dependencies
 
 	Since the version <3.2>, Jawr allows you to define the dependencies for your bundles. 
@@ -329,7 +358,31 @@ jawr.js.bundle.comp.child.names=foo, bar
 	awr.js.bundle.bar.dependencies=foo	
 	
 +------------------------------------------+
+
+	
+* External bundles
+	
+	External bundles are used to reference resources, which are not handle by Jawr.
+	You can still use the jawr tag library to 
+	An external bundle is a bundle with a specific URL to use in debug mode and in production mode.
+	For example, in the following mapping :
 		
++------------------------------------------+	
+	
+	jawr.js.bundle.external.id=/bundles/externalBundle.js
+	jawr.js.bundle.external.debugURL=http://mycomp/js/foo.js
+	jawr.js.bundle.external.productionURL=http://mycomp/js/foo.min.js
+	
++------------------------------------------+
+	
+	External bundles have some restrictions :
+	
+		* It can't have mappings.
+		
+		* It can't be a composite bundle and child of a composite bundle
+		
+		* If the debugUrl property is set, a production URL property is required.
+			
 * Orphan resources
 
 	In Jawr terminology, orphan resources are those not mapped to any bundle after initial configuration. The 'jawr.[js or css].bundle.basedir' property 

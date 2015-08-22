@@ -71,7 +71,8 @@ public class UglifyJS {
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start("initializing JS engine for Uglify");
-		String jsEngineName = config.getJavascriptEngineName();
+
+		String jsEngineName = config.getJavascriptEngineName(JawrConstant.UGLIFY_POSTPROCESSOR_JS_ENGINE);
 		this.jsEngine = new JavascriptEngine(jsEngineName);
 		this.config = config;
 		this.optionsInJson = optionsInJson;

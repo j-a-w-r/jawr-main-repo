@@ -11,6 +11,71 @@
 	
     <section name="Announcements and change log">
     <ul>
+      	  <li> <strong>XX August 2015</strong>: Version 3.8 released:<br/>
+	      This version is containing bug fixes and some new features.<br/><br/>
+	  	  <strong>New features: </strong>
+	  	  	<ul>
+      		 	<li>
+      			[<a href="https://java.net/jira/browse/JAWR-350">JAWR-350</a>] Jawr allows you to define which JS script engine, you would like to use for JS based processors or generators like coffee script, uglify or Autoprefixer.<br/>
+      			This means that you can use Nashorn JS engine if you're using Java 8<br/>
+      			To define which engine to use, you only need to set the property <b>jawr.js.engine</b>.<br/>
+      			For more information, please check <a href="./tutorials/howToSetJsEngine.html">the tutorial about how to set the Javascript Engine</a> for more detail. 
+      			</li>	
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-349">JAWR-349</a>] To reference webjars resources, you can now use short reference instead of full one.<br/>
+      			For example, you can now use : <b>webjars:/css/bootstrap.css</b> instead of <b>webjars:/bootstrap/3.2.0/css/bootstrap.css</b> <br/>
+				For more information, please check the <a href="./docs/generators.html">webjars generator documentation</a> for more information. 
+      			</li>	
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-348">JAWR-348</a>] Jawr allows you to define external bundles. This is used for resources which are not handle in Jawr in Production or debug mode, but you can still use the Jawr taglib to reference them<br/>
+      			For more information, please check <a href="./docs/custom_bundles.html">the bundle documentation</a> for more detail. 
+      			</li>	
+      			<li>
+      		 	[<a href="https://java.net/jira/browse/JAWR-342">JAWR-342</a>] Jawr allows developers to override comments generation in link renderer 
+      		 	</li>
+      			<li>
+      		 	[<a href="https://java.net/jira/browse/JAWR-340">JAWR-340</a>] Jawr allows users to specify if licence information should be kept or not in CSSMinifier.<br/>
+      		 	Please check the <a href="./docs/postprocessors.html">CSS minifier documentation</a> for more detail.
+      		 	</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-274">JAWR-274</a>] Jawr now support nested composite bundles. You can now define a composite bundle in another composite bundle<br/>
+      			For more information, please check <a href="./docs/custom_bundles.html">the composite bundle documentation</a> for more detail. 
+      			</li>	
+      			<li>
+      		 	[<a href="https://java.net/jira/browse/JAWR-247">JAWR-247</a>] Jawr is now able to handle less resources which are available in classpath 
+      		 	</li>
+      		</ul>
+      	 	<strong>Fixed issues : </strong>
+	    	<ul>   
+	    		<li>
+      			[<a href="https://java.net/jira/browse/JAWR-347">JAWR-347</a>] Reloading i18n generator does not work<br/>
+      			</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-345">JAWR-345</a>] Closure Compiler doesn't generate gzip bundle content<br/>
+      			</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-344">JAWR-344</a>] JAWR should throw an exception on start up if 'javax.servlet.context.tempdir' is null<br/>
+      			</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-343">JAWR-343</a>] Issue with CoffeeScript generator on Tomcat 8, where the script can't be generated<br/>
+      			</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-341">JAWR-341</a>] CSS import postprocessor doesn't handle properly url declaration boundaries<br/>
+      			</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-338">JAWR-338</a>] Grails taglib doesn't handle properly "jawr.use.random.parameter" property<br/>
+      			</li>
+      			<li>
+      			[<a href="https://java.net/jira/browse/JAWR-331">JAWR-331</a>] Clear RendererContext when DispatchError appears<br/>
+      			</li>
+      		</ul>
+	    	</li>
+	    	<li>
+	    	Thanks to tzrlk, paranoiabla, dtrunk90, Infeligo, mzz6wh for reporting the issues.<br/>
+	    	Thanks to vakopian, tedliang for reporting the issues and providing patches.
+	    	</li>
+	    </ul>
+	    <ul>
       	  <li> <strong>23rd May 2015</strong>: Version 3.7 released:<br/>
 	      This version is containing bug fixes and some new features.<br/><br/>
 	  	  <strong>Important note : </strong>

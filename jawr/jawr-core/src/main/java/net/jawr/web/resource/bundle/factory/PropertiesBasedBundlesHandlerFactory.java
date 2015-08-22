@@ -309,7 +309,15 @@ public class PropertiesBasedBundlesHandlerFactory {
 				ResourceBundleDefinition childDef = buildCustomBundleDefinition(
 						tk.nextToken().trim(), true, generatorRegistry);
 				childDef.setBundleId(bundleId);
-				children.add(childDef);
+				if(StringUtils.isEmpty(childDef.getDebugURL())){
+					children.add(childDef);
+				}else{
+					throw new IllegalArgumentException(
+							"The external bundle '"
+									+ childDef.getBundleName()
+									+ "' can't be a child of the composite bundle '"+bundleName+"'. Please check your configuration. ");
+
+				}
 			}
 			bundle.setChildren(children);
 		} else {

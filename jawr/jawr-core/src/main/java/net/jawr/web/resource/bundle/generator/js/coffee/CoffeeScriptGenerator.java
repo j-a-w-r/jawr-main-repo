@@ -58,6 +58,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	private static final String COFFEE_SCRIPT_SUFFIX = "coffee";
 
 	/** The coffee script options property name */
+	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE = "jawr.js.generator.coffee.script.js.engine";
+	
+	/** The coffee script options property name */
 	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS = "jawr.js.generator.coffee.script.options";
 
 	/** The coffee script generator location */
@@ -115,7 +118,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		String script = config.getProperty(
 				JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION,
 				DEFAULT_COFFEE_SCRIPT_JS_LOCATION);
-		jsEngine = new JavascriptEngine(config.getJavascriptEngineName());
+		jsEngine = new JavascriptEngine(config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
 		InputStream inputStream = getResourceInputStream(script);
 		jsEngine.evaluate("coffee-script.js", inputStream);
 		stopWatch.stop();

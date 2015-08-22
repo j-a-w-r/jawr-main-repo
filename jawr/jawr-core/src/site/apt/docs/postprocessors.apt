@@ -153,7 +153,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	[]
 	
 	The licenses includer will add the content of .license files at the top of a bundle. That way you will be able to add open source mandatory licenses 
-	or any other comment to the top of your resources. Check the {{{./license_files.html}license files page}} for more info. 
+	or any other comment to the top of your resources. Please check the {{{./license_files.html}license files page}} for more info. 
 
 =====================
 
@@ -220,7 +220,10 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	The built in version used is the version v2.4.15
 	The user is allowed to update the version used by specifying the directory where the Uglify JS sources will be find,
 	by defining the property <<jawr.js.postprocessor.uglify.script.location>>.
-	This postprocessor is based on the rhino javascript engine. So you'll have to add it to your project classpath to be able to us this postprocessor.
+	This postprocessor is based on javascript engine.
+	The default JS engine used in Jawr is the Rhino javascript engine. You can also use Nashorn engine since Java 8.
+	Please check {{{../tutorial/howToSetJsEngine.html}the tutorial about the use of JS engine}} for more info. 
+	To use the Rhino engine, you'll have to add it to your project classpath to be able to us this postprocessor.
 	For maven user, you can add the following snipset configuration to your pom.xml :
 	
 +-------------------------------+
@@ -252,7 +255,8 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 			* sourcemap.js	
 
 	The user can also define the compression options by using the <<jawr.js.postprocessor.uglify.options>> property.
-	This property is a JSON containing the different options for compression, output format, ...
+	This property is a JSON containing the different options for compression, output format, ...  
+	
 	For more information about uglify options, please check the following links : 
 	{{{http://lisperator.net/uglifyjs/}UglifyJS2 site}} and {{{https://github.com/mishoo/UglifyJS2}UglifyJS2 source repository}}
 	
@@ -262,10 +266,24 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	
 	jawr.js.postprocessor.uglify.script.location=/js/uglify/
 	jawr.js.bundle.factory.bundlepostprocessors=uglify
-	# Use unsage compression options and preserve comments containing @preserve keyword
+	# Use unsafe compression options and preserve comments containing @preserve keyword
 	jawr.js.postprocessor.uglify.options={ compress : { unsafe : true}, output : { compress : /@preserve/ }}
 	
 +-------------------------------+	  
+
+	* <<Configuration properties>>
+	
+	Jawr provides the following properties to configure the Uglify postprocessor : 
+
+*---------------+---------+--------------+----------------+
+| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  |
+*---------------+---------+--------------+----------------+
+| jawr.js.postprocessor.uglify.script.location | String | The uglify JS scripts location | /net/jawr/web/resource/bundle/postprocessor/js/uglify/ |
+*---------------+---------+--------------+----------------+
+| jawr.js.postprocessor.uglify.options | String | The uglify options in JSON format | \{\} |
+*---------------+---------+--------------+----------------+
+| jawr.js.postprocessor.uglify.js.engine   | String  | The JS engine to use for Autoprefixer.    | The value of the 'jawr.js.engine' property |
+*---------------+---------+--------------+----------------+
 
 	
 ** CSS-specific postprocessors
@@ -345,11 +363,43 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	[]
 	
 	This processor encodes the CSS images in base64 except for the images which has as annotation<< /** jawr:base64-skip */ >> statement.
-	This postprocessor should not be used with the <<csspathrewriter>>, because they are doing the same job rewriting the image URL.
-	<<WARNING :>> It is also important to set the base64ImageEncoder not only as a <<bundle post processor>> but as a <<file post processor>> AND a <<bundle post processor>>, because this post processor
+	This postprocessor should not be used with the <<csspathrewriter>>, because they are doing the same job rewriting the image URL. 
+	
+	<<WARNING :>> It is also important to set the base64ImageEncoder not only as a <<bundle post processor>> but as a <<file post processor>> AND a <<bundle post processor>>, because this post processor 
 	needs to prepend the MHTML part to the bundle and also to rewrite the URL for each file. \
 	So <<never>> use this post processor only as a bundle post processor or only as a file post processor.
 
+***<<Autoprefixer postprocessor>>
+	
+	* <<Type>>: Bundle,File
+	
+	* <<Properties Key>>: autoprefixer
+	
+	[]
+	
+	This processor adds vendor prefix to CSS resources. \
+	The user can define the autoprefixer options by using the <<jawr.css.autoprefixer.options>> property. \
+	This processor is using a JS engine to perform the processing. \
+	The user can define the JS engine to use by using the <<jawr.css.autoprefixer.js.engine>> property. \
+	If not set the JS engine used will be the one associated to <<jawr.js.engine>>.
+	
+	<<WARNING :>> The current version of autoprefixer don't work with the Nashorn JS engine.
+
+	* <<Configuration properties>>
+	
+	Jawr provides the following properties to configure the Autoprefixer postprocessor : 
+		
+*---------------+---------+--------------+----------------+
+| <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  |
+*---------------+---------+--------------+----------------+
+| jawr.css.autoprefixer.script | String | The autoprefixer script location | /net/jawr/web/resource/bundle/postprocessor/css/autoprefixer/autoprefixer-5.2.1.js |
+*---------------+---------+--------------+----------------+
+| jawr.css.autoprefixer.options | String | The autoprefixer options in JSON format | \{\} |  
+*---------------+---------+--------------+----------------+
+| jawr.css.autoprefixer.js.engine  | String  | The JS engine to use for Autoprefixer.    | The value of the 'jawr.js.engine' property    | 
+*---------------+---------+--------------+----------------+
+
+	
 *	User submitted postprocessors
 
 	Some users are so kind as to submit their own custom postprocessors. If you have one that you think may be useful to others, please post it

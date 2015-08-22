@@ -137,6 +137,37 @@ Jawr Generators
 	jawr.js.bundle.foo.mappings=webjars:/jquery/1.11.1/jquery.js, /js/foo.js	
 +------------------------------------------+
 
+	To reference webjars resources, you can now use short reference instead of full one.
+    For example, you can now use : <b>webjars:/css/bootstrap.css</b> instead of *webjars:/bootstrap/3.2.0/css/bootstrap.css*
+	To avoid resource reference collision if there multiple resource with the same name in different webjars, 
+	you can specify the webjars in parameter between bracket like below :<br/>
+
++------------------------------------------+
+	jawr.css.bundle.foo.mappings=webjars:/css/bootstrap.css[bootstrap]	
++------------------------------------------+
+
+	*Important note* :
+	For CSS resources, it is important to note that you should pay attention to the resource path used in your mapping,
+	because this may lead to issues in binary resources (image, fonts, ...) references in the generated resource.
+	We strongly advise you to use the resource path after the version number.
+	For example : The bootstrap CSS resource is under */META-INF/resources/webjars/bootstrap/<version>/css/bootstrap.css* in the webjars file.
+	To reference this resource you should use the path after the version number like :
+	 
++------------------------------------------+
+	jawr.css.bundle.foo.mappings=webjars:/css/bootstrap.css[bootstrap]	
++------------------------------------------+
+
+	To be able to use the short reference for webjars resource, you need to add webjars-locator-core library in you classpath.
+	For maven user, you'll need to define a dependency in your pom.xml :
+      			
++------------------------------------------+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+			<version>0.27</version>
+		</dependency>
++------------------------------------------+
+
 	Here is the link to the webjars site for more information : <a href="http://www.webjars.org/">webjars</a>
 	
 		
@@ -178,7 +209,7 @@ Jawr Generators
 	
 	* <<Configuration properties>>
 	
-	Jawr provides properties to configure the CoffeeScript generator. 
+	Jawr provides the following properties to configure the CoffeeScript generator. 
 
 *---------------+---------+--------------+
 | <<Property name>> | <<Purpose>>      | <<Default value>>  | 
@@ -187,7 +218,8 @@ Jawr Generators
 *---------------*---------*--------------+
 | jawr.js.generator.coffee.script.location  | The coffee script location  |  net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js    |
 *---------------*---------*--------------+
-
+| jawr.js.generator.coffee.script.js.engine | The JS engine to use for the coffescript generator | the value of 'jawr.js.engine' property |
+*---------------*---------*--------------+
 	 
 	[]
 			

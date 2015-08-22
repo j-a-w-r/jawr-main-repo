@@ -56,6 +56,9 @@ public class AutoPrefixerPostProcessor extends
 	/** The default location of the autoprefixer script */
 	public static final String AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION = "/net/jawr/web/resource/bundle/postprocessor/css/autoprefixer/autoprefixer-5.2.1.js";
 
+	/** The autoprefixer js engine property name */
+	public static final String AUTOPREFIXER_JS_ENGINE = "jawr.css.autoprefixer.js.engine";
+
 	/** The default options */
 	public static final String AUTOPREFIXER_DEFAULT_OPTIONS = "{}";
 
@@ -85,7 +88,7 @@ public class AutoPrefixerPostProcessor extends
 		// Load JavaScript Script Engine
 		String script = config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION,
 				AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
-		String jsEngineName = config.getJavascriptEngineName();
+		String jsEngineName = config.getJavascriptEngineName(AUTOPREFIXER_JS_ENGINE);
 		jsEngine = new JavascriptEngine(jsEngineName, true);
 		jsEngine.getBindings().put("logger", PERF_LOGGER);
 		InputStream inputStream = getResourceInputStream(config, script);

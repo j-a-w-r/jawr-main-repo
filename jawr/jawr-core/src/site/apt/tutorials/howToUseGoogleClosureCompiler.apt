@@ -7,11 +7,11 @@
 Introduction
 
 	The goal of this tutorial is to explain how to use with Jawr. \
-	This feature is available from the version 3.5 of Jawr.
+	This feature is available since the version 3.5 of Jawr.
 	
 * How it works ?
 	
-	Since the version 3.5, Jawr provide by default a postprocessor to compress your JS bundles with Google Closure Compiler.\
+	Since the version 3.5, Jawr provides by default a postprocessor to compress your JS bundles with Google Closure Compiler.\
 	The google closure compiler postprocessor is a global postprocessor, which means that it will be launched at the end of the bundling process.\ 
 	This google closure compiler postprocessor is defined as a global postprocessor, because in advance mode, the compiler will check the JS functions to remove the dead code.
 	
