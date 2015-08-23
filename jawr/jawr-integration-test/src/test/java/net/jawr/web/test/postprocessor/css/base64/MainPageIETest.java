@@ -3,15 +3,10 @@
  */
 package net.jawr.web.test.postprocessor.css.base64;
 
-
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
-
-import net.jawr.web.test.AbstractPageTest;
-import net.jawr.web.test.JawrTestConfigFiles;
-import net.jawr.web.test.utils.Utils;
 
 import org.junit.Test;
 
@@ -24,6 +19,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlScript;
 
+import net.jawr.web.test.AbstractPageTest;
+import net.jawr.web.test.JawrTestConfigFiles;
+import net.jawr.web.test.utils.JavaVersionUtils;
+import net.jawr.web.test.utils.Utils;
+
 /**
  * Test case for standard page in production mode.
  * 
@@ -34,10 +34,11 @@ public class MainPageIETest extends AbstractPageTest {
 
 	/**
 	 * Returns the page URL to test
+	 * 
 	 * @return the page URL to test
 	 */
 	protected String getPageUrl() {
-		return getServerUrlPrefix() + getUrlPrefix()+"/index.jsp";
+		return getServerUrlPrefix() + getUrlPrefix() + "/index.jsp";
 	}
 
 	/**
@@ -46,13 +47,13 @@ public class MainPageIETest extends AbstractPageTest {
 	 * @return the web client
 	 */
 	protected WebClient createWebClient() {
-		
+
 		WebClient webClient = new WebClient(BrowserVersion.INTERNET_EXPLORER_6);
 		// Defines the accepted language for the web client.
 		webClient.addRequestHeader("Accept-Language", getAcceptedLanguage());
 		return webClient;
 	}
-	
+
 	@Test
 	public void testPageLoad() throws Exception {
 
@@ -60,7 +61,11 @@ public class MainPageIETest extends AbstractPageTest {
 				.singletonList("A little message retrieved from the message bundle : Hello $ world!");
 		assertEquals(expectedAlerts, collectedAlerts);
 		
-		assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-expected.txt", page);
+		if(JavaVersionUtils.isVersionInferiorToJava8()){
+			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-expected.txt", page);
+		}else{
+			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-java8-expected.txt", page);
+		}
 	}
 
 	@Test
@@ -69,9 +74,7 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<HtmlScript> scripts = getJsScriptTags();
 		assertEquals(1, scripts.size());
 		final HtmlScript script = scripts.get(0);
-		assertEquals(
-				getUrlPrefix()+"/690372103.en_US/js/bundle/msg.js",
-				script.getSrcAttribute());
+		assertEquals(getUrlPrefix() + "/690372103.en_US/js/bundle/msg.js", script.getSrcAttribute());
 	}
 
 	@Test
@@ -89,9 +92,12 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
-		assertEquals(
-				getUrlPrefix()+"/1109471991.ie6@/fwk/core/component.css",
-				css.getHrefAttribute());
+		if (JavaVersionUtils.isVersionInferiorToJava8()) {
+			assertEquals(getUrlPrefix() + "/1109471991.ie6@/fwk/core/component.css", css.getHrefAttribute());
+		} else {
+			assertEquals(getUrlPrefix() + "/N1749366729.ie6@/fwk/core/component.css", css.getHrefAttribute());
+
+		}
 
 	}
 
@@ -101,7 +107,12 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		final HtmlLink css = styleSheets.get(0);
 		final TextPage page = getCssPage(css);
-		assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/component-ie-expected.css", page);
+		if (JavaVersionUtils.isVersionInferiorToJava8()) {
+			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/component-ie-expected.css", page);
+		} else {
+			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/component-ie-java8-expected.css",
+					page);
+		}
 	}
 
 	@Test
@@ -110,7 +121,8 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<?> images = getHtmlImageTags();
 		assertEquals(1, images.size());
 		final HtmlImage img = (HtmlImage) images.get(0);
-		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
+		Utils.assertGeneratedLinkEquals(
+				getUrlPrefix() + "/cbfc517da02d6a64a68e5fea9a5de472f1/img/appIcons/application.png",
 				img.getSrcAttribute());
 
 	}
@@ -121,9 +133,9 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<HtmlImageInput> images = getHtmlImageInputTags();
 		assertEquals(1, images.size());
 		final HtmlImageInput img = images.get(0);
-		Utils.assertGeneratedLinkEquals(getUrlPrefix()+"/cb30a18063ef42b090194a7e936086960f/img/cog.png", 
+		Utils.assertGeneratedLinkEquals(getUrlPrefix() + "/cb30a18063ef42b090194a7e936086960f/img/cog.png",
 				img.getSrcAttribute());
 
 	}
-	
+
 }
