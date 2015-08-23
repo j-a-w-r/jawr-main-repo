@@ -18,6 +18,6 @@ function p() {
 	return ret;
 }
 window.messages=(
-{ui:{error:{panel:{title:p("Erreur")}},msg:{hello:{world:p("Â¡Bonjour $ š tout le monde!")},salut:p("Mr.")}},error:{login:p("Erreur lors de la connection")}}
+{error:{login:p("Erreur lors de la connection")},ui:{msg:{hello:{world:p("Â¡Bonjour $ š tout le monde!")},salut:p("Mr.")},error:{panel:{title:p("Erreur")}}}}
 )
 })();
