@@ -202,9 +202,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		stopWatch.start("Compiling resource '"+resourcePath+"' with CoffeeScript");
 		Bindings bindings = jsEngine.getBindings();
 		bindings.put("coffeeScriptSource", coffeeScriptSource);
-		String result = (String) jsEngine.evaluateString(bindings, String.format(
+		String result = (String) jsEngine.evaluateString("JCoffeeScriptCompiler", String.format(
 				"CoffeeScript.compile(coffeeScriptSource, '%s');", options),
-				"JCoffeeScriptCompiler");
+				bindings);
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
 			PERF_LOGGER.debug(stopWatch.prettyPrint());

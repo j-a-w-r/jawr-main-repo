@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class AutoPrefixerTest {
 	@Parameters
 	public static List<Object[]> jsEnginesToTestWith() {
 		return Arrays.asList(new Object[][] {
-				{ JawrConstant.JS_ENGINE_DEFAULT }
+				{ JawrConstant.DEFAULT_JS_ENGINE }
 				// , { "nashorn" } Autoprefixer is not working on nashorn  
 				});
 	}
@@ -71,7 +72,7 @@ public class AutoPrefixerTest {
 		processor = new AutoPrefixerPostProcessor();
 		when(config.getContext()).thenReturn(context);
 
-		when(config.getJavascriptEngineName()).thenReturn(jsEngineName);
+		when(config.getJavascriptEngineName(Matchers.anyString())).thenReturn(jsEngineName);
 		when(
 				config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS,
 						AUTOPREFIXER_DEFAULT_OPTIONS)).thenReturn(

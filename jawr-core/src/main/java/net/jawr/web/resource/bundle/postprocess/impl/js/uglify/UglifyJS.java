@@ -124,9 +124,9 @@ public class UglifyJS {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start("Compressing using Uglify");
 		
-		result = jsEngine.evaluateString(bindings,
+		result = jsEngine.evaluateString("uglify",
 				String.format("minify(scriptSource, %s);", optionsInJson),
-				"uglify");
+				bindings);
 
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
