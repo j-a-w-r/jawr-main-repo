@@ -300,7 +300,7 @@ public class JawrConstant {
 	public static final String JS_ENGINE_PROPERTY = "jawr.js.engine";
 	
 	/** The default Javascript engine */
-	public static final String JS_ENGINE_DEFAULT = "mozilla.rhino";
+	public static final String DEFAULT_JS_ENGINE = "mozilla.rhino";
 
 	/** The performance logger */
 	public static final String PERF_LOGGER = "net.jawr.perf";

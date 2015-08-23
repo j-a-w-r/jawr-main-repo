@@ -153,9 +153,9 @@ public class AutoPrefixerPostProcessor extends
 		stopWatch.start("Processing Autoprefixer on '"+status.getLastPathAdded()+"'");
 		Bindings bindings = jsEngine.getBindings();
 		bindings.put("cssSource", bundleData.toString());
-		String res = (String) jsEngine.evaluateString(bindings,
+		String res = (String) jsEngine.evaluateString("Autoprefixer",
 				String.format("process(cssSource, %s);", options),
-				"Autoprefixer");
+				bindings);
 		
 		stopWatch.stop();
 		if (PERF_LOGGER.isDebugEnabled()) {

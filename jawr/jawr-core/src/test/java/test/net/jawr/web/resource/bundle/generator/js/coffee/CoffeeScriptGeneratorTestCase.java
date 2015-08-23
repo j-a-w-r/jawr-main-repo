@@ -53,7 +53,7 @@ public class CoffeeScriptGeneratorTestCase {
 	@Parameters
 	public static List<Object[]> jsEnginesToTestWith() {
 		return Arrays.asList(new Object[][] {
-				{ JawrConstant.JS_ENGINE_DEFAULT }, { "nashorn" } });
+				{ JawrConstant.DEFAULT_JS_ENGINE }, { "nashorn" } });
 	}
 
 	private JawrConfig config;

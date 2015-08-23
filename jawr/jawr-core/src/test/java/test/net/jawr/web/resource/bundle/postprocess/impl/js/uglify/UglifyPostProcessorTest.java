@@ -32,6 +32,7 @@ import net.jawr.web.resource.bundle.postprocess.impl.js.uglify.UglifyPostProcess
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -65,7 +66,9 @@ public class UglifyPostProcessorTest {
 		processor = new UglifyPostProcessor();
 		when(
 				config.getJavascriptEngineName()).thenReturn(
-				JawrConstant.JS_ENGINE_DEFAULT);
+				JawrConstant.DEFAULT_JS_ENGINE);
+		when(config.getJavascriptEngineName(Matchers.anyString())).thenReturn(
+				JawrConstant.DEFAULT_JS_ENGINE);
 		when(config.getContext()).thenReturn(context);
 		when(config.getConfigProperties()).thenReturn(new Properties());
 		when(bundle.getId()).thenReturn("/myJsBundle.js");

@@ -36,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class UglifyTest {
 	@Parameters
 	public static List<Object[]> jsEnginesToTestWith() {
 		return Arrays.asList(new Object[][] {
-				{ JawrConstant.JS_ENGINE_DEFAULT }, { "nashorn" } });
+				{ JawrConstant.DEFAULT_JS_ENGINE }, { "nashorn" } });
 	}
 
 	@Mock
@@ -75,8 +76,8 @@ public class UglifyTest {
 
 		initMocks(this);
 		when(config.getContext()).thenReturn(context);
-		when(config.getJavascriptEngineName()).thenReturn(
-				JawrConstant.JS_ENGINE_DEFAULT);
+		when(config.getJavascriptEngineName(Matchers.anyString())).thenReturn(
+				JawrConstant.DEFAULT_JS_ENGINE);
 		when(context.getResourceAsStream(anyString())).thenReturn(null);
 	}
 

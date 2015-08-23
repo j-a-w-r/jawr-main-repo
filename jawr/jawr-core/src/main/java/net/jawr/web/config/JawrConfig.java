@@ -1356,7 +1356,7 @@ public class JawrConfig implements Serializable {
 	 */
 	public String getJavascriptEngineName() {
 		return getProperty(JawrConstant.JS_ENGINE_PROPERTY,
-				JawrConstant.JS_ENGINE_DEFAULT);
+				JawrConstant.DEFAULT_JS_ENGINE);
 	}
 
 	/**

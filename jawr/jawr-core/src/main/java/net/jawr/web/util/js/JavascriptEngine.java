@@ -23,6 +23,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 
 /**
@@ -32,9 +33,27 @@ import net.jawr.web.exception.BundlingProcessException;
  */
 public class JavascriptEngine {
 
+	private static final String UNKNOWN_SCRIPT = "Unknown script";
 	/** The script engine */
 	private ScriptEngine scriptEngine;
 
+	/**
+	 * Constructor
+	 */
+	public JavascriptEngine() {
+		this(JawrConstant.DEFAULT_JS_ENGINE, false);
+	}
+	
+	/**
+	 * Constructor
+	 * @param initGlobal
+	 *            the flag indicating that we must initialize the global object
+	 *            in the global variable
+	 */
+	public JavascriptEngine(boolean initGlobal) {
+		this(JawrConstant.DEFAULT_JS_ENGINE, initGlobal);
+	}
+	
 	/**
 	 * Constructor
 	 * @param scriptEngineName the name of the Javascript engine to use
@@ -60,6 +79,7 @@ public class JavascriptEngine {
 			// get JavaScript "global" object and put it in the script engine scope
 			try {
 				Object global = scriptEngine.eval("eval(this)");
+				scriptEngine.put("window", global);
 				scriptEngine.put("global", global);
 			} catch (ScriptException e) {
 				throw new BundlingProcessException(e);
@@ -74,6 +94,17 @@ public class JavascriptEngine {
 		return this.scriptEngine.getContext();
 	}
 
+	/**
+	 * Evaluates the script
+	 * 
+	 * @param reader
+	 *            the script reader
+	 * @return the result
+	 */
+	public Object evaluate(Reader reader) {
+		return evaluate(UNKNOWN_SCRIPT, reader);
+	}
+	
 	/**
 	 * Evaluates the script
 	 * 
@@ -97,6 +128,17 @@ public class JavascriptEngine {
 	/**
 	 * Evaluates the script
 	 * 
+	 * @param script
+	 *            the script
+	 * @return the result
+	 */
+	public Object evaluate(String script) {
+		return evaluate(UNKNOWN_SCRIPT, script);
+	}
+	
+	/**
+	 * Evaluates the script
+	 * 
 	 * @param scriptName
 	 *            the script name
 	 * @param script
@@ -116,17 +158,17 @@ public class JavascriptEngine {
 
 	/**
 	 * Evaluates the JS passed in parameter
-	 * 
-	 * @param currentScope
-	 *            the scope to use
-	 * @param source
-	 *            the JS script
 	 * @param scriptName
 	 *            the script name
+	 * @param source
+	 *            the JS script
+	 * @param bindings
+	 *            the bindings to use
+	 * 
 	 * @return the result
 	 */
-	public Object evaluateString(Bindings bindings, String source,
-			String scriptName) {
+	public Object evaluateString(String scriptName, String source,
+			Bindings bindings) {
 		try {
 			scriptEngine.put(ScriptEngine.FILENAME, scriptName);
 			return scriptEngine.eval(source, bindings);

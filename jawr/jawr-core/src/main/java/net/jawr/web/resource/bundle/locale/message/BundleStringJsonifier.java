@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import net.jawr.web.resource.bundle.generator.JavascriptStringUtil;
 
@@ -47,7 +48,7 @@ public class BundleStringJsonifier {
 		super();
 		this.addQuoteToKey = addQuoteToKey;
 		this.bundleValues = bundleValues;
-		this.keyMap = new HashMap<String, Object>();
+		this.keyMap = new TreeMap<String, Object>();
 		Enumeration<Object> keys = this.bundleValues.keys();
 		
 		// Create map tree with all the message keys. 
