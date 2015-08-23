@@ -8,6 +8,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.JavaVersion;
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -92,13 +94,11 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
-		if (JavaVersionUtils.isVersionInferiorToJava8()) {
-			assertEquals(getUrlPrefix() + "/1109471991.ie6@/fwk/core/component.css", css.getHrefAttribute());
-		} else {
+		if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_1_8)) {
 			assertEquals(getUrlPrefix() + "/N1749366729.ie6@/fwk/core/component.css", css.getHrefAttribute());
-
+		} else {
+			assertEquals(getUrlPrefix() + "/1109471991.ie6@/fwk/core/component.css", css.getHrefAttribute());
 		}
-
 	}
 
 	@Test
@@ -107,11 +107,11 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		final HtmlLink css = styleSheets.get(0);
 		final TextPage page = getCssPage(css);
-		if (JavaVersionUtils.isVersionInferiorToJava8()) {
-			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/component-ie-expected.css", page);
-		} else {
+		if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_1_8)) {
 			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/component-ie-java8-expected.css",
 					page);
+		} else {
+			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/component-ie-expected.css", page);
 		}
 	}
 
