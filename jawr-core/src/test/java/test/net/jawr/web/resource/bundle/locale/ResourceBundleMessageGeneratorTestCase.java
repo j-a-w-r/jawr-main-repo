@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mozilla.javascript.ScriptableObject;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
@@ -21,7 +20,6 @@ import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
 import net.jawr.web.util.js.JavascriptEngine;
 import test.net.jawr.web.FileUtils;
-import test.net.jawr.web.util.js.rhino.RhinoEngine;
 
 public class ResourceBundleMessageGeneratorTestCase {
 
@@ -166,17 +164,32 @@ public class ResourceBundleMessageGeneratorTestCase {
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
-		assertEquals(readFile("bundleLocale/resultScriptWithFilter.js"), FileUtils.removeCarriageReturn(result));
+		// Checks result content instead of file to overcome the difference
+		// between JDK < 8 and JDK >= 8
+		// where the order of the message definition change
+		Map<String, String> expectedMsg = new HashMap<String, String>();
+		expectedMsg.put("messages.error.login", "Login failed");
+		expectedMsg.put("messages.ui.msg.hello.world", "Hello $ world!");
+		expectedMsg.put("messages.ui.msg.salut", "Mr.");
+		checkGeneratedMsgContent(result, expectedMsg);
 
 		ctx.setLocale(Locale.FRENCH);
 		rd = generator.createResource(ctx);
 		result = IOUtils.toString(rd);
-		assertEquals(readFile("bundleLocale/resultScriptWithFilter_fr.js"), FileUtils.removeCarriageReturn(result));
+		expectedMsg.clear();
+		expectedMsg.put("messages.error.login", "Erreur lors de la connection");
+		expectedMsg.put("messages.ui.msg.hello.world", "Â¡Bonjour $ š tout le monde!");
+		expectedMsg.put("messages.ui.msg.salut", "Mr.");
+		expectedMsg.put("messages.ui.error.panel.title", "Erreur");
 
 		ctx.setLocale(new Locale("es"));
 		rd = generator.createResource(ctx);
 		result = IOUtils.toString(rd);
-		assertEquals(readFile("bundleLocale/resultScriptWithFilter_es.js"), FileUtils.removeCarriageReturn(result));
+		expectedMsg.clear();
+		expectedMsg.put("messages.error.login", "Login failed");
+		expectedMsg.put("messages.ui.msg.hello.world", "Â¡Hola $ Mundo!");
+		expectedMsg.put("messages.ui.msg.salut", "Mr.");
+		checkGeneratedMsgContent(result, expectedMsg);
 	}
 
 	@Test
@@ -189,30 +202,30 @@ public class ResourceBundleMessageGeneratorTestCase {
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
-		GeneratorContext ctx = new GeneratorContext(config,
-				"bundleLocale.messages|bundleLocale.errors(myMessages)");
+		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messages|bundleLocale.errors(myMessages)");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
-		
-		// Checks result content instead of file to overcome the difference between JDK < 8 and JDK >= 8 
-		// where the order of the message definition change 
+
+		// Checks result content instead of file to overcome the difference
+		// between JDK < 8 and JDK >= 8
+		// where the order of the message definition change
 		Map<String, String> expectedMsg = new HashMap<String, String>();
 		expectedMsg.put("myMessages.error.login", "Login failed");
 		expectedMsg.put("myMessages.ui.msg.hello.world", "Hello $ world!");
-		expectedMsg.put("myMessages.ui.msg.salut","Mr.");
-		expectedMsg.put("myMessages.warning.password.expired","Password expired");
+		expectedMsg.put("myMessages.ui.msg.salut", "Mr.");
+		expectedMsg.put("myMessages.warning.password.expired", "Password expired");
 		checkGeneratedMsgContent(result, expectedMsg);
-		
+
 		ctx.setLocale(Locale.FRENCH);
 		rd = generator.createResource(ctx);
 		result = IOUtils.toString(rd);
 		expectedMsg.clear();
 		expectedMsg.put("myMessages.error.login", "Erreur lors de la connection");
 		expectedMsg.put("myMessages.ui.msg.hello.world", "Â¡Bonjour $ š tout le monde!");
-		expectedMsg.put("myMessages.ui.msg.salut","Mr.");
-		expectedMsg.put("myMessages.warning.password.expired","Password expiré");
-		expectedMsg.put("myMessages.ui.error.panel.title","Erreur");
+		expectedMsg.put("myMessages.ui.msg.salut", "Mr.");
+		expectedMsg.put("myMessages.warning.password.expired", "Password expiré");
+		expectedMsg.put("myMessages.ui.error.panel.title", "Erreur");
 		checkGeneratedMsgContent(result, expectedMsg);
 
 		ctx.setLocale(new Locale("es"));
@@ -221,12 +234,12 @@ public class ResourceBundleMessageGeneratorTestCase {
 		expectedMsg.clear();
 		expectedMsg.put("myMessages.error.login", "Login failed");
 		expectedMsg.put("myMessages.ui.msg.hello.world", "Â¡Hola $ Mundo!");
-		expectedMsg.put("myMessages.ui.msg.salut","Mr.");
-		expectedMsg.put("myMessages.warning.password.expired","Password expired");
+		expectedMsg.put("myMessages.ui.msg.salut", "Mr.");
+		expectedMsg.put("myMessages.warning.password.expired", "Password expired");
 		checkGeneratedMsgContent(result, expectedMsg);
-//		assertEquals(
-//				readFile("bundleLocale/resultScriptWithNamespace_es.js"),
-//				FileUtils.removeCarriageReturn(result));
+		// assertEquals(
+		// readFile("bundleLocale/resultScriptWithNamespace_es.js"),
+		// FileUtils.removeCarriageReturn(result));
 	}
 
 	/**
@@ -247,10 +260,10 @@ public class ResourceBundleMessageGeneratorTestCase {
 		// where the order of the message definition change
 		JavascriptEngine engine = new JavascriptEngine(true);
 		engine.evaluate("msg.js", generatedScript);
-		
-		for(Map.Entry<String, String> entries : expectedMsg.entrySet()){
-			String msg = (String) engine.evaluate(entries.getKey()+"()");
+
+		for (Map.Entry<String, String> entries : expectedMsg.entrySet()) {
+			String msg = (String) engine.evaluate(entries.getKey() + "()");
 			assertEquals(entries.getValue(), msg);
-		}		
+		}
 	}
 }
