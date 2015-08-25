@@ -1,20 +1,20 @@
 #header {
-  color: #4d926f;
+  color: #4D926F;
 }
 h2 {
-  color: #4d926f;
+  color: #4D926F;
 }
 .box {
-  box-shadow: 2px 5px 1px #000000;
-  -moz-box-shadow: 2px 5px 1px #000000;
-  -webkit-box-shadow: 2px 5px 1px #000000;
+  box-shadow: 2px 5px 1px #000;
+  -moz-box-shadow: 2px 5px 1px #000;
+  -webkit-box-shadow: 2px 5px 1px #000;
 }
 body {
-  background-image: url("../img/logo.png");
+  background-image: url("../img/logo.png");/** jawr-bas64;skip */
   background-repeat: no-repeat;
 }
 div {
-  color: #4d926f;
+  color: #4D926F;
   padding-top: 8px;
 }
 .calendar {

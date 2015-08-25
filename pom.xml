@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
@@ -74,18 +75,17 @@
 		<log4j.version>1.2.17</log4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
 		<jsp-api.version>2.1</jsp-api.version>
-		<rhino.version>1.7R4</rhino.version>
+		<rhino.version>1.7.7</rhino.version>
 		<yuicompressor.version>2.4.7</yuicompressor.version>
 		<jsf-api.version>1.1_02</jsf-api.version>
 		<commons-validator.version>1.2.0</commons-validator.version>
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
 		<ehcache.version>2.7.4</ehcache.version>
 		<smartsprites.version>0.2.11</smartsprites.version>
-		<google-closure.version>v20150505</google-closure.version>
+		<google-closure.version>v20150729</google-closure.version>
 		<lesscss-engine.version>1.5.1</lesscss-engine.version>
+		<less4j.version>1.14.0</less4j.version>
 		<jackson-json.version>2.4.2</jackson-json.version>
-		<jmagick.version>6.6.9</jmagick.version>
-		<im4java.version>1.4.0</im4java.version>
 		<jetty.version>9.2.6.v20141205</jetty.version>
 		<htmlunit.version>2.5</htmlunit.version>
 		<webjars-locator.version>0.27</webjars-locator.version>
@@ -190,13 +190,13 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j-api.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>${log4j.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet.jsp</groupId>
@@ -208,13 +208,13 @@
 				<groupId>org.mozilla</groupId>
 				<artifactId>rhino</artifactId>
 				<version>${rhino.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 			<dependency>
 				<groupId>com.yahoo.platform.yui</groupId>
 				<artifactId>yuicompressor</artifactId>
 				<version>${yuicompressor.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 				<exclusions>
 					<exclusion>
 						<groupId>rhino</groupId>
@@ -233,7 +233,7 @@
 				<groupId>commons-validator</groupId>
 				<artifactId>commons-validator</artifactId>
 				<version>${commons-validator.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 			<dependency>
 				<groupId>taglibs</groupId>
@@ -245,7 +245,7 @@
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
 				<version>${ehcache.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 
 			<!-- Smartsprites dependency -->
@@ -253,28 +253,26 @@
 				<groupId>com.carrotsearch</groupId>
 				<artifactId>smartsprites</artifactId>
 				<version>${smartsprites.version}</version>
-				<!-- TODO : replace by version 0.2.11 containing the feature to track 
-					sprite images when available -->
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 			<!-- Google closure dependency -->
 			<dependency>
 				<groupId>com.google.javascript</groupId>
 				<artifactId>closure-compiler</artifactId>
 				<version>${google-closure.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 			<dependency>
-				<groupId>com.asual.lesscss</groupId>
-				<artifactId>lesscss-engine</artifactId>
-				<version>${lesscss-engine.version}</version>
-				<scope>provided</scope>
+				<groupId>com.github.sommeri</groupId>
+				<artifactId>less4j</artifactId>
+				<version>${less4j.version}</version>
+				<optional>true</optional>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-json-org</artifactId>
 				<version>${jackson-json.version}</version>
-				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 
 			<!-- Optional Webjars Locator dependency -->
@@ -285,18 +283,6 @@
 				<optional>true</optional>
 			</dependency>
 
-			<dependency>
-				<groupId>jmagick</groupId>
-				<artifactId>jmagick</artifactId>
-				<version>${jmagick.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.im4java</groupId>
-				<artifactId>im4java</artifactId>
-				<version>${im4java.version}</version>
-				<scope>provided</scope>
-			</dependency>
 			<!-- webjars dependencies used for tests -->
 			<dependency>
 				<groupId>org.webjars</groupId>
@@ -349,7 +335,7 @@
 				<plugin>
 					<groupId>net.jawr.tools</groupId>
 					<artifactId>jawr-maven-plugin</artifactId>
-					<version>3.8-SNAPSHOT</version>
+					<version>${project.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
