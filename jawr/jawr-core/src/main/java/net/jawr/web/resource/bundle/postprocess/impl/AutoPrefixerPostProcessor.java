@@ -159,7 +159,7 @@ public class AutoPrefixerPostProcessor extends
 		
 		stopWatch.stop();
 		if (PERF_LOGGER.isDebugEnabled()) {
-			PERF_LOGGER.debug(stopWatch.prettyPrint());
+			PERF_LOGGER.debug(stopWatch.shortSummary());
 		}
 		return new StringBuffer(res);
 	}
