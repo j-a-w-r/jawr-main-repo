@@ -39,7 +39,7 @@ import net.jawr.web.util.js.JavascriptEngine;
 public class UglifyJS {
 
 	/** The logger */
-	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_LOGGER);
+	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 	
 	/** The Uglify scripts to load */
 	private static final String[] UGLIFY_SCRIPTS = { "utils.js", "ast.js",

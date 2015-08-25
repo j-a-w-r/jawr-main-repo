@@ -45,7 +45,7 @@ public class AutoPrefixerPostProcessor extends
 
 	/** The Logger */
 	private static final Logger PERF_LOGGER = LoggerFactory
-			.getLogger(JawrConstant.PERF_LOGGER);
+			.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The property name of the autoprefixer options */
 	public static final String AUTOPREFIXER_SCRIPT_OPTIONS = "jawr.css.autoprefixer.options";
