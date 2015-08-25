@@ -165,7 +165,15 @@
 	      This version is containing bug fixes and some new features.<br/><br/>
 	  	  <strong>New features: </strong>
 	  	  	<ul>
+	  	  		<li>
+	  	  		[<a href="https://java.net/jira/browse/JAWR-353">JAWR-353</a>] Jawr now use less4j engine instead of less-engine.<br/>
+      			Please check the <a href="./docs/generators.html">generator documentation</a> for more detail.
+      			</li>
       		 	<li>
+	  	  		[<a href="https://java.net/jira/browse/JAWR-351">JAWR-351</a>] Jawr now allow users to enable performance logging for bundle or request handling.<br/>
+      			Please check the <a href="./tutorials/howToEnablePerformanceLogging.html">tutorial</a> for more detail.
+      			</li>    
+	  	  		<li>
       			[<a href="https://java.net/jira/browse/JAWR-350">JAWR-350</a>] Jawr allows you to define which JS script engine, you would like to use for JS based processors or generators like coffee script, uglify or Autoprefixer.<br/>
       			This means that you can use Nashorn JS engine if you're using Java 8<br/>
       			To define which engine to use, you only need to set the property <b>jawr.js.engine</b>.<br/>

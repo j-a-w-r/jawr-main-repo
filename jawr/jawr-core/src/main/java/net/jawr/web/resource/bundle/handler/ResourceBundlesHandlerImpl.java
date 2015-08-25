@@ -66,6 +66,7 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.StringUtils;
 import net.jawr.web.util.bom.UnicodeBOMReader;
 
@@ -567,10 +568,12 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			resourceTypePreprocessor.processBundles(ctx, bundles);
 		}
 
+		StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
 		for (Iterator<JoinableResourceBundle> itCol = bundles.iterator(); itCol
 				.hasNext();) {
+		
 			JoinableResourceBundle bundle = itCol.next();
-
+			stopWatch.start("Processing bundle '"+bundle.getName()+"'");
 			boolean processBundle = processBundleFlag;
 			if (!ThreadLocalJawrContext.isBundleProcessingAtBuildTime()
 					&& null != bundle.getAlternateProductionURL()) {
@@ -592,14 +595,18 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 						bundle, resourceBundleHandler.getResourceType(),
 						bundleMapping);
 			}
+			
+			stopWatch.stop();
 		}
 
 		// Launch global postprocessing
 		if (resourceTypePostprocessor != null) {
+			stopWatch.start("Global postprocessing");
 			GlobalPostProcessingContext ctx = new GlobalPostProcessingContext(
 					config, this, resourceHandler, processBundleFlag);
 
 			resourceTypePostprocessor.processBundles(ctx, bundles);
+			stopWatch.stop();
 		}
 
 		if (config.getUseBundleMapping() && !mappingFileExists) {

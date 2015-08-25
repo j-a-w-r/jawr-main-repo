@@ -87,6 +87,8 @@
 			<item name="How to generate base64 images in CSS with Jawr"
 				href="/tutorials/howToUseJawrToGenerateBase64Image.html" />
 			<item name="How to use Google Closure Compiler with Jawr" href="/tutorials/howToUseGoogleClosureCompiler.html" />
+			<item name="How to set Javascript engine in Jawr" href="/tutorials/howToSetJsEngine.html" />
+			<item name="How to set performance logging in Jawr" href="/tutorials/howToEnablePerformanceLogging.html" />
 			<item name="FAQ-Howto" href="/tutorials/faq_howto.html" />
 			<item name="Using popular libraries" href="/tutorials/libraries.html" />
 			<item name="Sample applications" href="/docs/sampleApplications.html" />
