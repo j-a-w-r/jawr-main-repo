@@ -69,6 +69,7 @@ import net.jawr.web.resource.handler.bundle.ServletContextResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
 import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
+import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -89,6 +90,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JawrRequestHandler.class);
+
+	/** The performance processing logger */
+	private static final Logger PERF_PROCESSING_LOGGER = LoggerFactory
+			.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
+
+	/** The performance request handling logger */
+	private static final Logger PERF_REQUEST_HANDLING_LOGGER = LoggerFactory
+			.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The content encoding */
 	private static final String CONTENT_ENCODING = "Content-Encoding";
@@ -474,6 +483,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	protected void initializeJawrConfig(Properties props)
 			throws ServletException {
 
+		StopWatch stopWatch = new StopWatch();
+		
 		// init registry
 		generatorRegistry = new GeneratorRegistry(resourceType);
 
@@ -482,6 +493,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			jawrConfig.invalidate();
 		}
 
+		stopWatch.start("Initialize configuration");
 		createJawrConfig(props);
 
 		jawrConfig.setContext(servletContext);
@@ -517,6 +529,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Initialize the IllegalBundleRequest handler
 		initIllegalBundleRequestHandler();
 
+		stopWatch.stop();
+		stopWatch.start("Initialize '"+resourceType+"' bundles");
 		// Create a resource handler to read files from the WAR archive or
 		// exploded dir.
 		rsReaderHandler = initResourceReaderHandler();
@@ -538,7 +552,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		else
 			servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE,
 					bundlesHandler);
-
+		stopWatch.stop();
+		
 		this.clientSideScriptRequestHandler = new ClientSideHandlerScriptRequestHandler(
 				bundlesHandler, jawrConfig);
 
@@ -549,6 +564,10 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Warn when in debug mode
 		if (jawrConfig.isDebugModeOn()) {
 			LOGGER.warn("Jawr initialized in DEVELOPMENT MODE. Do NOT use this mode in production or integration servers. ");
+		}
+		
+		if(PERF_PROCESSING_LOGGER.isDebugEnabled()){
+			PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
 		}
 	}
 
@@ -687,6 +706,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("Process request for '"+requestedPath+"'");
+	
 		try {
 			// Checks that the requested Path is a normalized one. If not don't
 			// treat the request
@@ -743,6 +765,10 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			// Reset the Thread local for the Jawr context
 			ThreadLocalJawrContext.reset();
+			stopWatch.stop();
+			if(PERF_REQUEST_HANDLING_LOGGER.isDebugEnabled()){
+				PERF_REQUEST_HANDLING_LOGGER.debug(stopWatch.prettyPrint());
+			}
 		}
 	}
 
@@ -884,7 +910,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	protected void processRequest(String requestedPath,
 			HttpServletRequest request, HttpServletResponse response,
 			BundleHashcodeType bundleHashcodeType) throws IOException {
-
+		
 		boolean writeResponseHeader = false;
 		boolean validBundle = true;
 		if (!jawrConfig.isDebugModeOn()
@@ -929,6 +955,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			if (validBundle
 					|| illegalBundleRequestHandler.canWriteContent(
 							requestedPath, request)) {
+				
 				// By setting content type, the response writer will use
 				// appropriate encoding
 				response.setContentType(getContentType(requestedPath, request));
@@ -941,6 +968,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
 			}
+			
 		} catch (EOFException eofex) {
 			LOGGER.info("Browser cut off response", eofex);
 		} catch (IOException e) {

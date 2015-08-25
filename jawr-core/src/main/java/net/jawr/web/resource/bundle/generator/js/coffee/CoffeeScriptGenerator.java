@@ -52,7 +52,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
 
 	/** The Logger */
-	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_LOGGER);
+	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 	
 	/** The coffee script suffix */
 	private static final String COFFEE_SCRIPT_SUFFIX = "coffee";

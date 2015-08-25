@@ -34,6 +34,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.InvalidPathException;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -49,9 +52,7 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.servlet.util.MIMETypesSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.jawr.web.util.StopWatch;
 
 /**
  * This class defines the request handler for binary web resources (images,
@@ -68,6 +69,10 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JawrBinaryResourceRequestHandler.class);
+
+	/** The performance processing logger */
+	private static final Logger PERF_PROCESSING_LOGGER = LoggerFactory
+			.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The resource handler */
 	private ResourceReaderHandler rsReaderHandler;
@@ -137,6 +142,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	protected void initializeJawrConfig(Properties props)
 			throws ServletException {
 
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("Initialize jawr config for binary resource handler");
 		if (this.binaryMimeTypeMap == null) {
 			this.binaryMimeTypeMap = MIMETypesSupport
 					.getSupportedProperties(this);
@@ -185,7 +192,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		} else {
 			bundleMapping = new Properties();
 		}
-
+		stopWatch.stop();
+		stopWatch.start("initialize mapping for binary resource handler");
 		binaryRsHandler = new BinaryResourcesHandler(jawrConfig,
 				rsReaderHandler, rsBundleHandler);
 		initMapping(binaryRsHandler);
@@ -198,9 +206,18 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			LOGGER.debug(jawrConfig.toString());
 		}
 
+		stopWatch.stop();
+		stopWatch.start("initialize mapping for binary resource handler");
+		if(PERF_PROCESSING_LOGGER.isDebugEnabled()){
+			PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
+		}
 		// Warn when in debug mode
 		if (jawrConfig.isDebugModeOn()) {
 			LOGGER.warn("Jawr initialized in DEVELOPMENT MODE. Do NOT use this mode in production or integration servers. ");
+		}
+		stopWatch.stop();
+		if(PERF_PROCESSING_LOGGER.isDebugEnabled()){
+			PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
 		}
 	}
 
