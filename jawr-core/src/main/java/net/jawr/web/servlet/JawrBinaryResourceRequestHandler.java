@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.jawr.web.JawrConstant;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.InvalidPathException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
@@ -142,7 +143,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	protected void initializeJawrConfig(Properties props)
 			throws ServletException {
 
-		StopWatch stopWatch = new StopWatch();
+		StopWatch stopWatch = new StopWatch("Jawr Processing for '"+resourceType+"' resource"); 
+		ThreadLocalJawrContext.setStopWatch(stopWatch);
 		stopWatch.start("Initialize jawr config for binary resource handler");
 		if (this.binaryMimeTypeMap == null) {
 			this.binaryMimeTypeMap = MIMETypesSupport

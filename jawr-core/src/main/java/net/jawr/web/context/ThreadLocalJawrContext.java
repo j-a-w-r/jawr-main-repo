@@ -15,6 +15,8 @@ package net.jawr.web.context;
 
 import javax.management.ObjectName;
 
+import net.jawr.web.util.StopWatch;
+
 /**
  * This class defines the context for Jawr, it holds the context in a ThreadLocal object.
  * 
@@ -111,6 +113,22 @@ public final class ThreadLocalJawrContext {
 	 */
 	public static void setRequest(String requestURL) {
 		jawrContext.get().setRequestURL(requestURL);
+	}
+	
+	/**
+	 * Returns the stop watch used to monitor the processing
+	 * @return the stop watch
+	 */
+	public static StopWatch getStopWatch() {
+		return jawrContext.get().getStopWatch();
+	}
+
+	/**
+	 * Sets the StopWatch used to monitor the processing
+	 * @param stopWatch the stopWatch to set
+	 */
+	public static void setStopWatch(StopWatch stopWatch) {
+		jawrContext.get().setStopWatch(stopWatch);
 	}
 	
 	/**

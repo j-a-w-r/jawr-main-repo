@@ -15,6 +15,8 @@ package net.jawr.web.context;
 
 import javax.management.ObjectName;
 
+import net.jawr.web.util.StopWatch;
+
 /**
  * This class defines the Jawr context.
  * 
@@ -35,6 +37,9 @@ public class JawrContext {
 	
 	/** The current request URL*/
 	private String requestURL;
+	
+	/** The stop watch */
+	private StopWatch stopWatch;
 	
 	/**
 	 * Constructor. 
@@ -109,6 +114,23 @@ public class JawrContext {
 	}
 
 	/**
+	 * Returns the stop watch used to monitor the processing
+	 * @return the stop watch
+	 */
+	public StopWatch getStopWatch() {
+		return stopWatch;
+	}
+
+	/**
+	 * Sets the StopWatch used to monitor the processing
+	 * @param stopWatch the stopWatch to set
+	 */
+	public void setStopWatch(StopWatch stopWatch) {
+		this.stopWatch = stopWatch;
+	}
+
+	
+	/**
 	 * Reset the context. 
 	 */
 	public void reset(){
@@ -117,6 +139,7 @@ public class JawrContext {
 		this.debugOverriden = false;
 		this.bundleProcessingAtBuildTime = false;
 		this.requestURL = null;
+		this.stopWatch = null;
 	}
 
 }
