@@ -19,6 +19,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.sommeri.less4j.Less4jException;
 import com.github.sommeri.less4j.LessCompiler;
 import com.github.sommeri.less4j.LessCompiler.CompilationResult;
@@ -26,6 +29,7 @@ import com.github.sommeri.less4j.LessCompiler.Configuration;
 import com.github.sommeri.less4j.LessSource;
 import com.github.sommeri.less4j.core.DefaultLessCompiler;
 
+import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
@@ -36,14 +40,18 @@ import net.jawr.web.resource.bundle.generator.ResourceReaderHandlerAwareResource
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
+import net.jawr.web.util.StopWatch;
 
 /**
  * This class defines the Less CSS generator
  * 
  * @author Ibrahim Chaehoi
  */
-public class LessCssGenerator extends AbstractCSSGenerator
-		implements ILessCssResourceGenerator, ResourceReaderHandlerAwareResourceGenerator, PostInitializationAwareResourceGenerator {
+public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssResourceGenerator,
+		ResourceReaderHandlerAwareResourceGenerator, PostInitializationAwareResourceGenerator {
+
+	/** The Logger */
+	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The Less suffix */
 	private static final String LESS_SUFFIX = "less";
@@ -56,7 +64,7 @@ public class LessCssGenerator extends AbstractCSSGenerator
 
 	/** The Less compiler */
 	private LessCompiler compiler;
-	
+
 	/** The Less compiler config */
 	private Configuration lessConfig;
 
@@ -119,7 +127,7 @@ public class LessCssGenerator extends AbstractCSSGenerator
 		String path = context.getPath();
 		String content = null;
 		Reader rd = null;
-				
+
 		try {
 			if (context.isContentProvided()) {
 				content = context.getProvidedSourceContent();
@@ -156,14 +164,21 @@ public class LessCssGenerator extends AbstractCSSGenerator
 	 * @return the compiled CSS content
 	 */
 	public String compile(String content, String path) {
+		StopWatch stopWatch = new StopWatch("Compiling resource '" + path + "' with Less generator");
+		stopWatch.start();
 		LessSource source = new JawrLessSource(content, path, rsHandler);
 		try {
 			CompilationResult result = compiler.compile(source, lessConfig);
 			return result.getCss();
 		} catch (Less4jException e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
+		} finally {
+			stopWatch.stop();
+			if (PERF_LOGGER.isDebugEnabled()) {
+				PERF_LOGGER.debug(stopWatch.shortSummary());
+			}
 		}
-		
+
 	}
 
 }

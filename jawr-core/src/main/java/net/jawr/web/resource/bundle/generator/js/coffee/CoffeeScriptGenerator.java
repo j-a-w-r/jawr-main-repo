@@ -207,8 +207,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 				bindings);
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
-			PERF_LOGGER.debug(stopWatch.prettyPrint());
-		}return result;
+			PERF_LOGGER.debug(stopWatch.shortSummary());
+		}
+		return result;
 
 	}
 }
