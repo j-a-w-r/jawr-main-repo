@@ -175,25 +175,30 @@ Jawr Generators
 
 	* <<Suffix>>: .less
 	
-	This one will handle LESS CSS resources to compile them to plain CSS resources.
-	This generator is based on the Less CSS engine (https://github.com/Asual/lesscss-engine).
+	This one will handle LESS CSS resources to compile them to plain CSS resources.\
+	This generator is based on Less4j ({{{https://github.com/SomMeri/less4j}}}).
+	
+	Note :
+	
+	For information, the less generator switched from an implementation based on {{{https://github.com/Asual/lesscss-engine}LessCss Engine}} to one based on {{{https://github.com/SomMeri/less4j}Less4j}} since the version 3.8,
+	because the previous implementation is not supported anymore.
+	
 	
 +------------------------------------------+
 	jawr.css.bundle.styles.mappings=/css/foo.less,/css/bar.less	
++------------------------------------------+	
+
+	To be able to use the less generator, you need to add less4j library in you classpath.
+	For maven user, you'll need to add a dependency in your pom.xml :
+      			
 +------------------------------------------+
+		<dependency>
+			<groupId>com.github.sommeri</groupId>
+        	<artifactId>less4j</artifactId>
+        	<version>1.14.0</version>
+		</dependency>
 
-	* <<Configuration properties>>
-	
-	Jawr provides properties to configure the Less CSS generator. 
-
-*---------------+---------+--------------+--------------+
-| <<Property name>> | <<Purpose>>      | <<Default value>>   
-*---------------+---------+--------------+----------------+--------------+
-| jawr.css.less.generator.less.script.location  | The less script location  |  net/jawr/web/resource/bundle/generator/css/less/less.js    |
-*---------------*---------*--------------+--------------+
-| jawr.css.less.generator.resource.loader.class  | The custom resource loader  |      |
-*---------------*---------*--------------+--------------+
-	
++------------------------------------------+
 	 
 	[]
 	

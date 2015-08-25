@@ -282,7 +282,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 *---------------+---------+--------------+----------------+
 | jawr.js.postprocessor.uglify.options | String | The uglify options in JSON format | \{\} |
 *---------------+---------+--------------+----------------+
-| jawr.js.postprocessor.uglify.js.engine   | String  | The JS engine to use for Autoprefixer.    | The value of the 'jawr.js.engine' property |
+| jawr.js.postprocessor.uglify.js.engine   | String  | The JS engine to use for UglifyJS.    | The value of the 'jawr.js.engine' property |
 *---------------+---------+--------------+----------------+
 
 	
@@ -383,7 +383,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	The user can define the JS engine to use by using the <<jawr.css.autoprefixer.js.engine>> property. \
 	If not set the JS engine used will be the one associated to <<jawr.js.engine>>.
 	
-	<<WARNING :>> The current version of autoprefixer don't work with the Nashorn JS engine.
+	<<WARNING :>> The current version of autoprefixer doesn't work with the Nashorn JS engine.
 
 	* <<Configuration properties>>
 	
