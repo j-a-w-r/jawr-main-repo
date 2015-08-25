@@ -86,8 +86,6 @@ public class LessCssGeneratorTestCase {
 		when(binaryRsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
 		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(binaryServletJawrConfig, binaryRsReaderHandler, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
-		
-		generator.setConfig(config);
 		generator.setResourceReaderHandler(rsReaderHandler);
 		generator.afterPropertiesSet();
 	}

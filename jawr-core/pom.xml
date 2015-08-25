@@ -29,8 +29,8 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.asual.lesscss</groupId>
-			<artifactId>lesscss-engine</artifactId>
+			<groupId>com.github.sommeri</groupId>
+			<artifactId>less4j</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
