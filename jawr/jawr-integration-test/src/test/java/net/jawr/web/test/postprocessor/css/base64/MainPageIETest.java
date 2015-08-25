@@ -23,7 +23,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
 
 import net.jawr.web.test.AbstractPageTest;
 import net.jawr.web.test.JawrTestConfigFiles;
-import net.jawr.web.test.utils.JavaVersionUtils;
 import net.jawr.web.test.utils.Utils;
 
 /**
@@ -62,11 +61,13 @@ public class MainPageIETest extends AbstractPageTest {
 		final List<String> expectedAlerts = Collections
 				.singletonList("A little message retrieved from the message bundle : Hello $ world!");
 		assertEquals(expectedAlerts, collectedAlerts);
-		
-		if(JavaVersionUtils.isVersionInferiorToJava8()){
-			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-expected.txt", page);
-		}else{
-			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-java8-expected.txt", page);
+
+		if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_1_8)) {
+			assertContentEquals(
+					"/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-java8-expected.txt", page);
+		} else {
+			assertContentEquals("/net/jawr/web/postprocessor/css/base64/resources/index-jsp-result-ie-expected.txt",
+					page);
 		}
 	}
 
