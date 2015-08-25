@@ -573,7 +573,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				.hasNext();) {
 		
 			JoinableResourceBundle bundle = itCol.next();
-			stopWatch.start("Processing bundle '"+bundle.getName()+"'");
+			if(stopWatch!= null){
+				stopWatch.start("Processing bundle '"+bundle.getName()+"'");
+			}
 			boolean processBundle = processBundleFlag;
 			if (!ThreadLocalJawrContext.isBundleProcessingAtBuildTime()
 					&& null != bundle.getAlternateProductionURL()) {
@@ -596,17 +598,23 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 						bundleMapping);
 			}
 			
-			stopWatch.stop();
+			if(stopWatch!= null){
+				stopWatch.stop();
+			}
 		}
 
 		// Launch global postprocessing
 		if (resourceTypePostprocessor != null) {
-			stopWatch.start("Global postprocessing");
+			if(stopWatch!= null){
+				stopWatch.start("Global postprocessing");
+			}
 			GlobalPostProcessingContext ctx = new GlobalPostProcessingContext(
 					config, this, resourceHandler, processBundleFlag);
 
 			resourceTypePostprocessor.processBundles(ctx, bundles);
-			stopWatch.stop();
+			if(stopWatch!= null){
+				stopWatch.stop();
+			}
 		}
 
 		if (config.getUseBundleMapping() && !mappingFileExists) {
