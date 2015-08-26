@@ -309,7 +309,7 @@ The Jawr servlet
 </web-app>
 +------------------------------------------+
 
-* Using JSON configuration source
+* {Using JSON configuration source}
 	
 	By default, Jawr use properties file as configuration file.
 	Jawr allows users to use JSON configuration source by using the <<configPropertiesSourceClass>> init param.

@@ -79,7 +79,7 @@ Definition of custom bundles
 +------------------------------------------+
 
 		  	
-* Mapping resources
+* {Mapping resources}
 	
 	There are three ways to map resources: 
 		
@@ -134,7 +134,7 @@ Definition of custom bundles
 	
 	
 	
-* Global bundles
+* {Global bundles}
 	
 	Global bundles are useful for including common libraries and modules used throughout you site. Any bundle defined as global will always be 
 	included before any other bundle. Most of the time you will not need to explicitly invoke it since Jawr will automatically include all global 
@@ -153,7 +153,7 @@ Definition of custom bundles
 	We set the global parameter to true and then we specified an order number. The order value is only needed if you define more than one global bundle 
 	and you need a specific order of inclusion. 
 	
-* Bundle prefix
+* {Bundle prefix}
 
 	Every HTML link that Jawr creates has a section of its path dedicated to versioning. Jawr will serve its resources using aggressive caching 
 	headers, in order to keep clients from requesting the same bundle over and over. But, when you make changes you want to be sure that every client 
@@ -164,7 +164,7 @@ Definition of custom bundles
 	even across redeployments. 
 	
 	
-* Postprocessors 
+* {Postprocessors} 
 
 	Postprocessors are filters that Jawr applies to resources and bundles during startup. Check the  {{{./postprocessors.html}postprocessors manual page}}  for more info. \ 
 	
@@ -182,7 +182,7 @@ Definition of custom bundles
 	In this example, the bundle postprocessor for the <foo> bundle is set to <license>, meaning no minification will occur. And for the file-by-file
 	postprocessor, it is specified that none will be used. 
 	
-* Composite bundles
+* {Composite bundles}
 	
 	A composite bundle is made up of several bundles that may have different configuration attributes. For example, you might have a pre minified 
 	javascript library and need to bundle it along some of your own scripts. You can could then create a composite bundle in which your scripts are 
@@ -251,7 +251,7 @@ jawr.js.bundle.angular_dev.mappings=\
 	/webjars/angularjs/*/angular-route.js
 +------------------------------------------+
 	
-* Bundle dependencies
+* {Bundle dependencies}
 
 	Since the version <3.2>, Jawr allows you to define the dependencies for your bundles. 
 	This means that if your bundle defines dependencies to other bundles, when you include your bundle in a page, 
@@ -360,7 +360,7 @@ jawr.js.bundle.angular_dev.mappings=\
 +------------------------------------------+
 
 	
-* External bundles
+* {External bundles}
 	
 	External bundles are used to reference resources, which are not handle by Jawr.
 	You can still use the jawr tag library to 
@@ -383,7 +383,7 @@ jawr.js.bundle.angular_dev.mappings=\
 		
 		* If the debugUrl property is set, a production URL property is required.
 			
-* Orphan resources
+* {Orphan resources}
 
 	In Jawr terminology, orphan resources are those not mapped to any bundle after initial configuration. The 'jawr.[js or css].bundle.basedir' property 
 	lets Jawr know where to look for orphan resources. After all bundles are created, Jawr scans this location and its subdirs to find non mapped 
@@ -434,7 +434,7 @@ jawr.js.bundle.angular_dev.mappings=\
 	Note that you may actually define some bundles and then use this feature if that suits you. Also, the usual ordering scheme will apply to the 
 	orphans bundle. Check the {{{./source_ordering.html}source ordering manual}} for more info. \ 
 	
-* Using an absolute URL in production
+* {Using an absolute URL in production}
 
 	In some special cases you might want to have bundles served from a static URL when in production. To achieve this you would specify the 
 	production URL using the <<productionURL>>: 

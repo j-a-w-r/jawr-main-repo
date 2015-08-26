@@ -62,7 +62,7 @@ Jawr Generators
 	
 *	All-around generators
 
-<<i18n messages script generator>>
+{<<i18n messages script generator>>}
 	
 	* <<Prefix>>: message
 	
@@ -72,7 +72,7 @@ Jawr Generators
 	specific language. Full documentation is {{{./messages_gen.html}here}}.  
 
 	
-<<DWR scripts generator>>: 
+{<<DWR scripts generator>>} 
 
 	* <<Prefix>>: dwr
 	
@@ -80,7 +80,7 @@ Jawr Generators
 	
 	This generator allows you to bundle and compress together DWR generated interfaces, plus all the utility scripts required by them. Full documentation is {{{../integration/dwr.html}here}}. 
 	
-<<Commons Validator generator>>
+{<<Commons Validator generator>>}
 
 	* <<Prefix>>: acv
 	
@@ -89,7 +89,7 @@ Jawr Generators
 	This one will let you generate compressed and cacheable versions of the validation scripts 
 	generated in Struts by the Apache Commons Validator taglib. Full docs  {{{../integration/validator.html}here}}. 
 
-<<classpath resource generator>>
+{<<classpath resource generator>>}
 
 	* <<Prefix>>: jar
 
@@ -123,7 +123,7 @@ Jawr Generators
 	Unlike the normal mapping, this way of referring to resources does not yet allow wildcards (i.e.: <jar:/com/mycompany/myapp/**> would not 
 	work).  
 
-<<Webjars generator>>
+{<<Webjars generator>>}
 
 	* <<Prefix>>: webjars
 	
@@ -168,15 +168,15 @@ Jawr Generators
 		</dependency>
 +------------------------------------------+
 
-	Here is the link to the webjars site for more information : <a href="http://www.webjars.org/">webjars</a>
+	Here is the link to the webjars site for more information : {{{http://www.webjars.org/}webjars site}}
 	
 		
-<<Less CSS generator>>
+{<<Less CSS generator>>}
 
 	* <<Suffix>>: .less
 	
 	This one will handle LESS CSS resources to compile them to plain CSS resources.\
-	This generator is based on Less4j ({{{https://github.com/SomMeri/less4j}}}).
+	This generator is based on Less4j ({{https://github.com/SomMeri/less4j}}).
 	
 	Note :
 	
@@ -202,7 +202,7 @@ Jawr Generators
 	 
 	[]
 	
-<<CofeeScript generator>>
+{<<CofeeScript generator>>}
 
 	* <<Suffix>>: .coffee
 	
@@ -228,7 +228,7 @@ Jawr Generators
 	 
 	[]
 			
-<<Skin generator>>
+{<<Skin generator>>}
 
 	* <<Prefix>>: skin
 	
@@ -237,7 +237,7 @@ Jawr Generators
 	This one will help you to define CSS skin in your bundles. Full docs  {{{../tutorials/howToUseJawrCssSkin.html}here}}.
 	 
 	
-<<Skin swicther generator>>  
+{<<Skin swicther generator>>}  
 
 	* <<Prefix>>: skinSwitcher
 	
@@ -268,7 +268,7 @@ jawr.js.bundle.common.mappings=skinSwitcher:switcher.js
 	You can find an example of it's use in the basic webapplication sample.		
 	For more information about CSS skin, you can take a look to the following {{{../tutorials/howToUseJawrCssSkin.html}documentation}}. 
 	
-*	Implementing a generator
+*	{Implementing a generator}
 
 	You will find below the class diagram for generators.
 	
