@@ -144,7 +144,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 
 ** Css and Js common postprocessors
 
-***<<Licenses includer>>
+***{<<Licenses includer>>}
 	
 	* <<Type>>: Bundle
 	
@@ -163,7 +163,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 =====================
 
 
-***<<YUI compressor>>
+***{<<YUI compressor>>}
 	
 	* <<Type>>: Bundle
 	
@@ -196,7 +196,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 
 ** Javascript-specific postprocessors
 
-***<<JSMin>>
+***{<<JSMin>>}
 	
 	* <<Type>>: Bundle
 	
@@ -208,7 +208,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	
 	This processor uses {{{http://www.crockford.com/javascript/jsmin.html}Douglas Crockford's JSMin}}  minificator. It will remove any comments in code and unnecesary whitespace in a very safe manner.  
 
-***<<Uglify>>
+***{<<Uglify>>}
 	
 	* <<Type>>: Bundle
 	
@@ -288,7 +288,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	
 ** CSS-specific postprocessors
 
-***<<CSS Minificator>>
+***{<<CSS Minificator>>}
 	
 	* <<Type>>: Bundle
 	
@@ -302,7 +302,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	The user can define if the licence comment (/*! ... */) should be kept or not by using the following attribute 
 	*jawr.css.postprocessor.cssmin.keepLicence* in the configuration file. 
 		  
-***<<CSS combine Media>>
+***{<<CSS combine Media>>}
 	
 	* <<Type>>: Bundle
 	
@@ -332,7 +332,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 } 	 
 +-------------------------------+
 	
-***<<CSS Path rewriter>>
+***{<<CSS Path rewriter>>}
 	
 	* <<Type>>: File
 	
@@ -343,7 +343,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	This processor rewrites relative paths in URLs for each file that is added to a bundle. A bundle will have a different URL to that of its contained 
 	resources, so in order for relative paths to image files and the like to keep working, URLs must be rewritten accordingly.  
 	
-***<<CSS Import resolver>>
+***{<<CSS Import resolver>>}
 	
 	* <<Type>>: File
 	
@@ -354,7 +354,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	This processor imports the CSS resources referenced by <<@import url(...)>> statement. These resources are included in the generated CSS bundle.  
 
 	
-***<<CSS base64 postprocessor>>
+***{<<CSS base64 postprocessor>>}
 	
 	* <<Type>>: Bundle
 	
@@ -369,7 +369,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	needs to prepend the MHTML part to the bundle and also to rewrite the URL for each file. \
 	So <<never>> use this post processor only as a bundle post processor or only as a file post processor.
 
-***<<Autoprefixer postprocessor>>
+***{<<Autoprefixer postprocessor>>}
 	
 	* <<Type>>: Bundle,File
 	
