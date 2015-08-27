@@ -176,14 +176,9 @@ Jawr Generators
 	* <<Suffix>>: .less
 	
 	This one will handle LESS CSS resources to compile them to plain CSS resources.\
-	This generator is based on Less4j ({{https://github.com/SomMeri/less4j}}).
-	
-	Note :
-	
-	For information, the less generator switched from an implementation based on {{{https://github.com/Asual/lesscss-engine}LessCss Engine}} to one based on {{{https://github.com/SomMeri/less4j}Less4j}} since the version 3.8,
-	because the previous implementation is not supported anymore.
-	
-	
+	This generator is based on Less4j : {{https://github.com/SomMeri/less4j}}.\
+	Here is an example of mapping :
+		
 +------------------------------------------+
 	jawr.css.bundle.styles.mappings=/css/foo.less,/css/bar.less	
 +------------------------------------------+	
@@ -198,6 +193,57 @@ Jawr Generators
         	<version>1.14.0</version>
 		</dependency>
 
++------------------------------------------+
+	
+	Known limitation :
+	
+	It's not possible to use less resource from classpath.\
+	The below mapping will not work :
+	 
++------------------------------------------+
+	jawr.css.bundle.styles.mappings=jar:/css/foo.less,jar:/css/bar.less	
++------------------------------------------+
+	
+	Note :
+	
+	For information, the less generator switched from an implementation based on {{{https://github.com/Asual/lesscss-engine}LessCss Engine}} to one based on {{{https://github.com/SomMeri/less4j}Less4j}} since the version 3.8,
+	because the previous implementation is not supported anymore.
+	
+	[]
+
+{<<SASS generator>>}
+
+	* <<Suffix>>: .scss
+
+	This one will handle SASS resources to compile them to plain CSS resources.\
+	This generator is based on vaadin saas compiler : {{https://github.com/vaadin/sass-compiler}}.
+	
+	Here is an example of mapping :
+
++------------------------------------------+
+	jawr.css.bundle.styles.mappings=/css/foo.scss,/css/bar.scss	
++------------------------------------------+	
+
+	To be able to use the SASS generator, you need to add vaadin saas compiler library in you classpath.
+	For maven user, you'll need to add a dependency in your pom.xml :
+      			
++------------------------------------------+
+		<dependency>
+			<groupId>com.vaadin</groupId>
+        	<artifactId>vaadin-sass-compiler</artifactId>
+        	<version>0.9.12</version>
+        </dependency>
+
++------------------------------------------+
+	
+
+	Known limitation :
+	
+	It's not possible to use sass resource from classpath.\
+	The below mapping will not work :
+	 
++------------------------------------------+
+	jawr.css.bundle.styles.mappings=jar:/css/foo.scss,jar:/css/bar.scss	
 +------------------------------------------+
 	 
 	[]

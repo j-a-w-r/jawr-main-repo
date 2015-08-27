@@ -57,6 +57,15 @@
 			technology), Jawr can be used on every page. 
 			 <a href="./docs/plain_html.html" > Learn more</a>. </li> 
 			 
+			<li> <strong>CoffeeScript</strong>: Jawr allows you to use coffeescript resource in your bundle mapping. Jawr will handle the compilation to Javascript.
+			 <a href="./docs/generators.html#CofeeScript_generator" > Learn more</a>. </li> 
+			
+			<li> <strong>Less</strong>: Jawr allows you to use less resource in your bundle mapping. Jawr will handle the compilation to CSS.
+			 <a href="./docs/generators.html#Less_CSS_generator" > Learn more</a>. </li> 
+			
+			<li> <strong>Sass</strong>: Jawr allows you to use SASS resource in your bundle mapping. Jawr will handle the compilation to CSS.
+			 <a href="./docs/generators.html#SASS_generator" > Learn more</a>. </li> 
+			
 			<li> <strong>CSS skin</strong>: Jawr allows you to define skin (theme) for your CSS bundle. This means that the user will get the CSS bundle skin depending on his current skin setting.  
 			 <a href="/tutorials/howToUseJawrCssSkin.html" > Learn more</a>. </li> 
 			
@@ -95,11 +104,7 @@
 						With Jawr you can also bundle the Validator static javascript with other scripts in your application.
 						<a href="./integration/validator.html" > Learn more</a>.</li> 
 					
-			 <li><strong>CSS image sprite generation</strong>:
-      		 Jawr supports image sprites generation using smartsprites. <a href="./tutorials/jawrSpriteImage.html">Learn more</a>.
-      		 </li>
-      		 
-      		 <li> <strong>Library friendly</strong>: Open source javascript libraries can be used seamlessly with Jawr. Most of these are modular or have plugins: add the modules or 
+			 <li> <strong>Library friendly</strong>: Open source javascript libraries can be used seamlessly with Jawr. Most of these are modular or have plugins: add the modules or 
 			plugins you need and bundle all together. And, even if you minify them (thus eliminating comments), you can still keep the mandatory licenses in
 			the bundle. The <a href="../tutorials/quickstart.html">libraries tutorial</a> will show you how to integrate popular js libraries such 
 			as Protoype, JQuery or YUI. </li>
