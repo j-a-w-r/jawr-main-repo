@@ -15,7 +15,20 @@
 	      This version is containing bug fixes and some new features.<br/><br/>
 	  	  <strong>New features: </strong>
 	  	  	<ul>
+	  	  		<li>
+	  	  		[<a href="https://java.net/jira/browse/JAWR-354">JAWR-354</a>] Jawr now provides support for SASS resource (*.scss).<br/>
+      			You can now use SASS files in your bundle mapping.<br/>
+      			Please check the <a href="./docs/generators.html#SASS_generator">generator documentation</a> for more detail.
+      			</li>
       		 	<li>
+	  	  		[<a href="https://java.net/jira/browse/JAWR-353">JAWR-353</a>] Jawr now uses less4j engine instead of less-engine.<br/>
+      			Please check the <a href="./docs/generators.html#Less_CSS_generator">generator documentation</a> for more detail.
+      			</li>
+      		 	<li>
+	  	  		[<a href="https://java.net/jira/browse/JAWR-351">JAWR-351</a>] Jawr now allows users to enable performance logging for bundle or request handling.<br/>
+      			Please check the <a href="./tutorials/howToEnablePerformanceLogging.html">tutorial</a> for more detail.
+      			</li>    
+	  	  		<li>
       			[<a href="https://java.net/jira/browse/JAWR-350">JAWR-350</a>] Jawr allows you to define which JS script engine, you would like to use for JS based processors or generators like coffee script, uglify or Autoprefixer.<br/>
       			This means that you can use Nashorn JS engine if you're using Java 8<br/>
       			To define which engine to use, you only need to set the property <b>jawr.js.engine</b>.<br/>
@@ -24,26 +37,28 @@
       			<li>
       			[<a href="https://java.net/jira/browse/JAWR-349">JAWR-349</a>] To reference webjars resources, you can now use short reference instead of full one.<br/>
       			For example, you can now use : <b>webjars:/css/bootstrap.css</b> instead of <b>webjars:/bootstrap/3.2.0/css/bootstrap.css</b> <br/>
-				For more information, please check the <a href="./docs/generators.html">webjars generator documentation</a> for more information. 
+				For more information, please check the <a href="./docs/generators.html#Webjars_generator">webjars generator documentation</a> for more information. 
       			</li>	
       			<li>
       			[<a href="https://java.net/jira/browse/JAWR-348">JAWR-348</a>] Jawr allows you to define external bundles. This is used for resources which are not handle in Jawr in Production or debug mode, but you can still use the Jawr taglib to reference them<br/>
-      			For more information, please check <a href="./docs/custom_bundles.html">the bundle documentation</a> for more detail. 
+      			For more information, please check <a href="./docs/custom_bundles.html#External_bundles">the bundle documentation</a> for more detail. 
       			</li>	
       			<li>
       		 	[<a href="https://java.net/jira/browse/JAWR-342">JAWR-342</a>] Jawr allows developers to override comments generation in link renderer 
       		 	</li>
       			<li>
       		 	[<a href="https://java.net/jira/browse/JAWR-340">JAWR-340</a>] Jawr allows users to specify if licence information should be kept or not in CSSMinifier.<br/>
-      		 	Please check the <a href="./docs/postprocessors.html">CSS minifier documentation</a> for more detail.
+      		 	Please check the <a href="./docs/postprocessors.html#CSS_Minificator">CSS minifier documentation</a> for more detail.
       		 	</li>
       			<li>
       			[<a href="https://java.net/jira/browse/JAWR-274">JAWR-274</a>] Jawr now support nested composite bundles. You can now define a composite bundle in another composite bundle<br/>
-      			For more information, please check <a href="./docs/custom_bundles.html">the composite bundle documentation</a> for more detail. 
+      			For more information, please check <a href="./docs/custom_bundles.html#Composite_bundles">the composite bundle documentation</a> for more detail. 
       			</li>	
       			<li>
-      		 	[<a href="https://java.net/jira/browse/JAWR-247">JAWR-247</a>] Jawr is now able to handle less resources which are available in classpath 
-      		 	</li>
+      		 	[<a href="https://java.net/jira/browse/JAWR-153">JAWR-153</a>] Jawr provides a new postprocessor based on <a href="https://github.com/postcss/autoprefixer">Autoprefixer</a>.<br/>
+      		 	The autoprefixer postprocessor will generate vendor specific prefixes for CSS rules.
+      		 	Please check the <a href="./docs/postprocessors.html#Autoprefixer_postprocessor">generator documentation</a> for more detail.
+      			</li>
       		</ul>
       	 	<strong>Fixed issues : </strong>
 	    	<ul>   
@@ -71,7 +86,7 @@
       		</ul>
 	    	</li>
 	    	<li>
-	    	Thanks to tzrlk, paranoiabla, dtrunk90, Infeligo, mzz6wh for reporting the issues.<br/>
+	    	Thanks to tzrlk, michele, ksokol, paranoiabla, dtrunk90, Infeligo, mzz6wh for reporting the issues.<br/>
 	    	Thanks to vakopian, tedliang for reporting the issues and providing patches.
 	    	</li>
 	    </ul>
