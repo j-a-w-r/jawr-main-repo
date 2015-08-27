@@ -35,6 +35,7 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
+import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.ResourceReaderHandlerAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
@@ -53,9 +54,6 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
-	/** The Less suffix */
-	private static final String LESS_SUFFIX = "less";
-
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 
@@ -72,7 +70,7 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 	 * Constructor
 	 */
 	public LessCssGenerator() {
-		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(LESS_SUFFIX);
+		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(GeneratorRegistry.LESS_GENERATOR_SUFFIX);
 	}
 
 	/*
@@ -129,19 +127,14 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 		Reader rd = null;
 
 		try {
-			if (context.isContentProvided()) {
-				content = context.getProvidedSourceContent();
-			} else {
-				List<Class<?>> excluded = new ArrayList<Class<?>>();
-				excluded.add(ILessCssResourceGenerator.class);
-				rd = context.getResourceReaderHandler().getResource(path, false, excluded);
+			List<Class<?>> excluded = new ArrayList<Class<?>>();
+			excluded.add(ILessCssResourceGenerator.class);
+			rd = context.getResourceReaderHandler().getResource(path, false, excluded);
 
-				if (rd == null) {
-					throw new ResourceNotFoundException(path);
-				}
-				content = IOUtils.toString(rd);
+			if (rd == null) {
+				throw new ResourceNotFoundException(path);
 			}
-
+			content = IOUtils.toString(rd);
 			String result = compile(content, path);
 			rd = new StringReader(result);
 

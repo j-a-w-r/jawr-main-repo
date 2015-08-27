@@ -50,12 +50,6 @@ public class GeneratorContext {
 	private ResourceReaderHandler resourceReaderHandler;
 
 	/**
-	 * The provided content from which the generator should generate the
-	 * resource
-	 */
-	private String providedSourceContent;
-
-	/**
 	 * This flag indicates if we are currently processing the bundle or not.
 	 * This flag has been added so the generator have different behavior
 	 * depending on this flag. It is used in the ClassPathCSSGenerator to know
@@ -231,34 +225,6 @@ public class GeneratorContext {
 	 */
 	public String getBracketsParam() {
 		return helper.getBracketsParam();
-	}
-
-	/**
-	 * Checks if the source content is provided
-	 * 
-	 * @return true if the source content is provided
-	 */
-	public boolean isContentProvided() {
-		return providedSourceContent != null;
-	}
-
-	/**
-	 * Gets the provided source content
-	 * 
-	 * @return the provided source content
-	 */
-	public String getProvidedSourceContent() {
-		return providedSourceContent;
-	}
-
-	/**
-	 * Sets the provided source content
-	 * 
-	 * @param providedSourceContent
-	 *            the provided source content to set
-	 */
-	public void setProvidedSourceContent(String providedSourceContent) {
-		this.providedSourceContent = providedSourceContent;
 	}
 
 }

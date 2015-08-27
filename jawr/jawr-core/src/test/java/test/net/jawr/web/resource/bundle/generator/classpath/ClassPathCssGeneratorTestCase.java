@@ -37,6 +37,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -144,6 +145,7 @@ private static final String WORK_DIR = "workDirClasspathCss";
 	}
 	
 	@Test
+	@Ignore("Link to isse JAWR-247")
 	public void testClasspathGeneratorWithLessBundle() throws Exception{
 		
 		ctx = new GeneratorContext(config, "/generator/classpath/temp.less");
