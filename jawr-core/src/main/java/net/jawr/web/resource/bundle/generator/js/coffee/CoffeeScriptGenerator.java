@@ -113,8 +113,8 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	public void afterPropertiesSet() {
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start("initializing JS engine for Coffeescript");
+		StopWatch stopWatch = new StopWatch("initializing JS engine for Coffeescript");
+		stopWatch.start();
 		
 		// Load JavaScript Script Engine
 		String script = config.getProperty(
@@ -129,7 +129,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		coffeeScript = jsEngine.execEval("CoffeeScript");
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
-			PERF_LOGGER.debug(stopWatch.prettyPrint());
+			PERF_LOGGER.debug(stopWatch.shortSummary());
 		}
 	}
 
@@ -204,13 +204,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	public String compile(String resourcePath, String coffeeScriptSource) {
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start("Compiling resource '"+resourcePath+"' with CoffeeScript");
-//		Bindings bindings = jsEngine.createBindings();
-//		bindings.put("coffeeScriptSource", coffeeScriptSource);
-//		String result = (String) jsEngine.evaluateString("JCoffeeScriptCompiler", String.format(
-//				"CoffeeScript.compile(coffeeScriptSource, '%s');", options),
-//				bindings);
+		StopWatch stopWatch = new StopWatch("Compiling resource '"+resourcePath+"' with CoffeeScript");
+		stopWatch.start();
+
 		String result = null;
 		try {
 			result = (String) jsEngine.invokeMethod(coffeeScript, "compile", coffeeScriptSource, options);
