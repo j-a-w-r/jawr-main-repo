@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import javax.script.Bindings;
+import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -31,7 +32,7 @@ import net.jawr.web.exception.BundlingProcessException;
  * 
  * @author ibrahim Chaehoi
  */
-public class JavascriptEngine {
+public class JavascriptEngine implements Invocable{
 
 	private static final String UNKNOWN_SCRIPT = "Unknown script";
 	/** The script engine */
@@ -206,14 +207,92 @@ public class JavascriptEngine {
 	}
 
 	/**
-	 * Returns a new Object from the current context
+	 * Creates a new Bindings from the current context
 	 * 
-	 * @return a new Object from the current context
+	 * @return a new Bindings from the current context
 	 */
-	public Bindings getBindings() {
-		Bindings bindings = getContext()
-				.getBindings(ScriptContext.ENGINE_SCOPE);
-		return bindings;
+	public Bindings createBindings() {
+		
+		return scriptEngine.createBindings();
 	}
 
+	/**
+	 * Returns the engine bindings
+	 * @return the engine bindings
+	 */
+	public Bindings getBindings() {
+		
+		return getBindings(ScriptContext.ENGINE_SCOPE);
+	}
+
+	/**
+	 * Returns the bindings associated to the scope define in parameter
+	 * @param scope the bindings scope ({@link javax.script.ScriptContext.ENGINE_SCOPE} or {@link javax.script.ScriptContext.GLOBAL_SCOPE}
+	 * @return
+	 */
+	public Bindings getBindings(int scope) {
+		
+		return scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.script.Invocable#invokeMethod(java.lang.Object, java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public Object invokeMethod(Object thiz, String name, Object... args) throws ScriptException, NoSuchMethodException {
+		return ((Invocable)scriptEngine).invokeMethod(thiz, name, args);
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.script.Invocable#invokeFunction(java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public Object invokeFunction(String name, Object... args) throws ScriptException, NoSuchMethodException {
+		return ((Invocable)scriptEngine).invokeFunction(name, args);
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.script.Invocable#getInterface(java.lang.Class)
+	 */
+	@Override
+	public <T> T getInterface(Class<T> clasz) {
+		return ((Invocable)scriptEngine).getInterface(clasz);
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.script.Invocable#getInterface(java.lang.Object, java.lang.Class)
+	 */
+	@Override
+	public <T> T getInterface(Object thiz, Class<T> clasz) {
+		return ((Invocable)scriptEngine).getInterface(thiz, clasz);
+	}
+
+	/**
+	 * Returns the JSON object from a string
+	 * @return the JSON object from a string
+	 * @throws ScriptException if a script exception occurs
+	 * @throws NoSuchMethodException if a NoSuchMethodException occurs
+	 */
+	public Object parseJSON(String strJson) throws ScriptException, NoSuchMethodException{
+		
+		Object json = scriptEngine.eval("JSON");
+	    Object data = 
+	    		invokeMethod(json, "parse", strJson);
+
+	    return data;
+	}
+	
+	/**
+	 * Launch eval function on the argument given in parameter
+	 * @param arg the argument
+	 * @return the evaluated object
+	 */
+	public Object execEval(String arg) {
+		try {
+			return scriptEngine.eval("eval("+arg+")");
+		} catch (ScriptException e) {
+			throw new BundlingProcessException(
+					"Error while evaluating a script", e);
+		}
+	}
 }

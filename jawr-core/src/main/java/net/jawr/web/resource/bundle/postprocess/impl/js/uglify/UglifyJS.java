@@ -16,7 +16,7 @@ package net.jawr.web.resource.bundle.postprocess.impl.js.uglify;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import javax.script.Bindings;
+import javax.script.ScriptException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class UglifyJS {
 	private final JawrConfig config;
 
 	/** The Uglify options in JSON format */
-	private String optionsInJson;
+	private Object options;
 
 	/**
 	 * Constructor
@@ -75,7 +75,7 @@ public class UglifyJS {
 		String jsEngineName = config.getJavascriptEngineName(JawrConstant.UGLIFY_POSTPROCESSOR_JS_ENGINE);
 		this.jsEngine = new JavascriptEngine(jsEngineName);
 		this.config = config;
-		this.optionsInJson = optionsInJson;
+		this.options = jsEngine.execEval(optionsInJson);
 		String baseJsLocation = StringUtils.isNotEmpty(scriptDirLocation) ? scriptDirLocation
 				: JawrConstant.UGLIFY_POSTPROCESSOR_DEFAULT_JS_BASE_LOCATION;
 		for (String script : UGLIFY_SCRIPTS) {
@@ -119,14 +119,13 @@ public class UglifyJS {
 	public CompressionResult compress(String scriptSource) {
 
 		Object result = null;
-		Bindings bindings = jsEngine.getBindings();
-		bindings.put("scriptSource", scriptSource);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start("Compressing using Uglify");
-		
-		result = jsEngine.evaluateString("uglify",
-				String.format("minify(scriptSource, %s);", optionsInJson),
-				bindings);
+		try {
+			result = jsEngine.invokeFunction("minify", scriptSource, options);
+		} catch (NoSuchMethodException | ScriptException e) {
+			throw new BundlingProcessException(e);
+		}
 
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
