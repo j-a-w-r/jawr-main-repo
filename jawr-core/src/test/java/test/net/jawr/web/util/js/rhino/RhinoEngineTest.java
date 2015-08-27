@@ -1,7 +1,13 @@
 package test.net.jawr.web.util.js.rhino;
 
+import javax.script.ScriptException;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.mozilla.javascript.Callable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeJSON;
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 import net.jawr.web.util.js.JavascriptEngine;
