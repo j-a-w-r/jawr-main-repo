@@ -14,19 +14,15 @@
 package net.jawr.web.resource.bundle.generator.classpath;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
 import net.jawr.web.exception.BundlingProcessException;
-import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
-import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.TextResourceGenerator;
 
 /**
  * Abstract common functionality to retrieve resources (js and css) from the classpath. 
@@ -63,23 +59,7 @@ public class ClassPathGeneratorHelper {
 		
 		InputStream is = createStreamResource(context);
 		ReadableByteChannel chan = Channels.newChannel(is);
-		Reader reader = Channels.newReader(chan,context.getCharset().newDecoder (),-1);
-		
-		GeneratorRegistry generatorRegistry = context.getConfig().getGeneratorRegistry();
-		if(generatorRegistry.isPathGenerated(context.getPath())){
-			
-			String content = null;
-			try {
-				content = IOUtils.toString(reader);
-			} catch (IOException e) {
-				throw new BundlingProcessException(e);
-			}
-			context.setProvidedSourceContent(content);
-			TextResourceGenerator generator = (TextResourceGenerator) generatorRegistry.getResourceGenerator(context.getPath());
-			reader = generator.createResource(context);
-		}
-		
-		return reader;
+		return Channels.newReader(chan,context.getCharset().newDecoder (),-1);
 	}
 	
 	/**
