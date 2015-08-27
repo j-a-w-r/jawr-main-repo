@@ -41,6 +41,7 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorBi
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
+import net.jawr.web.resource.bundle.generator.css.sass.SassGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
@@ -113,8 +114,11 @@ public class GeneratorRegistry implements Serializable {
 	/** The coffee script suffix */
 	public static final String COFEESCRIPT_GENERATOR_SUFFIX = "coffee";
 
-	/** The coffee script suffix */
+	/** The less suffix */
 	public static final String LESS_GENERATOR_SUFFIX = "less";
+
+	/** The sass suffix */
+	public static final String SASS_GENERATOR_SUFFIX = "scss";
 
 	/** The generator prefix separator */
 	public static final String PREFIX_SEPARATOR = ":";
@@ -221,6 +225,9 @@ public class GeneratorRegistry implements Serializable {
 			commonGenerators.put(
 					new SuffixedPathResolver(LESS_GENERATOR_SUFFIX),
 					LessCssGenerator.class);
+			commonGenerators.put(
+					new SuffixedPathResolver(SASS_GENERATOR_SUFFIX),
+					SassGenerator.class);
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
@@ -259,6 +266,7 @@ public class GeneratorRegistry implements Serializable {
 	 * @return the resource generator
 	 */
 	private ResourceGenerator loadCommonGenerator(String resourcePath) {
+	
 		ResourceGenerator generator = null;
 
 		for (Iterator<Entry<ResourceGeneratorResolver, Class<?>>> iterator = commonGenerators

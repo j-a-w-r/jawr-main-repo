@@ -98,6 +98,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Vaadin Saas compiler -->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-sass-compiler</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 	</dependencies>
 	<reporting>
 		<plugins>
