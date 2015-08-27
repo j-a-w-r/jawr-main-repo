@@ -22,7 +22,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.script.Bindings;
+import javax.script.ScriptException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +51,8 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		implements ConfigurationAwareResourceGenerator,
 		PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
 
+	private static final String COFEE_SCRIPT_DEFAULT_OPTIONS = "";
+
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 	
@@ -75,8 +77,11 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	/** The jawr config */
 	private JawrConfig config;
 
+	/** The coffeeScript object*/
+	private Object coffeeScript;
+	
 	/** The coffee script options */
-	private String options;
+	private Object options;
 
 	/** The Rhino engine */
 	private JavascriptEngine jsEngine;
@@ -111,9 +116,6 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start("initializing JS engine for Coffeescript");
 		
-		options = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS,
-				"");
-
 		// Load JavaScript Script Engine
 		String script = config.getProperty(
 				JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION,
@@ -121,6 +123,10 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		jsEngine = new JavascriptEngine(config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
 		InputStream inputStream = getResourceInputStream(script);
 		jsEngine.evaluate("coffee-script.js", inputStream);
+		String strOptions = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS,
+				COFEE_SCRIPT_DEFAULT_OPTIONS);
+		options = jsEngine.execEval(strOptions);
+		coffeeScript = jsEngine.execEval("CoffeeScript");
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
 			PERF_LOGGER.debug(stopWatch.prettyPrint());
@@ -200,11 +206,19 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start("Compiling resource '"+resourcePath+"' with CoffeeScript");
-		Bindings bindings = jsEngine.getBindings();
-		bindings.put("coffeeScriptSource", coffeeScriptSource);
-		String result = (String) jsEngine.evaluateString("JCoffeeScriptCompiler", String.format(
-				"CoffeeScript.compile(coffeeScriptSource, '%s');", options),
-				bindings);
+//		Bindings bindings = jsEngine.createBindings();
+//		bindings.put("coffeeScriptSource", coffeeScriptSource);
+//		String result = (String) jsEngine.evaluateString("JCoffeeScriptCompiler", String.format(
+//				"CoffeeScript.compile(coffeeScriptSource, '%s');", options),
+//				bindings);
+		String result = null;
+		try {
+			result = (String) jsEngine.invokeMethod(coffeeScript, "compile", coffeeScriptSource, options);
+		} catch (NoSuchMethodException | ScriptException e) {
+			throw new BundlingProcessException(e);
+		}
+
+		
 		stopWatch.stop();
 		if(PERF_LOGGER.isDebugEnabled()){
 			PERF_LOGGER.debug(stopWatch.shortSummary());

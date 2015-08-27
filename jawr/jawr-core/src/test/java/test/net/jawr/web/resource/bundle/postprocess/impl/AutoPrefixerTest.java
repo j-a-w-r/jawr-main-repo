@@ -41,16 +41,14 @@ public class AutoPrefixerTest {
 
 	/** The logger */
 	private static Logger LOGGER = LoggerFactory.getLogger(AutoPrefixerTest.class);
-	
+
 	@Parameters
 	public static List<Object[]> jsEnginesToTestWith() {
-		return Arrays.asList(new Object[][] {
-				{ JawrConstant.DEFAULT_JS_ENGINE }
-				// , { "nashorn" } Autoprefixer is not working on nashorn  
-				});
+		return Arrays.asList(new Object[][] { { JawrConstant.DEFAULT_JS_ENGINE }
+				// , { "nashorn" } Autoprefixer is not working on nashorn
+		});
 	}
 
-	
 	@Parameter
 	public String jsEngineName;
 
@@ -73,14 +71,10 @@ public class AutoPrefixerTest {
 		when(config.getContext()).thenReturn(context);
 
 		when(config.getJavascriptEngineName(Matchers.anyString())).thenReturn(jsEngineName);
-		when(
-				config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS,
-						AUTOPREFIXER_DEFAULT_OPTIONS)).thenReturn(
-				AUTOPREFIXER_DEFAULT_OPTIONS);
-		when(
-				config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION,
-						AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION)).thenReturn(
-				AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
+		when(config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS))
+				.thenReturn(AUTOPREFIXER_DEFAULT_OPTIONS);
+		when(config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION, AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION))
+				.thenReturn(AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
 		when(config.getConfigProperties()).thenReturn(new Properties());
 		when(bundle.getId()).thenReturn("/myCssBundle.css");
 
@@ -88,6 +82,7 @@ public class AutoPrefixerTest {
 
 	/**
 	 * Checks if the JS engine is available
+	 * 
 	 * @return true if JS engine is available
 	 */
 	private boolean isJsEngineAvailable() {
@@ -99,17 +94,14 @@ public class AutoPrefixerTest {
 
 		if (isJsEngineAvailable()) {
 
-			String src = FileUtils
-					.readClassPathFile("postprocessor/css/autoprefixer/simple.css");
+			String src = FileUtils.readClassPathFile("postprocessor/css/autoprefixer/simple.css");
 			StringBuffer sb = new StringBuffer(src);
 
-			BundleProcessingStatus status = new BundleProcessingStatus(
-					BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle,
-					null, config);
+			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,
+					bundle, null, config);
 			StringBuffer ret = processor.postProcessBundle(status, sb);
 
-			String expected = FileUtils
-					.readClassPathFile("postprocessor/css/autoprefixer/simple_expected.css");
+			String expected = FileUtils.readClassPathFile("postprocessor/css/autoprefixer/simple_expected.css");
 			assertEquals(expected, ret.toString());
 		}
 
@@ -118,22 +110,17 @@ public class AutoPrefixerTest {
 	@Test
 	public void testPostProcessingWithBrowserOptions() throws Exception {
 		if (isJsEngineAvailable()) {
-			when(
-					config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS,
-							AUTOPREFIXER_DEFAULT_OPTIONS)).thenReturn(
-					"{browsers : ['Opera 12']}");
+			when(config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS))
+					.thenReturn("{ browsers  : ['Opera 12']}");
 
-			String src = FileUtils
-					.readClassPathFile("postprocessor/css/autoprefixer/simple.css");
+			String src = FileUtils.readClassPathFile("postprocessor/css/autoprefixer/simple.css");
 			StringBuffer sb = new StringBuffer(src);
 
-			BundleProcessingStatus status = new BundleProcessingStatus(
-					BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle,
-					null, config);
+			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,
+					bundle, null, config);
 			StringBuffer ret = processor.postProcessBundle(status, sb);
 
-			String expected = FileUtils
-					.readClassPathFile("postprocessor/css/autoprefixer/simple_opera_expected.css");
+			String expected = FileUtils.readClassPathFile("postprocessor/css/autoprefixer/simple_opera_expected.css");
 			assertEquals(expected, ret.toString());
 		}
 	}
@@ -141,16 +128,13 @@ public class AutoPrefixerTest {
 	@Test
 	public void testPostProcessingWithSafeMode() throws Exception {
 		if (isJsEngineAvailable()) {
-			when(
-					config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS,
-							AUTOPREFIXER_DEFAULT_OPTIONS)).thenReturn(
-					"{safe : true}");
+			when(config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS))
+					.thenReturn("{safe : true}");
 
 			StringBuffer sb = new StringBuffer("a {");
 
-			BundleProcessingStatus status = new BundleProcessingStatus(
-					BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle,
-					null, config);
+			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,
+					bundle, null, config);
 			StringBuffer ret = processor.postProcessBundle(status, sb);
 
 			String expected = "a {}";
@@ -162,15 +146,14 @@ public class AutoPrefixerTest {
 	public void testPostProcessingDontRemoveOldPrefix() throws Exception {
 		if (isJsEngineAvailable()) {
 
-			when(config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, "{}"))
+			when(config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS))
 					.thenReturn("{remove: false}");
 
 			String src = "a { -moz-border-radius: 5px; border-radius: 5px }";
 			StringBuffer sb = new StringBuffer(src);
 
-			BundleProcessingStatus status = new BundleProcessingStatus(
-					BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle,
-					null, config);
+			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,
+					bundle, null, config);
 			StringBuffer ret = processor.postProcessBundle(status, sb);
 
 			String expected = src;
@@ -179,27 +162,21 @@ public class AutoPrefixerTest {
 	}
 
 	@Test
-	public void testPostProcessingWithSpecifiedAutoprefixerScript()
-			throws Exception {
+	public void testPostProcessingWithSpecifiedAutoprefixerScript() throws Exception {
 		if (isJsEngineAvailable()) {
 
-			when(
-					config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION,
-							AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION)).thenReturn(
-					"postprocessor/css/autoprefixer/autoprefixer-5.1.11.js");
+			when(config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION, AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION))
+					.thenReturn("postprocessor/css/autoprefixer/autoprefixer-5.1.11.js");
 
 			String src = ":placeholder-shown { color: #999 }";
 			StringBuffer sb = new StringBuffer(src);
 
-			BundleProcessingStatus status = new BundleProcessingStatus(
-					BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle,
-					null, config);
+			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,
+					bundle, null, config);
 			StringBuffer ret = processor.postProcessBundle(status, sb);
 
-			String expected = "::-webkit-input-placeholder { color: #999 }\n"
-					+ "::-moz-placeholder { color: #999 }\n"
-					+ ":-ms-input-placeholder { color: #999 }\n"
-					+ ":placeholder-shown { color: #999 }";
+			String expected = "::-webkit-input-placeholder { color: #999 }\n" + "::-moz-placeholder { color: #999 }\n"
+					+ ":-ms-input-placeholder { color: #999 }\n" + ":placeholder-shown { color: #999 }";
 			assertEquals(expected, ret.toString());
 		}
 	}

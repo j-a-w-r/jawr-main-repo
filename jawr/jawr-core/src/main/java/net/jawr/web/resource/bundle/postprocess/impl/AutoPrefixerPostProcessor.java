@@ -18,7 +18,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.script.Bindings;
+import javax.script.ScriptException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
@@ -30,9 +33,6 @@ import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.js.JavascriptEngine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This class defines the autoprefixer postprocessor
  * 
@@ -40,12 +40,10 @@ import org.slf4j.LoggerFactory;
  *      site </a>
  * @author Ibrahim Chaehoi
  */
-public class AutoPrefixerPostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
+public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The Logger */
-	private static final Logger PERF_LOGGER = LoggerFactory
-			.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
+	private static final Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The property name of the autoprefixer options */
 	public static final String AUTOPREFIXER_SCRIPT_OPTIONS = "jawr.css.autoprefixer.options";
@@ -62,8 +60,8 @@ public class AutoPrefixerPostProcessor extends
 	/** The default options */
 	public static final String AUTOPREFIXER_DEFAULT_OPTIONS = "{}";
 
-	/** The coffee script options */
-	private String options;
+	/** The autoprefixer script options */
+	private Object options;
 
 	/** The Rhino engine */
 	private JavascriptEngine jsEngine;
@@ -80,33 +78,30 @@ public class AutoPrefixerPostProcessor extends
 	 */
 	private void initialize(JawrConfig config) {
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start("Initializing JS engine for Autoprefixer");
-		options = config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS,
-				AUTOPREFIXER_DEFAULT_OPTIONS);
-
+		StopWatch stopWatch = new StopWatch("Initializing JS engine for Autoprefixer");
+		stopWatch.start();
+		
 		// Load JavaScript Script Engine
-		String script = config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION,
-				AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
+		String script = config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION, AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
 		String jsEngineName = config.getJavascriptEngineName(AUTOPREFIXER_JS_ENGINE);
 		jsEngine = new JavascriptEngine(jsEngineName, true);
 		jsEngine.getBindings().put("logger", PERF_LOGGER);
 		InputStream inputStream = getResourceInputStream(config, script);
 		jsEngine.evaluate("autoprefixer.js", inputStream);
-		jsEngine.evaluate("initAutoPrefixer.js",
-				String.format("processor = autoprefixer(%s);", options));
-		jsEngine.evaluate("jawrAutoPrefixerProcess.js", String
-				.format("function process(cssSource, opts){"
+		String strOptions = config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS);
+		this.options = jsEngine.execEval(strOptions);
+		
+		jsEngine.evaluate("initAutoPrefixer.js", String.format("processor = autoprefixer(%s);", strOptions));
+		jsEngine.evaluate("jawrAutoPrefixerProcess.js",
+				String.format("function process(cssSource, opts){" 
 						+ "var result = processor.process(cssSource, opts);"
-						+ "if(result.warnings){"
-						+ "result.warnings().forEach(function(message){"
-						+ "if(logger.isWarnEnabled()){"
-						+ "logger.warn(message.toString());" + "}" + "});}"
+						+ "if(result.warnings){" + "result.warnings().forEach(function(message){"
+						+ "if(logger.isWarnEnabled()){" + "logger.warn(message.toString());" + "}" + "});}"
 						+ "return result.css;" + "}"));
 
 		stopWatch.stop();
 		if (PERF_LOGGER.isDebugEnabled()) {
-			PERF_LOGGER.debug(stopWatch.prettyPrint());
+			PERF_LOGGER.debug(stopWatch.shortSummary());
 		}
 	}
 
@@ -142,21 +137,27 @@ public class AutoPrefixerPostProcessor extends
 	 * java.lang.StringBuffer)
 	 */
 	@Override
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 
 		if (jsEngine == null) {
 			initialize(status.getJawrConfig());
 		}
 
 		StopWatch stopWatch = new StopWatch();
-		stopWatch.start("Processing Autoprefixer on '"+status.getLastPathAdded()+"'");
-		Bindings bindings = jsEngine.getBindings();
-		bindings.put("cssSource", bundleData.toString());
-		String res = (String) jsEngine.evaluateString("Autoprefixer",
-				String.format("process(cssSource, %s);", options),
-				bindings);
-		
+		stopWatch.start("Processing Autoprefixer on '" + status.getLastPathAdded() + "'");
+
+		String cssSource = bundleData.toString();
+		String res = null;
+		try {
+			res = (String) jsEngine.invokeFunction("process", cssSource, options);
+
+		} catch (NoSuchMethodException e) {
+			throw new BundlingProcessException(e);
+		} catch (ScriptException e) {
+			throw new BundlingProcessException(e);
+		}
+
 		stopWatch.stop();
 		if (PERF_LOGGER.isDebugEnabled()) {
 			PERF_LOGGER.debug(stopWatch.shortSummary());
