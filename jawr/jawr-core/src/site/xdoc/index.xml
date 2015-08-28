@@ -18,7 +18,7 @@
 	<img src="./images/index/logo.png" style="border:0 !important" id="mainJawrLogo"  alt="Logo" />
 	
 	<div id="jawrlinks">
-		<b>Latest version : 3.7</b><br/>
+		<b>Latest version : 3.8</b><br/>
 		<a href="https://java.net/projects/jawr/downloads/directory/release">
 			<img src="./images/index/download.png" style="border:0 !important" title="Download the latest version of Jawr" alt="Download" /></a> 
 		<a href="https://jawr.java.net/tutorials/quickstart.html" >
@@ -52,8 +52,6 @@
 	</div>
 	
 	<div id="firstPara">	
-	
-	
 	
 	<p>Jawr is a tunable packaging solution for Javascript and CSS which allows for rapid development of resources in separate module files. 
 	Developers can work with a large set of split javascript files in development mode, then Jawr bundles all together into one or several files 
