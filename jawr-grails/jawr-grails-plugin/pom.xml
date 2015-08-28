@@ -3,13 +3,13 @@
 	<parent>
 		<groupId>net.jawr</groupId>
 		<artifactId>jawr</artifactId>
-		<version>3.8</version>
+		<version>3.8-SNAPSHOT</version>
 		<relativePath>../../</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.grails.plugins</groupId>
 	<artifactId>jawr</artifactId>
-	<version>3.8</version>
+	<version>3.8-SNAPSHOT</version>
 	<packaging>grails-plugin</packaging>
 	<name>jawr Grails plugin</name>
 	<description>jawr grails plugin</description>
@@ -21,7 +21,7 @@
 		<connection>scm:git:git@github.com:ic3fox/jawr-grails.git</connection>
 		<developerConnection>scm:git:git@github.com:ic3fox/jawr-grails.git</developerConnection>
 		<url>http://github.com/ic3fox/jawr-grails</url>
-		<tag>jawr-3.8</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
 		<dependency>

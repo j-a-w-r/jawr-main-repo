@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>net.jawr</groupId>
 		<artifactId>jawr</artifactId>
-		<version>3.8</version>
+		<version>3.8-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.jawr.tools</groupId>
