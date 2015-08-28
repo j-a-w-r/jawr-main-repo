@@ -276,10 +276,7 @@
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<configuration>
-					<preparationGoals>clean verify scm:checkin -Dmessage="perform
-						release"</preparationGoals>
-					<completionGoals>validate scm:checkin -Dmessage="prepare for next
-						release"</completionGoals>
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 			<plugin>
