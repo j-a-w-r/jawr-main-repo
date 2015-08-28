@@ -18,6 +18,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.carrotsearch</groupId>
 			<artifactId>smartsprites</artifactId>
 			<scope>compile</scope>
