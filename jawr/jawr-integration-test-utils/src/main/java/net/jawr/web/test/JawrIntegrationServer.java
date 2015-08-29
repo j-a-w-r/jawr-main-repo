@@ -20,12 +20,13 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.webapp.WebAppClassLoader;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ibrahim Chaehoi
@@ -34,7 +35,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class JawrIntegrationServer {
 
 	/** The logger */
-	private static Logger LOGGER = Logger
+	private static Logger LOGGER = LoggerFactory
 			.getLogger(JawrIntegrationServer.class);
 
 	/** The properties file name */

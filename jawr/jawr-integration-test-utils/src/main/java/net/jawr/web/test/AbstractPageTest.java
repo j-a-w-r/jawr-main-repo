@@ -14,11 +14,12 @@ import java.util.List;
 import net.jawr.web.test.utils.Utils;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.CollectingAlertHandler;
@@ -46,7 +47,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
 public abstract class AbstractPageTest {
 
 	/** The logger */
-	private static Logger LOGGER = Logger.getLogger(AbstractPageTest.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(AbstractPageTest.class);
 
 	/** The web client */
 	protected WebClient webClient;
