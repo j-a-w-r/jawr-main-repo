@@ -397,7 +397,7 @@ The Jawr servlet
 * Defining a custom property resolver
 
 	By default no ConfigPropertyResolver is used in Jawr, but you can customize the way properties are resolved in Jawr.\
-	The property resolver is used to resolve values from placeholder, which are like "${myValueToReplace}".
+	The property resolver is used to resolve values from placeholder, which are like "$\{myValueToReplace\}".
 	To do that you must create an implementation of the interface 
 	<net.jawr.web.config.ConfigPropertyResolver> and then you must declare it when defining the Jawr servlet, by setting the 
 	<<configPropertyResolverClass>> init param:  	
