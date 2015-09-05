@@ -46,10 +46,10 @@ import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
-		ConfigurationAwareResourceGenerator, WorkingDirectoryLocationAware {
+public class ClassPathCSSGenerator extends AbstractCSSGenerator
+		implements ConfigurationAwareResourceGenerator, WorkingDirectoryLocationAware {
 
-	/** the class path generator helper  */
+	/** the class path generator helper */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
 
 	/**
@@ -83,7 +83,8 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 	/**
 	 * create the resource generator resolver
 	 *
-	 * @param  generatorPrefix the generator prefix
+	 * @param generatorPrefix
+	 *            the generator prefix
 	 * @return the resource generator resolver
 	 */
 	protected ResourceGeneratorResolver createResolver(String generatorPrefix) {
@@ -91,7 +92,8 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 	}
 
 	/**
-	 * Returns the class path generator helper 
+	 * Returns the class path generator helper
+	 * 
 	 * @return the class path generator helper
 	 */
 	protected String getClassPathGeneratorHelperPrefix() {
@@ -100,6 +102,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 
 	/**
 	 * Returns the generator prefix
+	 * 
 	 * @return the generator prefix
 	 */
 	protected String getGeneratorPrefix() {
@@ -107,7 +110,9 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 	}
 
 	/**
-	 * Returns the temporary directory which will be created under the working directory application server
+	 * Returns the temporary directory which will be created under the working
+	 * directory application server
+	 * 
 	 * @return the temporary directory
 	 */
 	protected String getTempDirectoryName() {
@@ -117,21 +122,19 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * ConfigurationAwareResourceGenerator
 	 * #setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	public void setConfig(JawrConfig config) {
-		this.isHandlingCssImage = config
-				.isCssClasspathImageHandledByClasspathCss();
+		this.isHandlingCssImage = config.isCssClasspathImageHandledByClasspathCss();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher
-	 * ()
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getPathMatcher ()
 	 */
 	public ResourceGeneratorResolver getResolver() {
 
@@ -158,14 +161,18 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 		this.workingDir = workingDir;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#generateResourceForBundle(net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#
+	 * generateResourceForBundle(net.jawr.web.resource.bundle.generator.
+	 * GeneratorContext)
 	 */
 	@Override
 	protected Reader generateResourceForBundle(GeneratorContext context) {
-		
+
 		Reader reader = helper.createResource(context);
-		
+
 		if (reader != null) {
 			reader = createTempResource(context, reader);
 		}
@@ -180,7 +187,6 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 	 * generateResourceForDebug
 	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
-	@SuppressWarnings("resource")
 	@Override
 	protected Reader generateResourceForDebug(GeneratorContext context) {
 
@@ -194,18 +200,21 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 		if (context.getConfig().isCssClasspathImageHandledByClasspathCss()) {
 
 			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(new File(workingDir + "/"
-						+ getTempDirectoryName(), context.getPath()));
-			} catch (FileNotFoundException e) {
-				throw new BundlingProcessException(
-						"An error occured while creating temporary resource for "
-								+ context.getPath(), e);
-			}
-			if (fis != null) {
+			File file = new File(workingDir + "/" + getTempDirectoryName(), context.getPath());
+			if (file.exists()) {
+				try {
+					fis = new FileInputStream(file);
+				} catch (FileNotFoundException e) {
+					throw new BundlingProcessException(
+							"An error occured while creating temporary resource for " + context.getPath(), e);
+				}
 				FileChannel inchannel = fis.getChannel();
-				rd = Channels.newReader(inchannel, context.getConfig()
-						.getResourceCharset().newDecoder(), -1);
+				rd = Channels.newReader(inchannel, context.getConfig().getResourceCharset().newDecoder(), -1);
+			}else{
+				rd = helper.createResource(context);
+				if(rd != null){
+					rd = createTempResource(context, rd);
+				}
 			}
 		} else {
 
@@ -226,8 +235,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 	 *            the reader
 	 * @return the reader to the temporary processed resource
 	 */
-	private Reader createTempResource(GeneratorContext generatorContext,
-			Reader rd) {
+	private Reader createTempResource(GeneratorContext generatorContext, Reader rd) {
 
 		Reader result = null;
 
@@ -235,51 +243,40 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements
 		// generator CSS path
 		// The version of the CSS classpath for debug mode will be different
 		// compare to the standard one
-		JoinableResourceBundle tempBundle = new JoinableResourceBundleImpl(
-				ResourceGenerator.CSS_DEBUGPATH, null, null, null, null, null,
-				generatorContext.getConfig().getGeneratorRegistry());
-		BundleProcessingStatus tempStatus = new BundleProcessingStatus(
-				BundleProcessingStatus.FILE_PROCESSING_TYPE, tempBundle,
-				generatorContext.getResourceReaderHandler(),
-				generatorContext.getConfig());
+		JoinableResourceBundle tempBundle = new JoinableResourceBundleImpl(ResourceGenerator.CSS_DEBUGPATH, null, null,
+				null, null, null, generatorContext.getConfig().getGeneratorRegistry());
+		BundleProcessingStatus tempStatus = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
+				tempBundle, generatorContext.getResourceReaderHandler(), generatorContext.getConfig());
 
 		CSSURLPathRewriterPostProcessor postProcessor = new CSSURLPathRewriterPostProcessor();
 		String resourcePath = generatorContext.getPath();
-		tempStatus.setLastPathAdded(getGeneratorPrefix()+GeneratorRegistry.PREFIX_SEPARATOR
-				+ resourcePath);
+		tempStatus.setLastPathAdded(getGeneratorPrefix() + GeneratorRegistry.PREFIX_SEPARATOR + resourcePath);
 		FileWriter fWriter = null;
 		try {
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(rd, writer, true);
 			result = new StringReader(writer.getBuffer().toString());
-			StringBuffer resourceData = postProcessor.postProcessBundle(
-					tempStatus, writer.getBuffer());
+			StringBuffer resourceData = postProcessor.postProcessBundle(tempStatus, writer.getBuffer());
 
-			String tempCssClasspathDir = workingDir + "/"
-					+ getTempDirectoryName();
+			String tempCssClasspathDir = workingDir + "/" + getTempDirectoryName();
 			File cssTempFile = new File(tempCssClasspathDir, resourcePath);
 			File tempCssDir = cssTempFile.getParentFile();
 			if (!tempCssDir.exists()) {
 				if (!tempCssDir.mkdirs()) {
 					throw new BundlingProcessException(
-							"An error occured while creating temporary resource for "
-									+ resourcePath + ".\n"
-									+ "Enable to create temporary directory '"
-									+ tempCssClasspathDir + "'");
+							"An error occured while creating temporary resource for " + resourcePath + ".\n"
+									+ "Enable to create temporary directory '" + tempCssClasspathDir + "'");
 				}
 			}
 
 			fWriter = new FileWriter(cssTempFile);
-			IOUtils.copy(new StringReader(resourceData.toString()), fWriter,
-					true);
+			IOUtils.copy(new StringReader(resourceData.toString()), fWriter, true);
 		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"An error occured while creating temporary resource for "
-							+ resourcePath, e);
+			throw new BundlingProcessException("An error occured while creating temporary resource for " + resourcePath,
+					e);
 		}
 
 		return result;
 	}
 
-	
 }
