@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -65,9 +65,11 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 	public Reader getResource(String resourceName, boolean processingBundle) {
 		
 		Reader rd = null;
-		InputStream is = context.getResourceAsStream(resourceName);
-		if(is != null){
-			rd = new InputStreamReader(is, charset);
+		if(!resourceName.contains(":")){
+			InputStream is = context.getResourceAsStream(resourceName);
+			if(is != null){
+				rd = new InputStreamReader(is, charset);
+			}
 		}
 		return rd;
 	}
@@ -87,7 +89,8 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 			boolean processingBundle) {
 		
 		InputStream is = null;
-		if(isAccessPermitted(resourceName)){
+		if(!resourceName.contains(":") &&
+			isAccessPermitted(resourceName)){
 			is = context.getResourceAsStream(resourceName);
 		}
 		return is;  
