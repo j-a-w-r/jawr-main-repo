@@ -289,7 +289,7 @@ public class ServletContextResourceReaderHandler implements
 						} catch (Exception e) {
 							LOGGER.info("An exception occured while trying to read resource '"
 									+ resourceName
-									+ "'. Continuing with other readers. Error : "+e.getMessage());
+									+ "'. Continuing with other readers. Error : ",e);
 						}
 						if (rd != null) {
 							break;
