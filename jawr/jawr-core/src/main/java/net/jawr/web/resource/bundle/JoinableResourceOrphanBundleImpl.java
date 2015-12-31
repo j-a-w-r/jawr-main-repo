@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2014 Ibrahim Chaehoi
+ * Copyright 2012-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -51,10 +51,11 @@ public class JoinableResourceOrphanBundleImpl extends
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundleImpl#addItemsFromDir(java.lang.String, boolean)
 	 */
 	@Override
-	protected void addItemsFromDir(String dirName, boolean addSubDirs) {
+	protected void addItemsFromDir(PathMapping dir, boolean addSubDirs) {
+		String dirName = dir.getPath(); 
 		if(!dirName.startsWith(JawrConstant.WEB_INF_DIR) &&
 				!dirName.startsWith(JawrConstant.META_INF_DIR)){
-			super.addItemsFromDir(dirName, addSubDirs);
+			super.addItemsFromDir(dir, addSubDirs);
 		}
 	}
 

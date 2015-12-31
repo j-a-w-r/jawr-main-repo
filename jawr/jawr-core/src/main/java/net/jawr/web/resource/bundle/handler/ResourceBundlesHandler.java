@@ -155,7 +155,6 @@ public interface ResourceBundlesHandler {
 	 */
 	public JawrConfig getConfig();
 	
-	
 	/**
 	 * Returns the client side handler generator
 	 * @return the client side handler generator
@@ -180,5 +179,22 @@ public interface ResourceBundlesHandler {
      * @return the path of the directory containing the generated zipped bundles
      */
     public String getBundleZipDirPath();
+
+    /**
+	 * Notify modification to the bundles
+	 * @param bundles the bundles to notify
+	 */
+	public void notifyModification(List<JoinableResourceBundle> bundles);
+
+	/**
+	 * Returns true if there are dirty bundles
+	 * @return true if there are dirty bundles
+	 */
+	public boolean bundlesNeedToBeRebuild();
+	
+	/** 
+	 * Rebuilds the bundles which needs to be rebuild 
+	 */
+	public void rebuildModifiedBundles();
 	
 }

@@ -69,7 +69,7 @@ public class SassCssGeneratorTestCase {
 		
 		ServletContext servletContext = new MockServletContext();
 		
-		//String[] paths = new String[]{"/temp.less", "jar:/style.less"};
+		//String[] paths = new String[]{"/temp.sass", "jar:/style.sass"};
 		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, cssBundleHandler);
 		when(config.getContext()).thenReturn(servletContext);
 		when(config.getResourceCharset()).thenReturn(Charset.forName("UTF-8"));
@@ -104,8 +104,8 @@ public class SassCssGeneratorTestCase {
 				Object[] args = invocation.getArguments();
 				Reader rd = null;
 				try{
-					final String lessContent = FileUtils.readClassPathFile("generator/css/sass"+args[0]);
-					rd = new StringReader(lessContent);	
+					final String sassContent = FileUtils.readClassPathFile("generator/css/sass"+args[0]);
+					rd = new StringReader(sassContent);	
 				}catch(IOException ex){
 					// Do nothing
 				}
@@ -228,15 +228,15 @@ public class SassCssGeneratorTestCase {
 	@Ignore
 	public void testSassCssBundleGeneratorInDebugMode() throws Exception{
 		
-		String tempLessContent = FileUtils.readClassPathFile("generator/css/less/temp.less");
-		when(rsReaderHandler.getResource(Matchers.eq("/temp.less"), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		String tempsassContent = FileUtils.readClassPathFile("generator/css/sass/temp.sass");
+		when(rsReaderHandler.getResource(Matchers.eq("/temp.sass"), Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempsassContent));
 		when(rsReaderHandler.getResourceAsStream(anyString())).thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
 		
 		ctx.setProcessingBundle(false);
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_debug.css"), writer.getBuffer().toString());
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected_debug.css"), writer.getBuffer().toString());
 	}
 	
 }

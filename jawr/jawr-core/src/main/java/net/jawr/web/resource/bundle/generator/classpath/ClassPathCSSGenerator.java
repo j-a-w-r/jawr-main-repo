@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.util.Set;
 
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
@@ -38,6 +39,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
+import net.jawr.web.resource.handler.reader.ResourceBrowser;
 import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
 
 /**
@@ -46,8 +48,8 @@ import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class ClassPathCSSGenerator extends AbstractCSSGenerator
-		implements ConfigurationAwareResourceGenerator, WorkingDirectoryLocationAware {
+public class ClassPathCSSGenerator extends AbstractCSSGenerator implements ResourceBrowser,
+		ConfigurationAwareResourceGenerator, WorkingDirectoryLocationAware {
 
 	/** the class path generator helper */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
@@ -277,6 +279,30 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		}
 
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
+	 */
+	@Override
+	public Set<String> getResourceNames(String path) {
+		return helper.getResourceNames(resolver.getResourcePath(path));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
+	 */
+	@Override
+	public boolean isDirectory(String path) {
+		return helper.isDirectory(path);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		return helper.getFilePath(resourcePath);
 	}
 
 }

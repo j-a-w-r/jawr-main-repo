@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,7 @@
 package net.jawr.web.resource.bundle.generator.classpath;
 
 import java.io.InputStream;
+import java.util.Set;
 
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
@@ -22,6 +23,7 @@ import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.resource.bundle.generator.StreamResourceGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
+import net.jawr.web.resource.handler.reader.ResourceBrowser;
 
 /**
  * This class defines the resource generator which loads image resources from
@@ -30,13 +32,13 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  * @author Ibrahim Chaehoi
  *
  */
-public class ClassPathImgResourceGenerator implements StreamResourceGenerator {
+public class ClassPathBinaryResourceGenerator implements ResourceBrowser, StreamResourceGenerator {
 
 	/** the class path generator helper */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	protected ResourceGeneratorResolver resolver;
 
 	/** The classpath generator helper */
 	private ClassPathGeneratorHelper helper;
@@ -44,7 +46,7 @@ public class ClassPathImgResourceGenerator implements StreamResourceGenerator {
 	/**
 	 * Constructor.
 	 */
-	public ClassPathImgResourceGenerator() {
+	public ClassPathBinaryResourceGenerator() {
 		helper = new ClassPathGeneratorHelper(
 				getClassPathGeneratorHelperPrefix());
 		resolver = createResolver(getGeneratorPrefix());
@@ -116,6 +118,30 @@ public class ClassPathImgResourceGenerator implements StreamResourceGenerator {
 		}
 
 		return is;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
+	 */
+	@Override
+	public Set<String> getResourceNames(String path) {
+		return helper.getResourceNames(resolver.getResourcePath(path));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
+	 */
+	@Override
+	public boolean isDirectory(String path) {
+		return helper.isDirectory(path);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		return helper.getFilePath(resourcePath);
 	}
 
 }

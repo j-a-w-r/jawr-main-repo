@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -334,6 +334,25 @@ public class JawrApplicationConfigManager implements
 			binaryMBean.refreshConfig();
 		}
 	}
+	
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.config.jmx.JawrApplicationConfigManagerMBean#rebuildDirtyBundles()
+	 */
+	@Override
+	public void rebuildDirtyBundles() {
+		if (jsMBean != null) {
+			jsMBean.rebuildDirtyBundles();
+		}
+		if (cssMBean != null) {
+			cssMBean.rebuildDirtyBundles();
+		}
+		if (binaryMBean != null) {
+			binaryMBean.rebuildDirtyBundles();
+		}
+	}
+
+	
 
 	/*
 	 * (non-Javadoc)
@@ -517,5 +536,4 @@ public class JawrApplicationConfigManager implements
 				&& str2.equals(str3));
 	}
 
-	
 }
