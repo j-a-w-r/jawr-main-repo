@@ -93,4 +93,12 @@ public class SampleGeneratorResourceBrowser extends AbstractJavascriptGenerator 
 		return new PrefixedPathResolver("browse");
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		return null;
+	}
+
 }
