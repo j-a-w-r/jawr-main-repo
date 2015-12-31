@@ -10,7 +10,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>jawr-core</module>
-    <module>jawr-core-evol</module>
     <module>jawr-integration-test</module>
     <module>jawr-integration-test-utils</module>
     <module>jawr-basicwebapp</module>
