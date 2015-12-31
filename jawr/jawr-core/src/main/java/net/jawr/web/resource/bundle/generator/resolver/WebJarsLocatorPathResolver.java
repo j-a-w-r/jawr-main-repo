@@ -16,18 +16,21 @@ package net.jawr.web.resource.bundle.generator.resolver;
 import static net.jawr.web.JawrConstant.URL_SEPARATOR;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.jawr.web.resource.bundle.generator.GeneratorMappingHelper;
-import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webjars.WebJarAssetLocator;
+
+import net.jawr.web.JawrConstant;
+import net.jawr.web.resource.bundle.generator.GeneratorMappingHelper;
+import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
 
 /**
  * This class define the WebJars locator resolver. If the webjars-jquery library
@@ -130,6 +133,30 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 						.length() - 2);
 	}
 
+	/**
+     * List assets within a folder.
+     *
+     * @param folderPath the root path to the folder.
+     * @return a set of folder paths that match.
+     */
+    public Set<String> getResourceNames(String folder){
+    	String path = super.getResourcePath(folder);
+		Set<String> assets = locator.listAssets(path);
+		Set<String> resourceNames = new HashSet<String>();
+		for (String asset : assets) {
+			int idx = asset.indexOf(path);
+			if(idx != -1){
+				String name = asset.substring(idx+path.length());
+				idx = name.indexOf(JawrConstant.URL_SEPARATOR);
+				if(idx != -1){
+					name = name.substring(0, idx+1);
+				}
+				resourceNames.add(name);
+			}
+		}
+		return resourceNames;
+    }
+    
 	/**
 	 * Checks the resource path to warn users if the resource path used may lead
 	 * to issues in binary resources (image, fonts, ...) references in the

@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -347,6 +347,30 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	@Override
 	public String getBundleZipDirPath() {
 		return rsHandler.getBundleZipDirPath();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#notifyModification(java.util.List)
+	 */
+	@Override
+	public void notifyModification(List<JoinableResourceBundle> bundles) {
+		rsHandler.notifyModification(bundles);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#rebuildModifiedBundles()
+	 */
+	@Override
+	public void rebuildModifiedBundles() {
+		rsHandler.rebuildModifiedBundles();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#bundlesNeedToBeRebuild()
+	 */
+	@Override
+	public boolean bundlesNeedToBeRebuild() {
+		return rsHandler.bundlesNeedToBeRebuild();
 	}
 
 }

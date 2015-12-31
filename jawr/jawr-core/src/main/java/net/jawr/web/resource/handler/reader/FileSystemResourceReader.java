@@ -144,4 +144,13 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 		return new File(baseDir, path).isDirectory();
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		String path = resourcePath.replace('/', File.separatorChar);
+		return new File(baseDir, path).getAbsolutePath();
+	}
+
 }

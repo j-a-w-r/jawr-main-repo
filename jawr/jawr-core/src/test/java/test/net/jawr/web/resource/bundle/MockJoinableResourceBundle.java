@@ -20,6 +20,7 @@ import java.util.Set;
 
 import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.PathMapping;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
@@ -28,6 +29,7 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
  * @author Ibrahim Chaehoi
  *
  */
+//TODO Remove this and use a Mockito.Mock instead
 public class MockJoinableResourceBundle implements JoinableResourceBundle {
 
 	/* (non-Javadoc)
@@ -246,6 +248,33 @@ public class MockJoinableResourceBundle implements JoinableResourceBundle {
 	@Override
 	public String getBundlePrefix() {
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getMappings()
+	 */
+	@Override
+	public List<PathMapping> getMappings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#setDirty(boolean)
+	 */
+	@Override
+	public void setDirty(boolean dirty) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#isDirty()
+	 */
+	@Override
+	public boolean isDirty() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

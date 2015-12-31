@@ -2,13 +2,23 @@ package test.net.jawr.web.resource.bundle.postprocess.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.Reader;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
+
+import static org.junit.Assert.assertEquals;
+
+import static org.mockito.Mockito.when;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -17,27 +27,46 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
-import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
-import test.net.jawr.web.resource.bundle.handler.MockResourceReaderHandler;
+import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
-public class CSSURLRewriterPostProcessorTest extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class CSSURLRewriterPostProcessorTest {
 	
+	@Mock
+	private ResourceReaderHandler rsHandler;
 	
-	JoinableResourceBundle bundle;
-	JawrConfig config;
-	BundleProcessingStatus status;
-	CSSURLPathRewriterPostProcessor processor;
+	@Mock
+	private JoinableResourceBundle bundle;
 	
+	private JawrConfig config;
+	private BundleProcessingStatus status;
+	private CSSURLPathRewriterPostProcessor processor;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@SuppressWarnings("unchecked")
+	@Before
+	public void setUp() throws Exception {
 		// Bundle path (full url would be: /servletMapping/prefix/css/bundle.css
 		final String bundlePath = "/css/bundle.css";
 		// Bundle url prefix
 		final String urlPrefix = "/v00";
 		
-		bundle = buildFakeBundle(bundlePath, urlPrefix);
+		when(rsHandler.getResourceAsStream(Matchers.anyString())).thenAnswer(new Answer<InputStream>() {
+			
+			@Override
+			public InputStream answer(InvocationOnMock invocation) throws Throwable {
+				String resourceName = (String) invocation.getArguments()[0];
+				if(resourceName.equals("jar:style/images/logo.png")){
+					return new ByteArrayInputStream("Fake value".getBytes());
+				}
+				
+				throw new ResourceNotFoundException(resourceName);
+			}
+		});
+		
+		when(bundle.getId()).thenReturn(bundlePath);
+		when(bundle.getURLPrefix(Matchers.anyMap())).thenReturn(urlPrefix);
+		
 		config = new JawrConfig("css", new Properties());
 		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
@@ -67,6 +96,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		return generatorRegistry;
 	}
 	
+	@Test
 	public void testBasicURLRewriting() {
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(../../../../../images/someImage.gif);");
@@ -81,6 +111,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testURLRewritingWithQuestionMark() {
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(../../../../../images/someImage.gif?#iefix);");
@@ -95,6 +126,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testURLRewritingWithSvgReferenceElement() {
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(../../../../../images/someImage.svg#gradient);");
@@ -109,6 +141,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testBasicURLWithAbsolutePathRewriting() {
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(/images/someImage.gif);");
@@ -125,6 +158,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 	
 	
 	
+	@Test
 	public void testBasicURLWithAbsolutePathInContextPathRewriting() {
 		// basic test
 		StringBuffer data = new StringBuffer("background-image:url(/myApp/images/someImage.gif);");
@@ -139,6 +173,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly",expectedURL, result);
 	}
 	
+	@Test
 	public void testBackReferenceAndSpaces() {
 		// Now a back reference must be created, and there are quotes and spaces
 		StringBuffer data = new StringBuffer("background-image:url( \n 'images/someImage.gif' );");
@@ -149,6 +184,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly : " +expectedURL + "    \n:  " + result,expectedURL, result);
 	}
 	
+	@Test
 	public void testBackReferenceNoUrlMapping() {
 		StringBuffer data = new StringBuffer("background-image:url(  'images/someImage.gif' );");
 		// Remove the url mapping from config, one back reference less expected
@@ -159,6 +195,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testSameLevelUrl() {
 		
 		// An image at the same path as the css
@@ -172,6 +209,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 	}
 
 	
+	@Test
 	public void testSameLineURLs() {
 		// Now a back reference must be created, and there are quotes and spaces
 		
@@ -183,7 +221,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly : " +expectedURL + "    \n:  " + result,expectedURL, result);
 	}
 	
-	
+	@Test
 	public void testSameLevelUrlWithPartialBackreference() {
 		
 		// An image at the same path as the css
@@ -200,6 +238,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly",expectedURL, result);
 		
 	}
+	
+	@Test
 	public void testSameLevelResource() {
 		
 		// An image at the same path as the css
@@ -212,6 +252,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testSameLevelExtraPathMapping() {
 		// Set a path with several contexts to test if backtracking is done right. 
 		status.getJawrConfig().setServletMapping("/foo/bar/baz/");
@@ -225,6 +266,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testSameLevelResourceLeadingDotSlash() {
 		
 		// An image at the same path as the css
@@ -236,6 +278,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly",expectedURL, result);
 		
 	}
+	
+	@Test
 	public void testSameLevelUrlWithComplexBackreference() {
 		
 		// An image at the same path as the css
@@ -247,6 +291,8 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly",expectedURL, result);
 		
 	}
+	
+	@Test
 	public void testSameUrlWithDollarSymbol() {
 		
 		// An image at the same path as the css
@@ -259,6 +305,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testUpperCaseUrl() {
 		
 		// An image at the same path as the css
@@ -271,6 +318,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testSameUrlWithParens() {
 		StringBuffer data = new StringBuffer("background-image:url(  'images/some\\(Image\\).gif' );");
 		// Remove the url mapping from config, one back reference less expected
@@ -281,6 +329,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testSameUrlWithQuotes() {
 		StringBuffer data = new StringBuffer("background-image:url(  'images/some\\'Image\\\".gif' );");
 		// Remove the url mapping from config, one back reference less expected
@@ -291,7 +340,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
-
+	@Test
 	public void testDomainRelativeUrl() {
 		StringBuffer data = new StringBuffer("background-image:url('/someImage.gif');");
 		String result = processor.postProcessBundle(status, data).toString();	
@@ -299,6 +348,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testDblSlashDomainRelativeUrl() {
 		StringBuffer data = new StringBuffer("background-image:url('//someImage.gif');");
 		String result = processor.postProcessBundle(status, data).toString();	
@@ -306,12 +356,15 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testStaticUrlWithProtocol() {
 		StringBuffer data = new StringBuffer("background-image:url('http://www.someSite.org/someImage.gif');");
 		String result = processor.postProcessBundle(status, data).toString();	
 		assertEquals("URL was not rewritten properly:" + result,data.toString(), result);
 		
 	}
+	
+	@Test
 	public void testStaticUrlWithProtocolAndParens() {
 		StringBuffer data = new StringBuffer("background-image:url(http://www.someSite.org/some\\(Image.gif\\));");
 		String result = processor.postProcessBundle(status, data).toString();	
@@ -319,6 +372,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testImgURLFromClasspathCssRewriting() {
 
 		// Set the properties
@@ -336,7 +390,6 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
 		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
-		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		config.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		imgServletJawrConfig.getGeneratorRegistry().setResourceReaderHandler(rsHandler);
@@ -362,8 +415,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 
 	}
 	
-	
-	
+	@Test
 	public void testURLImgClasspathCssRewriting() {
 
 		// Set the properties
@@ -380,7 +432,6 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		props = new Properties();
 		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		GeneratorRegistry generatorRegistry = addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
-		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		generatorRegistry.setResourceReaderHandler(rsHandler);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
@@ -406,6 +457,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testImgURLRewritingForDataScheme() {
 
 		// Set the properties
@@ -444,6 +496,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testBasicURLWithCachedImageRewriting() {
 		
 		// Set the properties
@@ -477,7 +530,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
-	
+	@Test
 	public void testBasicURLWithNonExistingImageRewriting() {
 		
 		// Set the properties
@@ -488,7 +541,6 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
 		addGeneratorRegistryToConfig(config, "css");
-		FakeResourceReaderHandler rsHandler = new FakeResourceReaderHandler();
 		status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE, bundle, rsHandler, config);
 
 		// Set up the Image servlet Jawr config
@@ -512,7 +564,7 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		
 	}
 	
-	
+	@Test
 	public void testMultiLine() {
 		StringBuffer data = new StringBuffer("\nsomeRule {");
 		data.append("\n");
@@ -567,52 +619,5 @@ public class CSSURLRewriterPostProcessorTest extends TestCase {
 		assertEquals("URL was not rewritten properly:",expected.toString(), result);
 		
 	}
-	private JoinableResourceBundle buildFakeBundle(final String id, final String urlPrefix) {
-		
-		return new MockJoinableResourceBundle(){
-			
-			/* (non-Javadoc)
-			 * @see test.net.jawr.web.resource.bundle.MockJoinableResourceBundle#getId()
-			 */
-			public String getId() {
-				return id;
-			}
-
-			public String getURLPrefix(Map<String, String> variants) {
-				return urlPrefix;
-			}
-		};
-			
-	}
 	
-	private static class FakeResourceReaderHandler extends MockResourceReaderHandler {
-
-		public Reader getResource(String resourceName)
-				throws ResourceNotFoundException {
-			
-			throw new ResourceNotFoundException(resourceName);
-		}
-
-		public Reader getResource(String resourceName, boolean processingBundle)
-				throws ResourceNotFoundException {
-			
-			throw new ResourceNotFoundException(resourceName);
-			
-		}
-
-		public InputStream getResourceAsStream(String resourceName,
-				boolean processingBundle) throws ResourceNotFoundException {
-			throw new ResourceNotFoundException(resourceName);
-		}
-
-		public InputStream getResourceAsStream(String resourceName)
-				throws ResourceNotFoundException {
-			
-			if(resourceName.equals("jar:style/images/logo.png")){
-				return new ByteArrayInputStream("Fake value".getBytes());
-			}
-			
-			throw new ResourceNotFoundException(resourceName);
-		}
-	}
 }

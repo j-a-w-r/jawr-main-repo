@@ -58,13 +58,13 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
          for (Iterator<JoinableResourceBundle> it = this.childBundles.iterator(); it.hasNext();) {
              JoinableResourceBundle child = it.next();
              if (!child.getInclusionPattern().isIncludeOnlyOnDebug()) {
-                 this.itemPathList.addAll(child.getItemPathList());
+                 this.bundlePathMapping.getItemPathList().addAll(child.getItemPathList());
              }
 
              if (!child.getInclusionPattern().isExcludeOnDebug()) {
-                 this.itemDebugPathList.addAll(child.getItemDebugPathList());
+                 this.bundlePathMapping.getItemDebugPathList().addAll(child.getItemDebugPathList());
              }
-             this.licensesPathList.addAll(child.getLicensesPathList());
+             this.bundlePathMapping.getLicensesPathList().addAll(child.getLicensesPathList());
 
              // If the child has no postprocessors, apply the composite's if any
              if (null == child.getBundlePostProcessor()) {

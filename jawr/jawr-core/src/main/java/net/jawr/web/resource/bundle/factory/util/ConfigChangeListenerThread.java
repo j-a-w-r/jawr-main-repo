@@ -1,5 +1,5 @@
 /**
- * Copyright 2008  Jordi Hernández Sellés
+ * Copyright 2008-2016  Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,33 +19,62 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+
 /**
  * A threaded component that periodically checks for updates to the
  * configuration of Jawr.
  * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
 public class ConfigChangeListenerThread extends Thread implements Serializable {
 
 	/** The serial version UID */
 	private static final long serialVersionUID = -7816209592970823852L;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ConfigChangeListenerThread.class.getName());
+	/** The logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigChangeListenerThread.class.getName());
 
+	/** The wait duration in millisecond */
 	private long waitMillis;
+
+	/** The configuration source */
 	private ConfigPropertiesSource propertiesSource;
-	private Properties overrideProperties;
+
+	/** The overridden properties */
+	private Properties overriddenProperties;
+
+	/** The listener for configuration changes */
 	private ConfigChangeListener listener;
+
+	/** The resource bundles handler */
+	private ResourceBundlesHandler bundlesHandler;
+
+	/** The flag indicating if we should continue the check */
 	private boolean continuePolling;
 
-	public ConfigChangeListenerThread(ConfigPropertiesSource propertiesSource,
-			Properties overrideProperties, ConfigChangeListener listener,
-			long secondsToWait) {
-		super();
+	/**
+	 * Constructor
+	 * 
+	 * @param propertiesSource
+	 *            the properties source
+	 * @param overriddenProperties
+	 *            the overridden properties
+	 * @param listener
+	 *            the listener
+	 * @param bundlesHandler
+	 *            the bundles handler
+	 * @param secondsToWait
+	 *            the second to wait between each check
+	 */
+	public ConfigChangeListenerThread(String resourceType, ConfigPropertiesSource propertiesSource, Properties overriddenProperties,
+			ConfigChangeListener listener, ResourceBundlesHandler bundlesHandler, long secondsToWait) {
+		super(resourceType+ " Config Change listener Thread");
 		this.propertiesSource = propertiesSource;
-		this.overrideProperties = overrideProperties;
+		this.overriddenProperties = overriddenProperties;
 		this.listener = listener;
+		this.bundlesHandler = bundlesHandler;
 		this.waitMillis = secondsToWait * 1000;
 		continuePolling = true;
 		this.setDaemon(true);
@@ -65,22 +94,22 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 			try {
 				// Must check before sleeping, otherwise stopPolling does not
 				// work.
-				if (!firstRun && propertiesSource.configChanged()) {
-					Properties props = propertiesSource.getConfigProperties();
-					if (overrideProperties != null) {
-						props.putAll(overrideProperties);
+				if (!firstRun) {
+					if (propertiesSource.configChanged()) {
+						Properties props = propertiesSource.getConfigProperties();
+						if (overriddenProperties != null) {
+							props.putAll(overriddenProperties);
+						}
+						listener.configChanged(props);
+					}else if(bundlesHandler != null && bundlesHandler.bundlesNeedToBeRebuild()){
+						listener.rebuildDirtyBundles();
 					}
-					listener.configChanged(props);
 				}
 				sleep(waitMillis);
 				firstRun = false;
-				/*
-				 * It is painful to show a log statement every certain amount of
-				 * seconds... if(log.isDebugEnabled())
-				 * log.debug("Verifying wether properties are changed...");
-				 */
+
 			} catch (InterruptedException e) {
-				LOGGER.error("Failure at config reloading checker thread.");
+				// Nothing to do
 			}
 		}
 	}
@@ -89,9 +118,10 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	 * Causes the thread to stop polling for changes.
 	 */
 	public void stopPolling() {
-		if (LOGGER.isDebugEnabled())
+		if (LOGGER.isDebugEnabled()){
 			LOGGER.debug("Stopping the configuration change polling");
-
+		}
+		
 		continuePolling = false;
 	}
 
