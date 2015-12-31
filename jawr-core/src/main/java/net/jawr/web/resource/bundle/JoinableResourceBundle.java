@@ -70,6 +70,12 @@ public interface JoinableResourceBundle {
 	public void setMappings(List<String> mappings);
 	
 	/**
+	 * Returns the mappings, used for the bundle
+	 * @return mappings the mapping of the resources of the bundle
+	 */
+	public List<PathMapping> getMappings();
+	
+	/**
 	 * Returns an ordered list with all the items pertaining to this bundle. 
 	 * @return an ordered list with all the items pertaining to this bundle. 
 	 */
@@ -218,5 +224,17 @@ public interface JoinableResourceBundle {
 	 */
 	public void setUnitaryPostProcessor(
 			ResourceBundlePostProcessor unitaryPostProcessor);
+
+	/**
+	 * Sets the flag indicating if the resource bundle is dirty or not
+	 * @param dirty the flag to set
+	 */
+	public void setDirty(boolean dirty);
+	
+	/**
+	 * Returns the flag indicating if the resource bundle is dirty or not
+	 * @return true if resource bundle is dirty or not
+	 */
+	public boolean isDirty();
 	
 }

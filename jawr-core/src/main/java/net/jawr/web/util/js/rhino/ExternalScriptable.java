@@ -379,7 +379,7 @@ final class ExternalScriptable implements Scriptable {
             try {
                 v = fun.call(cx, fun.getParentScope(), this, args);
             } finally {
-                cx.exit();
+            	Context.exit();
             }
             if (v != null) {
                 if (!(v instanceof Scriptable)) {

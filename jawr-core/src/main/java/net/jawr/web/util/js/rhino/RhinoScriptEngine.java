@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Method;
+import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +43,6 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-import net.jawr.web.util.js.rhino.util.InterfaceImplementor;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Function;
@@ -54,6 +53,8 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
+
+import net.jawr.web.util.js.rhino.util.InterfaceImplementor;
 
 
 /**
@@ -103,7 +104,7 @@ public final class RhinoScriptEngine extends AbstractScriptEngine
     private static int getLanguageVersion() {
         int version;
         String tmp = java.security.AccessController.doPrivileged(
-            new sun.security.action.GetPropertyAction(RHINO_JS_VERSION));
+            new GetPropertyAction(RHINO_JS_VERSION));
         if (tmp != null) {
             version = Integer.parseInt((String)tmp);
         } else {
@@ -112,6 +113,16 @@ public final class RhinoScriptEngine extends AbstractScriptEngine
         return version;
     }
 
+    private static class GetPropertyAction implements PrivilegedAction<String> {
+        private String property;
+        private String value;
+        public GetPropertyAction(String prop) { property = prop;}
+        public String run() { 
+                 value = System.getProperty(property);
+                 return value;
+        } 
+    }
+        
     private static final String RHINO_OPT_LEVEL = "rhino.opt.level";
     private static int getOptimizationLevel() {
         int optLevel = -1;

@@ -453,4 +453,31 @@ public class ServletContextResourceReaderHandler implements
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		
+		String filePath = null;
+		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders
+				.iterator(); iterator.hasNext() && filePath == null;) {
+			ResourceBrowser rsBrowser = iterator.next();
+			if (generatorRegistry.isPathGenerated(resourcePath)) {
+				if (rsBrowser instanceof ResourceGenerator) {
+					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
+					if (rsGeneratorBrowser.getResolver()
+							.matchPath(resourcePath)) {
+						filePath = rsBrowser.getFilePath(resourcePath);
+					}
+				}
+			} else {
+				if (!(rsBrowser instanceof ResourceGenerator)) {
+					filePath = rsBrowser.getFilePath(resourcePath);
+				}
+			}
+		}
+		return filePath;
+	}
+
 }

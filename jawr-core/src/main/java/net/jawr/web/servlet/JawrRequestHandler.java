@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2015  Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016  Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -68,6 +68,7 @@ import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.bundle.ServletContextResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
+import net.jawr.web.resource.watcher.ResourceWatcher;
 import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.StringUtils;
@@ -163,6 +164,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 	/** The Thread which listen the configuration changes */
 	protected ConfigChangeListenerThread configChangeListenerThread;
+
+	/** The resource watcher */
+	protected ResourceWatcher watcher;
 
 	/** The generator registry */
 	protected GeneratorRegistry generatorRegistry;
@@ -295,9 +299,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					+ "Be aware that a daemon thread will be checking for changes to configuration every " + interval
 					+ " seconds.");
 
-			this.configChangeListenerThread = new ConfigChangeListenerThread(propsSrc, this.overrideProperties, this,
-					interval);
+			this.configChangeListenerThread = new ConfigChangeListenerThread(this.resourceType, propsSrc, this.overrideProperties, this,
+					this.bundlesHandler, interval);
 			configChangeListenerThread.start();
+		}
+
+		if (this.bundlesHandler != null) {
+
+			this.watcher = new ResourceWatcher(this.bundlesHandler, this.rsReaderHandler);
+			this.watcher.start();
 		}
 
 		if (LOGGER.isInfoEnabled()) {
@@ -692,7 +702,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			if (this.jawrConfig.getRefreshKey().length() > 0
 					&& null != request.getParameter(JawrConstant.REFRESH_KEY_PARAM)
 					&& this.jawrConfig.getRefreshKey().equals(request.getParameter(JawrConstant.REFRESH_KEY_PARAM))) {
-				this.configChanged(propertiesSource.getConfigProperties());
+
+				stopWatch.stop();
+				
+				if (propertiesSource.configChanged()) {
+					this.configChanged(propertiesSource.getConfigProperties());
+				} else {
+					this.rebuildDirtyBundles();
+				}
 			}
 
 			if (LOGGER.isDebugEnabled()) {
@@ -1140,8 +1157,54 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Stop the config change listener.
 		if (null != this.configChangeListenerThread) {
 			configChangeListenerThread.stopPolling();
+			try {
+				configChangeListenerThread.interrupt();
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// Nothing to do
+			}
+		}
+		if(watcher != null){ 
+			watcher.stopWatching();
+			try {
+				watcher.interrupt();
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// Nothing to do
+			}
 		}
 		ThreadLocalJawrContext.reset();
+	}
+
+	/**
+	 * Refresh the dirty bundles
+	 */
+	public synchronized void rebuildDirtyBundles() {
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Rebuild dirty bundles");
+		}
+
+		// Initialize the Thread local for the Jawr context
+		ThreadLocalJawrContext.setJawrConfigMgrObjectName(JmxUtils.getMBeanObjectName(servletContext, resourceType,
+				jawrConfig.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX)));
+
+		// clears resource bundle cache for the refresh
+		ResourceBundle.clearCache();
+		try {
+			if(bundlesHandler != null){
+				bundlesHandler.rebuildModifiedBundles();
+			}
+		} catch (Exception e) {
+			throw new BundlingProcessException("Error while rebuilding dirty bundles : " + e.getMessage(), e);
+		} finally {
+
+			// Reset the Thread local for the Jawr context
+			ThreadLocalJawrContext.reset();
+		}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Jawr configuration succesfully reloaded. ");
+		}
 	}
 
 	/*
@@ -1151,12 +1214,20 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * configChanged (java.util.Properties)
 	 */
 	public synchronized void configChanged(Properties newConfig) {
-		if (LOGGER.isDebugEnabled())
+		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Reloading Jawr configuration");
+		}
 		try {
 			// Initialize the Thread local for the Jawr context
 			ThreadLocalJawrContext.setJawrConfigMgrObjectName(JmxUtils.getMBeanObjectName(servletContext, resourceType,
 					jawrConfig.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX)));
+
+			// clears resource bundle cache for the refresh
+			ResourceBundle.clearCache();
+			StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
+			if(stopWatch.isRunning()){
+				stopWatch.stop();
+			}
 
 			Properties props = propertiesSource.getConfigProperties();
 			// override the properties if needed
@@ -1164,8 +1235,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				props.putAll(overrideProperties);
 			}
 			props.putAll(newConfig);
-			// clears resource bundle cache for the refresh
-			ResourceBundle.clearCache();
+
 			initializeJawrContext(props);
 		} catch (Exception e) {
 			throw new BundlingProcessException("Error reloading Jawr config: " + e.getMessage(), e);

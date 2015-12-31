@@ -323,24 +323,27 @@ public class PropertiesBasedBundlesHandlerFactory {
 		} else {
 			String mappingsProperty = props.getCustomBundleProperty(bundleName,
 					BUNDLE_FACTORY_CUSTOM_MAPPINGS);
-			if (!hasDebugURL  && null == mappingsProperty)
-				throw new IllegalArgumentException(
-						"No mappings were defined for the bundle with name:"
-								+ bundleName
-								+ ". Please specify at least one in configuration. ");
-
-			// Add the mappings
-			List<String> mappings = new ArrayList<String>();
-			Map<String, VariantSet> variants = new TreeMap<String, VariantSet>();
-			StringTokenizer tk = new StringTokenizer(mappingsProperty, JawrConstant.COMMA_SEPARATOR);
-			while (tk.hasMoreTokens()){
-				String mapping = tk.nextToken().trim();
-				mappings.add(mapping);
-				// Add local variants
-				variants = VariantUtils.concatVariants(variants, generatorRegistry.getAvailableVariants(mapping));
+			if (!hasDebugURL){
+				if(null == mappingsProperty){
+					throw new IllegalArgumentException(
+							"No mappings were defined for the bundle with name:"
+									+ bundleName
+									+ ". Please specify at least one in configuration. ");
+				}else{
+					// Add the mappings
+					List<String> mappings = new ArrayList<String>();
+					Map<String, VariantSet> variants = new TreeMap<String, VariantSet>();
+					StringTokenizer tk = new StringTokenizer(mappingsProperty, JawrConstant.COMMA_SEPARATOR);
+					while (tk.hasMoreTokens()){
+						String mapping = tk.nextToken().trim();
+						mappings.add(mapping);
+						// Add local variants
+						variants = VariantUtils.concatVariants(variants, generatorRegistry.getAvailableVariants(mapping));
+					}
+					bundle.setMappings(mappings);
+					bundle.setVariants(variants);
+				}
 			}
-			bundle.setMappings(mappings);
-			bundle.setVariants(variants);
 		}
 
 		// dependencies

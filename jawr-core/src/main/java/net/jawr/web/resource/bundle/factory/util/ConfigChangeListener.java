@@ -26,6 +26,11 @@ public interface ConfigChangeListener {
 	 * To be invoked when configuration is changed. 
 	 * @param newConfig New properties representing new configuration. 
 	 */
-	public abstract void configChanged(Properties newConfig);
+	public void configChanged(Properties newConfig);
+
+	/**
+	 * To be invoked when bundles needs to be rebuild. 
+	 */
+	public void rebuildDirtyBundles();
 	
 }

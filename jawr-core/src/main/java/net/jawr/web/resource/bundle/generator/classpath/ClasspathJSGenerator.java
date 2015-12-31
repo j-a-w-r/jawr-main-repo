@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés
+ * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,7 @@
 package net.jawr.web.resource.bundle.generator.classpath;
 
 import java.io.Reader;
+import java.util.Set;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.FileNameUtils;
@@ -22,6 +23,7 @@ import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
+import net.jawr.web.resource.handler.reader.ResourceBrowser;
 
 /**
  * This class defines the resource generator, which loads Javascript resources from the classpath.  
@@ -29,7 +31,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class ClasspathJSGenerator extends AbstractJavascriptGenerator {
+public class ClasspathJSGenerator extends AbstractJavascriptGenerator implements ResourceBrowser {
 
 	/** the class path generator helper  */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
@@ -92,6 +94,30 @@ public class ClasspathJSGenerator extends AbstractJavascriptGenerator {
 			rd = helper.createResource(context);
 		}
 		return rd;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
+	 */
+	@Override
+	public Set<String> getResourceNames(String path) {
+		return helper.getResourceNames(resolver.getResourcePath(path));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
+	 */
+	@Override
+	public boolean isDirectory(String path) {
+		return helper.isDirectory(resolver.getResourcePath(path));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		return helper.getFilePath(resolver.getResourcePath(resourcePath));
 	}
 
 }
