@@ -208,7 +208,7 @@ public class JoinableResourceBundlePropertySerializer {
 	/**
 	 * Returns the mapping list
 	 * 
-	 * @param itemPathList the item path list
+	 * @param bundlePathMapping.getItemPathList() the item path list
 	 * @return the item path list
 	 */
 	private static String getCommaSeparatedString(Collection<String> coll) {
@@ -227,7 +227,7 @@ public class JoinableResourceBundlePropertySerializer {
 	/**
 	 * Returns the mapping list
 	 * 
-	 * @param itemPathList the item path list
+	 * @param bundlePathMapping.getItemPathList() the item path list
 	 * @return the item path list
 	 */
 	private static String getCommaSeparatedStringForBundlePath(Collection<BundlePath> coll) {

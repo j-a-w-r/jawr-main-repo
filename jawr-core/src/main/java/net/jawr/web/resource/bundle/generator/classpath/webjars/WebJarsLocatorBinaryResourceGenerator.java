@@ -13,6 +13,9 @@
  */
 package net.jawr.web.resource.bundle.generator.classpath.webjars;
 
+import java.util.Set;
+
+import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolver;
 
@@ -36,11 +39,26 @@ public class WebJarsLocatorBinaryResourceGenerator extends
 	 * (non-Javadoc)
 	 * 
 	 * @see net.jawr.web.resource.bundle.generator.classpath.
-	 * ClassPathImgResourceGenerator#createResolver(java.lang.String)
+	 * ClassPathBinaryResourceGenerator#createResolver(java.lang.String)
 	 */
 	@Override
 	protected ResourceGeneratorResolver createResolver(String generatorPrefix) {
 		return new WebJarsLocatorPathResolver(generatorPrefix);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator#getResourceNames(java.lang.String)
+	 */
+	@Override
+	public Set<String> getResourceNames(String path) {
+		return ((WebJarsLocatorPathResolver)resolver).getResourceNames(path);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator#isDirectory(java.lang.String)
+	 */
+	@Override
+	public boolean isDirectory(String path) {
+		return path.endsWith(JawrConstant.URL_SEPARATOR);
+	}
 }

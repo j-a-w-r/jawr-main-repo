@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2015 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -282,6 +282,14 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	public void refreshConfig() {
 
 		requestHandler.configChanged(configProperties);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#rebuildDirtyDundles()
+	 */
+	@Override
+	public void rebuildDirtyBundles() {
+		requestHandler.rebuildDirtyBundles();
 	}
 
 	

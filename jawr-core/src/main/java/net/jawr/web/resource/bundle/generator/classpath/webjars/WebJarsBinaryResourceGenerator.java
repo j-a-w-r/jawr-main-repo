@@ -14,7 +14,7 @@
 package net.jawr.web.resource.bundle.generator.classpath.webjars;
 
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.ClassPathBinaryResourceGenerator;
 
 /**
  * This class defines the generator for webjars binary resources (images, fonts, ..)
@@ -22,7 +22,7 @@ import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGene
  * @author Ibrahim Chaehoi
  */
 public class WebJarsBinaryResourceGenerator extends
-		ClassPathImgResourceGenerator {
+		ClassPathBinaryResourceGenerator {
 
 	/**
 	 * Constructor

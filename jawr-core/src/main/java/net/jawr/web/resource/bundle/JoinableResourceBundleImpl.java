@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,14 +15,15 @@ package net.jawr.web.resource.bundle;
 
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -35,9 +36,6 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation of JoinableResourceBundle.
@@ -61,32 +59,17 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	/** The inclusion pattern */
 	private InclusionPattern inclusionPattern;
 
-	/**
-	 * The list of path mappings. It could contains directory mapping like
-	 * 'myPath/**'
-	 */
-	private List<String> pathMappings;
-
-	/**
-	 * The final item path list containing all the resource linked to this
-	 * bundle
-	 */
-	protected List<BundlePath> itemPathList;
-
-	/**
-	 * The final item path list containing all the resource linked to this
-	 * bundle for debug mode
-	 */
-	protected List<BundlePath> itemDebugPathList;
-
 	/** The resource reader handle */
 	private ResourceReaderHandler resourceReaderHandler;
 
 	/** The generator Registry */
 	private GeneratorRegistry generatorRegistry;
 
-	/** The licence path list */
-	protected Set<String> licensesPathList;
+	/** The bundle path mapping */
+	protected BundlePathMapping bundlePathMapping;
+
+	/** The flag indicating if the resource bundle is dirty */
+	private boolean dirty;
 
 	/** The bundle prefix */
 	private String bundlePrefix;
@@ -158,9 +141,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		}
 		this.name = name;
 		this.resourceReaderHandler = resourceReaderHandler;
-		this.itemPathList = new CopyOnWriteArrayList<BundlePath>();
-		this.itemDebugPathList = new CopyOnWriteArrayList<BundlePath>();
-		this.licensesPathList = new HashSet<String>();
+		
+		this.bundlePathMapping = new BundlePathMapping(this);
 
 		if (bundlePrefix != null) {
 			this.bundlePrefix = PathNormalizer.asDirPath(bundlePrefix);
@@ -207,12 +189,12 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Adding mapped files for bundle " + id);
 		}
-		this.pathMappings = pathMappings;
+		this.bundlePathMapping.setPathMappings(pathMappings);
 
 		initPathList();
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Added " + this.itemPathList.size() + " files and "
-					+ licensesPathList.size() + " licenses for the bundle "
+			LOGGER.debug("Added " + this.bundlePathMapping.getItemPathList().size() + " files and "
+					+ bundlePathMapping.getLicensesPathList().size() + " licenses for the bundle "
 					+ id);
 		}
 
@@ -227,28 +209,26 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			LOGGER.debug("Creating bundle path List for " + this.id);
 		}
 
-		if (pathMappings != null){
-			for (Iterator<String> it = pathMappings.iterator(); it.hasNext();) {
-				String pathMapping = it.next();
+		if (bundlePathMapping.getPathMappings() != null){
+			for (Iterator<PathMapping> it = bundlePathMapping.getPathMappings().iterator(); it.hasNext();) {
+				PathMapping pathMapping = it.next();
 				boolean isGeneratedPath = generatorRegistry
-						.isPathGenerated(pathMapping);
+						.isPathGenerated(pathMapping.getPath());
 
 				// Handle generated resources
 				// path ends in /, the folder is included without subfolders
-				if (pathMapping.endsWith("/")) {
+				if (pathMapping.isDirectory()) {
 					addItemsFromDir(pathMapping, false);
 				}
 				// path ends in /, the folder is included with all subfolders
-				else if (pathMapping.endsWith("/**")) {
-					addItemsFromDir(
-							pathMapping.substring(0,
-									pathMapping.lastIndexOf("**")), true);
-				} else if (pathMapping.endsWith(fileExtension)) {
-					addPathMapping(asPath(pathMapping, isGeneratedPath));
-				} else if (generatorRegistry.isPathGenerated(pathMapping)) {
-					addPathMapping(pathMapping);
-				} else if (pathMapping.endsWith(LICENSES_FILENAME)) {
-					licensesPathList.add(asPath(pathMapping, isGeneratedPath));
+				else if (pathMapping.isRecursive()) {
+					addItemsFromDir(pathMapping, true);
+				} else if (pathMapping.getPath().endsWith(fileExtension)) {
+					addPathMapping(asPath(pathMapping.getPath(), isGeneratedPath));
+				} else if (generatorRegistry.isPathGenerated(pathMapping.getPath())) {
+					addPathMapping(pathMapping.getPath());
+				} else if (pathMapping.getPath().endsWith(LICENSES_FILENAME)) {
+					bundlePathMapping.getLicensesPathList().add(asPath(pathMapping.getPath(), isGeneratedPath));
 				} else
 					throw new BundlingProcessException("Wrong mapping ["
 							+ pathMapping + "] for bundle [" + this.name
@@ -269,11 +249,11 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 */
 	private void addPathMapping(String pathMapping) {
 		if (!getInclusionPattern().isIncludeOnlyOnDebug()) {
-			itemPathList.add(new BundlePath(bundlePrefix, pathMapping));
+			bundlePathMapping.getItemPathList().add(new BundlePath(bundlePrefix, pathMapping));
 		}
 
 		if (!getInclusionPattern().isExcludeOnDebug()) {
-			itemDebugPathList.add(new BundlePath(bundlePrefix, pathMapping));
+			bundlePathMapping.getItemDebugPathList().add(new BundlePath(bundlePrefix, pathMapping));
 		}
 	}
 
@@ -285,9 +265,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 *            boolean If subfolders will be included. In such case, every
 	 *            folder below the path is included.
 	 */
-	protected void addItemsFromDir(String dirName, boolean addSubDirs) {
-		Set<String> resources = resourceReaderHandler.getResourceNames(dirName);
-		boolean isGeneratedPath = generatorRegistry.isPathGenerated(dirName);
+	protected void addItemsFromDir(PathMapping dirName, boolean addSubDirs) {
+		Set<String> resources = resourceReaderHandler.getResourceNames(dirName.getPath());
+		boolean isGeneratedPath = generatorRegistry.isPathGenerated(dirName.getPath());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Adding " + resources.size()
 					+ " resources from path [" + dirName + "] to bundle "
@@ -299,7 +279,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		if (resources.contains(SORT_FILE_NAME)
 				|| resources.contains("/" + SORT_FILE_NAME)) {
 
-			String sortFilePath = joinPaths(dirName, SORT_FILE_NAME,
+			String sortFilePath = joinPaths(dirName.getPath(), SORT_FILE_NAME,
 					isGeneratedPath);
 
 			Reader reader;
@@ -312,7 +292,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			}
 
 			SortFileParser parser = new SortFileParser(reader, resources,
-					dirName);
+					dirName.getPath());
 
 			List<String> sortedResources = parser.getSortedResources();
 			for (Iterator<String> it = sortedResources.iterator(); it.hasNext();) {
@@ -326,16 +306,16 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 					if (LOGGER.isDebugEnabled())
 						LOGGER.debug("Added to item path list from the sorting file:"
 								+ resourceName);
-				} else if (addSubDirs
+				} else if (dirName.isRecursive()
 						&& resourceReaderHandler.isDirectory(resourceName))
-					addItemsFromDir(resourceName, true);
+					addItemsFromDir(new PathMapping(this, resourceName+"/**"), true);
 			}
 		}
 
 		// Add licenses file
 		if (resources.contains(LICENSES_FILENAME)
 				|| resources.contains("/" + LICENSES_FILENAME)) {
-			licensesPathList.add(joinPaths(dirName, LICENSES_FILENAME,
+			bundlePathMapping.getLicensesPathList().add(joinPaths(dirName.getPath(), LICENSES_FILENAME,
 					isGeneratedPath));
 		}
 
@@ -344,7 +324,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		List<String> folders = new ArrayList<String>();
 		for (Iterator<String> it = resources.iterator(); it.hasNext();) {
 			String resourceName = (String) it.next();
-			String resourcePath = joinPaths(dirName, resourceName,
+			String resourcePath = joinPaths(dirName.getPath(), resourceName,
 					isGeneratedPath);
 
 			boolean resourceIsDir = resourceReaderHandler
@@ -365,9 +345,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		// specified in sorting file.
 		if (addSubDirs) {
 			for (Iterator<String> it = folders.iterator(); it.hasNext();) {
-				String folderName = (String) it.next();
-				addItemsFromDir(
-						joinPaths(dirName, folderName, isGeneratedPath), true);
+				String folderName = joinPaths(dirName.getPath(), it.next(), isGeneratedPath);
+				addItemsFromDir(new PathMapping(this, folderName+"/**"), true);
 			}
 		}
 	}
@@ -596,14 +575,14 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 		boolean belongsToBundle = false;
 
-		for (BundlePath path : itemPathList) {
+		for (BundlePath path : bundlePathMapping.getItemPathList()) {
 			if (path.getPath().equals(itemPath)) {
 				belongsToBundle = true;
 				break;
 			}
 		}
 		if (!belongsToBundle) {
-			for (BundlePath path : itemDebugPathList) {
+			for (BundlePath path : bundlePathMapping.getItemDebugPathList()) {
 				if (path.getPath().equals(itemPath)) {
 					belongsToBundle = true;
 					break;
@@ -633,8 +612,16 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 */
 	public void setMappings(List<String> pathMappings) {
 
-		this.pathMappings = pathMappings;
+		this.bundlePathMapping.setPathMappings(pathMappings);
 		initPathList();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getMappings()
+	 */
+	@Override
+	public List<PathMapping> getMappings() {
+		return this.bundlePathMapping.getPathMappings();
 	}
 
 	/*
@@ -644,7 +631,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList()
 	 */
 	public List<BundlePath> getItemPathList() {
-		return itemPathList;
+		return bundlePathMapping.getItemPathList();
 	}
 
 	/*
@@ -655,7 +642,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * ()
 	 */
 	public List<BundlePath> getItemDebugPathList() {
-		return itemDebugPathList;
+		return bundlePathMapping.getItemDebugPathList();
 	}
 
 	/*
@@ -668,9 +655,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	public List<BundlePath> getItemDebugPathList(Map<String, String> variants) {
 		
 		if(StringUtils.isNotEmpty(debugURL)){
-			return itemDebugPathList;
+			return bundlePathMapping.getItemDebugPathList();
 		}
-		return getItemPathList(itemDebugPathList, variants);
+		return getItemPathList(bundlePathMapping.getItemDebugPathList(), variants);
 	}
 
 	/*
@@ -681,7 +668,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * .lang.String)
 	 */
 	public List<BundlePath> getItemPathList(Map<String, String> variants) {
-		return getItemPathList(itemPathList, variants);
+		return getItemPathList(bundlePathMapping.getItemPathList(), variants);
 	}
 
 	/**
@@ -747,7 +734,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getLicensesPathList()
 	 */
 	public Set<String> getLicensesPathList() {
-		return this.licensesPathList;
+		return this.bundlePathMapping.getLicensesPathList();
 	}
 
 	/**
@@ -757,7 +744,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 *            the list to set
 	 */
 	public void setLicensesPathList(Set<String> licencePathList) {
-		this.licensesPathList = licencePathList;
+		this.bundlePathMapping.setLicensesPathList(licencePathList);
 	}
 
 	/*
@@ -842,6 +829,22 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 */
 	public String toString() {
 		return "JoinableResourceBundleImpl [id=" + id + ", name=" + name + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#setDirty(boolean)
+	 */
+	@Override
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#isDirty()
+	 */
+	@Override
+	public boolean isDirty() {
+		return dirty;
 	}
 
 }

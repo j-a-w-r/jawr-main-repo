@@ -32,7 +32,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
-import net.jawr.web.resource.bundle.generator.classpath.ClassPathImgResourceGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.ClassPathBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsCssGenerator;
@@ -191,7 +191,7 @@ public class GeneratorRegistry implements Serializable {
 				webJarsGeneratorClass = WebJarsCssGenerator.class;
 			}
 		} else {
-			classPathGeneratorClass = ClassPathImgResourceGenerator.class;
+			classPathGeneratorClass = ClassPathBinaryResourceGenerator.class;
 			if (isWebJarsLocatorPresent) {
 				webJarsGeneratorClass = WebJarsLocatorBinaryResourceGenerator.class;
 			}

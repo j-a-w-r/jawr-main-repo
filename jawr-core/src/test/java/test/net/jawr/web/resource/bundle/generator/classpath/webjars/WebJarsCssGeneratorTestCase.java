@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 
@@ -30,6 +31,11 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
@@ -132,6 +138,29 @@ public class WebJarsCssGeneratorTestCase {
 		result = IOUtils.toString(rd);
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/webjars/bootstrap_debug_expected.css"), result);
 		
+	}
+	
+	@Test
+	public void testIsDirectory() throws Exception {
+		assertTrue(generator.isDirectory("webjars:/bootstrap/3.2.0/"));
+		assertFalse(generator.isDirectory("webjars:/bootstrap/3.2.0/css/bootstrap.css"));
+	}
+
+	@Test
+	public void testGetResourceNames() throws Exception {
+		
+		Set<String> resources = generator.getResourceNames("webjars:/bootstrap/3.2.0/");
+		assertEquals(5, resources.size());
+		assertTrue(resources.contains("css/"));
+		assertTrue(resources.contains("fonts/"));
+		assertTrue(resources.contains("js/"));
+		assertTrue(resources.contains("less/"));
+		assertTrue(resources.contains("webjars-requirejs.js"));
+	}
+	
+	@Test
+	public void testGetFilePathFromJar(){
+		assertNull(generator.getFilePath("webjars:/bootstrap/3.2.0/css/bootstrap.css"));
 	}
 	
 }

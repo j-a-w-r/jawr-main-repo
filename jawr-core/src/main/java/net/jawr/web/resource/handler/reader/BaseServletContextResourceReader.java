@@ -132,4 +132,13 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 		return (null != paths && paths.size() > 0);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		return context.getRealPath(resourcePath);
+	}
+
 }

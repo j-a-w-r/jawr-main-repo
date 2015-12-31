@@ -319,6 +319,15 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 		return rsBrowser.isDirectory(resourcePath);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		String path = getResolver().getResourcePath(resourcePath);
+		return rsBrowser.getFilePath(path);
+	}
+	
 	/**
 	 * Returns the skin mapping from the Jawr config
 	 * 
@@ -837,5 +846,6 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements
 	public boolean isHandlingCssImage() {
 		return false;
 	}
+
 
 }

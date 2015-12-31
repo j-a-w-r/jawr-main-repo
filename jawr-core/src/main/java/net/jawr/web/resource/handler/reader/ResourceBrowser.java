@@ -28,14 +28,22 @@ public interface ResourceBrowser {
 	 * @param path
 	 * @return a list of resources at the specified path
 	 */
-	public Set<String> getResourceNames(String path);
+	Set<String> getResourceNames(String path);
 	
 	/**
 	 * Determines wether a given path is a directory. 
 	 * @param path the path to check
 	 * @return true if the path is a directory
 	 */
-	public boolean isDirectory(String path);
+	boolean isDirectory(String path);
 	
-	
+	/**
+	 * Returns the file path of the resource path available on filesystem.
+	 * For example, on unix : /apps/webserver/myapp/myResource.js
+	 * If the resource is not available on filesystem, return null
+	 * @param resourcePath the resource Path
+	 * @return the file path of the resource
+	 */
+	String getFilePath(String resourcePath);
+
 }
