@@ -17,8 +17,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
 
 /**
- * @author ibrahim
- *
+ * @author ibrahim Chaehoi
  */
 public class SampleGeneratorResourceBrowser extends AbstractJavascriptGenerator implements ResourceBrowser {
 
@@ -91,6 +90,14 @@ public class SampleGeneratorResourceBrowser extends AbstractJavascriptGenerator 
 	 */
 	public ResourceGeneratorResolver getResolver() {
 		return new PrefixedPathResolver("browse");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	 */
+	@Override
+	public String getFilePath(String resourcePath) {
+		return null;
 	}
 
 }

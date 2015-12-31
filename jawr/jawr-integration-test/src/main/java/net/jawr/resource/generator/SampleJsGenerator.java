@@ -1,6 +1,3 @@
-/**
- * 
- */
 package net.jawr.resource.generator;
 
 import java.io.Reader;
