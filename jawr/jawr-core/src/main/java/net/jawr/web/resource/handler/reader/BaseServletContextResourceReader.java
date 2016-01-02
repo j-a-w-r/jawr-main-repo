@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -36,7 +36,7 @@ import net.jawr.web.config.JawrConfig;
  */
 public class BaseServletContextResourceReader implements ServletContextResourceReader {
 
-	/** The sevrlet context */
+	/** The servlet context */
 	private ServletContext context;
 	
 	/** The charset */

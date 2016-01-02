@@ -15,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import net.jawr.web.JawrConstant;
@@ -111,6 +110,7 @@ public class WebJarsJsGeneratorTestCase {
 	
 	@Test
 	public void testGetFilePathFromJar(){
-		assertNull(generator.getFilePath("webjars:/bootstrap/3.2.0/js/bootstrap.js"));
+		String filePath = generator.getFilePath("webjars:/bootstrap/3.2.0/css/bootstrap.css");
+		assertTrue(filePath.replace('\\', '/').endsWith("org/webjars/bootstrap/3.2.0/bootstrap-3.2.0.jar"));
 	}
 }

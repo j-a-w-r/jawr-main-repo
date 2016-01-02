@@ -302,7 +302,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {
-		return helper.getFilePath(resourcePath);
+		return helper.getFilePath(resolver.getResourcePath(resourcePath));
 	}
 
 }

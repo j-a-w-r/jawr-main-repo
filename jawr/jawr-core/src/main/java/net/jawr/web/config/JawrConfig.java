@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi, Matt Ruby
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi, Matt Ruby
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -62,18 +62,15 @@ public class JawrConfig implements Serializable {
 	private static final long serialVersionUID = -6243263853446050289L;
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JawrConfig.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JawrConfig.class);
 
 	/** The unauthorized resource extensions */
-	private static final List<String> UNAUTHORIZED_RESOURCE_EXTENSIONS = Arrays
-			.asList("xml", "properties", "text");
+	private static final List<String> UNAUTHORIZED_RESOURCE_EXTENSIONS = Arrays.asList("xml", "properties", "text");
 
 	/**
 	 * The jawr property placeholder patten ex : ${my_property.id}
 	 */
-	public static final Pattern JAWR_PROPERY_PLACEHOLDER_PATTERN = Pattern
-			.compile("\\$\\{([a-zA-Z0-9_\\.\\-]+)}");
+	public static final Pattern JAWR_PROPERY_PLACEHOLDER_PATTERN = Pattern.compile("\\$\\{([a-zA-Z0-9_\\.\\-]+)}");
 
 	/**
 	 * The property name for the css link flavor
@@ -423,8 +420,7 @@ public class JawrConfig implements Serializable {
 	 * @param props
 	 *            the properties
 	 */
-	public JawrConfig(final String resourceType, final Properties props,
-			ConfigPropertyResolver resolver) {
+	public JawrConfig(final String resourceType, final Properties props, ConfigPropertyResolver resolver) {
 		this.resourceType = resourceType;
 
 		this.configProperties = props;
@@ -432,32 +428,28 @@ public class JawrConfig implements Serializable {
 		if (resolver != null) {
 			for (Entry<Object, Object> entry : this.configProperties.entrySet()) {
 				String value = (String) entry.getValue();
-				Matcher matcher = JAWR_PROPERY_PLACEHOLDER_PATTERN
-						.matcher(value);
+				Matcher matcher = JAWR_PROPERY_PLACEHOLDER_PATTERN.matcher(value);
 				StringBuffer sb = new StringBuffer();
 				boolean resolved = false;
 				while (matcher.find()) {
 					String resolvedValue = resolver.resolve(matcher.group(1));
 					if (value == null) {
 						resolvedValue = matcher.group(1);
-						LOGGER.warn("The property '"
-								+ matcher.group(1)
+						LOGGER.warn("The property '" + matcher.group(1)
 								+ "' has not been resolved. Please make sure that your configuration is correct.");
 					} else {
 						resolved = true;
 					}
 
-					matcher.appendReplacement(sb,
-							RegexUtil.adaptReplacementToMatcher(resolvedValue));
+					matcher.appendReplacement(sb, RegexUtil.adaptReplacementToMatcher(resolvedValue));
 				}
 				matcher.appendTail(sb);
 				// Sets the new value
 				if (resolved) {
 					entry.setValue(sb.toString());
 					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("The property '" + entry.getKey()
-								+ "' has been resolved to : "
-								+ entry.getValue());
+						LOGGER.debug(
+								"The property '" + entry.getKey() + "' has been resolved to : " + entry.getValue());
 					}
 				}
 			}
@@ -467,25 +459,20 @@ public class JawrConfig implements Serializable {
 
 		// If system flag is available, override debug mode from properties
 		if (null != System.getProperty(DEBUG_MODE_SYSTEM_FLAG)) {
-			this.debugModeOn = Boolean.valueOf(
-					System.getProperty(DEBUG_MODE_SYSTEM_FLAG)).booleanValue();
+			this.debugModeOn = Boolean.valueOf(System.getProperty(DEBUG_MODE_SYSTEM_FLAG)).booleanValue();
 		}
 
 		this.debugOverrideKey = getProperty(JAWR_DEBUG_OVERRIDE_KEY, "");
 
-		this.debugUseRandomParam = getBooleanProperty(JAWR_USE_RANDOM_PARAM,
-				true);
+		this.debugUseRandomParam = getBooleanProperty(JAWR_USE_RANDOM_PARAM, true);
 
 		this.strictMode = getBooleanProperty(JAWR_STRICT_MODE, false);
 
-		if (null != props.getProperty("jawr." + resourceType
-				+ ".allowed.extensions")) {
-			String[] strExtensions = props.getProperty(
-					"jawr." + resourceType + ".allowed.extensions").split(",");
+		if (null != props.getProperty("jawr." + resourceType + ".allowed.extensions")) {
+			String[] strExtensions = props.getProperty("jawr." + resourceType + ".allowed.extensions").split(",");
 			for (String extension : strExtensions) {
 				if (UNAUTHORIZED_RESOURCE_EXTENSIONS.contains(extension)) {
-					LOGGER.warn("The extension '"
-							+ extension
+					LOGGER.warn("The extension '" + extension
 							+ "' is an unauthorized extension. It will not be added to the allowed extension.");
 				} else {
 					this.allowedExtensions.add(extension);
@@ -494,8 +481,7 @@ public class JawrConfig implements Serializable {
 		}
 
 		if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
-			for (Object key : MIMETypesSupport.getSupportedProperties(this)
-					.keySet()) {
+			for (Object key : MIMETypesSupport.getSupportedProperties(this).keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {
 					this.allowedExtensions.add((String) key);
 				}
@@ -508,8 +494,7 @@ public class JawrConfig implements Serializable {
 			}
 		}
 
-		this.useBundleMapping = getBooleanProperty(JAWR_USE_BUNDLE_MAPPING,
-				false);
+		this.useBundleMapping = getBooleanProperty(JAWR_USE_BUNDLE_MAPPING, false);
 
 		this.jawrWorkingDirectory = getProperty(JAWR_WORKING_DIRECTORY);
 
@@ -517,87 +502,69 @@ public class JawrConfig implements Serializable {
 
 		setCharsetName(getProperty(JAWR_CHARSET_NAME, "UTF-8"));
 
-		this.gzipResourcesForIESixOn = getBooleanProperty(JAWR_GZIP_IE6_ON,
-				true);
+		this.gzipResourcesForIESixOn = getBooleanProperty(JAWR_GZIP_IE6_ON, true);
 
-		this.forceCssBundleInDebugForIEOn = getBooleanProperty(
-				JAWR_DEBUG_IE_FORCE_CSS_BUNDLE, false);
+		this.forceCssBundleInDebugForIEOn = getBooleanProperty(JAWR_DEBUG_IE_FORCE_CSS_BUNDLE, false);
 
 		this.contextPathOverride = getProperty(JAWR_URL_CONTEXTPATH_OVERRIDE);
 
 		this.contextPathSslOverride = getProperty(JAWR_URL_CONTEXTPATH_SSL_OVERRIDE);
 
-		this.useContextPathOverrideInDebugMode = getBooleanProperty(
-				JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE, false);
+		this.useContextPathOverrideInDebugMode = getBooleanProperty(JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE,
+				false);
 
 		this.refreshKey = getProperty(JAWR_CONFIG_RELOAD_REFRESH_KEY, "");
 
 		this.dwrMapping = getProperty(JAWR_DWR_MAPPING);
 
-		String localResolverClassName = getProperty(JAWR_LOCALE_RESOLVER,
-				DefaultLocaleResolver.class.getName());
-		localeResolver = (LocaleResolver) ClassLoaderResourceUtils
-				.buildObjectInstance(localResolverClassName);
+		String localResolverClassName = getProperty(JAWR_LOCALE_RESOLVER, DefaultLocaleResolver.class.getName());
+		localeResolver = (LocaleResolver) ClassLoaderResourceUtils.buildObjectInstance(localResolverClassName);
 
-		String bundleHashCodeGenerator = props.getProperty(
-				JAWR_BUNDLE_HASHCODE_GENERATOR, "").trim();
-		if (bundleHashCodeGenerator.length() == 0
-				|| JawrConstant.DEFAULT
-						.equalsIgnoreCase(bundleHashCodeGenerator)) {
+		String bundleHashCodeGenerator = props.getProperty(JAWR_BUNDLE_HASHCODE_GENERATOR, "").trim();
+		if (bundleHashCodeGenerator.length() == 0 || JawrConstant.DEFAULT.equalsIgnoreCase(bundleHashCodeGenerator)) {
 			bundleHashcodeGenerator = new BundleStringHashcodeGenerator();
-		} else if (JawrConstant.MD5_ALGORITHM
-				.equalsIgnoreCase(bundleHashCodeGenerator)) {
+		} else if (JawrConstant.MD5_ALGORITHM.equalsIgnoreCase(bundleHashCodeGenerator)) {
 			bundleHashcodeGenerator = new MD5BundleHashcodeGenerator();
 		} else {
 			bundleHashcodeGenerator = (BundleHashcodeGenerator) ClassLoaderResourceUtils
 					.buildObjectInstance(bundleHashCodeGenerator);
 		}
 
-		this.clientSideHandlerGeneratorClass = getProperty(
-				JAWR_JS_CLIENTSIDE_HANDLER,
+		this.clientSideHandlerGeneratorClass = getProperty(JAWR_JS_CLIENTSIDE_HANDLER,
 				JawrConstant.DEFAULT_JS_CLIENTSIDE_HANDLER_CLASS);
 
-		this.jsBundleLinkRenderClass = getProperty(
-				JAWR_JS_BUNDLE_LINK_RENDERER_CLASS,
+		this.jsBundleLinkRenderClass = getProperty(JAWR_JS_BUNDLE_LINK_RENDERER_CLASS,
 				JawrConstant.DEFAULT_JS_BUNDLE_LINK_RENDERER_CLASS);
 
-		this.cssBundleLinkRenderClass = getProperty(
-				JAWR_CSS_BUNDLE_LINK_RENDERER_CLASS,
+		this.cssBundleLinkRenderClass = getProperty(JAWR_CSS_BUNDLE_LINK_RENDERER_CLASS,
 				JawrConstant.DEFAULT_CSS_BUNDLE_LINK_RENDERER_CLASS);
 
-		this.imgRenderClass = getProperty(JAWR_IMG_RENDERER_CLASS,
-				JawrConstant.DEFAULT_IMG_RENDERER_CLASS);
+		this.imgRenderClass = getProperty(JAWR_IMG_RENDERER_CLASS, JawrConstant.DEFAULT_IMG_RENDERER_CLASS);
 
-		this.servletContextRsReaderClass = getProperty(
-				JAWR_SERVLET_CTX_READER_CLASS,
+		this.servletContextRsReaderClass = getProperty(JAWR_SERVLET_CTX_READER_CLASS,
 				JawrConstant.DEFAULT_SERVLET_CTX_RESOURCE_READER_CLASS);
 
-		skinCookieName = getProperty(JAWR_CSS_SKIN_COOKIE,
-				JawrConstant.JAWR_SKIN);
+		skinCookieName = getProperty(JAWR_CSS_SKIN_COOKIE, JawrConstant.JAWR_SKIN);
 
 		String cssLinkFlavor = getProperty(JAWR_CSSLINKS_FLAVOR);
 		if (null != cssLinkFlavor) {
 			setCssLinkFlavor(cssLinkFlavor);
 		}
 
-		this.classpathCssHandleImage = getBooleanProperty(
-				JAWR_CSS_CLASSPATH_HANDLE_IMAGE, false);
+		this.classpathCssHandleImage = getBooleanProperty(JAWR_CSS_CLASSPATH_HANDLE_IMAGE, false);
 
-		this.binaryHashAlgorithm = getProperty(JAWR_BINARY_HASH_ALGORITHM,
-				"CRC32");
+		this.binaryHashAlgorithm = getProperty(JAWR_BINARY_HASH_ALGORITHM, "CRC32");
 
 		this.binaryResourcesDefinition = getProperty(JAWR_BINARY_RESOURCES);
 
 		// TODO : remove the below section in the next major release
-		if (StringUtils
-				.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
+		if (StringUtils.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
 			throw new BundlingProcessException(
 					"The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"
 							+ JAWR_CSS_CLASSPATH_HANDLE_IMAGE + "' instead.");
 		}
 
-		if (StringUtils
-				.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
+		if (StringUtils.isNotEmpty(getProperty("jawr.css.image.classpath.use.servlet"))) {
 			throw new BundlingProcessException(
 					"The property 'jawr.css.image.classpath.use.servlet' is not supported anymore, please use '"
 							+ JAWR_CSS_CLASSPATH_HANDLE_IMAGE + "' instead.");
@@ -611,8 +578,8 @@ public class JawrConfig implements Serializable {
 
 		if (StringUtils.isNotEmpty(getProperty("jawr.image.resources"))) {
 			throw new BundlingProcessException(
-					"The property 'jawr.image.resources' is not supported anymore, please use '"
-							+ JAWR_BINARY_RESOURCES + "' instead.");
+					"The property 'jawr.image.resources' is not supported anymore, please use '" + JAWR_BINARY_RESOURCES
+							+ "' instead.");
 		}
 
 	}
@@ -801,8 +768,8 @@ public class JawrConfig implements Serializable {
 	 */
 	public final void setCharsetName(String charsetName) {
 		if (!Charset.isSupported(charsetName))
-			throw new IllegalArgumentException("The specified charset ["
-					+ charsetName + "] is not supported by the jvm.");
+			throw new IllegalArgumentException(
+					"The specified charset [" + charsetName + "] is not supported by the jvm.");
 		this.charsetName = charsetName;
 	}
 
@@ -944,8 +911,7 @@ public class JawrConfig implements Serializable {
 	 * @param useContextPathOverrideInDebugMode
 	 *            the useContextPathOverrideInDebugMode to set
 	 */
-	public void setUseContextPathOverrideInDebugMode(
-			boolean useContextPathOverrideInDebugMode) {
+	public void setUseContextPathOverrideInDebugMode(boolean useContextPathOverrideInDebugMode) {
 		this.useContextPathOverrideInDebugMode = useContextPathOverrideInDebugMode;
 	}
 
@@ -1021,8 +987,7 @@ public class JawrConfig implements Serializable {
 	 * @param servletContextReaderClass
 	 *            the class name to set
 	 */
-	public void setServletContextResourceReaderClass(
-			String servletContextReaderClass) {
+	public void setServletContextResourceReaderClass(String servletContextReaderClass) {
 		this.servletContextRsReaderClass = servletContextReaderClass;
 	}
 
@@ -1064,8 +1029,7 @@ public class JawrConfig implements Serializable {
 	 *            CSS image servlet will be in charge of loading the image from
 	 *            the classpath.
 	 */
-	public void setCssClasspathImageHandledByClasspathCss(
-			boolean classpathCssHandleImage) {
+	public void setCssClasspathImageHandledByClasspathCss(boolean classpathCssHandleImage) {
 		this.classpathCssHandleImage = classpathCssHandleImage;
 	}
 
@@ -1148,17 +1112,13 @@ public class JawrConfig implements Serializable {
 			localeResolver = new DefaultLocaleResolver();
 		} else {
 			localeResolver = (LocaleResolver) ClassLoaderResourceUtils
-					.buildObjectInstance(configProperties
-							.getProperty(JAWR_LOCALE_RESOLVER));
+					.buildObjectInstance(configProperties.getProperty(JAWR_LOCALE_RESOLVER));
 		}
 
-		this.generatorRegistry
-				.registerVariantResolver(new LocaleVariantResolverWrapper(
-						localeResolver));
+		this.generatorRegistry.registerVariantResolver(new LocaleVariantResolverWrapper(localeResolver));
 
 		registerResolver(new BrowserResolver(), JAWR_BROWSER_RESOLVER);
-		registerResolver(new ConnectionTypeResolver(),
-				JAWR_CONNECTION_TYPE_SCHEME_RESOLVER);
+		registerResolver(new ConnectionTypeResolver(), JAWR_CONNECTION_TYPE_SCHEME_RESOLVER);
 		registerResolver(new CssSkinVariantResolver(), JAWR_CSS_SKIN_RESOLVER);
 	}
 
@@ -1172,15 +1132,13 @@ public class JawrConfig implements Serializable {
 	 *            class
 	 * @return
 	 */
-	private VariantResolver registerResolver(VariantResolver defaultResolver,
-			String configPropertyName) {
+	private VariantResolver registerResolver(VariantResolver defaultResolver, String configPropertyName) {
 		VariantResolver resolver = null;
 		if (configProperties.getProperty(configPropertyName) == null) {
 			resolver = defaultResolver;
 		} else {
 			resolver = (VariantResolver) ClassLoaderResourceUtils
-					.buildObjectInstance(configProperties
-							.getProperty(configPropertyName));
+					.buildObjectInstance(configProperties.getProperty(configPropertyName));
 		}
 
 		this.generatorRegistry.registerVariantResolver(resolver);
@@ -1250,18 +1208,13 @@ public class JawrConfig implements Serializable {
 	 *            the cssLinkFlavor to set
 	 */
 	public final void setCssLinkFlavor(String cssLinkFlavor) {
-		if (CSSHTMLBundleLinkRenderer.FLAVORS_HTML
-				.equalsIgnoreCase(cssLinkFlavor)
-				|| CSSHTMLBundleLinkRenderer.FLAVORS_XHTML
-						.equalsIgnoreCase(cssLinkFlavor)
-				|| CSSHTMLBundleLinkRenderer.FLAVORS_XHTML_EXTENDED
-						.equalsIgnoreCase(cssLinkFlavor))
+		if (CSSHTMLBundleLinkRenderer.FLAVORS_HTML.equalsIgnoreCase(cssLinkFlavor)
+				|| CSSHTMLBundleLinkRenderer.FLAVORS_XHTML.equalsIgnoreCase(cssLinkFlavor)
+				|| CSSHTMLBundleLinkRenderer.FLAVORS_XHTML_EXTENDED.equalsIgnoreCase(cssLinkFlavor))
 			CSSHTMLBundleLinkRenderer.setClosingTag(cssLinkFlavor);
 		else {
-			throw new IllegalArgumentException(
-					"The value for the jawr.csslinks.flavor " + "property ["
-							+ cssLinkFlavor + "] is invalid. "
-							+ "Please check the docs for valid values ");
+			throw new IllegalArgumentException("The value for the jawr.csslinks.flavor " + "property [" + cssLinkFlavor
+					+ "] is invalid. " + "Please check the docs for valid values ");
 		}
 	}
 
@@ -1276,8 +1229,7 @@ public class JawrConfig implements Serializable {
 	 */
 	public boolean getBooleanProperty(String propertyName, boolean defaultValue) {
 
-		return Boolean.valueOf(getProperty(propertyName,
-				Boolean.toString(defaultValue)));
+		return Boolean.valueOf(getProperty(propertyName, Boolean.toString(defaultValue)));
 	}
 
 	/**
@@ -1321,10 +1273,8 @@ public class JawrConfig implements Serializable {
 	 */
 	public boolean isWorkingDirectoryInWebApp() {
 
-		return useBundleMapping
-				&& StringUtils.isNotEmpty(jawrWorkingDirectory)
-				&& !jawrWorkingDirectory
-						.startsWith(JawrConstant.FILE_URI_PREFIX);
+		return useBundleMapping && StringUtils.isNotEmpty(jawrWorkingDirectory)
+				&& !jawrWorkingDirectory.startsWith(JawrConstant.FILE_URI_PREFIX);
 	}
 
 	/**
@@ -1343,38 +1293,37 @@ public class JawrConfig implements Serializable {
 	 */
 	public String toString() {
 		StringBuffer sb = new StringBuffer(65);
-		sb.append("[JawrConfig:'charset name:'").append(this.charsetName)
-				.append("'\ndebugModeOn:'").append(isDebugModeOn())
-				.append("'\nservletMapping:'").append(getServletMapping())
-				.append("' ]");
+		sb.append("[JawrConfig:'charset name:'").append(this.charsetName).append("'\ndebugModeOn:'")
+				.append(isDebugModeOn()).append("'\nservletMapping:'").append(getServletMapping()).append("' ]");
 		return sb.toString();
 	}
 
 	/**
 	 * Returns the name of JS engine to use
+	 * 
 	 * @return the name of JS engine to use
 	 */
 	public String getJavascriptEngineName() {
-		return getProperty(JawrConstant.JS_ENGINE_PROPERTY,
-				JawrConstant.DEFAULT_JS_ENGINE);
+		return getProperty(JawrConstant.JS_ENGINE_PROPERTY, JawrConstant.DEFAULT_JS_ENGINE);
 	}
 
 	/**
 	 * Returns the name of JS engine to use
+	 * 
 	 * @return the name of JS engine to use
 	 */
 	public String getJavascriptEngineName(String defaultJsEnginePropName) {
-	
+
 		String jsEngineName = null;
-		if(StringUtils.isEmpty(defaultJsEnginePropName)){
+		if (StringUtils.isEmpty(defaultJsEnginePropName)) {
 			jsEngineName = getJavascriptEngineName();
-		}else{
+		} else {
 			jsEngineName = getProperty(defaultJsEnginePropName);
-			if(StringUtils.isEmpty(jsEngineName)){
+			if (StringUtils.isEmpty(jsEngineName)) {
 				jsEngineName = getJavascriptEngineName();
 			}
 		}
-		
+
 		return jsEngineName;
 	}
 

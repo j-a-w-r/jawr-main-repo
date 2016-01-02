@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Ibrahim Chaehoi
+ * Copyright 2015-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -11,13 +11,14 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle;
+package net.jawr.web.resource.bundle.mappings;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
 
 /**
@@ -35,18 +36,27 @@ public class BundlePathMapping {
 	 * 'myPath/**'
 	 */
 	private List<PathMapping> pathMappings;
+	
 	/**
 	 * The final item path list containing all the resource linked to this
 	 * bundle
 	 */
 	private List<BundlePath> itemPathList;
+	
+	/**
+	 * The list of file path mappings. It could only contains file mapping to resources used by the bundle
+	 */
+	private List<FilePathMapping> filePathMappings;
+	
 	/**
 	 * The final item path list containing all the resource linked to this
 	 * bundle for debug mode
 	 */
 	private List<BundlePath> itemDebugPathList;
 
-	/** The license path list */
+	/** 
+	 * The license path list 
+	 */
 	private Set<String> licensesPathList;
 
 	/**
@@ -59,6 +69,14 @@ public class BundlePathMapping {
 		this.itemDebugPathList = new CopyOnWriteArrayList<BundlePath>();
 		this.licensesPathList = new HashSet<String>();
 		this.pathMappings = new CopyOnWriteArrayList<PathMapping>();
+		this.filePathMappings = new CopyOnWriteArrayList<FilePathMapping>();
+	}
+
+	/**
+	 * @return the filePathMappings
+	 */
+	public List<FilePathMapping> getFilePathMappings() {
+		return filePathMappings;
 	}
 
 	/**

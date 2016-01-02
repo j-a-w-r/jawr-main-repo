@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -312,7 +312,7 @@ public class BundlesHandlerFactory {
 			List<JoinableResourceBundle> resourceBundles) {
 
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("Building bundles from the full bundle mapping. The bundles will not be processed.");
+			LOGGER.info("Building bundles from the full bundle mapping. Only modified bundles will be processed.");
 		}
 		Properties mappingProperties = resourceBundleHandler
 				.getJawrBundleMapping();
@@ -505,7 +505,7 @@ public class BundlesHandlerFactory {
 		CompositeResourceBundle composite = new CompositeResourceBundle(
 				definition.getBundleId(), definition.getBundleName(),
 				childBundles, include, resourceReaderHandler, definition.getBundlePrefix(), fileExtension,
-				jawrConfig);
+				jawrConfig.getGeneratorRegistry());
 		if (null != definition.getBundlePostProcessorKeys())
 			composite.setBundlePostProcessor(chainFactory
 					.buildPostProcessorChain(definition

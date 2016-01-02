@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -43,12 +43,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Ibrahim Chaehoi
  */
-public class ServletContextResourceReaderHandler implements
-		ResourceReaderHandler {
+public class ServletContextResourceReaderHandler implements ResourceReaderHandler {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ServletContextResourceReaderHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServletContextResourceReaderHandler.class);
 
 	/** The servlet context */
 	private ServletContext servletContext;
@@ -83,36 +81,32 @@ public class ServletContextResourceReaderHandler implements
 	 * @throws IOException
 	 *             if an IOException occurs.
 	 */
-	public ServletContextResourceReaderHandler(ServletContext servletContext,
-			JawrConfig jawrConfig, GeneratorRegistry generatorRegistry)
-			throws IOException {
+	public ServletContextResourceReaderHandler(ServletContext servletContext, JawrConfig jawrConfig,
+			GeneratorRegistry generatorRegistry) throws IOException {
 
-		String tempWorkingDirectory = ((File) servletContext
-				.getAttribute(JawrConstant.SERVLET_CONTEXT_TEMPDIR))
+		String tempWorkingDirectory = ((File) servletContext.getAttribute(JawrConstant.SERVLET_CONTEXT_TEMPDIR))
 				.getCanonicalPath();
-		if (jawrConfig.getUseBundleMapping()
-				&& StringUtils.isNotEmpty(jawrConfig.getJawrWorkingDirectory())) {
+		if (jawrConfig.getUseBundleMapping() && StringUtils.isNotEmpty(jawrConfig.getJawrWorkingDirectory())) {
 			tempWorkingDirectory = jawrConfig.getJawrWorkingDirectory();
 		}
 
-		if(tempWorkingDirectory == null){
+		if (tempWorkingDirectory == null) {
 			throw new IllegalStateException("There is no temporary directory configured for this web application.\n"
-					+ "The servlet context attribute '"+JawrConstant.SERVLET_CONTEXT_TEMPDIR+"' should contain the temporary directory attribute.");
+					+ "The servlet context attribute '" + JawrConstant.SERVLET_CONTEXT_TEMPDIR
+					+ "' should contain the temporary directory attribute.");
 		}
 		this.servletContext = servletContext;
 		this.generatorRegistry = generatorRegistry;
 		this.generatorRegistry.setResourceReaderHandler(this);
 		if (tempWorkingDirectory.startsWith(JawrConstant.FILE_URI_PREFIX)) {
-			tempWorkingDirectory = tempWorkingDirectory
-					.substring(JawrConstant.FILE_URI_PREFIX.length());
+			tempWorkingDirectory = tempWorkingDirectory.substring(JawrConstant.FILE_URI_PREFIX.length());
 		}
 
 		// add the default extension
 		allowedExtensions.addAll(JawrConstant.DEFAULT_RESOURCE_EXTENSIONS);
 
 		if (JawrConstant.BINARY_TYPE.equals(jawrConfig.getResourceType())) {
-			for (Object key : MIMETypesSupport.getSupportedProperties(
-					JawrConfig.class).keySet()) {
+			for (Object key : MIMETypesSupport.getSupportedProperties(JawrConfig.class).keySet()) {
 				if (!this.allowedExtensions.contains((String) key)) {
 					this.allowedExtensions.add((String) key);
 				}
@@ -124,33 +118,31 @@ public class ServletContextResourceReaderHandler implements
 		this.workingDirectory = tempWorkingDirectory;
 
 		ServletContextResourceReader rd = (ServletContextResourceReader) ClassLoaderResourceUtils
-				.buildObjectInstance(jawrConfig
-						.getServletContextResourceReaderClass());
+				.buildObjectInstance(jawrConfig.getServletContextResourceReaderClass());
 		rd.init(servletContext, jawrConfig);
 		addResourceReaderToEnd(rd);
 
 		// Add FileSystemResourceReader if needed
-		String baseContextDir = jawrConfig
-				.getProperty(JawrConstant.JAWR_BASECONTEXT_DIRECTORY);
+		String baseContextDir = jawrConfig.getProperty(JawrConstant.JAWR_BASECONTEXT_DIRECTORY);
 		if (StringUtils.isNotEmpty(baseContextDir)) {
 			ResourceReader fileRd = new FileSystemResourceReader(jawrConfig);
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("The base directory context is set to "
-						+ baseContextDir);
+				LOGGER.debug("The base directory context is set to " + baseContextDir);
 			}
 
 			boolean baseContextDirHighPriority = Boolean
-					.valueOf(jawrConfig
-							.getProperty(JawrConstant.JAWR_BASECONTEXT_DIRECTORY_HIGH_PRIORITY));
+					.valueOf(jawrConfig.getProperty(JawrConstant.JAWR_BASECONTEXT_DIRECTORY_HIGH_PRIORITY));
 			if (baseContextDirHighPriority) {
 				addResourceReaderToStart(fileRd);
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Jawr will search in priority in the base directory context before searching in the war content.");
+					LOGGER.debug(
+							"Jawr will search in priority in the base directory context before searching in the war content.");
 				}
 			} else {
 				addResourceReaderToEnd(fileRd);
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Jawr will search in priority in the war content before searching in the base directory context.");
+					LOGGER.debug(
+							"Jawr will search in priority in the war content before searching in the base directory context.");
 				}
 			}
 		}
@@ -184,8 +176,7 @@ public class ServletContextResourceReaderHandler implements
 	 */
 	private void initReader(Object obj) {
 		if (obj instanceof WorkingDirectoryLocationAware) {
-			((WorkingDirectoryLocationAware) obj)
-					.setWorkingDirectory(workingDirectory);
+			((WorkingDirectoryLocationAware) obj).setWorkingDirectory(workingDirectory);
 		}
 		if (obj instanceof ServletContextAware) {
 			((ServletContextAware) obj).setServletContext(servletContext);
@@ -239,8 +230,7 @@ public class ServletContextResourceReaderHandler implements
 	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource
 	 * (java.lang.String)
 	 */
-	public Reader getResource(String resourceName)
-			throws ResourceNotFoundException {
+	public Reader getResource(String resourceName) throws ResourceNotFoundException {
 
 		return getResource(resourceName, false);
 	}
@@ -252,11 +242,9 @@ public class ServletContextResourceReaderHandler implements
 	 * net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String
 	 * , boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle)
-			throws ResourceNotFoundException {
+	public Reader getResource(String resourceName, boolean processingBundle) throws ResourceNotFoundException {
 
-		return getResource(resourceName, processingBundle,
-				new ArrayList<Class<?>>());
+		return getResource(resourceName, processingBundle, new ArrayList<Class<?>>());
 	}
 
 	/*
@@ -266,30 +254,25 @@ public class ServletContextResourceReaderHandler implements
 	 * net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String
 	 * , boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle,
-			List<Class<?>> excludedReader) throws ResourceNotFoundException {
+	public Reader getResource(String resourceName, boolean processingBundle, List<Class<?>> excludedReader)
+			throws ResourceNotFoundException {
 
 		Reader rd = null;
 
 		String resourceExtension = FileNameUtils.getExtension(resourceName);
 		boolean generatedPath = generatorRegistry.isPathGenerated(resourceName);
-		if (generatedPath
-				|| allowedExtensions.contains(resourceExtension.toLowerCase())) {
-			for (Iterator<TextResourceReader> iterator = resourceReaders
-					.iterator(); iterator.hasNext();) {
+		if (generatedPath || allowedExtensions.contains(resourceExtension.toLowerCase())) {
+			for (Iterator<TextResourceReader> iterator = resourceReaders.iterator(); iterator.hasNext();) {
 				TextResourceReader rsReader = iterator.next();
 
 				if (!isInstanceOf(rsReader, excludedReader)) {
 					if (!(rsReader instanceof ResourceGenerator)
-							|| ((ResourceGenerator) rsReader).getResolver()
-									.matchPath(resourceName)) {
+							|| ((ResourceGenerator) rsReader).getResolver().matchPath(resourceName)) {
 						try {
-							rd = rsReader.getResource(resourceName,
-									processingBundle);
+							rd = rsReader.getResource(resourceName, processingBundle);
 						} catch (Exception e) {
-							LOGGER.info("An exception occured while trying to read resource '"
-									+ resourceName
-									+ "'. Continuing with other readers. Error : ",e);
+							LOGGER.info("An exception occured while trying to read resource '" + resourceName
+									+ "'. Continuing with other readers. Error : ", e);
 						}
 						if (rd != null) {
 							break;
@@ -299,9 +282,7 @@ public class ServletContextResourceReaderHandler implements
 
 			}
 		} else {
-			LOGGER.warn("The resource '"
-					+ resourceName
-					+ "' will not be read as its extension is not an allowed one.");
+			LOGGER.warn("The resource '" + resourceName + "' will not be read as its extension is not an allowed one.");
 		}
 
 		if (rd == null) {
@@ -312,13 +293,18 @@ public class ServletContextResourceReaderHandler implements
 	}
 
 	/**
-	 * Checks if an object is an instance of on interface from a list of interface
-	 * @param rd the object
-	 * @param interfacesthe list of interfaces
-	 * @return true if the object is an instance of on interface from a list of interface
+	 * Checks if an object is an instance of on interface from a list of
+	 * interface
+	 * 
+	 * @param rd
+	 *            the object
+	 * @param interfacesthe
+	 *            list of interfaces
+	 * @return true if the object is an instance of on interface from a list of
+	 *         interface
 	 */
 	private boolean isInstanceOf(Object rd, List<Class<?>> interfaces) {
-		
+
 		boolean result = false;
 
 		for (Class<?> class1 : interfaces) {
@@ -338,8 +324,7 @@ public class ServletContextResourceReaderHandler implements
 	 * net.jawr.web.resource.handler.ResourceReader#getResourceAsStream(java
 	 * .lang.String)
 	 */
-	public InputStream getResourceAsStream(String resourceName)
-			throws ResourceNotFoundException {
+	public InputStream getResourceAsStream(String resourceName) throws ResourceNotFoundException {
 
 		return getResourceAsStream(resourceName, false);
 	}
@@ -347,33 +332,28 @@ public class ServletContextResourceReaderHandler implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream
-	 * (java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#
+	 * getResourceAsStream (java.lang.String, boolean)
 	 */
-	public InputStream getResourceAsStream(String resourceName,
-			boolean processingBundle) throws ResourceNotFoundException {
+	public InputStream getResourceAsStream(String resourceName, boolean processingBundle)
+			throws ResourceNotFoundException {
 
 		generatorRegistry.loadGeneratorIfNeeded(resourceName);
 		InputStream is = null;
 
 		String resourceExtension = FileNameUtils.getExtension(resourceName);
 		boolean generatedPath = generatorRegistry.isPathGenerated(resourceName);
-		if (generatedPath
-				|| allowedExtensions.contains(resourceExtension.toLowerCase())) {
-			for (Iterator<StreamResourceReader> iterator = streamResourceReaders
-					.iterator(); iterator.hasNext();) {
+		if (generatedPath || allowedExtensions.contains(resourceExtension.toLowerCase())) {
+			for (Iterator<StreamResourceReader> iterator = streamResourceReaders.iterator(); iterator.hasNext();) {
 
 				StreamResourceReader rsReader = iterator.next();
 				if (!(rsReader instanceof ResourceGenerator)
-						|| ((ResourceGenerator) rsReader).getResolver()
-								.matchPath(resourceName)) {
-					try{
+						|| ((ResourceGenerator) rsReader).getResolver().matchPath(resourceName)) {
+					try {
 						is = rsReader.getResourceAsStream(resourceName);
-					}catch(Exception e){
-						LOGGER.info("An exception occured while trying to read resource '"
-								+ resourceName
-								+ "'. Continuing with other readers. Error : "+e.getMessage());
+					} catch (Exception e) {
+						LOGGER.info("An exception occured while trying to read resource '" + resourceName
+								+ "'. Continuing with other readers. Error : " + e.getMessage());
 					}
 					if (is != null) {
 						break;
@@ -381,9 +361,7 @@ public class ServletContextResourceReaderHandler implements
 				}
 			}
 		} else {
-			LOGGER.warn("The resource '"
-					+ resourceName
-					+ "' will not be read as its extension is not an allowed one.");
+			LOGGER.warn("The resource '" + resourceName + "' will not be read as its extension is not an allowed one.");
 		}
 		if (is == null) {
 			throw new ResourceNotFoundException(resourceName);
@@ -401,15 +379,13 @@ public class ServletContextResourceReaderHandler implements
 	 */
 	public Set<String> getResourceNames(String dirName) {
 		Set<String> resourceNames = new TreeSet<String>();
-		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders
-				.iterator(); iterator.hasNext();) {
+		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders.iterator(); iterator.hasNext();) {
 			ResourceBrowser rsBrowser = iterator.next();
 			if (generatorRegistry.isPathGenerated(dirName)) {
 				if (rsBrowser instanceof ResourceGenerator) {
 					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
 					if (rsGeneratorBrowser.getResolver().matchPath(dirName)) {
-						resourceNames.addAll(rsBrowser
-								.getResourceNames(dirName));
+						resourceNames.addAll(rsBrowser.getResourceNames(dirName));
 						break;
 					}
 				}
@@ -433,14 +409,12 @@ public class ServletContextResourceReaderHandler implements
 	 */
 	public boolean isDirectory(String resourceName) {
 		boolean result = false;
-		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders
-				.iterator(); iterator.hasNext() && !result;) {
+		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders.iterator(); iterator.hasNext() && !result;) {
 			ResourceBrowser rsBrowser = iterator.next();
 			if (generatorRegistry.isPathGenerated(resourceName)) {
 				if (rsBrowser instanceof ResourceGenerator) {
 					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
-					if (rsGeneratorBrowser.getResolver()
-							.matchPath(resourceName)) {
+					if (rsGeneratorBrowser.getResolver().matchPath(resourceName)) {
 						result = rsBrowser.isDirectory(resourceName);
 					}
 				}
@@ -453,21 +427,24 @@ public class ServletContextResourceReaderHandler implements
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#getFilePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getFilePath(
+	 * java.lang.String)
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {
-		
+
 		String filePath = null;
-		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders
-				.iterator(); iterator.hasNext() && filePath == null;) {
+		for (Iterator<ResourceBrowser> iterator = resourceInfoProviders.iterator(); iterator.hasNext()
+				&& filePath == null;) {
 			ResourceBrowser rsBrowser = iterator.next();
 			if (generatorRegistry.isPathGenerated(resourcePath)) {
 				if (rsBrowser instanceof ResourceGenerator) {
 					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
-					if (rsGeneratorBrowser.getResolver()
-							.matchPath(resourcePath)) {
+					if (rsGeneratorBrowser.getResolver().matchPath(resourcePath)) {
 						filePath = rsBrowser.getFilePath(resourcePath);
 					}
 				}
@@ -478,6 +455,23 @@ public class ServletContextResourceReaderHandler implements
 			}
 		}
 		return filePath;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getLastModified(java
+	 * .lang.String)
+	 */
+	@Override
+	public long getLastModified(String filePath) {
+		long lastModified = 0;
+		File f = new File(filePath);
+		if (f.exists()) {
+			lastModified = f.lastModified();
+		}
+		return lastModified;
 	}
 
 }

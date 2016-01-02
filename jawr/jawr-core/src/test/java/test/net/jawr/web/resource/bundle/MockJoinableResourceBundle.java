@@ -20,8 +20,9 @@ import java.util.Set;
 
 import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.PathMapping;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 
@@ -275,6 +276,14 @@ public class MockJoinableResourceBundle implements JoinableResourceBundle {
 	public boolean isDirty() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getFilePathMappings()
+	 */
+	@Override
+	public List<FilePathMapping> getFilePathMappings() {
+		return null;
 	}
 
 }

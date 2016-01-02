@@ -94,6 +94,9 @@ public class PropertiesBundleConstant {
 	/** The suffix for the property defining the mappings of the bundle  */
 	public static final String BUNDLE_FACTORY_CUSTOM_MAPPINGS = ".mappings";
 	
+	/** The suffix for the property defining the mappings of the bundle  */
+	public static final String BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS = ".mappings.files";
+	
 	/** The suffix for the property indicating if the bundle is a global one or not */
 	public static final String BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG = ".global";
 	

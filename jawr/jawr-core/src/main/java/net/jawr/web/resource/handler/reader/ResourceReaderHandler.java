@@ -91,4 +91,11 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 */
 	public InputStream getResourceAsStream(String resourceName, boolean processingBundle) throws ResourceNotFoundException;
 
+	/**
+	 * Returns the last modified date of the resource path available on filesystem or 0 if it doesn't exists.
+	 * @param filePath the file Path
+	 * @return the last modified date
+	 */
+	long getLastModified(String filePath);
+
 }

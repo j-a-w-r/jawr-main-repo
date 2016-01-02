@@ -30,6 +30,9 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
+import net.jawr.web.resource.bundle.mappings.BundlePathMapping;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.sorting.SortFileParser;
 import net.jawr.web.resource.bundle.variant.VariantSet;
@@ -47,8 +50,7 @@ import net.jawr.web.util.StringUtils;
 public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JoinableResourceBundleImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JoinableResourceBundleImpl.class);
 
 	/** The name of the bundle used in the configuration properties */
 	private String name;
@@ -125,10 +127,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param generatorRegistry
 	 *            The generator registry.
 	 */
-	public JoinableResourceBundleImpl(String id, String name,
-			String bundlePrefix, String fileExtension,
-			InclusionPattern inclusionPattern,
-			ResourceReaderHandler resourceReaderHandler,
+	public JoinableResourceBundleImpl(String id, String name, String bundlePrefix, String fileExtension,
+			InclusionPattern inclusionPattern, ResourceReaderHandler resourceReaderHandler,
 			GeneratorRegistry generatorRegistry) {
 		super();
 
@@ -141,14 +141,13 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		}
 		this.name = name;
 		this.resourceReaderHandler = resourceReaderHandler;
-		
+
 		this.bundlePathMapping = new BundlePathMapping(this);
 
 		if (bundlePrefix != null) {
 			this.bundlePrefix = PathNormalizer.asDirPath(bundlePrefix);
 		}
-		if (fileExtension != null && fileExtension.length() > 0
-				&& fileExtension.charAt(0) != '.') {
+		if (fileExtension != null && fileExtension.length() > 0 && fileExtension.charAt(0) != '.') {
 			this.fileExtension = "." + fileExtension;
 		} else {
 			this.fileExtension = fileExtension;
@@ -178,13 +177,10 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param generatorRegistry
 	 *            the generator registry
 	 */
-	public JoinableResourceBundleImpl(String id, String name,
-			String bundlePrefix, String fileExtension,
-			InclusionPattern inclusionPattern, List<String> pathMappings,
-			ResourceReaderHandler resourceReaderHandler,
+	public JoinableResourceBundleImpl(String id, String name, String bundlePrefix, String fileExtension,
+			InclusionPattern inclusionPattern, List<String> pathMappings, ResourceReaderHandler resourceReaderHandler,
 			GeneratorRegistry generatorRegistry) {
-		this(id, name, bundlePrefix, fileExtension, inclusionPattern,
-				resourceReaderHandler, generatorRegistry);
+		this(id, name, bundlePrefix, fileExtension, inclusionPattern, resourceReaderHandler, generatorRegistry);
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Adding mapped files for bundle " + id);
@@ -194,8 +190,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		initPathList();
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Added " + this.bundlePathMapping.getItemPathList().size() + " files and "
-					+ bundlePathMapping.getLicensesPathList().size() + " licenses for the bundle "
-					+ id);
+					+ bundlePathMapping.getLicensesPathList().size() + " licenses for the bundle " + id);
 		}
 
 	}
@@ -209,11 +204,10 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			LOGGER.debug("Creating bundle path List for " + this.id);
 		}
 
-		if (bundlePathMapping.getPathMappings() != null){
+		if (bundlePathMapping.getPathMappings() != null) {
 			for (Iterator<PathMapping> it = bundlePathMapping.getPathMappings().iterator(); it.hasNext();) {
 				PathMapping pathMapping = it.next();
-				boolean isGeneratedPath = generatorRegistry
-						.isPathGenerated(pathMapping.getPath());
+				boolean isGeneratedPath = generatorRegistry.isPathGenerated(pathMapping.getPath());
 
 				// Handle generated resources
 				// path ends in /, the folder is included without subfolders
@@ -230,8 +224,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 				} else if (pathMapping.getPath().endsWith(LICENSES_FILENAME)) {
 					bundlePathMapping.getLicensesPathList().add(asPath(pathMapping.getPath(), isGeneratedPath));
 				} else
-					throw new BundlingProcessException("Wrong mapping ["
-							+ pathMapping + "] for bundle [" + this.name
+					throw new BundlingProcessException("Wrong mapping [" + pathMapping + "] for bundle [" + this.name
 							+ "]. Please check configuration. ");
 			}
 		}
@@ -248,6 +241,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 *            the path mapping to add
 	 */
 	private void addPathMapping(String pathMapping) {
+
+		addFilePathMapping(pathMapping);
+
 		if (!getInclusionPattern().isIncludeOnlyOnDebug()) {
 			bundlePathMapping.getItemPathList().add(new BundlePath(bundlePrefix, pathMapping));
 		}
@@ -255,6 +251,33 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		if (!getInclusionPattern().isExcludeOnDebug()) {
 			bundlePathMapping.getItemDebugPathList().add(new BundlePath(bundlePrefix, pathMapping));
 		}
+
+	}
+
+	/**
+	 * Adds the path mapping to the file path mapping
+	 * 
+	 * @param pathMapping
+	 *            the path mapping to add
+	 */
+	protected void addFilePathMapping(String pathMapping) {
+		long timestamp = 0;
+		String filePath = resourceReaderHandler.getFilePath(pathMapping);
+		if (filePath != null) {
+			timestamp = resourceReaderHandler.getLastModified(filePath);
+			List<FilePathMapping> filePathMappings = bundlePathMapping.getFilePathMappings();
+			boolean found = false;
+			for (FilePathMapping filePathMapping : filePathMappings) {
+				if(filePathMapping.getPath().equals(filePath)){
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				filePathMappings.add(new FilePathMapping(this, filePath, timestamp));
+			}
+		}
+
 	}
 
 	/**
@@ -269,54 +292,47 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		Set<String> resources = resourceReaderHandler.getResourceNames(dirName.getPath());
 		boolean isGeneratedPath = generatorRegistry.isPathGenerated(dirName.getPath());
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Adding " + resources.size()
-					+ " resources from path [" + dirName + "] to bundle "
-					+ getId());
+			LOGGER.debug("Adding " + resources.size() + " resources from path [" + dirName + "] to bundle " + getId());
 		}
 
 		// If the directory contains a sorting file, it is used to order the
 		// resources.
-		if (resources.contains(SORT_FILE_NAME)
-				|| resources.contains("/" + SORT_FILE_NAME)) {
+		if (resources.contains(SORT_FILE_NAME) || resources.contains("/" + SORT_FILE_NAME)) {
 
-			String sortFilePath = joinPaths(dirName.getPath(), SORT_FILE_NAME,
-					isGeneratedPath);
+			String sortFilePath = joinPaths(dirName.getPath(), SORT_FILE_NAME, isGeneratedPath);
+
+			addFilePathMapping(sortFilePath);
 
 			Reader reader;
 			try {
 				reader = resourceReaderHandler.getResource(sortFilePath);
 			} catch (ResourceNotFoundException e) {
 				throw new BundlingProcessException(
-						"Unexpected ResourceNotFoundException when reading a sorting file["
-								+ sortFilePath + "]", e);
+						"Unexpected ResourceNotFoundException when reading a sorting file[" + sortFilePath + "]", e);
 			}
 
-			SortFileParser parser = new SortFileParser(reader, resources,
-					dirName.getPath());
+			SortFileParser parser = new SortFileParser(reader, resources, dirName.getPath());
 
 			List<String> sortedResources = parser.getSortedResources();
 			for (Iterator<String> it = sortedResources.iterator(); it.hasNext();) {
 				String resourceName = (String) it.next();
 
 				// Add subfolders or files
-				if (resourceName.endsWith(fileExtension)
-						|| generatorRegistry.isPathGenerated(resourceName)) {
+				if (resourceName.endsWith(fileExtension) || generatorRegistry.isPathGenerated(resourceName)) {
 					addPathMapping(asPath(resourceName, isGeneratedPath));
 
 					if (LOGGER.isDebugEnabled())
-						LOGGER.debug("Added to item path list from the sorting file:"
-								+ resourceName);
-				} else if (dirName.isRecursive()
-						&& resourceReaderHandler.isDirectory(resourceName))
-					addItemsFromDir(new PathMapping(this, resourceName+"/**"), true);
+						LOGGER.debug("Added to item path list from the sorting file:" + resourceName);
+				} else if (dirName.isRecursive() && resourceReaderHandler.isDirectory(resourceName))
+					addItemsFromDir(new PathMapping(this, resourceName + "/**"), true);
 			}
 		}
 
 		// Add licenses file
-		if (resources.contains(LICENSES_FILENAME)
-				|| resources.contains("/" + LICENSES_FILENAME)) {
-			bundlePathMapping.getLicensesPathList().add(joinPaths(dirName.getPath(), LICENSES_FILENAME,
-					isGeneratedPath));
+		if (resources.contains(LICENSES_FILENAME) || resources.contains("/" + LICENSES_FILENAME)) {
+			String licencePath = joinPaths(dirName.getPath(), LICENSES_FILENAME, isGeneratedPath);
+			bundlePathMapping.getLicensesPathList().add(licencePath);
+			addFilePathMapping(licencePath);
 		}
 
 		// Add remaining resources (remaining after sorting, or all if no sort
@@ -324,11 +340,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		List<String> folders = new ArrayList<String>();
 		for (Iterator<String> it = resources.iterator(); it.hasNext();) {
 			String resourceName = (String) it.next();
-			String resourcePath = joinPaths(dirName.getPath(), resourceName,
-					isGeneratedPath);
+			String resourcePath = joinPaths(dirName.getPath(), resourceName, isGeneratedPath);
 
-			boolean resourceIsDir = resourceReaderHandler
-					.isDirectory(resourcePath);
+			boolean resourceIsDir = resourceReaderHandler.isDirectory(resourcePath);
 			if (addSubDirs && resourceIsDir) {
 				folders.add(resourceName);
 			} else if (resourcePath.endsWith(fileExtension)
@@ -336,8 +350,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 				addPathMapping(asPath(resourcePath, isGeneratedPath));
 
 				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Added to item path list:"
-							+ asPath(resourcePath, isGeneratedPath));
+					LOGGER.debug("Added to item path list:" + asPath(resourcePath, isGeneratedPath));
 			}
 		}
 
@@ -346,7 +359,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		if (addSubDirs) {
 			for (Iterator<String> it = folders.iterator(); it.hasNext();) {
 				String folderName = joinPaths(dirName.getPath(), it.next(), isGeneratedPath);
-				addItemsFromDir(new PathMapping(this, folderName+"/**"), true);
+				addItemsFromDir(new PathMapping(this, folderName + "/**"), true);
 			}
 		}
 	}
@@ -381,8 +394,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 *            the flag indicating if the resource has been generated
 	 * @return the normalized path
 	 */
-	private String joinPaths(String dirName, String folderName,
-			boolean generatedResource) {
+	private String joinPaths(String dirName, String folderName, boolean generatedResource) {
 
 		return PathNormalizer.joinPaths(dirName, folderName, generatedResource);
 	}
@@ -427,9 +439,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getUnitaryPostProcessor
-	 * ()
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
+	 * getUnitaryPostProcessor ()
 	 */
 	public ResourceBundlePostProcessor getUnitaryPostProcessor() {
 		return unitaryPostProcessor;
@@ -441,17 +452,15 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param unitaryPostProcessor
 	 *            the unitary post processor
 	 */
-	public void setUnitaryPostProcessor(
-			ResourceBundlePostProcessor unitaryPostProcessor) {
+	public void setUnitaryPostProcessor(ResourceBundlePostProcessor unitaryPostProcessor) {
 		this.unitaryPostProcessor = unitaryPostProcessor;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getBundlePostProcessor
-	 * ()
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
+	 * getBundlePostProcessor ()
 	 */
 	public ResourceBundlePostProcessor getBundlePostProcessor() {
 		return bundlePostProcessor;
@@ -463,8 +472,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param bundlePostProcessor
 	 *            the post processor to set
 	 */
-	public void setBundlePostProcessor(
-			ResourceBundlePostProcessor bundlePostProcessor) {
+	public void setBundlePostProcessor(ResourceBundlePostProcessor bundlePostProcessor) {
 		this.bundlePostProcessor = bundlePostProcessor;
 	}
 
@@ -483,8 +491,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @param explorerConditionalExpression
 	 */
-	public void setExplorerConditionalExpression(
-			String explorerConditionalExpression) {
+	public void setExplorerConditionalExpression(String explorerConditionalExpression) {
 		this.explorerConditionalExpression = explorerConditionalExpression;
 	}
 
@@ -526,9 +533,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getAlternateProductionURL
-	 * ()
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
+	 * getAlternateProductionURL ()
 	 */
 	public String getAlternateProductionURL() {
 		return this.alternateProductionURL;
@@ -615,8 +621,10 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		this.bundlePathMapping.setPathMappings(pathMappings);
 		initPathList();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getMappings()
 	 */
 	@Override
@@ -649,12 +657,23 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getFilePathMappings
+	 * ()
+	 */
+	public List<FilePathMapping> getFilePathMappings() {
+		return bundlePathMapping.getFilePathMappings();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList(java
 	 * .lang.String)
 	 */
 	public List<BundlePath> getItemDebugPathList(Map<String, String> variants) {
-		
-		if(StringUtils.isNotEmpty(debugURL)){
+
+		if (StringUtils.isNotEmpty(debugURL)) {
 			return bundlePathMapping.getItemDebugPathList();
 		}
 		return getItemPathList(bundlePathMapping.getItemDebugPathList(), variants);
@@ -672,31 +691,31 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	}
 
 	/**
-	 * Filters the bundlePath list given in parameter using the specified variants
-	 * @param itemList the list of bundlePath
-	 * @param variants the variants
+	 * Filters the bundlePath list given in parameter using the specified
+	 * variants
+	 * 
+	 * @param itemList
+	 *            the list of bundlePath
+	 * @param variants
+	 *            the variants
 	 * @return the filtered list of bundlePath
 	 */
-	private List<BundlePath> getItemPathList(List<BundlePath> itemList,
-			Map<String, String> variants) {
-		if (variants == null || variants.isEmpty()){
+	private List<BundlePath> getItemPathList(List<BundlePath> itemList, Map<String, String> variants) {
+		if (variants == null || variants.isEmpty()) {
 			return itemList;
 		}
-		
+
 		List<BundlePath> rets = new ArrayList<BundlePath>();
 
 		for (Iterator<BundlePath> it = itemList.iterator(); it.hasNext();) {
 			BundlePath bundlePath = it.next();
 			String path = bundlePath.getPath();
 			if (generatorRegistry.isPathGenerated(path)) {
-				Set<String> variantTypes = generatorRegistry
-						.getGeneratedResourceVariantTypes(path);
-				String variantKey = VariantUtils.getVariantKey(variants,
-						variantTypes);
+				Set<String> variantTypes = generatorRegistry.getGeneratedResourceVariantTypes(path);
+				String variantKey = VariantUtils.getVariantKey(variants, variantTypes);
 				if (StringUtils.isNotEmpty(variantKey)) {
 					rets.add(new BundlePath(bundlePath.getBundlePrefix(),
-							VariantUtils.getVariantBundleName(path, variantKey,
-									true)));
+							VariantUtils.getVariantBundleName(path, variantKey, true)));
 				} else {
 					rets.add(bundlePath);
 				}
@@ -757,8 +776,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	public String getURLPrefix(Map<String, String> variants) {
 
 		if (null == this.urlPrefix)
-			throw new IllegalStateException(
-					"The bundleDataHashCode must be set before accessing the url prefix.");
+			throw new IllegalStateException("The bundleDataHashCode must be set before accessing the url prefix.");
 
 		if (variants != null && !variants.isEmpty()) {
 			String key = getAvailableVariant(variants);
@@ -791,8 +809,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#setBundleDataHashCode
 	 * (java.lang.String, java.lang.String)
 	 */
-	public void setBundleDataHashCode(String variantKey,
-			String bundleDataHashCode) {
+	public void setBundleDataHashCode(String variantKey, String bundleDataHashCode) {
 
 		String prefix = bundleDataHashCode;
 
@@ -814,8 +831,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 		String variantKey = null;
 		if (variants != null) {
-			Map<String, String> availableVariants = generatorRegistry
-					.getAvailableVariantMap(variants, curVariants);
+			Map<String, String> availableVariants = generatorRegistry.getAvailableVariantMap(variants, curVariants);
 			variantKey = VariantUtils.getVariantKey(availableVariants);
 		}
 
@@ -831,15 +847,20 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		return "JoinableResourceBundleImpl [id=" + id + ", name=" + name + "]";
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#setDirty(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle#setDirty(boolean)
 	 */
 	@Override
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#isDirty()
 	 */
 	@Override

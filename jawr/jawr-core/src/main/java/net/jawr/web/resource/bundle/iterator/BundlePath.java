@@ -33,7 +33,7 @@ public class BundlePath {
 	/**
 	 * Constructor
 	 * @param bundlePrefix the bundle prefix
-	 * @param path the bundle path, which is not a production URL 
+	 * @param path the bundle path, which is not a production URL
 	 */
 	public BundlePath(String bundlePrefix, String path) {
 		this(bundlePrefix, path, false);
@@ -41,9 +41,9 @@ public class BundlePath {
 	
 	/**
 	 * Constructor
-	 * @param bundlePrefix the bundle prefix
 	 * @param path the bundle path 
 	 * @param isExternalURL flag indicating if it's an external URL or not
+	 * @param bundlePrefix the bundle prefix
 	 */
 	public BundlePath(String prefix, String path, boolean isExternalURL) {
 		super();

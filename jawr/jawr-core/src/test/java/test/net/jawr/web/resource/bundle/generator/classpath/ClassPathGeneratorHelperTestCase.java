@@ -70,6 +70,6 @@ public class ClassPathGeneratorHelperTestCase {
 	public void testGetFilePathFromJar(){
 		helper = new ClassPathGeneratorHelper();
 		String filePath = helper.getFilePath("META-INF/resources/webjars/bootstrap/3.2.0/webjars-requirejs.js");
-		assertNull(filePath);
+		assertTrue(filePath.replace('\\', '/').endsWith("org/webjars/bootstrap/3.2.0/bootstrap-3.2.0.jar"));
 	}
 }

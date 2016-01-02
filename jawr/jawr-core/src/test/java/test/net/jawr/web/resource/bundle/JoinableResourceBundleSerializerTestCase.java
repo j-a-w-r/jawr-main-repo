@@ -3,10 +3,7 @@
  */
 package test.net.jawr.web.resource.bundle;
 
-import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.when;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,9 +12,22 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.when;
+
 import net.jawr.web.JawrConstant;
+import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.DebugInclusion;
 import net.jawr.web.resource.bundle.InclusionPattern;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.JoinableResourceBundlePropertySerializer;
 import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
@@ -26,13 +36,6 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Test case for JoinableResourceBundle serializer
@@ -54,6 +57,10 @@ public class JoinableResourceBundleSerializerTestCase {
 
 	@Before
 	public void setUp() {
+		when(rsHandler.getFilePath("/bundle/content/script1.js")).thenReturn("/FS/bundle/content/script1.js");
+		when(rsHandler.getFilePath("/bundle/content/script2.js")).thenReturn("/FS/bundle/content/script2.js");
+		when(rsHandler.getFilePath("/bundle/myScript.js")).thenReturn("/FS/bundle/myScript.js");
+		
 		when(rsHandler.getResourceNames(Matchers.anyString())).thenReturn(
 				new HashSet<String>(Arrays.asList("script1.js", "script2.js")));
 		when(bundleProcessor.getId()).thenReturn(
@@ -88,12 +95,20 @@ public class JoinableResourceBundleSerializerTestCase {
 				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID));
 
 		Set<String> expectedMappings = new HashSet<String>(Arrays.asList(
-				"/bundle/content/script1.js", "/bundle/content/script2.js",
+				"/bundle/content/**",
 				"/bundle/myScript.js"));
 		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
 				bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
 
+		expectedMappings = new HashSet<String>(Arrays.asList(
+				"/FS/bundle/content/script1.js#0", "/FS/bundle/content/script2.js#0",
+				"/FS/bundle/myScript.js#0"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS));
+		
 		assertEquals("true", helper.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG));
 		assertEquals("false", helper.getCustomBundleProperty(bundleName,
@@ -107,6 +122,102 @@ public class JoinableResourceBundleSerializerTestCase {
 
 	}
 
+	@Test
+	public void testCompositeBundleSerialization() {
+
+		String bundleName = "myBundle";
+		String resourceType = "js";
+		
+		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
+		InclusionPattern inclusionPattern = new InclusionPattern(false, 3,
+				DebugInclusion.ALWAYS);
+		
+		List<JoinableResourceBundle> nestedBundles = new ArrayList<>();
+		JoinableResourceBundle b1 = new JoinableResourceBundleImpl("/bundle/child1.js", "child1", null, "js", inclusionPattern, rsHandler, generatorRegistry);
+		b1.setMappings(Arrays.asList("/bundle/content/**"));
+		nestedBundles.add(b1);
+		
+		JoinableResourceBundle b2 = new JoinableResourceBundleImpl("/bundle/child1.js", "child2", null, "js", inclusionPattern, rsHandler, generatorRegistry);
+		b2.setMappings(Arrays.asList("/bundle/myScript.js"));
+		nestedBundles.add(b2);
+		
+		JoinableResourceBundle bundle = new CompositeResourceBundle(
+				"/bundle/myBundle.js", bundleName, nestedBundles, inclusionPattern, rsHandler, null, "js",
+				generatorRegistry);
+		bundle.setBundleDataHashCode(null, "123456");
+		
+		Properties props = new Properties();
+		JoinableResourceBundlePropertySerializer.serializeInProperties(bundle,
+				resourceType, props);
+
+		PropertiesConfigHelper helper = new PropertiesConfigHelper(props,
+				resourceType);
+		assertEquals("/bundle/myBundle.js", helper.getCustomBundleProperty(
+				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID));
+
+		assertEquals("true", helper.getCustomBundleProperty(
+				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_FLAG));
+		
+		Set<String> expectedChildren = new HashSet<String>(Arrays.asList(
+				"child1",
+				"child2"));
+		assertEquals(expectedChildren, helper.getCustomBundlePropertyAsSet(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_NAMES));
+
+		Set<String> expectedMappings = new HashSet<String>(Arrays.asList(
+				"/bundle/content/**"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				"child1",
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
+
+		assertEquals("false", helper.getCustomBundleProperty("child1",
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGNEVER,
+				"false"));
+		assertEquals("false", helper.getCustomBundleProperty("child1",
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGONLY,
+				"false"));
+		
+		expectedMappings = new HashSet<String>(Arrays.asList(
+				"/bundle/myScript.js"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				"child2",
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
+		
+		assertNull(helper.getCustomBundleProperty(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
+
+		assertEquals("false", helper.getCustomBundleProperty("child2",
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGNEVER,
+				"false"));
+		assertEquals("false", helper.getCustomBundleProperty("child2",
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGONLY,
+				"false"));
+		
+		expectedMappings = new HashSet<String>(Arrays.asList(
+				"/FS/bundle/content/script1.js#0", "/FS/bundle/content/script2.js#0",
+				"/FS/bundle/myScript.js#0"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS));
+		
+		assertEquals(false, helper.getCustomBundleBooleanProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG));
+		assertEquals("false", helper.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGNEVER,
+				"false"));
+		assertEquals("false", helper.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGONLY,
+				"false"));
+		assertEquals("123456", helper.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE));
+
+	}
+	
 	@Test
 	public void testStdBundleSerialization() {
 
@@ -149,12 +260,20 @@ public class JoinableResourceBundleSerializerTestCase {
 				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID));
 
 		Set<String> expectedMappings = new HashSet<String>(Arrays.asList(
-				"/bundle/content/script1.js", "/bundle/content/script2.js",
+				"/bundle/content/**",
 				"/bundle/myScript.js"));
 		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
 				bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
 
+		expectedMappings = new HashSet<String>(Arrays.asList(
+				"/FS/bundle/content/script1.js#0", "/FS/bundle/content/script2.js#0",
+				"/FS/bundle/myScript.js#0"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS));
+		
 		assertEquals("false", helper.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG,
 				"false"));
@@ -251,12 +370,20 @@ public class JoinableResourceBundleSerializerTestCase {
 				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID));
 
 		Set<String> expectedMappings = new HashSet<String>(Arrays.asList(
-				"/bundle/content/script1.js", "/bundle/content/script2.js",
+				"/bundle/content/**",
 				"/bundle/myScript.js"));
 		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
 				bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
 
+		expectedMappings = new HashSet<String>(Arrays.asList(
+				"/FS/bundle/content/script1.js#0", "/FS/bundle/content/script2.js#0",
+				"/FS/bundle/myScript.js#0"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS));
+		
 		assertEquals("false", helper.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG,
 				"false"));
@@ -353,12 +480,20 @@ public class JoinableResourceBundleSerializerTestCase {
 				bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID));
 
 		Set<String> expectedMappings = new HashSet<String>(Arrays.asList(
-				"/bundle/content/script1.js", "/bundle/content/script2.js",
+				"/bundle/content/**",
 				"/bundle/myScript.js"));
 		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
 				bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS));
 
+		expectedMappings = new HashSet<String>(Arrays.asList(
+				"/FS/bundle/content/script1.js#0", "/FS/bundle/content/script2.js#0",
+				"/FS/bundle/myScript.js#0"));
+		
+		assertEquals(expectedMappings, helper.getCustomBundlePropertyAsSet(
+				bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS));
+		
 		assertEquals("false", helper.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG,
 				"false"));
