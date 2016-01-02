@@ -117,17 +117,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(3, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
-		fMapping = filePathMappings.get(2);
-		checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+		
 		// Checks if the bundle is considered as modified
 		assertFalse(bundle.isDirty());
 
@@ -184,17 +180,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		}
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(3, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
-		fMapping = filePathMappings.get(2);
-		checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+		
 		// Checks if the bundle is considered as modified
 		assertFalse(bundle.isDirty());
 
@@ -252,17 +244,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		}
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(3, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript1, updatedLastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript2, updatedLastModified);
-
-		fMapping = filePathMappings.get(2);
-		checkFileMapping(fMapping, filePathScript, updatedLastModified);
-
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, updatedLastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, updatedLastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, updatedLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+		
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -321,20 +309,14 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		}
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(4, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript3, script3LastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-		fMapping = filePathMappings.get(2);
-		checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
-		fMapping = filePathMappings.get(3);
-		checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript3, script3LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+		
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -391,14 +373,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		}
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(2, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+		
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -457,17 +437,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		}
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(3, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript3, script3LastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-		fMapping = filePathMappings.get(2);
-		checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript3, script3LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+		
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -516,17 +492,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
-				List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-				assertEquals(3, filePathMappings.size());
-				FilePathMapping fMapping = filePathMappings.get(0);
-				checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-				fMapping = filePathMappings.get(1);
-				checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
-				fMapping = filePathMappings.get(2);
-				checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+				assertEquals(expectedFilePathMappings, filePathMappings);
+				
 				// Checks if the bundle is considered as modified
 				assertFalse(bundle.isDirty());
 
@@ -548,14 +520,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
-				List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-				assertEquals(2, filePathMappings.size());
-				FilePathMapping fMapping = filePathMappings.get(0);
-				checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-				fMapping = filePathMappings.get(1);
-				checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
+				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+				assertEquals(expectedFilePathMappings, filePathMappings);
+				
 				// Checks if the bundle is not considered as modified
 				assertFalse(bundle.isDirty());
 
@@ -574,11 +544,11 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
-				List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-				assertEquals(1, filePathMappings.size());
-				FilePathMapping fMapping = filePathMappings.get(0);
-				checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+				assertEquals(expectedFilePathMappings, filePathMappings);
+				
 				// Checks if the bundle is not considered as modified
 				assertFalse(bundle.isDirty());
 
@@ -623,17 +593,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
-				List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-				assertEquals(3, filePathMappings.size());
-				FilePathMapping fMapping = filePathMappings.get(0);
-				checkFileMapping(fMapping, filePathScript1, updatedLastModified);
-
-				fMapping = filePathMappings.get(1);
-				checkFileMapping(fMapping, filePathScript2, updatedLastModified);
-
-				fMapping = filePathMappings.get(2);
-				checkFileMapping(fMapping, filePathScript, updatedLastModified);
-
+				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, updatedLastModified));
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, updatedLastModified));
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, updatedLastModified));
+				assertEquals(expectedFilePathMappings, filePathMappings);
+				
 				// Checks if the bundle is considered as modified
 				assertTrue(bundle.isDirty());
 
@@ -655,14 +621,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
-				List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-				assertEquals(2, filePathMappings.size());
-				FilePathMapping fMapping = filePathMappings.get(0);
-				checkFileMapping(fMapping, filePathScript1, updatedLastModified);
-
-				fMapping = filePathMappings.get(1);
-				checkFileMapping(fMapping, filePathScript2, updatedLastModified);
-
+				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, updatedLastModified));
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, updatedLastModified));
+				assertEquals(expectedFilePathMappings, filePathMappings);
+				
 				// Checks if the bundle is not considered as modified
 				assertTrue(bundle.isDirty());
 
@@ -681,11 +645,11 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
-				List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-				assertEquals(1, filePathMappings.size());
-				FilePathMapping fMapping = filePathMappings.get(0);
-				checkFileMapping(fMapping, filePathScript, updatedLastModified);
-
+				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, updatedLastModified));
+				assertEquals(expectedFilePathMappings, filePathMappings);
+				
 				// Checks if the bundle is not considered as modified
 				assertTrue(bundle.isDirty());
 
@@ -737,17 +701,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 			}
 
 			// Check bundle file mapping
-			List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-			assertEquals(3, filePathMappings.size());
-			FilePathMapping fMapping = filePathMappings.get(0);
-			checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-			fMapping = filePathMappings.get(1);
-			checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
-			fMapping = filePathMappings.get(2);
-			checkFileMapping(fMapping, filePathScript, scriptLastModified);
-
+			Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+			Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+			expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+			expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+			expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+			assertEquals(expectedFilePathMappings, filePathMappings);
+			
 			// Checks if the bundle is considered as modified
 			assertFalse(bundle.isDirty());
 
@@ -800,16 +760,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
 
 		// Check bundle file mapping
-		List<FilePathMapping> filePathMappings = bundle.getFilePathMappings();
-		assertEquals(3, filePathMappings.size());
-		FilePathMapping fMapping = filePathMappings.get(0);
-		checkFileMapping(fMapping, filePathScript1, script1LastModified);
-
-		fMapping = filePathMappings.get(1);
-		checkFileMapping(fMapping, filePathScript2, script2LastModified);
-
-		fMapping = filePathMappings.get(2);
-		checkFileMapping(fMapping, filePathScript, scriptLastModified);
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
 
 		// Checks if the bundle is considered as modified
 		assertFalse(bundle.isDirty());
