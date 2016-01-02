@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,12 @@
  */
 package net.jawr.web.resource.bundle.factory;
 
+import static net.jawr.web.resource.bundle.JoinableResourceBundlePropertySerializer.LAST_MODIFIED_SEPARATOR;
 import static net.jawr.web.resource.bundle.factory.PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUG_URL;
 import static net.jawr.web.resource.bundle.factory.PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.DebugInclusion;
 import net.jawr.web.resource.bundle.InclusionPattern;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
@@ -33,6 +36,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.factory.postprocessor.PostProcessorChainFactory;
 import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.StringUtils;
@@ -185,10 +189,26 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 		String bundlePrefix = props.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX);
 
+		boolean isComposite = props.getCustomBundleBooleanProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_FLAG);
+
 		InclusionPattern inclusionPattern = getInclusionPattern(props, bundleName);
-		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl(
-				bundleId, bundleName, bundlePrefix, fileExtension, inclusionPattern,
-				rsHandler, generatorRegistry);
+		JoinableResourceBundleImpl bundle = null;
+		if(isComposite){
+			List<JoinableResourceBundle> nestedBundles = new ArrayList<>();
+			List<String> nestedBundleNames = props.getCustomBundlePropertyAsList(bundleName,
+					PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_NAMES);
+			for (String nestedBundleName : nestedBundleNames) {
+				JoinableResourceBundle nestedBundle = buildJoinableResourceBundle(props, nestedBundleName, fileExtension, rsHandler);
+				nestedBundles.add(nestedBundle);
+			}
+			bundle = new CompositeResourceBundle(
+					bundleId, bundleName, nestedBundles, inclusionPattern, rsHandler, bundlePrefix, fileExtension, generatorRegistry);
+		}else{
+			bundle = new JoinableResourceBundleImpl(
+					bundleId, bundleName, bundlePrefix, fileExtension, inclusionPattern,
+			rsHandler, generatorRegistry);
+		}
 		
 		// Override bundle postprocessor
 		String bundlePostProcessors = props.getCustomBundleProperty(bundleName,
@@ -263,9 +283,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 
 		List<String> mappings = props.getCustomBundlePropertyAsList(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS);
-		if (!hasDebugURL && mappings.isEmpty()) {
+		if (!hasDebugURL && mappings.isEmpty() && !bundle.isComposite()) {
 			throw new IllegalArgumentException(
-					"No mappings were defined for the bundle with name:"
+					"No mappings were defined for the bundle with name: "
 							+ bundleName
 							+ ". Please specify at least one in configuration. ");
 		}
@@ -274,6 +294,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 			
 			// Add the mappings
 			bundle.setMappings(mappings);
+			
+			// Checks if the bundle files have been modified
+			verifyIfBundleIsModified(bundleName, bundle, props);
 			
 			Map<String, VariantSet> variants = props.getCustomBundleVariantSets(bundleName);
 			bundle.setVariants(variants);
@@ -290,6 +313,38 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 		}
 		
 		return bundle;
+	}
+
+	/**
+	 * Verify f the bundle has been modified
+	 * @param bundleName the bundle name
+	 * @param bundle the bundle
+	 * @param props the properties config helper
+	 */
+	private void verifyIfBundleIsModified(String bundleName, JoinableResourceBundleImpl bundle,
+			PropertiesConfigHelper props) {
+		List<String> fileMappings = props.getCustomBundlePropertyAsList(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS);
+		if(fileMappings != null){
+			List<FilePathMapping> bundleFileMappings = bundle.getFilePathMappings();
+			if(bundleFileMappings.size() != fileMappings.size()){
+				bundle.setDirty(true);
+			}else{
+				
+				Set<FilePathMapping> storedFilePathMapping = new HashSet<>();
+				for (String filePathWithTimeStamp : fileMappings) {
+					String[] tmp = filePathWithTimeStamp.split(LAST_MODIFIED_SEPARATOR);
+					String filePath = tmp[0];
+					long storedLastModified = Long.parseLong(tmp[1]);
+					storedFilePathMapping.add(new FilePathMapping(bundle, filePath, storedLastModified));
+				}
+				
+				Set<FilePathMapping> bundleFilePathMappingSet = new HashSet<>(bundleFileMappings);
+				if(!bundleFilePathMappingSet.equals(storedFilePathMapping)){
+						bundle.setDirty(true);
+				}
+			}
+		}
 	}
 
 	/**

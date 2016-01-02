@@ -34,8 +34,10 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -43,8 +45,8 @@ import org.slf4j.LoggerFactory;
 
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.PathMapping;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
@@ -73,7 +75,7 @@ public class ResourceWatcher extends Thread {
 	private AtomicBoolean stopWatching = new AtomicBoolean(false);
 
 	/** The map between path and resource bundle */
-	private final Map<Path, List<PathMapping>> pathToResourceBundle = new HashMap<>();
+	private final Map<Path, List<PathMapping>> pathToResourceBundle = new ConcurrentHashMap<>();
 
 	/**
 	 * Constructor
@@ -89,7 +91,7 @@ public class ResourceWatcher extends Thread {
 
 		try {
 			this.watchService = FileSystems.getDefault().newWatchService();
-			initPathToAssetBundleMap();
+			initPathToResourceBundleMap();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -119,15 +121,25 @@ public class ResourceWatcher extends Thread {
 	 * @throws IOException
 	 *             if an {@link IOException} occurs
 	 */
-	private void initPathToAssetBundleMap() throws IOException {
+	private void initPathToResourceBundleMap() throws IOException {
 		
-		initPathToAssetBundleMap(bundlesHandler.getGlobalBundles());
-		initPathToAssetBundleMap(bundlesHandler.getContextBundles());
+		initPathToResourceBundleMap(bundlesHandler.getGlobalBundles());
+		initPathToResourceBundleMap(bundlesHandler.getContextBundles());
 	}
 	
-	private void initPathToAssetBundleMap(List<JoinableResourceBundle> bundles) throws IOException {
+	/**
+	 * Initialize the map which links path to asset bundle 
+	 * @param bundles the list of bundles
+	 * @throws IOException
+	 *             if an {@link IOException} occurs
+	 */
+	public synchronized void initPathToResourceBundleMap(List<JoinableResourceBundle> bundles) throws IOException {
 		
 		for (JoinableResourceBundle bundle : bundles) {
+			
+			// Remove bundle reference from existing mapping if exists
+			removePathMappingFromPathMap(bundle);
+			
 			List<PathMapping> mappings = bundle.getMappings();
 			for (PathMapping pathMapping : mappings) {
 				
@@ -147,6 +159,21 @@ public class ResourceWatcher extends Thread {
 					}
 				}
 
+			}
+		}
+	}
+
+	/**
+	 * Removes the path mapping of the bundle given in parameter from map which links Path to resource bundle 
+	 * @param bundle the bundle whose the path mapping should be removed
+	 */
+	private void removePathMappingFromPathMap(JoinableResourceBundle bundle) {
+		for (List<PathMapping> pathMappings : pathToResourceBundle.values()) {
+			for (Iterator<PathMapping> iterator = pathMappings.iterator(); iterator.hasNext();) {
+				PathMapping pathMapping = (PathMapping) iterator.next();
+				if(pathMapping.getBundle().getName().equals(bundle.getName())){
+					iterator.remove();
+				}
 			}
 		}
 	}
@@ -266,8 +293,10 @@ public class ResourceWatcher extends Thread {
 							}
 						}
 
-						bundlesHandler.notifyModification(bundles);
-
+						if(!bundles.isEmpty()){
+							bundlesHandler.notifyModification(bundles);
+						}
+						
 						if (!recursivePathMappings.isEmpty()) {
 
 							// if directory is created, and watching recursively,
@@ -296,9 +325,9 @@ public class ResourceWatcher extends Thread {
 						break;
 					}
 				}
-	
 			}
 		}
 		close();
 	}
+	
 }

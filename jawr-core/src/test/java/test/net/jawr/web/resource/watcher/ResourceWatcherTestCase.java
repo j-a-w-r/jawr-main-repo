@@ -33,8 +33,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.PathMapping;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.watcher.ResourceWatcher;
 import test.net.jawr.web.FileUtils;
@@ -89,7 +89,8 @@ public class ResourceWatcherTestCase {
 
 	@After
 	public void tearDown() {
-		
+		watcher.stopWatching();
+		watcher.interrupt();
 	}
 
 	/**
@@ -577,6 +578,8 @@ public class ResourceWatcherTestCase {
 		// Wait a little bit
 		Thread.sleep(waitTime);
 		assertTrue(invocationCount[0] > nb);
+		watcher.stopWatching();
+		watcher.interrupt();
 	}
 
 	@Test
@@ -592,6 +595,9 @@ public class ResourceWatcherTestCase {
 		File fToModify = new File(f.getParentFile(), "vertex/cube/cube.js");
 		createOrModifyFile(fToModify);
 
+		// Wait a little bit
+		Thread.sleep(waitTime);
+	
 		watcher = new ResourceWatcher(bundlesHandler, rsReader);
 		watcher.start();
 
@@ -601,6 +607,7 @@ public class ResourceWatcherTestCase {
 		// Wait a little bit
 		Thread.sleep(waitTime);
 		watcher.stopWatching();
+		
 		verify(bundlesHandler, never()).notifyModification(Matchers.eq(Arrays.asList(b)));
 	}
 
@@ -679,6 +686,7 @@ public class ResourceWatcherTestCase {
 		// Wait a little bit
 		Thread.sleep(waitTime);
 		watcher.stopWatching();
+	
 		verify(bundlesHandler, never()).notifyModification(Matchers.eq(Arrays.asList(b)));
 	}
 }

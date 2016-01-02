@@ -11,7 +11,9 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle;
+package net.jawr.web.resource.bundle.mappings;
+
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 
 /**
  * This class define a path mapping
@@ -20,6 +22,7 @@ package net.jawr.web.resource.bundle;
  */
 public class PathMapping {
 
+	
 	/** The directory path mapping suffix */
 	private static final String DIR_PATH_SUFFIX = "/";
 
@@ -94,30 +97,46 @@ public class PathMapping {
 	}
 
 	/**
-	 * Returns true if the mapping accepts the path given in parameter
-	 * @param path the path to check
-	 * @return true if the mapping accepts the path given in parameter
-	 */
-	public boolean accept(String path) {
-		
-		boolean result = false;
-		if(kind == PathMappingKind.ASSET){
-			result = mapping.equals(path);
-		}else if(kind == PathMappingKind.DIRECTORY){
-			result = path.startsWith(mapping) && path.indexOf(DIR_PATH_SUFFIX, mapping.length()) == -1;
-		}else { // kind == PathMappingKind.RECURSIVE_DIRECTORY
-			result = path.startsWith(mapping);
-		}
-		return result;
-	}
-	
-	/**
 	 * The enumeration of the different kind of path mapping
 	 * @author Ibrahim Chaehoi
 	 */
 	private enum PathMappingKind{
 		
 		ASSET, DIRECTORY, RECURSIVE_DIRECTORY
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
+		result = prime * result + ((mapping == null) ? 0 : mapping.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PathMapping other = (PathMapping) obj;
+		if (kind != other.kind)
+			return false;
+		if (mapping == null) {
+			if (other.mapping != null)
+				return false;
+		} else if (!mapping.equals(other.mapping))
+			return false;
+		return true;
 	}
 
 }

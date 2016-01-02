@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.jawr.web.resource.bundle.iterator.BundlePath;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 
@@ -75,6 +77,13 @@ public interface JoinableResourceBundle {
 	 */
 	public List<PathMapping> getMappings();
 	
+	/**
+	 * Returns the file path mappings, used by the bundle
+	 * @return mappings the file path mapping of the resources of the bundle
+     */
+    public List<FilePathMapping> getFilePathMappings();
+    
+    
 	/**
 	 * Returns an ordered list with all the items pertaining to this bundle. 
 	 * @return an ordered list with all the items pertaining to this bundle. 

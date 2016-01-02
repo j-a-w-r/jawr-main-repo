@@ -312,8 +312,16 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 		URL url = null;
 		try {
 			url = ClassLoaderResourceUtils.getResourceURL(path, this);
-			if(url.toString().startsWith(FILE_URL_PREFIX)){
+			String strURL = url.toString();
+			if(strURL.startsWith(FILE_URL_PREFIX)){
 				filePath = new File(url.getFile()).getAbsolutePath();
+			}else if(strURL.startsWith(JAR_URL_PREFIX+FILE_URL_PREFIX)){
+				String tmp = strURL.substring((JAR_URL_PREFIX+FILE_URL_PREFIX).length());
+				int idxJarContentSeparator = tmp.indexOf("!");
+				if(idxJarContentSeparator != -1){
+					tmp = tmp.substring(0, idxJarContentSeparator);
+				}
+				filePath = new File(tmp).getAbsolutePath();
 			}
 		} catch (ResourceNotFoundException e) {
 			filePath = null;

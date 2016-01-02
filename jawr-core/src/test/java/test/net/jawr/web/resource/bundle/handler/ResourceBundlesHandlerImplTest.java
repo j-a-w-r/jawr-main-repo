@@ -15,8 +15,6 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import test.net.jawr.web.resource.bundle.PredefinedBundlesHandlerUtil;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
-
-
 public class ResourceBundlesHandlerImplTest  extends  ResourceHandlerBasedTest {
 	
 	private static final String ROOT_DEFAULT_FOLDER = "/collectionshandler/default/";

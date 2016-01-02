@@ -17,6 +17,7 @@ import java.util.List;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**

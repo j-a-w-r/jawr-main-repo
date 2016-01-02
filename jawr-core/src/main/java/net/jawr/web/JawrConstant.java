@@ -307,5 +307,8 @@ public class JawrConstant {
 	
 	/** The performance request handling logger */
 	public static final String PERF_REQ_HANDLING_LOGGER = "net.jawr.perf.request";
+
+	/** The JAWR config hashcode property name */
+	public static final String JAWR_CONFIG_HASHCODE = "jawr.config.hashcode";
 	
 }

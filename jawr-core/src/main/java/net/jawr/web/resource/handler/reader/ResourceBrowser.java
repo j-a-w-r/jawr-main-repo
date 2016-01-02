@@ -45,5 +45,5 @@ public interface ResourceBrowser {
 	 * @return the file path of the resource
 	 */
 	String getFilePath(String resourcePath);
-
+		
 }

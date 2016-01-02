@@ -50,12 +50,13 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 		Properties props = new Properties();
 		JawrConfig config = new JawrConfig("js", props);
 		config.setDebugModeOn(false);
-		config.setGeneratorRegistry(new GeneratorRegistry());
-		compositeCollectionNoDebug = new CompositeResourceBundle("/bundles/compositeNoDebug.js","compositeNoDebug",bundles,new InclusionPattern(false, 0, DebugInclusion.NEVER),rsHandler, null, "js",config);
+		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
+		config.setGeneratorRegistry(generatorRegistry);
+		compositeCollectionNoDebug = new CompositeResourceBundle("/bundles/compositeNoDebug.js","compositeNoDebug",bundles,new InclusionPattern(false, 0, DebugInclusion.NEVER),rsHandler, null, "js",generatorRegistry);
 		config.setDebugModeOn(true);
-		compositeCollectionDebugOnly = new CompositeResourceBundle("/bundles/compositeDebugOnly.js","compositeDebugOnly",bundles,new InclusionPattern(false, 0, DebugInclusion.ONLY),rsHandler, null, "js",config);
+		compositeCollectionDebugOnly = new CompositeResourceBundle("/bundles/compositeDebugOnly.js","compositeDebugOnly",bundles,new InclusionPattern(false, 0, DebugInclusion.ONLY),rsHandler, null, "js",generatorRegistry);
 
-		compositeCollectionDebugAlways = new CompositeResourceBundle("/bundles/compositeDebugAlways.js","compositeDebugAlways",bundles,new InclusionPattern(false, 0, DebugInclusion.ALWAYS),rsHandler, null, "js",config);
+		compositeCollectionDebugAlways = new CompositeResourceBundle("/bundles/compositeDebugAlways.js","compositeDebugAlways",bundles,new InclusionPattern(false, 0, DebugInclusion.ALWAYS),rsHandler, null, "js",generatorRegistry);
 
 	}
 	

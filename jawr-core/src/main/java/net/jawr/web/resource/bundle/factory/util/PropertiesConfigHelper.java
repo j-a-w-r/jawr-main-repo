@@ -137,6 +137,17 @@ public class PropertiesConfigHelper {
 	}
 
 	/**
+	 * Returns the value of the custom bundle boolean property, or <b>false</b> if no value is defined
+	 * @param bundleName the bundle name
+	 * @param key the key of the property
+	 * @return the value of the custom bundle property
+	 */
+	public boolean getCustomBundleBooleanProperty(String bundleName, String key) {
+		return Boolean.parseBoolean(props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
+				+ bundleName + key, "false"));
+	}
+	
+	/**
 	 * Returns as a list, the comma separated values of a property 
 	 * @param key the key of the property
 	 * @return a list of the comma separated values of a property 

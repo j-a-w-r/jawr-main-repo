@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,17 +13,20 @@
  */
 package net.jawr.web.resource.bundle;
 
+import static net.jawr.web.JawrConstant.COMMA_SEPARATOR;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
-import net.jawr.web.resource.bundle.iterator.BundlePath;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.bundle.postprocess.ChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.util.StringUtils;
@@ -37,13 +40,19 @@ import net.jawr.web.util.StringUtils;
 public class JoinableResourceBundlePropertySerializer {
 
 	/**
-	 * This method will serialize the properties of the bundle in the Properties object
+	 * The last modified separator
+	 */
+	public static final String LAST_MODIFIED_SEPARATOR = "#";
+	
+	
+
+	/**
+	 * Serializes the properties of the bundle in the Properties object
 	 * 
-	 * This method will serialize all bundle except the childs of composite bundle,
-	 * for which the mappings will be part of their parent bundles.  
+	 * This method will serialize all bundle.  
 	 * The properties associated to a bundle are the same as the one define in the jawr configuration file.
 	 * Only the following properties are different from the standard configuration file :
-	 *   - The mapping, which will contains path to each resources of the bundle ( no wildcard like : myfolder/** ) 
+	 *   - The file mappings, which will contains the file path to each resources which is available on filesystem 
 	 *   - The variants which will be explicitly specified.
 	 *   - The bundle hash codes will be define as properties, so we will not have to compute them.
 	 *   For a bundle with local variants, there will be an hash code for each variant + one, which is the hash 
@@ -56,18 +65,15 @@ public class JoinableResourceBundlePropertySerializer {
 	public static void serializeInProperties(JoinableResourceBundle bundle,
 			String type, Properties props) {
 
-		// If the bundle is a child of a composite bundle, 
-		// no need to serialize it, it will be integrated with the composite bundle
-		if (StringUtils.isEmpty(bundle.getId())) {
-			return;
-		}
 
 		String bundleName = bundle.getName();
 		String prefix = PropertiesBundleConstant.PROPS_PREFIX + type + "."+ PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY + bundleName;
 		InclusionPattern inclusion = bundle.getInclusionPattern();
 
 		// Set the ID
-		props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID, bundle.getId());
+		if(StringUtils.isNotEmpty(bundle.getId())){
+			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_ID, bundle.getId());
+		}
 		
 		if(StringUtils.isNotEmpty(bundle.getBundlePrefix())){
 			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX, bundle.getBundlePrefix());
@@ -142,19 +148,20 @@ public class JoinableResourceBundlePropertySerializer {
 			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE, bundleHashcode);
 		}
 		
-
 		// mapping
-		List<BundlePath> itemPathList = null; 
-		if(!bundle.getInclusionPattern().isIncludeOnDebug()){
-			itemPathList = bundle.getItemPathList();
-		}else if(!bundle.getInclusionPattern().isExcludeOnDebug()){
-			itemPathList = bundle.getItemDebugPathList();
-		}
-		
-		if (itemPathList != null && !itemPathList.isEmpty()) {
+		List<PathMapping> pathMappings= bundle.getMappings(); 
+		if (pathMappings != null && !pathMappings.isEmpty()) {
 			props
 					.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS,
-							getCommaSeparatedStringForBundlePath(itemPathList));
+							getCommaSeparatedStringForPathMapping(pathMappings));
+		}
+		
+		List<FilePathMapping> filePathList = bundle.getFilePathMappings(); 
+		
+		if (filePathList != null && !filePathList.isEmpty()) {
+			props
+					.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS,
+							getCommaSeparatedStringForFilePath(filePathList));
 		}
 		List<JoinableResourceBundle> dependencies = bundle.getDependencies();
 		if (dependencies != null && !dependencies.isEmpty()) {
@@ -166,6 +173,17 @@ public class JoinableResourceBundlePropertySerializer {
 		if (licensesPathList != null && !licensesPathList.isEmpty()) {
 			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_LICENCE_PATH_LIST,
 					getCommaSeparatedString(licensesPathList));
+		}
+		
+		// Handle composite bundle
+		if(bundle.isComposite()){
+			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_FLAG, Boolean.TRUE.toString());
+			List<JoinableResourceBundle> children = ((CompositeResourceBundle) bundle).getChildBundles();
+			List<String> bundleNames = getBundleNames(children);
+			props.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_NAMES, getCommaSeparatedString(bundleNames));
+			for (JoinableResourceBundle childBundle : children) {
+				serializeInProperties(childBundle, type, props);
+			}
 		}
 	}
 
@@ -213,12 +231,12 @@ public class JoinableResourceBundlePropertySerializer {
 	 */
 	private static String getCommaSeparatedString(Collection<String> coll) {
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (Iterator<String> eltIterator = coll.iterator(); eltIterator.hasNext();) {
 			String elt = eltIterator.next();
 			buffer.append(elt);
 			if(eltIterator.hasNext()){
-				buffer.append(",");
+				buffer.append(COMMA_SEPARATOR);
 			}
 		}
 		return buffer.toString();
@@ -230,14 +248,36 @@ public class JoinableResourceBundlePropertySerializer {
 	 * @param bundlePathMapping.getItemPathList() the item path list
 	 * @return the item path list
 	 */
-	private static String getCommaSeparatedStringForBundlePath(Collection<BundlePath> coll) {
+	private static String getCommaSeparatedStringForPathMapping(Collection<PathMapping> coll) {
+
+		StringBuilder buffer = new StringBuilder();
+		for (Iterator<PathMapping> eltIterator = coll.iterator(); eltIterator.hasNext();) {
+			PathMapping mapping = eltIterator.next();
+			buffer.append(mapping.getPath());
+			if(mapping.isRecursive()){
+				buffer.append("**");
+			}
+			if(eltIterator.hasNext()){
+				buffer.append(COMMA_SEPARATOR);
+			}
+		}
+		return buffer.toString();
+	}
+	
+	/**
+	 * Returns the mapping list
+	 * 
+	 * @param bundlePathMapping.getItemPathList() the item path list
+	 * @return the item path list
+	 */
+	private static String getCommaSeparatedStringForFilePath(Collection<FilePathMapping> mappings) {
 
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator<BundlePath> eltIterator = coll.iterator(); eltIterator.hasNext();) {
-			String elt = eltIterator.next().getPath();
-			buffer.append(elt);
+		for (Iterator<FilePathMapping> eltIterator = mappings.iterator(); eltIterator.hasNext();) {
+			FilePathMapping mapping = eltIterator.next();
+			buffer.append(mapping.getPath()+LAST_MODIFIED_SEPARATOR+mapping.getLastModified());
 			if(eltIterator.hasNext()){
-				buffer.append(",");
+				buffer.append(COMMA_SEPARATOR);
 			}
 		}
 		return buffer.toString();
