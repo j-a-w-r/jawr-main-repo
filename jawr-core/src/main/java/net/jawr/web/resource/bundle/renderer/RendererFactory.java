@@ -32,6 +32,8 @@ public class RendererFactory {
 	 * 
 	 * @param bundler
 	 *            the ResourceBundlesHandler
+	 * @param type
+	 *            the script type attribute
 	 * @param useRandomParam
 	 *            the flag indicating if it should use the random param
 	 * @param async
@@ -41,12 +43,12 @@ public class RendererFactory {
 	 * @return the JS Bundle renderer
 	 */
 	public final static JsBundleLinkRenderer getJsBundleRenderer(
-			ResourceBundlesHandler bundler, Boolean useRandomParam,
+			ResourceBundlesHandler bundler, String type, Boolean useRandomParam,
 			Boolean async, Boolean defer) {
 		JsBundleLinkRenderer renderer = (JsBundleLinkRenderer) ClassLoaderResourceUtils
 				.buildObjectInstance(bundler.getConfig()
 						.getJsBundleLinkRenderClass());
-		renderer.init(bundler, useRandomParam, async, defer);
+		renderer.init(bundler, type, useRandomParam, async, defer);
 
 		return renderer;
 	}

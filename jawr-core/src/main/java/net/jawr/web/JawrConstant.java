@@ -66,9 +66,6 @@ public class JawrConstant {
 	/** The css servlet context attribute name */
 	public static final String CSS_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.CSS_CONTEXT_ATTRIBUTE";
 
-	/** The image servlet context attribute name */
-	//public static final String IMG_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.IMG_CONTEXT_ATTRIBUTE";
-
 	/** The binary servlet context attribute name */
 	public static final String BINARY_CONTEXT_ATTRIBUTE = "net.jawr.web.resource.bundle.BINARY_CONTEXT_ATTRIBUTE";
 
@@ -214,6 +211,9 @@ public class JawrConstant {
 	/** The name of the src attribute */
 	public static final String SRC_ATTR = "src";
 
+	/** The name of the type attribute */
+	public static final String TYPE_ATTR = "type";
+	
 	/** The name of the async attribute */
 	public static final String ASYNC_ATTR = "async";
 	
@@ -310,5 +310,6 @@ public class JawrConstant {
 
 	/** The JAWR config hashcode property name */
 	public static final String JAWR_CONFIG_HASHCODE = "jawr.config.hashcode";
+
 	
 }

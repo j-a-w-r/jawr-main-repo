@@ -45,6 +45,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	private static final String JS_CTX_PATH = "/ctxPathJs";
 
 	private static final String JS_PRE_TAG = "<script type=\"text/javascript\" src=\"";
+	private static final String JS_PRE_TAG_BABEL_TYPE = "<script type=\"text/babel\" src=\"";
 	private static final String JS_POST_TAG = "\" ></script>";
 	private static final String JS_WITH_ASYNC_POST_TAG = "\" async=\"async\" ></script>";
 	private static final String JS_WITH_DEFER_POST_TAG = "\" defer=\"defer\" ></script>";
@@ -90,7 +91,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	 */
 	public void setUp() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, false, false);
+		jsRenderer.init(jsHandler, null, true, false, false);
 	}
 
 	private String renderToString(BundleRenderer renderer, String path,
@@ -271,7 +272,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSDebugLinksPrefixedBundle() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, false, false);
+		jsRenderer.init(jsHandler, null, true, false, false);
 		jawrConfig.setDebugModeOn(true);
 
 		// Test regular link creation
@@ -448,7 +449,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSBundleLinksWithDeferAttributes() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, false, true);
+		jsRenderer.init(jsHandler, null, true, false, true);
 
 		jawrConfig.setDebugModeOn(false);
 
@@ -530,7 +531,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSBundleLinksWithAsyncAttributes() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, true, false);
+		jsRenderer.init(jsHandler, null, true, true, false);
 
 		jawrConfig.setDebugModeOn(false);
 
@@ -612,7 +613,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSBundleLinksWithAsyncAndDeferAttributes() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, true, true);
+		jsRenderer.init(jsHandler, null, true, true, true);
 
 		jawrConfig.setDebugModeOn(false);
 
@@ -700,7 +701,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSDebugLinks() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, false, false);
+		jsRenderer.init(jsHandler, null, true, false, false);
 		jawrConfig.setDebugModeOn(true);
 
 		// Test regular link creation
@@ -840,7 +841,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSDebugExternalBundle() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, false, false);
+		jsRenderer.init(jsHandler, null, true, false, false);
 		jawrConfig.setDebugModeOn(true);
 
 		// Test regular link creation
@@ -930,7 +931,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSDebugLinksWithDefer() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, false, true);
+		jsRenderer.init(jsHandler, null, true, false, true);
 
 		jawrConfig.setDebugModeOn(true);
 
@@ -1031,7 +1032,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSDebugLinksWithAsync() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, true, false);
+		jsRenderer.init(jsHandler, null, true, true, false);
 
 		jawrConfig.setDebugModeOn(true);
 
@@ -1132,7 +1133,7 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 	@Test
 	public void testWriteJSDebugLinksWithAsyncAndDefer() {
 		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
-		jsRenderer.init(jsHandler, true, true, true);
+		jsRenderer.init(jsHandler, null, true, true, true);
 
 		jawrConfig.setDebugModeOn(true);
 
@@ -1230,6 +1231,88 @@ public class BundleLinkRendererTest extends ResourceHandlerBasedTest {
 
 	}
 
+	@Test
+	public void testWriteJSBundleLinksWithNonDefaultType() {
+		
+		jsRenderer = new JavascriptHTMLBundleLinkRenderer();
+		jsRenderer.init(jsHandler, "text/babel", true, false, false);
+
+		jawrConfig.setDebugModeOn(false);
+
+		// Test regular link creation
+		bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, false,
+				false);
+		String result = renderToString(jsRenderer, "/js/one/one2.js",
+				bundleRendererCtx);
+
+		assertNotSame("No script tag written ", "", result.trim());
+
+		String libTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping/libPfx/library.js"
+				+ JS_POST_TAG;
+		String globalTag = JS_PRE_TAG_BABEL_TYPE
+				+ "/ctxPathJs/srvMapping/globalPfx/global.js" + JS_POST_TAG;
+		String debOffTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping/pfx/debugOff.js"
+				+ JS_POST_TAG;
+		String oneTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping/pfx/js/one.js"
+				+ JS_POST_TAG;
+		StringTokenizer tk = new StringTokenizer(result, "\n");
+
+		assertEquals("Invalid number of tags written. ", 4, tk.countTokens());
+		assertTrue("Unexpected tag added at position 0",
+				assertStartEndSimmilarity(libTag, "libPfx", tk.nextToken()));
+		assertTrue(
+				"Unexpected tag added at position 1",
+				assertStartEndSimmilarity(globalTag, "globalPfx",
+						tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",
+				assertStartEndSimmilarity(debOffTag, "pfx", tk.nextToken()));
+		assertTrue("Unexpected tag added at position 3",
+				assertStartEndSimmilarity(oneTag, "pfx", tk.nextToken()));
+
+		// Reusing the set, we test that no repeats are allowed.
+		result = renderToString(jsRenderer, "/js/one/one2.js",
+				bundleRendererCtx);
+		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
+
+		// Test gzipped link creation
+		String libZTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping"
+				+ BundleRenderer.GZIP_PATH_PREFIX + "libPfx/library.js"
+				+ JS_POST_TAG;
+		String globalZTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping"
+				+ BundleRenderer.GZIP_PATH_PREFIX + "globalPfx/global.js"
+				+ JS_POST_TAG;
+		String debOffZTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping"
+				+ BundleRenderer.GZIP_PATH_PREFIX + "pfx/debugOff.js"
+				+ JS_POST_TAG;
+		String debOffoneTag = JS_PRE_TAG_BABEL_TYPE + "/ctxPathJs/srvMapping"
+				+ BundleRenderer.GZIP_PATH_PREFIX + "pfx/js/one.js"
+				+ JS_POST_TAG;
+		bundleRendererCtx = new BundleRendererContext(JS_CTX_PATH, null, true,
+				false);
+		// globalBundleAdded = false;
+		result = renderToString(jsRenderer, "/js/one/one2.js",
+				bundleRendererCtx);
+		assertNotSame("No gzip script tags written ", "", result.trim());
+		tk = new StringTokenizer(result, "\n");
+		assertEquals("Invalid number of gzip script tags written. ", 4,
+				tk.countTokens());
+		assertTrue("Unexpected tag added at position 0",
+				assertStartEndSimmilarity(libZTag, "libPfx", tk.nextToken()));
+		assertTrue(
+				"Unexpected tag added at position 1",
+				assertStartEndSimmilarity(globalZTag, "globalPfx",
+						tk.nextToken()));
+		assertTrue("Unexpected tag added at position 2",
+				assertStartEndSimmilarity(debOffZTag, "pfx", tk.nextToken()));
+		assertTrue("Unexpected tag added at position 3",
+				assertStartEndSimmilarity(debOffoneTag, "pfx", tk.nextToken()));
+
+		// Reusing the set, we test that no repeats are allowed.
+		result = renderToString(jsRenderer, "/js/one/one2.js",
+				bundleRendererCtx);
+		assertTrue("Tags were repeated", StringUtils.isEmpty(result));
+	}
+	
 	@Test
 	public void testWriteJSBundleLinksWithHttpCdn() {
 		jawrConfig.setDebugModeOn(false);
