@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Ibrahim Chaehoi
+ * Copyright 2008-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,8 +38,8 @@ public class ELJavascriptBundleTagBeanInfo extends SimpleBeanInfo {
 		List<PropertyDescriptor> proplist = new ArrayList<PropertyDescriptor>();
 
 		try {
-			proplist.add(new PropertyDescriptor("src", ELJavascriptBundleTag.class,
-					null, "setSrcExpr"));
+			proplist.add(new PropertyDescriptor("type", ELJavascriptBundleTag.class,
+					null, "setTypeExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {

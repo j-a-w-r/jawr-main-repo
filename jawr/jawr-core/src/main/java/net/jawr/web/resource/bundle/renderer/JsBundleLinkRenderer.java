@@ -31,4 +31,15 @@ public interface JsBundleLinkRenderer extends BundleRenderer {
 	 */
 	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer);
 	
+	/**
+	 * Initializes the JS Bundle renderer
+	 * @param bundler the resource bundle handler
+	 * @param type the script type attribute
+	 * @param useRandomParam the flag indicating if it should use random param
+	 * @param async the flag indicating if the link has an async attribute
+	 * @param defer the flag indicating if the link has a deferred attribute
+	 */
+	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam,
+    		Boolean async, Boolean defer);
+    
 }

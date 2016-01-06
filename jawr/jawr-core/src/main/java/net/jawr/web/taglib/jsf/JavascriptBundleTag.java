@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,32 +21,41 @@ import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
- * Implementation of a facelets taglib AbstractResourceBundleTag used to render javascript bundles. 
+ * Implementation of a facelets taglib AbstractResourceBundleTag used to render
+ * javascript bundles.
  * 
  * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
  */
 public class JavascriptBundleTag extends AbstractResourceBundleTag {
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.jsf.AbstractResourceBundleTag#createRenderer(javax.faces.context.FacesContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.taglib.jsf.AbstractResourceBundleTag#createRenderer(javax.
+	 * faces.context.FacesContext)
 	 */
 	protected BundleRenderer createRenderer(FacesContext context) {
 
 		ResourceBundlesHandler rsHandler = getResourceBundlesHandler(context);
+		String type = (String) getAttributes().get(JawrConstant.TYPE_ATTR);
 		boolean async = Boolean.valueOf((String) getAttributes().get(JawrConstant.ASYNC_ATTR)).booleanValue();
 		boolean defer = Boolean.valueOf((String) getAttributes().get(JawrConstant.DEFER_ATTR)).booleanValue();
-		return  RendererFactory.getJsBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), async, defer);
+		return RendererFactory.getJsBundleRenderer(rsHandler, type, getUseRandomParamFlag(rsHandler.getConfig()), async,
+				defer);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.jsf.AbstractResourceBundleTag#getResourceHandlerAttributeName()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.taglib.jsf.AbstractResourceBundleTag#
+	 * getResourceHandlerAttributeName()
 	 */
 	@Override
 	protected String getResourceBundlesHandlerAttributeName() {
-		
+
 		return JawrConstant.JS_CONTEXT_ATTRIBUTE;
 	}
 
-	
 }

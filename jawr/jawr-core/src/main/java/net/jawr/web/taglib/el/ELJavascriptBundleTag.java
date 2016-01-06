@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Ibrahim Chaehoi
+ * Copyright 2008-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,10 +29,13 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 public class ELJavascriptBundleTag extends JavascriptBundleTag {
 
 	/** The serial version UID */
-	private static final long serialVersionUID = -5893064781111690672L;
+	private static final long serialVersionUID = -7205914220367498483L;
 
 	/** The source expression */
 	private String srcExpr;
+
+	/** The type expression */
+	private String typeExpr;
 
 	/** The async expression */
 	private String asyncExpr;
@@ -60,6 +63,23 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 	 */
 	public void setUseRandomParamExpr(String useRandomParamExpr) {
 		this.useRandomParamExpr = useRandomParamExpr;
+	}
+
+	/**
+	 * Returns the typeExpr
+	 * 
+	 * @return the typeExpr
+	 */
+	public String getTypeExpr() {
+		return typeExpr;
+	}
+
+	/**
+	 * Sets the typeExpr
+	 * @param typeExpr the typeExpr to set
+	 */
+	public void setTypeExpr(String typeExpr) {
+		this.typeExpr = typeExpr;
 	}
 
 	/**
@@ -132,6 +152,12 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 			setSrc(string);
 		}
 		
+		if (typeExpr != null) {
+			string = (String) ExpressionEvaluatorManager.evaluate("typeExpr",
+					typeExpr, String.class, this, pageContext);
+			setType(string);
+		}
+		
 		if (asyncExpr != null) {
 			string = (String) ExpressionEvaluatorManager.evaluate("asyncExpr",
 					asyncExpr, String.class, this, pageContext);
@@ -161,9 +187,10 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 	 */
 	public void release() {
 		super.release();
+		setTypeExpr(null);
 		setSrcExpr(null);
 		setUseRandomParamExpr(null);
-		setAsync(null);
-		setDefer(null);
+		setAsyncExpr(null);
+		setDeferExpr(null);
 	}
 }

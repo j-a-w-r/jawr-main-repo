@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -29,9 +29,9 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public class JawrJavascriptReference extends AbstractJawrReference {
 
-    /** The serial version UID */
-	private static final long serialVersionUID = -2767038866259367402L;
-
+	/** The serial version UID */
+	private static final long serialVersionUID = 5568821795911376608L;
+	
 	/**
 	 * Constructor
 	 * @param id the ID
@@ -65,6 +65,7 @@ public class JawrJavascriptReference extends AbstractJawrReference {
 		final IValueMap attributes = tag.getAttributes();
 		boolean async = attributes.getBoolean(JawrConstant.ASYNC_ATTR);
 		boolean defer = attributes.getBoolean(JawrConstant.DEFER_ATTR);
-        return RendererFactory.getJsBundleRenderer(rsHandler, useRandomParam, async, defer);
+        String type = attributes.getString(JawrConstant.TYPE_ATTR);
+		return RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, async, defer);
 	}
 }
