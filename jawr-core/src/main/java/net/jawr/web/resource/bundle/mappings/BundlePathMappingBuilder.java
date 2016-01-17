@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
@@ -40,7 +39,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 public class BundlePathMappingBuilder {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory.getLogger(JoinableResourceBundleImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BundlePathMappingBuilder.class);
 
 	/** The licencing file name */
 	public static final String LICENSES_FILENAME = ".license";

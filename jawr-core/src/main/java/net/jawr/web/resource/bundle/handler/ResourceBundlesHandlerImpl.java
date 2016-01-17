@@ -641,6 +641,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		
 		for (JoinableResourceBundle bundle : bundlesToBuild) {
 			
+			// Clears the linked resource mappings as they will be initialized by the processing 
 			bundle.getLinkedFilePathMappings().clear();
 			if (stopWatch != null) {
 				stopWatch.start("Processing bundle '" + bundle.getName() + "'");

@@ -28,10 +28,6 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  * 
  * @author Ibrahim Chaehoi
  */
-/**
- * 
- * @author Ibrahim Chaehoi
- */
 public class CompositeBundlePathMappingBuilder extends BundlePathMappingBuilder {
 
 	/**
