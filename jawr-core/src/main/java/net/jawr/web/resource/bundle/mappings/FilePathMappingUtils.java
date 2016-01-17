@@ -40,10 +40,7 @@ public class FilePathMappingUtils {
 	 */
 	public static void addLinkedFilePathMapping(JoinableResourceBundle bundle, String path,
 			ResourceReaderHandler rsHandler) {
-		// TODO check if necessary
-//				if(!generatedBinaryResource){
-//					url = PathNormalizer.asPath(url);
-//				}
+
 		String filePath = rsHandler.getFilePath(path);
 		if(filePath != null){
 			
