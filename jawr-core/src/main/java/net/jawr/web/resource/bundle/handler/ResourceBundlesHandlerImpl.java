@@ -593,7 +593,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
 		build(bundlesToRebuild, true, stopWatch);
 		try {
-			watcher.initPathToResourceBundleMap(bundlesToRebuild);
+			if(watcher != null){
+				watcher.initPathToResourceBundleMap(bundlesToRebuild);
+			}
 		} catch (IOException e) {
 			throw new BundlingProcessException(e);
 		}
@@ -637,19 +639,21 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		// Global preprocessing
 		executeGlobalPreprocessing(processBundleFlag, stopWatch);
 		
+		// TODO Remove processbundle variable
+		boolean processBundle = true;
+		
 		for (JoinableResourceBundle bundle : bundlesToBuild) {
 			
+			bundle.getLinkedFilePathMappings().clear();
 			if (stopWatch != null) {
 				stopWatch.start("Processing bundle '" + bundle.getName() + "'");
 			}
 
-			boolean processBundle = processBundleFlag;
 			if (!ThreadLocalJawrContext.isBundleProcessingAtBuildTime() && null != bundle.getAlternateProductionURL()) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("No bundle generated for '" + bundle.getId()
 							+ "' because a production URL is defined for this bundle.");
 				}
-				processBundle = false;
 			}
 			if (bundle instanceof CompositeResourceBundle) {
 				joinAndStoreCompositeResourcebundle((CompositeResourceBundle) bundle, processBundle);
@@ -825,13 +829,13 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			// Post process composite bundle as needed
 			store = postProcessJoinedCompositeBundle(composite, store.getContent(), status);
 
-			if (processBundle) {
+			//if (processBundle) {
 
 				String variantKey = VariantUtils.getVariantKey(variants);
 				String name = VariantUtils.getVariantBundleName(composite.getId(), variantKey, false);
 				storeBundle(name, store);
 				initBundleDataHashcode(composite, store, variantKey);
-			}
+			//}
 		}
 	}
 
@@ -929,7 +933,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private void joinAndStoreBundle(JoinableResourceBundle bundle, boolean processBundle) {
 
-		if (processBundle) {
+		//if (processBundle) {
 
 			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
 					bundle, resourceHandler, config);
@@ -961,7 +965,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			// be generated
 			initBundleDataHashcode(bundle, store, null);
 
-		}
+		//}
 	}
 
 	/**
@@ -1039,15 +1043,6 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			Map<String, String> variants, BundleProcessingStatus status, boolean processBundle) {
 
 		JoinableResourceBundleContent bundleContent = new JoinableResourceBundleContent();
-
-		// // Don't bother with the bundle if it is excluded because of the
-		// // inclusion pattern
-		// // or if we don't process the bundle at start up
-		// if ((bundle.getInclusionPattern().isExcludeOnDebug() && config
-		// .isDebugModeOn())
-		// || (bundle.getInclusionPattern().isIncludeOnlyOnDebug() && !config
-		// .isDebugModeOn()) || !processBundle)
-		// return bundleContent;
 
 		StringBuffer bundleData = new StringBuffer();
 		StringBuffer store = null;

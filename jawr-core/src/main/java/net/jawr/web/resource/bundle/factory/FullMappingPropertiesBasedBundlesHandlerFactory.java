@@ -345,6 +345,21 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 				}
 			}
 		}
+		
+		// Checks if the linked resource has been modified
+		fileMappings = props.getCustomBundlePropertyAsList(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_LINKED_FILEPATH_MAPPINGS);
+		for (String filePathWithTimeStamp : fileMappings) {
+			String[] tmp = filePathWithTimeStamp.split(LAST_MODIFIED_SEPARATOR);
+			String filePath = tmp[0];
+			long storedLastModified = Long.parseLong(tmp[1]);
+			long currentLastModified = rsReaderHandler.getLastModified(filePath);
+			FilePathMapping fPathMapping = new FilePathMapping(bundle, filePath, currentLastModified);
+			bundle.getLinkedFilePathMappings().add(fPathMapping);
+			if(storedLastModified != currentLastModified){
+				bundle.setDirty(true);
+			}
+		}
 	}
 
 	/**

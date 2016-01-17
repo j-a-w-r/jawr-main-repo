@@ -311,5 +311,4 @@ public class JawrConstant {
 	/** The JAWR config hashcode property name */
 	public static final String JAWR_CONFIG_HASHCODE = "jawr.config.hashcode";
 
-	
 }

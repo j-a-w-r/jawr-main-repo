@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2015 Ibrahim Chaehoi
+ * Copyright 2012-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,8 @@ import java.util.List;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.mappings.BundlePathMappingBuilder;
+import net.jawr.web.resource.bundle.mappings.OrphanBundlePathMappingBuilder;
 import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
@@ -25,39 +27,41 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  * 
  * @author Ibrahim Chaehoi
  */
-public class JoinableResourceOrphanBundleImpl extends
-		JoinableResourceBundleImpl {
+public class JoinableResourceOrphanBundleImpl extends JoinableResourceBundleImpl {
 
 	/**
 	 * Constructor
 	 * 
-	 * @param id the ID of this bundle
-	 * @param name Unique name for this bundle.
-	 * @param fileExtension File extensions for this bundle.
-	 * @param inclusionPattern Strategy for including this bundle.
-	 * @param pathMappings Set Strings representing the folders or files to include, possibly with wildcards.
-	 * @param resourceReaderHandler Used to access the files and folders.
-	 * @param generatorRegistry the generator registry
+	 * @param id
+	 *            the ID of this bundle
+	 * @param name
+	 *            Unique name for this bundle.
+	 * @param fileExtension
+	 *            File extensions for this bundle.
+	 * @param inclusionPattern
+	 *            Strategy for including this bundle.
+	 * @param pathMappings
+	 *            Set Strings representing the folders or files to include,
+	 *            possibly with wildcards.
+	 * @param resourceReaderHandler
+	 *            Used to access the files and folders.
+	 * @param generatorRegistry
+	 *            the generator registry
 	 */
-	public JoinableResourceOrphanBundleImpl(String id, String name,
-			String fileExtension, InclusionPattern inclusionPattern,
-			List<String> pathMappings,
-			ResourceReaderHandler resourceReaderHandler,
+	public JoinableResourceOrphanBundleImpl(String id, String name, String fileExtension,
+			InclusionPattern inclusionPattern, List<String> pathMappings, ResourceReaderHandler resourceReaderHandler,
 			GeneratorRegistry generatorRegistry) {
-		super(id, name, null, fileExtension, inclusionPattern, pathMappings,
-				resourceReaderHandler, generatorRegistry);
+		super(id, name, null, fileExtension, inclusionPattern, pathMappings, resourceReaderHandler, generatorRegistry);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundleImpl#addItemsFromDir(java.lang.String, boolean)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundleImpl#createBundlePathMappingBuilder(java.lang.String, net.jawr.web.resource.handler.reader.ResourceReaderHandler, net.jawr.web.resource.bundle.generator.GeneratorRegistry)
 	 */
 	@Override
-	protected void addItemsFromDir(PathMapping dir, boolean addSubDirs) {
-		String dirName = dir.getPath(); 
-		if(!dirName.startsWith(JawrConstant.WEB_INF_DIR) &&
-				!dirName.startsWith(JawrConstant.META_INF_DIR)){
-			super.addItemsFromDir(dir, addSubDirs);
-		}
+	protected BundlePathMappingBuilder createBundlePathMappingBuilder(String fileExtension,
+			ResourceReaderHandler resourceReaderHandler, GeneratorRegistry generatorRegistry) {
+		
+		return new OrphanBundlePathMappingBuilder(this, fileExtension, generatorRegistry, resourceReaderHandler);
 	}
 
 	

@@ -445,4 +445,32 @@ public class FileUtils {
 		}
 		return resourceNames;
     }
+    
+    public static void clearDirectory(String path) {
+		deleteDirectory(path);
+		File dir = new File(path);
+		if (!dir.exists()){
+			if(!dir.mkdirs()){
+				throw new RuntimeException("Impossible to create the directory : "+path);
+			}
+		}
+	}
+	
+	public static boolean deleteDirectory(String path) {
+		return deleteDirectory(new File(path));
+	}
+	
+	public static boolean deleteDirectory(File path) {
+		if (path.exists()) {
+			File[] files = path.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleteDirectory(files[i]);
+				} else {
+					files[i].delete();
+				}
+			}
+		}
+		return (path.delete());
+	}
 }

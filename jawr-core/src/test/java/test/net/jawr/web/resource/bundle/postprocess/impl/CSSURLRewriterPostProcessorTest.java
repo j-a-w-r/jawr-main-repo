@@ -512,7 +512,7 @@ public class CSSURLRewriterPostProcessorTest {
 		// Set up the Image servlet Jawr config
 		props = new Properties();
 		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
-		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, null, null);
+		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgServletJawrConfig, rsHandler, null);
 		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		imgRsHandler.addMapping("/images/someImage.gif", "/cp653321354/images/someImage.gif");

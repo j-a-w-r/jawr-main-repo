@@ -84,6 +84,18 @@ public interface JoinableResourceBundle {
     public List<FilePathMapping> getFilePathMappings();
     
     
+    /**
+	 * Returns the file path mappings for linked resources, used by the bundle
+	 * @return mappings the file path mapping of the linked resources of the bundle
+     */
+	public List<FilePathMapping> getLinkedFilePathMappings();
+	
+	/**
+	 * Sets the file path mappings for linked resources
+	 * @param mappings the mapping to set
+	 */
+	public void setLinkedFilePathMappings(List<FilePathMapping> mappings);
+	
 	/**
 	 * Returns an ordered list with all the items pertaining to this bundle. 
 	 * @return an ordered list with all the items pertaining to this bundle. 
@@ -245,5 +257,5 @@ public interface JoinableResourceBundle {
 	 * @return true if resource bundle is dirty or not
 	 */
 	public boolean isDirty();
-	
+
 }
