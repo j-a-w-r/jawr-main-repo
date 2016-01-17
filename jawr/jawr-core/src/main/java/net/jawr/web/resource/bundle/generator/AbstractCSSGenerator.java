@@ -46,7 +46,6 @@ public abstract class AbstractCSSGenerator implements SpecificCDNDebugPathResour
 	 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#getDebugModeBuildTimeGenerationPath(java.lang.String)
 	 */
 	public String getDebugModeBuildTimeGenerationPath(String path) {
-		// TODO check this
 		return path.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR);
 	}
 	

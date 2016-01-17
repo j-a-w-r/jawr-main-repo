@@ -10,27 +10,48 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.when;
+
 import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.mapper.OrphanResourceBundlesMapper;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
-import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
-import test.net.jawr.web.resource.bundle.handler.ResourceHandlerBasedTest;
+import test.net.jawr.web.ResourceHandlerBasedUtils;
 
 /**
  * @author jhernandez
  * @author ibrahim Chaehoi
  */
-public class OrphanResourceBundlesMapperTest extends  ResourceHandlerBasedTest {
+@RunWith(MockitoJUnitRunner.class)
+public class OrphanResourceBundlesMapperTest {
 	private static final String ROOT_TESTDIR = "/orphanspathfactory/";
 	private OrphanResourceBundlesMapper factory;
+	private ResourceHandlerBasedUtils rhb;
+	
+	@Mock
+	private JoinableResourceBundle bundle;
 	
 	public OrphanResourceBundlesMapperTest() {
 		try {			
 			Charset charsetUtf = Charset.forName("UTF-8"); 
 			
-			ResourceReaderHandler rsHandler = createResourceReaderHandler(ROOT_TESTDIR,"js",charsetUtf);
+			rhb = new ResourceHandlerBasedUtils();
+			ResourceReaderHandler rsHandler = rhb.createResourceReaderHandler(ROOT_TESTDIR,"js",charsetUtf);
 			List<JoinableResourceBundle> bundles = new ArrayList<JoinableResourceBundle>();
 			
 			List<String> globalPaths = Arrays.asList("/js/global/global.js");
@@ -42,7 +63,7 @@ public class OrphanResourceBundlesMapperTest extends  ResourceHandlerBasedTest {
 			List<String> debugPaths = Arrays.asList("/js/debug/off/debugOff.js", "/js/debug/on/debugOn.js");
 			bundles.add(buildMockResourceBundle(debugPaths,Collections.singleton("")));
 			
-			factory = new OrphanResourceBundlesMapper("", rsHandler, config.getGeneratorRegistry(), bundles, "js");
+			factory = new OrphanResourceBundlesMapper("", rsHandler, rhb.getConfig().getGeneratorRegistry(), bundles, "js");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,6 +73,7 @@ public class OrphanResourceBundlesMapperTest extends  ResourceHandlerBasedTest {
 	/**
 	 * Test method for {@link net.jawr.web.resource.bundle.factory.mapper.OrphanResourceBundlesMapper#getOrphans()}.
 	 */
+	@Test
 	public void testGetOrphans() {
 		
 		List<String> data = null;
@@ -95,24 +117,24 @@ public class OrphanResourceBundlesMapperTest extends  ResourceHandlerBasedTest {
 	
 	private JoinableResourceBundle buildMockResourceBundle(final List<String> avoidedPaths, final Set<String> licenses) {
 		
-		return new MockJoinableResourceBundle() {
+		JoinableResourceBundle bundle = Mockito.mock(JoinableResourceBundle.class);
+		when(bundle.belongsToBundle(Matchers.anyString())).then(new Answer<Object>() {
 
-			public boolean belongsToBundle(String itemPath) {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				String itemPath = (String) invocation.getArguments()[0];
 				return avoidedPaths.contains(itemPath);
 			}
-
-			public List<BundlePath> getItemPathList() {
-				List<BundlePath> bundlePaths = new ArrayList<BundlePath>();
-				for(String path : avoidedPaths){
-					bundlePaths.add(new BundlePath(null, path));
-				}
-				return bundlePaths;
-			}
-
-			public Set<String> getLicensesPathList() {
-				return licenses;
-			}
-
-		};		
+		});
+		
+		List<BundlePath> bundlePaths = new ArrayList<BundlePath>();
+		for(String path : avoidedPaths){
+			bundlePaths.add(new BundlePath(null, path));
+		}
+		
+		when(bundle.getItemPathList()).thenReturn(bundlePaths);
+		
+		when(bundle.getLicensesPathList()).thenReturn(licenses);
+		return bundle;
 	}
 }

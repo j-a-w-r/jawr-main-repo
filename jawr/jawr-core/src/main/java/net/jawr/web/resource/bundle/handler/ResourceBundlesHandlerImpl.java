@@ -639,9 +639,6 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		// Global preprocessing
 		executeGlobalPreprocessing(processBundleFlag, stopWatch);
 		
-		// TODO Remove processbundle variable
-		boolean processBundle = true;
-		
 		for (JoinableResourceBundle bundle : bundlesToBuild) {
 			
 			bundle.getLinkedFilePathMappings().clear();
@@ -656,9 +653,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				}
 			}
 			if (bundle instanceof CompositeResourceBundle) {
-				joinAndStoreCompositeResourcebundle((CompositeResourceBundle) bundle, processBundle);
+				joinAndStoreCompositeResourcebundle((CompositeResourceBundle) bundle);
 			} else {
-				joinAndStoreBundle(bundle, processBundle);
+				joinAndStoreBundle(bundle);
 			}
 
 			if (config.getUseBundleMapping() && (!mappingFileExists || bundle.isDirty())) {
@@ -752,10 +749,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * 
 	 * @param composite
 	 *            the composite resource bundle
-	 * @param processBundle
-	 *            the flag indicating if we should process the bundle or not
 	 */
-	private void joinAndStoreCompositeResourcebundle(CompositeResourceBundle composite, boolean processBundle) {
+	private void joinAndStoreCompositeResourcebundle(CompositeResourceBundle composite) {
 
 		BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
 				composite, resourceHandler, config);
@@ -770,7 +765,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		}
 		composite.setVariants(compositeBundleVariants);
 		status.setSearchingPostProcessorVariants(true);
-		joinAndPostProcessBundle(composite, status, processBundle);
+		joinAndPostProcessBundle(composite, status);
 
 		Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
 		if (!postProcessVariants.isEmpty()) {
@@ -781,7 +776,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 					postProcessVariants);
 			composite.setVariants(newVariants);
 			status.setSearchingPostProcessorVariants(false);
-			joinAndPostProcessBundle(composite, status, processBundle);
+			joinAndPostProcessBundle(composite, status);
 		}
 
 	}
@@ -795,11 +790,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 *            the status
 	 * @param compositeBundleVariants
 	 *            the variants
-	 * @param processBundle
-	 *            the flag indicating if we must process the bundle or not.
 	 */
-	private void joinAndPostProcessBundle(CompositeResourceBundle composite, BundleProcessingStatus status,
-			boolean processBundle) {
+	private void joinAndPostProcessBundle(CompositeResourceBundle composite, BundleProcessingStatus status) {
 		JoinableResourceBundleContent store;
 
 		List<Map<String, String>> allVariants = VariantUtils.getAllVariants(composite.getVariants());
@@ -815,8 +807,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				JoinableResourceBundle childbundle = (JoinableResourceBundle) it.next();
 
 				if (!childbundle.getInclusionPattern().isIncludeOnlyOnDebug()) {
-					JoinableResourceBundleContent childContent = joinAndPostprocessBundle(childbundle, variants, status,
-							processBundle);
+					JoinableResourceBundleContent childContent = joinAndPostprocessBundle(childbundle, variants, status);
 					// Do unitary postprocessing.
 					status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
 					StringBuffer content = executeUnitaryPostProcessing(composite, status, childContent.getContent(),
@@ -931,7 +922,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * @param the
 	 *            flag indicating if we should process the bundle or not
 	 */
-	private void joinAndStoreBundle(JoinableResourceBundle bundle, boolean processBundle) {
+	private void joinAndStoreBundle(JoinableResourceBundle bundle) {
 
 		//if (processBundle) {
 
@@ -941,7 +932,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 			// Process the bundle
 			status.setSearchingPostProcessorVariants(true);
-			joinAndPostProcessBundle(bundle, status, processBundle);
+			joinAndPostProcessBundle(bundle, status);
 
 			Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
 			if (!postProcessVariants.isEmpty()) {
@@ -953,13 +944,13 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 						postProcessVariants);
 				bundle.setVariants(newVariants);
 				status.setSearchingPostProcessorVariants(false);
-				joinAndPostProcessBundle(bundle, status, processBundle);
+				joinAndPostProcessBundle(bundle, status);
 			}
 
 			// Store the collected resources as a single file, both in text and
 			// gzip
 			// formats.
-			store = joinAndPostprocessBundle(bundle, null, status, processBundle);
+			store = joinAndPostprocessBundle(bundle, null, status);
 			storeBundle(bundle.getId(), store);
 			// Set the data hascode in the bundle, in case the prefix needs to
 			// be generated
@@ -1002,11 +993,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 *            the bundle
 	 * @param status
 	 *            the bundle processing status
-	 * @param processBundle
-	 *            the flag indicating if we must process the bundle or not
 	 */
-	private void joinAndPostProcessBundle(JoinableResourceBundle bundle, BundleProcessingStatus status,
-			boolean processBundle) {
+	private void joinAndPostProcessBundle(JoinableResourceBundle bundle, BundleProcessingStatus status) {
 
 		JoinableResourceBundleContent store;
 		List<Map<String, String>> allVariants = VariantUtils.getAllVariants(bundle.getVariants());
@@ -1018,7 +1006,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			status.setBundleVariants(variantMap);
 			String variantKey = VariantUtils.getVariantKey(variantMap);
 			String name = VariantUtils.getVariantBundleName(bundle.getId(), variantKey, false);
-			store = joinAndPostprocessBundle(bundle, variantMap, status, processBundle);
+			store = joinAndPostprocessBundle(bundle, variantMap, status);
 			storeBundle(name, store);
 			initBundleDataHashcode(bundle, store, variantKey);
 		}
@@ -1040,7 +1028,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 *         executed
 	 */
 	private JoinableResourceBundleContent joinAndPostprocessBundle(JoinableResourceBundle bundle,
-			Map<String, String> variants, BundleProcessingStatus status, boolean processBundle) {
+			Map<String, String> variants, BundleProcessingStatus status) {
 
 		JoinableResourceBundleContent bundleContent = new JoinableResourceBundleContent();
 

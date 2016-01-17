@@ -29,5 +29,4 @@ public interface SpecificCDNDebugPathResourceGenerator extends ResourceGenerator
 	 */
 	public String getDebugModeBuildTimeGenerationPath(String parameter);
 	
-	// TODO check impact resourceGeneratorResolver
 }
