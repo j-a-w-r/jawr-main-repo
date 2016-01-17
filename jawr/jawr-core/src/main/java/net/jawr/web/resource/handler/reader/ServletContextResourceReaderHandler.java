@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.ServletContext;
 
@@ -58,16 +59,16 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	private GeneratorRegistry generatorRegistry;
 
 	/** The list of resource readers */
-	private List<TextResourceReader> resourceReaders = new ArrayList<TextResourceReader>();
+	private List<TextResourceReader> resourceReaders = new CopyOnWriteArrayList<TextResourceReader>();
 
 	/** The list of stream resource readers */
-	private List<StreamResourceReader> streamResourceReaders = new ArrayList<StreamResourceReader>();
+	private List<StreamResourceReader> streamResourceReaders = new CopyOnWriteArrayList<StreamResourceReader>();
 
 	/** The list of resource info providers */
-	private List<ResourceBrowser> resourceInfoProviders = new ArrayList<ResourceBrowser>();
+	private List<ResourceBrowser> resourceInfoProviders = new CopyOnWriteArrayList<ResourceBrowser>();
 
 	/** The allowed file extension */
-	private List<String> allowedExtensions = new ArrayList<String>();
+	private List<String> allowedExtensions = new CopyOnWriteArrayList<String>();
 
 	/**
 	 * Constructor

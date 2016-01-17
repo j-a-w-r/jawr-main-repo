@@ -15,10 +15,10 @@ package net.jawr.web.resource.bundle;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.iterator.BundlePath;
+import net.jawr.web.resource.bundle.mappings.BundlePathMappingBuilder;
+import net.jawr.web.resource.bundle.mappings.CompositeBundlePathMappingBuilder;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
@@ -63,20 +63,12 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 		super(id, name, bundlePrefix, fileExtension, inclusionPattern, resourceHandler, generatorRegistry);
 
 		this.childBundles = childBundles;
+		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceHandler, generatorRegistry);
+		this.bundlePathMapping = this.bundlePathMappingBuilder.build(null);
+		
 		for (Iterator<JoinableResourceBundle> it = this.childBundles.iterator(); it.hasNext();) {
 			JoinableResourceBundle child = it.next();
-			if (!child.getInclusionPattern().isIncludeOnlyOnDebug()) {
-				this.bundlePathMapping.getItemPathList().addAll(child.getItemPathList());
-				addFilePathMapping(child.getItemPathList());
-			}
-
-			if (!child.getInclusionPattern().isExcludeOnDebug()) {
-				this.bundlePathMapping.getItemDebugPathList().addAll(child.getItemDebugPathList());
-				addFilePathMapping(child.getItemDebugPathList());
-			}
-			this.bundlePathMapping.getLicensesPathList().addAll(child.getLicensesPathList());
-			addFilePathMapping(child.getLicensesPathList());
-
+			
 			// If the child has no postprocessors, apply the composite's if any
 			if (null == child.getBundlePostProcessor()) {
 				child.setBundlePostProcessor(this.getBundlePostProcessor());
@@ -87,24 +79,12 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 		}
 	}
 
-	/**
-	 * Adds paths to the file path mapping
-	 * @param paths the paths to add
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundleImpl#createBundlePathMappingBuilder(java.lang.String, net.jawr.web.resource.handler.reader.ResourceReaderHandler, net.jawr.web.resource.bundle.generator.GeneratorRegistry)
 	 */
-	private void addFilePathMapping(Set<String> paths) {
-		for (String path : paths) {
-			addFilePathMapping(path);
-		}
-	}
-
-	/**
-	 * Adds bundle paths to the file path mapping
-	 * @param paths the paths to add
-	 */
-	private void addFilePathMapping(List<BundlePath> itemPathList) {
-		for (BundlePath bundlePath : itemPathList) {
-			addFilePathMapping(bundlePath.getPath());
-		}
+	@Override
+	protected BundlePathMappingBuilder createBundlePathMappingBuilder(String fileExtension, ResourceReaderHandler resourceReaderHandler, GeneratorRegistry generatorRegistry){
+		return new CompositeBundlePathMappingBuilder(this, fileExtension, generatorRegistry, resourceReaderHandler);
 	}
 
 	/*

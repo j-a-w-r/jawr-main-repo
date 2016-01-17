@@ -49,6 +49,11 @@ public class BundlePathMapping {
 	private List<FilePathMapping> filePathMappings;
 	
 	/**
+	 * The list of file path mappings for linked resources. It could only contains file mapping to resources used by the bundle
+	 */
+	private List<FilePathMapping> linkedFilePathMappings;
+	
+	/**
 	 * The final item path list containing all the resource linked to this
 	 * bundle for debug mode
 	 */
@@ -70,13 +75,7 @@ public class BundlePathMapping {
 		this.licensesPathList = new HashSet<String>();
 		this.pathMappings = new CopyOnWriteArrayList<PathMapping>();
 		this.filePathMappings = new CopyOnWriteArrayList<FilePathMapping>();
-	}
-
-	/**
-	 * @return the filePathMappings
-	 */
-	public List<FilePathMapping> getFilePathMappings() {
-		return filePathMappings;
+		this.linkedFilePathMappings = new CopyOnWriteArrayList<FilePathMapping>();
 	}
 
 	/**
@@ -146,5 +145,27 @@ public class BundlePathMapping {
 	 */
 	public void setLicensesPathList(Set<String> licensesPathList) {
 		this.licensesPathList = licensesPathList;
+	}
+	
+	/**
+	 * @return the filePathMappings
+	 */
+	public List<FilePathMapping> getFilePathMappings() {
+		return filePathMappings;
+	}
+
+	/**
+	 * @return the linkedFilePathMappings
+	 */
+	public List<FilePathMapping> getLinkedFilePathMappings() {
+		return linkedFilePathMappings;
+	}
+	
+	/**
+	 * Sets the file path mappings for linked resources
+	 * @param mappings the mapping to set
+	 */
+	public void setLinkedFilePathMappings(List<FilePathMapping> mappings) {
+		this.linkedFilePathMappings = mappings;
 	}
 }

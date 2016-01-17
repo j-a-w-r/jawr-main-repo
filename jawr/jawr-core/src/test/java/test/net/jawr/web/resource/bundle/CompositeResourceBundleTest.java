@@ -6,6 +6,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.DebugInclusion;
@@ -15,23 +22,29 @@ import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
-import test.net.jawr.web.resource.bundle.handler.ResourceHandlerBasedTest;
+import test.net.jawr.web.ResourceHandlerBasedUtils;
 
-public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
+@RunWith(MockitoJUnitRunner.class)
+public class CompositeResourceBundleTest {
 	private static final String ROOT_TESTDIR = "/compositeresourcebundle/";
 	private JoinableResourceBundle compositeCollectionNoDebug;
 	private JoinableResourceBundle compositeCollectionDebugOnly;
 	private JoinableResourceBundle compositeCollectionDebugAlways;
 	
+	private JawrConfig config = null;
+	
 	public CompositeResourceBundleTest() {
+	
+		ResourceHandlerBasedUtils rhb = new ResourceHandlerBasedUtils();
 		ResourceReaderHandler rsHandler = null;
 		try {
-			rsHandler = createResourceReaderHandler(ROOT_TESTDIR, "js",Charset.forName("UTF-8"));
+			rsHandler = rhb.createResourceReaderHandler(ROOT_TESTDIR, "js",Charset.forName("UTF-8"));
 		} catch (Exception e) {
 			System.out.println("Error in test constructor");
 			e.printStackTrace();
 		}
-		
+	
+		config = rhb.getConfig();
 		List<String> mappingA = new ArrayList<String>();
 		mappingA.add("/js/subfolder/");
 		mappingA.add("/outsider.js");
@@ -60,6 +73,7 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 
 	}
 	
+	@Test
 	public void testDebugModeInclusion_debug() {
 		
 		assertTrue("/outsider.js should be added in debug mode",
@@ -96,6 +110,7 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 		return result;
 	}
 	
+	@Test
 	public void testDebugModeInclusion_nodebug() {
 		
 		assertFalse("/outsider.js should not be added in production mode",
@@ -108,6 +123,7 @@ public class CompositeResourceBundleTest extends ResourceHandlerBasedTest {
 				belongsToItemPathList(compositeCollectionNoDebug, "/js/subfolder2/subfolderscript2.js"));
 	}
 	
+	@Test
 	public void testDebugModeInclusion_always() {
 		
 		assertTrue("/outsider.js should be added in debug mode",

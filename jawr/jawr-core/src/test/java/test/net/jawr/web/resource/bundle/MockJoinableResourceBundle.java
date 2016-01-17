@@ -286,4 +286,22 @@ public class MockJoinableResourceBundle implements JoinableResourceBundle {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getLinkedFilePathMappings()
+	 */
+	@Override
+	public List<FilePathMapping> getLinkedFilePathMappings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#setLinkedFilePathMappings(java.util.List)
+	 */
+	@Override
+	public void setLinkedFilePathMappings(List<FilePathMapping> mappings) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

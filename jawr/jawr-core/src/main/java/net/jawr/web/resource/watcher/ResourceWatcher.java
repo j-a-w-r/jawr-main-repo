@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
@@ -61,13 +62,13 @@ public class ResourceWatcher extends Thread {
 
 	/** The watch service */
 	private final WatchService watchService;
-	
+
 	/** The bundles handler */
 	private ResourceBundlesHandler bundlesHandler;
-	
+
 	/** The bundles handler */
 	private ResourceReaderHandler rsReader;
-	
+
 	/** The keys map */
 	private final Map<WatchKey, Path> keys;
 
@@ -80,11 +81,13 @@ public class ResourceWatcher extends Thread {
 	/**
 	 * Constructor
 	 * 
-	 * @param bundlesHandler the bundles handler
-	 * @param rsReader the resource reader handler
+	 * @param bundlesHandler
+	 *            the bundles handler
+	 * @param rsReader
+	 *            the resource reader handler
 	 */
 	public ResourceWatcher(ResourceBundlesHandler bundlesHandler, ResourceReaderHandler rsReader) {
-		super(bundlesHandler.getResourceType()+" JawrResourceWatcher");
+		super(bundlesHandler.getResourceType() + " JawrResourceWatcher");
 		this.bundlesHandler = bundlesHandler;
 		this.rsReader = rsReader;
 		this.keys = new HashMap<WatchKey, Path>();
@@ -108,10 +111,10 @@ public class ResourceWatcher extends Thread {
 	 * Sets the flag indicating if we must stop the resource watching
 	 */
 	public void stopWatching() {
-		if (LOGGER.isDebugEnabled()){
+		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Stopping resource watching");
 		}
-		
+
 		this.stopWatching.set(true);
 	}
 
@@ -122,56 +125,103 @@ public class ResourceWatcher extends Thread {
 	 *             if an {@link IOException} occurs
 	 */
 	private void initPathToResourceBundleMap() throws IOException {
-		
+
 		initPathToResourceBundleMap(bundlesHandler.getGlobalBundles());
 		initPathToResourceBundleMap(bundlesHandler.getContextBundles());
 	}
-	
+
 	/**
-	 * Initialize the map which links path to asset bundle 
-	 * @param bundles the list of bundles
+	 * Initialize the map which links path to asset bundle
+	 * 
+	 * @param bundles
+	 *            the list of bundles
 	 * @throws IOException
 	 *             if an {@link IOException} occurs
 	 */
 	public synchronized void initPathToResourceBundleMap(List<JoinableResourceBundle> bundles) throws IOException {
-		
+
 		for (JoinableResourceBundle bundle : bundles) {
-			
+
 			// Remove bundle reference from existing mapping if exists
 			removePathMappingFromPathMap(bundle);
-			
+
 			List<PathMapping> mappings = bundle.getMappings();
 			for (PathMapping pathMapping : mappings) {
-				
-				String filePath = rsReader.getFilePath(pathMapping.getPath());
-				if (filePath != null) {
+				register(pathMapping);
+			}
 
-					Path p = Paths.get(filePath);
-					boolean isDir = Files.isDirectory(p);
-					if (!isDir) {
-						p = p.getParent();
-					}
-
-					if (pathMapping.isRecursive()) {
-						registerAll(p, Arrays.asList(pathMapping));
-					} else {
-						register(p, Arrays.asList(pathMapping));
-					}
-				}
-
+			// Register file path mapping for linked resources
+			List<FilePathMapping> fMappings = bundle.getLinkedFilePathMappings();
+			for (FilePathMapping fMapping : fMappings) {
+				register(fMapping);
 			}
 		}
 	}
 
 	/**
-	 * Removes the path mapping of the bundle given in parameter from map which links Path to resource bundle 
-	 * @param bundle the bundle whose the path mapping should be removed
+	 * Register a path mapping
+	 * 
+	 * @param pathMapping
+	 *            the path mapping to register
+	 * @throws IOException
+	 *             if an IOException occurs
+	 */
+	protected void register(PathMapping pathMapping) throws IOException {
+		String filePath = rsReader.getFilePath(pathMapping.getPath());
+		registerPathMapping(pathMapping, filePath);
+	}
+
+	/**
+	 * Register a path mapping
+	 * 
+	 * @param pathMapping
+	 *            the path mapping to register
+	 * @throws IOException
+	 *             if an IOException occurs
+	 */
+	protected void register(FilePathMapping pathMapping) throws IOException {
+		registerPathMapping(pathMapping, pathMapping.getPath());
+	}
+
+	/**
+	 * Register the path mapping
+	 * 
+	 * @param pathMapping
+	 *            the path mapping
+	 * @param filePath
+	 *            the file path
+	 * @throws IOException
+	 *             if an IOException occurs
+	 */
+	protected void registerPathMapping(PathMapping pathMapping, String filePath) throws IOException {
+		if (filePath != null) {
+
+			Path p = Paths.get(filePath);
+			boolean isDir = Files.isDirectory(p);
+			if (!isDir) {
+				p = p.getParent();
+			}
+
+			if (pathMapping.isRecursive()) {
+				registerAll(p, Arrays.asList(pathMapping));
+			} else {
+				register(p, Arrays.asList(pathMapping));
+			}
+		}
+	}
+
+	/**
+	 * Removes the path mapping of the bundle given in parameter from map which
+	 * links Path to resource bundle
+	 * 
+	 * @param bundle
+	 *            the bundle whose the path mapping should be removed
 	 */
 	private void removePathMappingFromPathMap(JoinableResourceBundle bundle) {
 		for (List<PathMapping> pathMappings : pathToResourceBundle.values()) {
 			for (Iterator<PathMapping> iterator = pathMappings.iterator(); iterator.hasNext();) {
 				PathMapping pathMapping = (PathMapping) iterator.next();
-				if(pathMapping.getBundle().getName().equals(bundle.getName())){
+				if (pathMapping.getBundle().getName().equals(bundle.getName())) {
 					iterator.remove();
 				}
 			}
@@ -241,7 +291,7 @@ public class ResourceWatcher extends Thread {
 				close();
 				return;
 			}
-			if(key != null){
+			if (key != null) {
 				Path dir = keys.get(key);
 				if (dir == null) {
 					LOGGER.warn("WatchKey not recognized!!");
@@ -255,7 +305,8 @@ public class ResourceWatcher extends Thread {
 						continue;
 					}
 
-					// Context for directory entry event is the file name of entry
+					// Context for directory entry event is the file name of
+					// entry
 					Path path = (Path) event.context();
 					Path resolvedPath = ((Path) key.watchable()).resolve(path);
 
@@ -293,13 +344,14 @@ public class ResourceWatcher extends Thread {
 							}
 						}
 
-						if(!bundles.isEmpty()){
+						if (!bundles.isEmpty()) {
 							bundlesHandler.notifyModification(bundles);
 						}
-						
+
 						if (!recursivePathMappings.isEmpty()) {
 
-							// if directory is created, and watching recursively,
+							// if directory is created, and watching
+							// recursively,
 							// then
 							// register it and its sub-directories
 							if (kind == ENTRY_CREATE && isDir) {
@@ -315,7 +367,8 @@ public class ResourceWatcher extends Thread {
 					}
 				}
 
-				// reset key and remove from set if directory no longer accessible
+				// reset key and remove from set if directory no longer
+				// accessible
 				boolean valid = key.reset();
 				if (!valid) {
 					keys.remove(key);
@@ -329,5 +382,5 @@ public class ResourceWatcher extends Thread {
 		}
 		close();
 	}
-	
+
 }
