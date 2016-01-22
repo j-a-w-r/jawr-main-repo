@@ -22,6 +22,11 @@ local.properties
 .cproject
 # PDT-specific
 .buildpath
+#################
+## IntelliJ IDEA
+#################
+.idea
+*.iml
 #############
 ## Maven
 #############
