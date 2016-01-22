@@ -69,4 +69,30 @@ public class GeneratorMappingHelperTest {
         assertNull(helper.getParenthesesParam());
     }
 
+    @Test
+    public void withEscapedParentheses() {
+        final String resource = "path/to/foo\\(\\).js";
+        final GeneratorMappingHelper helper = new GeneratorMappingHelper(resource);
+        assertEquals("path/to/foo().js", helper.getPath());
+        assertNull(helper.getParenthesesParam());
+        assertNull(helper.getBracketsParam());
+    }
+
+    @Test
+    public void withEscapedBrackets() {
+        final String resource = "path/to/foo\\[\\].js";
+        final GeneratorMappingHelper helper = new GeneratorMappingHelper(resource);
+        assertEquals("path/to/foo[].js", helper.getPath());
+        assertNull(helper.getParenthesesParam());
+        assertNull(helper.getBracketsParam());
+    }
+
+    @Test
+    public void withEscapedOther() {
+        final String resource = "path/to/foo\\|\\?.js";
+        final GeneratorMappingHelper helper = new GeneratorMappingHelper(resource);
+        assertEquals("path/to/foo\\|\\?.js", helper.getPath());
+        assertNull(helper.getParenthesesParam());
+        assertNull(helper.getBracketsParam());
+    }
 }
