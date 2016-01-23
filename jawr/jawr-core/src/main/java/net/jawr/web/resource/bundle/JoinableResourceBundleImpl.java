@@ -143,7 +143,6 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		this.bundlePathMapping = new BundlePathMapping(this);
 
 		prefixMap = new ConcurrentHashMap<String, String>();
-
 	}
 
 	/**
@@ -681,4 +680,10 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		return dirty;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#resetBundleMapping()
+	 */
+	public void resetBundleMapping(){
+		bundlePathMapping = bundlePathMappingBuilder.build();
+	}
 }

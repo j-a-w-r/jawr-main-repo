@@ -3,7 +3,9 @@
  */
 package net.jawr.web.test.smartbundling;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
@@ -53,21 +55,7 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		checkStandardGeneratedHtmlImageLinks();
 		checkStandardGeneratedHtmlImageInputLinks();
 		
-		JawrIntegrationServer.getInstance().getJettyWebAppContext().stop();
-		
-		// Sleep
-		Thread.sleep(3000);
-		
-		// Update CSS and JS file
-		InputStream is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/css/three.css");
-		OutputStream out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/css/basic/three.css");
-		IOUtils.copy(is, out, true);
-		
-		is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/js/script.js");
-		out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/js/script.js");
-		IOUtils.copy(is, out, true);
-		
-		JawrIntegrationServer.getInstance().getJettyWebAppContext().start();
+		updateContent();
 		page = webClient.getPage(getPageUrl());
 		assertContentEquals("/net/jawr/web/smartbundling/resources/index-jsp-result-2-expected.txt", page);
 
@@ -78,6 +66,38 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		checkUpdatedGeneratedHtmlImageLinks();
 		checkUpdatedGeneratedHtmlImageInputLinks();
 		
+	}
+
+	/**
+	 * @throws Exception
+	 * @throws InterruptedException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	protected void updateContent() throws Exception, InterruptedException, FileNotFoundException, IOException {
+		JawrIntegrationServer.getInstance().getJettyWebAppContext().stop();
+		
+		// Sleep
+		Thread.sleep(3000);
+		
+		// Update CSS and JS file
+		updateResources();
+		
+		JawrIntegrationServer.getInstance().getJettyWebAppContext().start();
+	}
+
+	/**
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	protected void updateResources() throws FileNotFoundException, IOException {
+		InputStream is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/css/three.css");
+		OutputStream out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/css/basic/three.css");
+		IOUtils.copy(is, out, true);
+		
+		is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/js/script.js");
+		out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/js/script.js");
+		IOUtils.copy(is, out, true);
 	}
 
 	public void checkStandardGeneratedJsLinks() {

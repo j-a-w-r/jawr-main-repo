@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -65,6 +65,11 @@ public interface JoinableResourceBundle {
 	 */
 	public InclusionPattern getInclusionPattern();
 	
+	/**
+	 * Reset the bundle mapping
+	 */
+	public void resetBundleMapping();
+		
 	/**
 	 * Sets the mappings, which should be used for the bundle
 	 * @param mappings the mapping of the resources of the bundle

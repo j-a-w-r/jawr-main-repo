@@ -59,6 +59,9 @@ public class BundlePathMappingBuilder {
 	/** The file extensions of the bundle */
 	protected String fileExtension;
 
+	/** The list of path mappings */
+	private List<String> strPathMappings;
+
 	/**
 	 * Constructor
 	 * 
@@ -76,10 +79,10 @@ public class BundlePathMappingBuilder {
 		this.bundle = bundle;
 		this.generatorRegistry = generatorRegistry;
 		this.resourceReaderHandler = rsHandler;
-		
+
 		if (fileExtension != null && fileExtension.length() > 0 && fileExtension.charAt(0) != '.') {
 			this.fileExtension = "." + fileExtension;
-		}else{
+		} else {
 			this.fileExtension = fileExtension;
 		}
 	}
@@ -88,10 +91,23 @@ public class BundlePathMappingBuilder {
 	 * Detects all files that belong to the bundle and adds them to the bundle
 	 * path mapping.
 	 * 
-	 * @param pathMappings the list of path mappings 
+	 * @param pathMappings
+	 *            the list of path mappings
 	 * @return the bundlePathMapping
 	 */
 	public BundlePathMapping build(List<String> strPathMappings) {
+		this.strPathMappings = strPathMappings;
+		return build();
+	}
+
+	/**
+	 * Detects all files that belong to the bundle and adds them to the bundle
+	 * path mapping.
+	 * 
+	 * @return the bundlePathMapping
+	 */
+	public BundlePathMapping build() {
+
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Creating bundle path List for " + this.bundle.getId());
 		}
@@ -191,7 +207,7 @@ public class BundlePathMappingBuilder {
 	 *            folder below the path is included.
 	 */
 	protected void addItemsFromDir(BundlePathMapping bundlePathMapping, PathMapping dirName, boolean addSubDirs) {
-		
+
 		Set<String> resources = resourceReaderHandler.getResourceNames(dirName.getPath());
 		boolean isGeneratedPath = generatorRegistry.isPathGenerated(dirName.getPath());
 		if (LOGGER.isDebugEnabled()) {

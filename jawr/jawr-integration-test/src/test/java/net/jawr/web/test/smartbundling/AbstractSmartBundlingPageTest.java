@@ -71,8 +71,9 @@ public class AbstractSmartBundlingPageTest {
 
 		LOGGER.debug("****** Start Test case *********");
 		JawrIntegrationServer.getInstance().initBeforeTestCase();
-		tmpDir = System.getProperty("java.io.tmpdir") + getTempFolder();
-		File dir = new File(tmpDir);
+		tmpDir = System.getProperty("java.io.tmpdir") +File.separator+ getTempFolder();
+		File dir = new File(System.getProperty("java.io.tmpdir"), getTempFolder());
+		tmpDir = dir.getAbsolutePath();
 		if(dir.exists()){
 			if(!net.jawr.web.util.FileUtils.deleteDirectory(tmpDir)){
 				Thread.sleep(300);
@@ -80,6 +81,8 @@ public class AbstractSmartBundlingPageTest {
 					fail("Unable to delete temp dir : '"+tmpDir+"'");
 				}	
 			}	
+		}else{
+			dir.mkdirs();
 		}
 		
 		tmpDirBackup = JawrIntegrationServer.getInstance().getJettyWebAppContext().getTempDirectory();
