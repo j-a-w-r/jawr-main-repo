@@ -27,6 +27,9 @@ public class GeneratorMappingHelper {
 	/** The brackets regexp finder */
 	private static final String BRACKFINDER_REGEXP = ".*(\\[.*\\]).*";
 
+	/** The string to use in the jawr.properties bundles to escape characters */
+	private static final String ESCAPE_STRING = "\\";
+
 	/** The path requested */
 	private String path;
 
@@ -38,25 +41,40 @@ public class GeneratorMappingHelper {
 
 	/**
 	 * Constructor
-	 * @param mapping the resource mapping
+	 * @param resourceMapping the resource mapping
 	 */
 	public GeneratorMappingHelper(String resourceMapping) {
-		this.path = resourceMapping;
+		path = resourceMapping;
+
+		String escapesRemoved = removeEscapedParenthesesAndBrackets(path);
+
 		// init parameters, if any
-		if (path.matches(PARENFINDER_REGEXP)) {
+		if (escapesRemoved.matches(PARENFINDER_REGEXP)) {
 			parenthesesParam = path.substring(path.indexOf('(') + 1,
 					path.indexOf(')'));
 
 			path = path.substring(0, path.indexOf('('))
 					+ path.substring(path.indexOf(')') + 1);
 		}
-		if (path.matches(BRACKFINDER_REGEXP)) {
+		if (escapesRemoved.matches(BRACKFINDER_REGEXP)) {
 			bracketsParam = path.substring(path.indexOf('[') + 1,
 					path.indexOf(']'));
 
 			path = path.substring(0, path.indexOf('['))
 					+ path.substring(path.indexOf(']') + 1);
 		}
+
+		if (!escapesRemoved.equals(path)) { // Had escaped brackets or parens
+			path = path.replace(ESCAPE_STRING, "");
+		}
+	}
+
+	private String removeEscapedParenthesesAndBrackets(String resourceMapping) {
+		return resourceMapping
+				.replace(ESCAPE_STRING + "(", "")
+				.replace(ESCAPE_STRING + ")", "")
+				.replace(ESCAPE_STRING + "[", "")
+				.replace(ESCAPE_STRING + "]", "");
 	}
 
 	/**
