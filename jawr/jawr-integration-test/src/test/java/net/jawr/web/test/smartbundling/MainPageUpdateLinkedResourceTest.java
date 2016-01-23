@@ -30,11 +30,11 @@ import net.jawr.web.test.utils.Utils;
  * 
  * @author ibrahim Chaehoi
  */
-@JawrTestConfigFiles(webXml = "net/jawr/web/smartbundling/config/web.xml", jawrConfig = "net/jawr/web/smartbundling/config/jawr.properties")
-public class MainPageTest extends AbstractSmartBundlingPageTest {
+@JawrTestConfigFiles(webXml = "net/jawr/web/smartbundling/config/web.xml", jawrConfig = "net/jawr/web/smartbundling/config/jawr-linked-resources.properties")
+public class MainPageUpdateLinkedResourceTest extends AbstractSmartBundlingPageTest {
 
 	protected static String getTempFolder() {
-		return "jawr-integration-smartbundling-test-1";
+		return "jawr-integration-smartbundling-test-2";
 	}
 	
 	@Test
@@ -44,7 +44,7 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 				.singletonList("A little message retrieved from the message bundle : Hello $ world!");
 		assertEquals(expectedAlerts, collectedAlerts);
 		
-		assertContentEquals("/net/jawr/web/smartbundling/resources/index-jsp-result-1-expected.txt", page);
+		assertContentEquals("/net/jawr/web/smartbundling/resources/index-jsp-result-3-expected.txt", page);
 
 		checkStandardGeneratedCssLinks();
 		checkStandardGeneratedJsLinks();
@@ -53,23 +53,25 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		checkStandardGeneratedHtmlImageLinks();
 		checkStandardGeneratedHtmlImageInputLinks();
 		
+		// Stop webapp
 		JawrIntegrationServer.getInstance().getJettyWebAppContext().stop();
 		
 		// Sleep
 		Thread.sleep(3000);
 		
-		// Update CSS and JS file
-		InputStream is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/css/three.css");
-		OutputStream out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/css/basic/three.css");
+		// Update linked resource 
+		InputStream is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/css/two2.css");
+		OutputStream out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/css/linkedresources/two.css");
 		IOUtils.copy(is, out, true);
 		
 		is = getClass().getResourceAsStream("/net/jawr/web/smartbundling/resources/js/script.js");
 		out = new FileOutputStream(JawrIntegrationServer.getInstance().getWebAppRootDir()+"/smartbundling/js/script.js");
 		IOUtils.copy(is, out, true);
 		
+		// Restart webapp
 		JawrIntegrationServer.getInstance().getJettyWebAppContext().start();
 		page = webClient.getPage(getPageUrl());
-		assertContentEquals("/net/jawr/web/smartbundling/resources/index-jsp-result-2-expected.txt", page);
+		assertContentEquals("/net/jawr/web/smartbundling/resources/index-jsp-result-4-expected.txt", page);
 
 		checkUpdatedGeneratedCssLinks();
 		checkUpdatedGeneratedJsLinks();
@@ -104,7 +106,7 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N2053553881/fwk/core/component.css",
+				getUrlPrefix()+"/1159691951/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -114,7 +116,7 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		final HtmlLink css = styleSheets.get(0);
 		final TextPage page = getCssPage(css);
-		assertContentEquals("/net/jawr/web/smartbundling/resources/component-expected.css", page);
+		assertContentEquals("/net/jawr/web/smartbundling/resources/component-expected-3.css", page);
 	}
 
 	public void checkStandardGeneratedHtmlImageLinks() {
@@ -161,7 +163,7 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/1701415561/fwk/core/component.css",
+				getUrlPrefix()+"/N638877215/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -171,7 +173,7 @@ public class MainPageTest extends AbstractSmartBundlingPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		final HtmlLink css = styleSheets.get(0);
 		final TextPage page = getCssPage(css);
-		assertContentEquals("/net/jawr/web/smartbundling/resources/component-expected-2.css", page);
+		assertContentEquals("/net/jawr/web/smartbundling/resources/component-expected-4.css", page);
 	}
 
 	public void checkUpdatedGeneratedHtmlImageLinks() {
