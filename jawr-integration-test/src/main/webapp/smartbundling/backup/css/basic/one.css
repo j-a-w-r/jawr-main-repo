@@ -1,5 +1,5 @@
 body {
-	background-image: url("../img/logo.png");
+	background-image: url("../../img/logo.png");
 	background-repeat: no-repeat;
 }
 
@@ -11,7 +11,7 @@ div {
 .calendar {
 	background-repeat: no-repeat;
 	padding-left : 20px;
-	background-image: url("../img/calendarIcons/calendar.png");
+	background-image: url("../../img/calendarIcons/calendar.png");
 }
 
 .clock {
