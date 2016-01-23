@@ -77,6 +77,15 @@ public class GeneratorMappingHelperTest {
         assertNull(helper.getParenthesesParam());
         assertNull(helper.getBracketsParam());
     }
+    
+    @Test
+    public void withEscapedParenthesesAndParentheses() {
+        final String resource = "path/to/foo\\(\\)(bar).js";
+        final GeneratorMappingHelper helper = new GeneratorMappingHelper(resource);
+        assertEquals("path/to/foo().js", helper.getPath());
+        assertEquals("bar",helper.getParenthesesParam());
+        assertNull(helper.getBracketsParam());
+    }
 
     @Test
     public void withEscapedBrackets() {
