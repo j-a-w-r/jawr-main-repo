@@ -589,8 +589,12 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	public synchronized void rebuildModifiedBundles() {
 
-		List<JoinableResourceBundle> bundlesToRebuild = getBundlesToRebuild();
 		StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
+		
+		List<JoinableResourceBundle> bundlesToRebuild = getBundlesToRebuild();
+		for (JoinableResourceBundle bundle : bundlesToRebuild) {
+			bundle.resetBundleMapping();
+		}
 		build(bundlesToRebuild, true, stopWatch);
 		try {
 			if(watcher != null){
@@ -1238,6 +1242,28 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	@Override
 	public boolean bundlesNeedToBeRebuild() {
 		return !getBundlesToRebuild().isEmpty();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getDirtyBundleNames()
+	 */
+	@Override
+	public List<String> getDirtyBundleNames() {
+		
+		List<String> bundleNames = new ArrayList<>();
+		List<JoinableResourceBundle> bundles = getBundlesToRebuild();
+		for (JoinableResourceBundle bundle : bundles) {
+			bundleNames.add(bundle.getName());
+		}
+		return bundleNames;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
+	 */
+	@Override
+	public void setResourceWatcher(ResourceWatcher watcher) {
+		this.watcher = watcher;
 	}
 
 }

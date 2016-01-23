@@ -16,10 +16,15 @@ package net.jawr.web.test;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.management.remote.JMXServiceURL;
+
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jetty.jmx.ConnectorServer;
+import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -103,6 +108,23 @@ public class JawrIntegrationServer {
 		serverPort = Integer.parseInt(prop.getProperty(PORT_PROPERTY_NAME,
 				DEFAULT_PORT));
 		server = new Server(serverPort);
+		// Setup JMX
+		MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
+		server.addEventListener(mbContainer);
+		server.addBean(mbContainer);
+		
+		try {
+			
+			String host = "localhost";
+			int jmxPort = 1099;
+			String urlPath = String.format("/jndi/rmi://%s:%s/jmxrmi", host, jmxPort);
+	        JMXServiceURL serviceURL = new JMXServiceURL("rmi", host, jmxPort, urlPath);
+	        ConnectorServer connectorServer = new ConnectorServer(serviceURL, "org.eclipse.jetty.jmx:name=rmiconnectorserver");
+			connectorServer.start();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
 		server.setStopAtShutdown(true);
 		String webappName = prop.getProperty(WEBAPP_PROPERTY_NAME,
 				DEFAULT_WEBAPP_NAME);

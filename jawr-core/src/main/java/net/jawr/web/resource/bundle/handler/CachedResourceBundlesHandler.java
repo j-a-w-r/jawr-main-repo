@@ -33,6 +33,7 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
+import net.jawr.web.resource.watcher.ResourceWatcher;
 
 
 /**
@@ -371,6 +372,22 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	@Override
 	public boolean bundlesNeedToBeRebuild() {
 		return rsHandler.bundlesNeedToBeRebuild();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getDirtyBundleNames()
+	 */
+	@Override
+	public List<String> getDirtyBundleNames() {
+		return rsHandler.getDirtyBundleNames();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
+	 */
+	@Override
+	public void setResourceWatcher(ResourceWatcher watcher) {
+		rsHandler.setResourceWatcher(watcher);
 	}
 
 }

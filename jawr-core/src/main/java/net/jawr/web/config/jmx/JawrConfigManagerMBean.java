@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -12,6 +12,8 @@
  * and limitations under the License.
  */
 package net.jawr.web.config.jmx;
+
+import java.util.List;
 
 /**
  * This interface defines the MBean which manage the Jawr configuration for a servlet.
@@ -211,5 +213,10 @@ public interface JawrConfigManagerMBean {
 	 * Rebuilds the dirty bundles. 
 	 */
 	void rebuildDirtyBundles();
+	
+	/**
+	 * Returns the list of dirty bundles. 
+	 */
+	public List<String> getDirtyBundleNames();
 	
 }
