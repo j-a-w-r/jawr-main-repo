@@ -15,19 +15,22 @@ package net.jawr.web.test.smartbundling;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
-import net.jawr.web.test.JawrTestConfigFiles;
+import static org.junit.Assert.assertEquals;
+
+import net.jawr.web.config.jmx.JawrConfigManagerMBean;
+import net.jawr.web.test.jmx.JawrJmxClient;
 
 /**
  * 
  * @author Ibrahim Chaehoi
  */
-@JawrTestConfigFiles(webXml = "net/jawr/web/smartbundling/config/web.xml", jawrConfig = "net/jawr/web/smartbundling/config/jawr-watch-linked-resources.properties")
-public class MainPageWatcherUpdateLinkedResource extends MainPageUpdateLinkedResourceTest {
+public class MainPageJMXUpdateLinkedResourceTest extends MainPageUpdateLinkedResourceTest {
 
 	
 	protected static String getTempFolder() {
-		return "jawr-integration-smartbundling-test-watch-2";
+		return "jawr-integration-smartbundling-test-jmx-2";
 	}
 	
 	/* (non-Javadoc)
@@ -39,8 +42,21 @@ public class MainPageWatcherUpdateLinkedResource extends MainPageUpdateLinkedRes
 		updateResources();
 		
 		// Wait a little bit
-		Thread.sleep(3000);
+		Thread.sleep(300);
 		 
+		JawrJmxClient jmxClient = new JawrJmxClient();
+		JawrConfigManagerMBean cssMBean = jmxClient.getCssMbean();
+		
+		List<String> bundles = cssMBean.getDirtyBundleNames();
+		assertEquals(1, bundles.size());
+		assertEquals("component", bundles.get(0));
+		
+		JawrConfigManagerMBean jsMBean = jmxClient.getJsMbean();
+		bundles = jsMBean.getDirtyBundleNames();
+		assertEquals(1, bundles.size());
+		assertEquals("msg", bundles.get(0));
+		
+		jmxClient.getApplicationMBean().rebuildDirtyBundles();
 	}
 
 }

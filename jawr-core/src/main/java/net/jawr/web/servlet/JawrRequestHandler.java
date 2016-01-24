@@ -301,8 +301,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					+ "Be aware that a daemon thread will be checking for changes to configuration every " + interval
 					+ " seconds.");
 
-			this.configChangeListenerThread = new ConfigChangeListenerThread(this.resourceType, propsSrc, this.overrideProperties, this,
-					this.bundlesHandler, interval);
+			this.configChangeListenerThread = new ConfigChangeListenerThread(this.resourceType, propsSrc,
+					this.overrideProperties, this, this.bundlesHandler, interval);
 			configChangeListenerThread.start();
 		}
 
@@ -707,7 +707,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 					&& this.jawrConfig.getRefreshKey().equals(request.getParameter(JawrConstant.REFRESH_KEY_PARAM))) {
 
 				stopWatch.stop();
-				
+
 				if (propertiesSource.configChanged()) {
 					this.configChanged(propertiesSource.getConfigProperties());
 				} else {
@@ -1167,7 +1167,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				// Nothing to do
 			}
 		}
-		if(watcher != null){ 
+		if (watcher != null) {
 			watcher.stopWatching();
 			try {
 				watcher.interrupt();
@@ -1176,24 +1176,28 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				// Nothing to do
 			}
 		}
+
+		JmxUtils.unregisterJMXBean(servletContext, resourceType,
+				jawrConfig.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX));
+		
 		ThreadLocalJawrContext.reset();
 	}
 
-
 	/**
 	 * Returns the names of the dirty bundles
+	 * 
 	 * @return the names of the dirty bundles
 	 */
 	public List<String> getDirtyBundleNames() {
-		
+
 		List<String> bundleNames = new ArrayList<>();
-		if(bundlesHandler != null){
+		if (bundlesHandler != null) {
 			bundleNames = bundlesHandler.getDirtyBundleNames();
 		}
-		
+
 		return bundleNames;
 	}
-	
+
 	/**
 	 * Refresh the dirty bundles
 	 */
@@ -1202,10 +1206,10 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Rebuild dirty bundles");
 		}
-		
+
 		StopWatch stopWatch = new StopWatch();
 		ThreadLocalJawrContext.setStopWatch(stopWatch);
-		
+
 		// Initialize the Thread local for the Jawr context
 		ThreadLocalJawrContext.setJawrConfigMgrObjectName(JmxUtils.getMBeanObjectName(servletContext, resourceType,
 				jawrConfig.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX)));
@@ -1213,7 +1217,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// clears resource bundle cache for the refresh
 		ResourceBundle.clearCache();
 		try {
-			if(bundlesHandler != null){
+			if (bundlesHandler != null) {
 				bundlesHandler.rebuildModifiedBundles();
 			}
 		} catch (Exception e) {
@@ -1249,7 +1253,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			// clears resource bundle cache for the refresh
 			ResourceBundle.clearCache();
 			StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
-			if(stopWatch.isRunning()){
+			if (stopWatch.isRunning()) {
 				stopWatch.stop();
 			}
 
