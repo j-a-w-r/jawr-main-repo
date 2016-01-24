@@ -54,7 +54,15 @@ Jawr Generators
 ------------------------------------------+
 	
 	Note that if you use the parameters, the order must always be parentheses first, brackets last. If you need only one parameter, you can omit 
-	the brackets param. 
+	the brackets param.
+	
+	It is possible to escape the parentheses and the brackets if these characters are used in your resource path using the escape character '\'.
+	Here isan example :
+	
+------------------------------------------+
+	jawr.js.bundle.one.mappings=webjars:/datatables-plugins/1.10.9/api/sum\(\).js
+------------------------------------------+
+		 
 		 
 *	Jawr generators
 
