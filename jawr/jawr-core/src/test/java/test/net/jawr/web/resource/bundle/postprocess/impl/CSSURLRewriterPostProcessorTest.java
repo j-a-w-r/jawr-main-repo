@@ -156,6 +156,17 @@ public class CSSURLRewriterPostProcessorTest {
 		
 	}
 	
+	@Test
+	public void testBasicURLWithAbsoluteWithParamPathRewriting() {
+		StringBuffer data = new StringBuffer("background-image:url(/images/someImage.gif?color=grey);");
+		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
+		String expectedURL = "background-image:url(/images/someImage.gif?color=grey);";
+		status.setLastPathAdded(filePath);		
+		String result = processor.postProcessBundle(status, data).toString();		
+		assertEquals("URL was not rewritten properly",expectedURL, result);
+		
+	}
+	
 	
 	
 	@Test
