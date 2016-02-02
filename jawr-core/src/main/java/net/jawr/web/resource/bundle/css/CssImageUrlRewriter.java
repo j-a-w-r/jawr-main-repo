@@ -173,9 +173,7 @@ public class CssImageUrlRewriter {
 		int firstSlash = url.indexOf('/');
 		if (0 == firstSlash
 				|| (firstSlash != -1 && url.charAt(++firstSlash) == '/')) {
-			StringBuffer sb = new StringBuffer("url(");
-			sb.append(quoteStr).append(url).append(quoteStr).append(")");
-			return sb.toString();
+			return match;
 		}
 
 		if (url.startsWith(URL_SEPARATOR))
