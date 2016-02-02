@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,7 @@
  */
 package net.jawr.web.resource.bundle.global.preprocessor.css.smartsprites;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 
@@ -40,6 +41,9 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 	/** The jawr config */
 	private JawrConfig jawrConfig;
 	
+	/** the smartsprites temporary directory */
+	private String tempDir;
+	
 	/**
 	 * Constructor
 	 * @param tempDir the smartsprites temporary directory
@@ -47,6 +51,7 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 	 */
 	public CssSmartSpritesResourceReader(String tempDir, JawrConfig jawrConfig) {
 		
+		this.tempDir = tempDir;
 		this.jawrConfig = jawrConfig;
 		if(jawrConfig.isWorkingDirectoryInWebApp()){
 			resourceReader = new PathPrefixedServletContextResourceReader(jawrConfig.getContext(), jawrConfig, tempDir+JawrConstant.CSS_SMARTSPRITES_TMP_DIR);
@@ -54,7 +59,6 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		}else{
 			resourceReader = new FileSystemResourceReader(tempDir+JawrConstant.CSS_SMARTSPRITES_TMP_DIR, jawrConfig);
 		}
-		
 	}
 	
 	/* (non-Javadoc)
@@ -77,17 +81,27 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		
 		Reader rd = null;
 		if(processingBundle){
-			String path = resourceName;
-			if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
-				path = path.replace(':', '/');
-				path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
-			}
+			String path = getCssPath(resourceName);
 			rd = ((TextResourceReader) resourceReader).getResource(path, processingBundle);
 		}
 		
 		return rd;
 	}
 
+	/**
+	 * Returns the Css path from the resource name
+	 * @param resourceName the resource name
+	 * @return the Css path
+	 */
+	protected String getCssPath(String resourceName) {
+		String path = resourceName;
+		if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
+			path = path.replace(':', '/');
+			path = JawrConstant.SPRITE_GENERATED_CSS_DIR+path;
+		}
+		return path;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String)
 	 */
@@ -110,6 +124,43 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 		}
 				
 		return ((StreamResourceReader) resourceReader).getResourceAsStream(path, processingBundle);
+	}
+
+	/**
+	 * Returns the file of the generated CSS
+	 * @param path the path of the CSS
+	 * @return the file of the generated CSS
+	 */
+	public File getGeneratedCssFile(String path) {
+		
+		String rootDir = tempDir+JawrConstant.CSS_SMARTSPRITES_TMP_DIR;
+		String fPath = null;
+		if(jawrConfig.isWorkingDirectoryInWebApp()){
+			fPath = jawrConfig.getContext().getRealPath(rootDir+getCssPath(path));
+
+		}else{
+			fPath = rootDir+getCssPath(path);
+		}
+		
+		return new File(fPath);
+	}
+
+	/**
+	 * Returns the file of the generated CSS
+	 * @param path the path of the CSS
+	 * @return the file of the generated CSS
+	 */
+	public File getBackupFile(String path) {
+		
+		String rootDir = tempDir+JawrConstant.SPRITE_BACKUP_GENERATED_CSS_DIR;
+		String fPath = null;
+		if(jawrConfig.isWorkingDirectoryInWebApp()){
+			fPath = jawrConfig.getContext().getRealPath(rootDir+getCssPath(path));
+		}else{
+			fPath = rootDir+getCssPath(path);
+		}
+		
+		return new File(fPath);
 	}
 
 }

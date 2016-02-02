@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -41,16 +41,16 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 public final class CheckSumUtils {
 
 	/**
-	 * Return the cache busted url associated to the url passed in parameter,
+	 * Return the checksum of the path given in parameter,
 	 * if the resource is not found, null will b returned. 
 	 * @param url the url path to the resource file
 	 * @param is the resource input stream 
 	 * @param jawrConfig the jawrConfig
-	 * @return the cache busted url
+	 * @return checksum of the path given in parameter
 	 * @throws IOException if an IO exception occurs.
 	 * @throws ResourceNotFoundException if the resource is not found.
 	 */
-	public static String getCacheBustedUrl(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig) throws IOException, ResourceNotFoundException {
+	public static String getChecksum(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig) throws IOException, ResourceNotFoundException {
 		
 		String checksum = null;
 		InputStream is = null;
@@ -77,10 +77,24 @@ public final class CheckSumUtils {
 			IOUtils.close(is);
 		}
 		
-		String result = "";
+		return checksum;
+	}
+	
+	/**
+	 * Return the cache busted url associated to the url passed in parameter,
+	 * if the resource is not found, null will b returned. 
+	 * @param url the url path to the resource file
+	 * @param is the resource input stream 
+	 * @param jawrConfig the jawrConfig
+	 * @return the cache busted url
+	 * @throws IOException if an IO exception occurs.
+	 * @throws ResourceNotFoundException if the resource is not found.
+	 */
+	public static String getCacheBustedUrl(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig) throws IOException, ResourceNotFoundException {
 		
-		
-		result = JawrConstant.CACHE_BUSTER_PREFIX;
+		String checksum = getChecksum(url, rsReader, jawrConfig);
+		String result = JawrConstant.CACHE_BUSTER_PREFIX;
+		boolean generatedBinaryResource = jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(url);
 		
 		if(generatedBinaryResource){
 			int idx = url.indexOf(GeneratorRegistry.PREFIX_SEPARATOR);

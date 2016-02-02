@@ -1,0 +1,14 @@
+
+.calendar_add {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+  background-image: url('../../../cbdffb4eb1d7f924cc2c96b282b66e656/smartbundling/css/img/mysprite-dffb4eb1d7f924cc2c96b282b66e656.png'); /** sprite:sprite */
+  background-position: left -156px;
+}
+
+.calendar_delete {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+  background-image: url('../../../cbdffb4eb1d7f924cc2c96b282b66e656/smartbundling/css/img/mysprite-dffb4eb1d7f924cc2c96b282b66e656.png'); /** sprite:sprite */
+  background-position: left -140px;
+}

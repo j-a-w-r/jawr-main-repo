@@ -1,0 +1,7 @@
+/** sprite: mysprite; sprite-image: url('../../img/mysprite-${md5}.png'); sprite-layout: vertical */ 
+
+.calendar_add {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../../img/calendarIcons/calendar_add.png"); /** sprite-ref: mysprite; */
+}
