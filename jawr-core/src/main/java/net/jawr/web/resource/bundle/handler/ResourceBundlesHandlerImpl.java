@@ -562,19 +562,28 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 	/**
 	 * Executes the global preprocessing
+	 * @param bundlesToBuild The list of bundles to rebuild
 	 * 
 	 * @param processBundleFlag
 	 *            the flag indicating if the bundles needs to be processed
 	 * @param stopWatch
 	 *            the stopWatch
 	 */
-	private void executeGlobalPreprocessing(boolean processBundleFlag, StopWatch stopWatch) {
+	private void executeGlobalPreprocessing(List<JoinableResourceBundle> bundlesToBuild, boolean processBundleFlag, StopWatch stopWatch) {
 		if (resourceTypePreprocessor != null) {
 			if (stopWatch != null) {
 				stopWatch.start("Global preprocessing");
 			}
 			GlobalPreprocessingContext ctx = new GlobalPreprocessingContext(config, resourceHandler, processBundleFlag);
 			resourceTypePreprocessor.processBundles(ctx, bundles);
+			
+			// Update the list of bundle to rebuild if new bundles have been detected as dirty in the global preprocessing phase
+			List<JoinableResourceBundle> bundles = getBundlesToRebuild();
+			for (JoinableResourceBundle b : bundles) {
+				if(!bundlesToBuild.contains(b)){
+					bundlesToBuild.add(b);
+				}
+			}
 			if (stopWatch != null) {
 				stopWatch.stop();
 			}
@@ -641,7 +650,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		boolean processBundleFlag = !config.getUseBundleMapping() || !mappingFileExists;
 
 		// Global preprocessing
-		executeGlobalPreprocessing(processBundleFlag, stopWatch);
+		executeGlobalPreprocessing(bundlesToBuild, processBundleFlag, stopWatch);
 		
 		for (JoinableResourceBundle bundle : bundlesToBuild) {
 			

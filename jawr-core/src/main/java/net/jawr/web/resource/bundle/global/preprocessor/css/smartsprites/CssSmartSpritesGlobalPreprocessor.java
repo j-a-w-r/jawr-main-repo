@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,17 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.jawr.web.JawrConstant;
-import net.jawr.web.config.JawrConfig;
-import net.jawr.web.exception.BundlingProcessException;
-import net.jawr.web.resource.BinaryResourcesHandler;
-import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.factory.global.preprocessor.GlobalPreprocessingContext;
-import net.jawr.web.resource.bundle.global.processor.AbstractChainedGlobalProcessor;
-import net.jawr.web.resource.bundle.iterator.BundlePath;
-import net.jawr.web.resource.handler.reader.ResourceReader;
-import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
-
 import org.apache.commons.io.FileUtils;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters;
 import org.carrot2.labs.smartsprites.SmartSpritesParameters.PngDepth;
@@ -42,6 +31,16 @@ import org.carrot2.labs.smartsprites.message.MessageLog;
 import org.carrot2.labs.smartsprites.message.MessageSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.jawr.web.JawrConstant;
+import net.jawr.web.config.JawrConfig;
+import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.BinaryResourcesHandler;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.factory.global.preprocessor.GlobalPreprocessingContext;
+import net.jawr.web.resource.bundle.global.processor.AbstractChainedGlobalProcessor;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
+import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
  * This class defines the global preprocessor which will process all CSS files
@@ -86,6 +85,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 			List<JoinableResourceBundle> bundles) {
 
 		ResourceReaderHandler rsHandler = ctx.getRsReaderHandler();
+		
 		Set<String> resourcePaths = getResourcePaths(bundles);
 		JawrConfig jawrConfig = ctx.getJawrConfig();
 		Charset charset = jawrConfig.getResourceCharset();
@@ -93,15 +93,15 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig
 				.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 
-		ResourceReader cssSpriteResourceReader = null;
-		if (ctx.hasBundleToBeProcessed()) {
-			generateSprites(rsHandler, binaryRsHandler, resourcePaths, jawrConfig,
+		generateSprites(rsHandler, binaryRsHandler, resourcePaths, jawrConfig,
 					charset);
-		}
-
+	
 		// Update CSS resource handler
-		cssSpriteResourceReader = new CssSmartSpritesResourceReader(
+		CssSmartSpritesResourceReader cssSpriteResourceReader = new CssSmartSpritesResourceReader(
 				rsHandler.getWorkingDirectory(), jawrConfig);
+		
+		updateBundlesDirtyState(bundles, cssSpriteResourceReader);
+		
 		ctx.getRsReaderHandler().addResourceReaderToStart(
 				cssSpriteResourceReader);
 
@@ -109,6 +109,35 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		ResourceReaderHandler imgStreamRsHandler = binaryRsHandler
 				.getRsReaderHandler();
 		imgStreamRsHandler.addResourceReaderToStart(cssSpriteResourceReader);
+	}
+
+	/**
+	 * Update the bundles dirty state
+	 * @param bundles the list of bundle
+	 * @param cssSpriteResourceReader the css sprite resource reader
+	 */
+	private void updateBundlesDirtyState(List<JoinableResourceBundle> bundles, CssSmartSpritesResourceReader cssSpriteResourceReader) {
+
+		for (JoinableResourceBundle bundle : bundles) {
+			
+			List<BundlePath> bundlePaths = bundle.getItemPathList();
+			for (BundlePath bundlePath : bundlePaths) {
+				String path = bundlePath.getPath();
+				File stdFile = cssSpriteResourceReader.getGeneratedCssFile(path);
+				File bckFile = cssSpriteResourceReader.getBackupFile(path);
+				if(bckFile.exists()){
+					try {
+						if(!FileUtils.contentEquals(stdFile, bckFile)){
+							bundle.setDirty(true);
+							break;
+						}
+					} catch (IOException e) {
+						throw new BundlingProcessException("Issue while generating smartsprite bundle", e);
+					}
+				}
+				cssSpriteResourceReader.getResource(path);
+			}
+		}
 	}
 
 	/**
@@ -161,12 +190,22 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		if (!tmpDir.exists()) {
 			if (!tmpDir.mkdirs()) {
 				throw new BundlingProcessException(
-						"Impossible to create temporary directory : " + outDir);
+						"Impossible to create temporary directory : " + tmpDir);
 			}
 		}else{
-			// Clean temp directories
+			// Copy to backup and clean temp directories
 			try {
+				File backupDir = new File(cssRsHandler.getWorkingDirectory()
+						+ JawrConstant.SPRITE_BACKUP_GENERATED_CSS_DIR);
+				if (!backupDir.exists()) {
+					if (!backupDir.mkdirs()) {
+						throw new BundlingProcessException(
+								"Impossible to create temporary directory : " + backupDir);
+					}
+				}
+				FileUtils.copyDirectory(tmpDir, backupDir);
 				FileUtils.cleanDirectory(tmpDir);
+			
 			} catch (IOException e) {
 				throw new BundlingProcessException(
 						"Impossible to clean temporary directory : " + outDir, e);
