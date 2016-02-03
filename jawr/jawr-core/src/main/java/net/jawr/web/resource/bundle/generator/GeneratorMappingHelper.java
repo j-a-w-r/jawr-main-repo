@@ -14,6 +14,9 @@
 
 package net.jawr.web.resource.bundle.generator;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * This class defines a helper class to handle generator mapping
  * 
@@ -22,10 +25,13 @@ package net.jawr.web.resource.bundle.generator;
 public class GeneratorMappingHelper {
 
 	/** The parentheses regexp finder */
-	private static final String PARENFINDER_REGEXP = ".*(\\(.*\\)).*";
+	private static final Pattern PARENFINDER_REGEXP = Pattern.compile("(?<!\\\\)\\(([^\\)]*)(?<!\\\\)\\)");
 
 	/** The brackets regexp finder */
-	private static final String BRACKFINDER_REGEXP = ".*(\\[.*\\]).*";
+	private static final Pattern BRACKFINDER_REGEXP = Pattern.compile("(?<!\\\\)\\[([^\\]]*)(?<!\\\\)\\]");
+
+	/** The string to use in the jawr.properties bundles to escape characters */
+	private static final Pattern ESCAPE_STRINGS_REGEXP = Pattern.compile("\\\\(\\(|\\)|\\[|\\])");
 
 	/** The path requested */
 	private String path;
@@ -38,24 +44,28 @@ public class GeneratorMappingHelper {
 
 	/**
 	 * Constructor
-	 * @param mapping the resource mapping
+	 * @param resourceMapping the resource mapping
 	 */
 	public GeneratorMappingHelper(String resourceMapping) {
-		this.path = resourceMapping;
+		
+		path = resourceMapping;
+
 		// init parameters, if any
-		if (path.matches(PARENFINDER_REGEXP)) {
-			parenthesesParam = path.substring(path.indexOf('(') + 1,
-					path.indexOf(')'));
-
-			path = path.substring(0, path.indexOf('('))
-					+ path.substring(path.indexOf(')') + 1);
+		Matcher m = PARENFINDER_REGEXP.matcher(path);
+		if(m.find()){
+			parenthesesParam = m.group(1);
+			path = m.replaceFirst("");
 		}
-		if (path.matches(BRACKFINDER_REGEXP)) {
-			bracketsParam = path.substring(path.indexOf('[') + 1,
-					path.indexOf(']'));
+		
+		m = BRACKFINDER_REGEXP.matcher(path);
+		if(m.find()){
+			bracketsParam = m.group(1);
+			path = m.replaceFirst("");
+		}
 
-			path = path.substring(0, path.indexOf('['))
-					+ path.substring(path.indexOf(']') + 1);
+		m = ESCAPE_STRINGS_REGEXP.matcher(path);
+		if(m.find()){
+			path = m.replaceAll("$1");
 		}
 	}
 

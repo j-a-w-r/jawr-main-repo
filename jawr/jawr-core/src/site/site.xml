@@ -81,6 +81,7 @@
 
 		<menu name="Tutorials">
 			<item name="Quick start" href="/tutorials/quickstart.html" />
+			<item name="How to use Jawr smart bundling feature" href="/tutorials/howToUseJawrSmartbundling.html" />
 			<item name="How to use Jawr to serve image resources" href="/tutorials/howToUseJawrToServeImage.html" />
 			<item name="How to use Jawr to generate CSS skin" href="/tutorials/howToUseJawrCssSkin.html" />
 			<item name="How to generate Image sprites with Jawr" href="/tutorials/jawrSpriteImage.html" />

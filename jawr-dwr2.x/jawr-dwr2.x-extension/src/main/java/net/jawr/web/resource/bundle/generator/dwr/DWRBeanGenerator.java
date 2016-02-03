@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2011 Jordi Hernández Sellés
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -41,7 +41,6 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.bundle.renderer.DWRParamWriter;
 
-import org.apache.log4j.Logger;
 import org.directwebremoting.Container;
 import org.directwebremoting.extend.CreatorManager;
 import org.directwebremoting.extend.DwrConstants;
@@ -50,6 +49,8 @@ import org.directwebremoting.extend.Remoter;
 import org.directwebremoting.extend.ServerLoadMonitor;
 import org.directwebremoting.impl.ContainerUtil;
 import org.directwebremoting.impl.DefaultCreatorManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generator that creates resources from DWR beans. 
@@ -58,7 +59,8 @@ import org.directwebremoting.impl.DefaultCreatorManager;
  * @author Ibrahim Chaehoi
  */
 public class DWRBeanGenerator extends AbstractJavascriptGenerator {
-	private static final Logger LOGGER = Logger.getLogger(DWRBeanGenerator.class.getName());
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DWRBeanGenerator.class.getName());
 
 	/** The message bundle prefix */
 	public static final String DWR_BUNDLE_PREFIX = "dwr";

@@ -1,0 +1,42 @@
+
+.header {
+  background-image: url('../../../cb2a6d4bfbf21f0c94f98c74fb60134b86/smartbundling/css/img/mysprite-2a6d4bfbf21f0c94f98c74fb60134b86.png'); /** sprite:sprite */
+  background-position: left -0px;
+	background-repeat: no-repeat;
+	height : 74px;
+}
+
+div {
+
+	padding-top : 8px;		
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+  background-image: url('../../../cb2a6d4bfbf21f0c94f98c74fb60134b86/smartbundling/css/img/mysprite-2a6d4bfbf21f0c94f98c74fb60134b86.png'); /** sprite:sprite */
+  background-position: left -82px;
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+  background-image: url('../../../cb2a6d4bfbf21f0c94f98c74fb60134b86/smartbundling/css/img/mysprite-2a6d4bfbf21f0c94f98c74fb60134b86.png'); /** sprite:sprite */
+  background-position: left -108px;
+	 
+}
+
+
+.calendar_edit {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+  background-image: url('../../../cb2a6d4bfbf21f0c94f98c74fb60134b86/smartbundling/css/img/mysprite-2a6d4bfbf21f0c94f98c74fb60134b86.png'); /** sprite:sprite */
+  background-position: left -124px;
+}
+
+.tools {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+  background-image: url('../../../cb2a6d4bfbf21f0c94f98c74fb60134b86/smartbundling/css/img/mysprite-2a6d4bfbf21f0c94f98c74fb60134b86.png'); /** sprite:sprite */
+  background-position: left -172px;
+}

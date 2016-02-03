@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2013 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -26,12 +29,10 @@ import net.jawr.web.resource.bundle.CheckSumUtils;
 import net.jawr.web.resource.bundle.css.CssImageUrlRewriter;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.servlet.util.MIMETypesSupport;
 import net.jawr.web.util.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the URL rewriter for the Css post processor
@@ -221,6 +222,10 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 	private String addCacheBuster(BundleProcessingStatus status, String url,
 			BinaryResourcesHandler binaryRsHandler) throws IOException {
 
+		if(binaryRsHandler != null){
+			FilePathMappingUtils.addLinkedFilePathMapping(status.getCurrentBundle(), url, binaryRsHandler.getRsReaderHandler());
+		}
+		
 		// Try to retrieve the cache busted URL from the bundle processing cache
 		Map<String, String> imageMapping = (Map<String, String>) status
 				.getData(JawrConstant.POST_PROCESSING_CTX_JAWR_BINARY_MAPPING);
@@ -231,7 +236,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 				return newUrl;
 			}
 		}
-
+		
 		// Try to retrieve the from the image resource handler cache
 		if (binaryRsHandler != null) {
 			newUrl = binaryRsHandler.getCacheUrl(url);
@@ -269,4 +274,5 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 
 		return newUrl;
 	}
+
 }

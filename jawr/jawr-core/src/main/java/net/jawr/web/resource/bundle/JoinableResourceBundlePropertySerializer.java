@@ -163,6 +163,14 @@ public class JoinableResourceBundlePropertySerializer {
 					.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS,
 							getCommaSeparatedStringForFilePath(filePathList));
 		}
+		
+		filePathList = bundle.getLinkedFilePathMappings(); 
+		
+		if (filePathList != null && !filePathList.isEmpty()) {
+			props
+					.put(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_LINKED_FILEPATH_MAPPINGS,
+							getCommaSeparatedStringForFilePath(filePathList));
+		}
 		List<JoinableResourceBundle> dependencies = bundle.getDependencies();
 		if (dependencies != null && !dependencies.isEmpty()) {
 			List<String> dependenciesBundleName = getBundleNames(dependencies);

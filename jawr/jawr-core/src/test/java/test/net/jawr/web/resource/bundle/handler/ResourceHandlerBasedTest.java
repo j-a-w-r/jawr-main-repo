@@ -22,14 +22,14 @@ import test.net.jawr.web.servlet.mock.MockServletContext;
  *
  * @author jhernandez
  */
-public abstract class ResourceHandlerBasedTest  extends  TestCase {
+public abstract class ResourceHandlerBasedTest extends TestCase{
     
     protected static final String TMP_DIR = "tmp/";
 	protected static final String WORK_DIR = "work/";
 	
 	protected JawrConfig config;
 	
-	protected ResourceReaderHandler createResourceReaderHandler(String rootDir,String resourceType,Charset charset) {
+	public ResourceReaderHandler createResourceReaderHandler(String rootDir,String resourceType,Charset charset) {
 
 		    GeneratorRegistry generatorRegistry = new GeneratorRegistry(resourceType);
 		    JawrConfig config = new JawrConfig(resourceType, new Properties());
@@ -110,6 +110,14 @@ public abstract class ResourceHandlerBasedTest  extends  TestCase {
 		String res =  fullyReadReader(rd);
 		rd.close();
 		return res;
+	}
+
+	/**
+	 * Returns the config
+	 * @return the config
+	 */
+	public JawrConfig getConfig() {
+		return config;
 	}	
     
 }

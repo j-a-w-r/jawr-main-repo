@@ -141,8 +141,11 @@ public class JawrConstant {
 	/** The META-INF directory  */
 	public static final String META_INF_DIR = "/META-INF";
 	
-	/** The directory for CSS created by generators */
+	/** The directory for CSS created by sprite generators */
 	public static final String SPRITE_GENERATED_CSS_DIR = "/generatedCss/";
+
+	/** The backup directory for CSS created by sprite generators */
+	public static final String SPRITE_BACKUP_GENERATED_CSS_DIR = "/backupGeneratedCss/";
 
 	/** The directory for image created the sprite generator */
 	public static final String SPRITE_GENERATED_IMG_DIR = "/generatedSpriteImg/";
@@ -311,5 +314,4 @@ public class JawrConstant {
 	/** The JAWR config hashcode property name */
 	public static final String JAWR_CONFIG_HASHCODE = "jawr.config.hashcode";
 
-	
 }

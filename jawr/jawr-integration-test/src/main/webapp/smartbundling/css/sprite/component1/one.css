@@ -1,0 +1,32 @@
+/** sprite: mysprite; sprite-image: url('../../img/mysprite-${md5}.png'); sprite-layout: vertical */ 
+
+.header {
+	background-image: url("../../../img/logo.png"); /** sprite-ref: mysprite; */
+	background-repeat: no-repeat;
+	height : 74px;
+}
+
+div {
+
+	padding-top : 8px;		
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../../img/calendarIcons/calendar.png"); /** sprite-ref: mysprite; sprite-margin-bottom: 10px */
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("jar:net/jawr/img/clock.png"); /** sprite-ref: mysprite; */
+	 
+}
+
+
+.calendar_edit {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("img:/calendarIcons/calendar_edit.png"); /** sprite-ref: mysprite; */
+}

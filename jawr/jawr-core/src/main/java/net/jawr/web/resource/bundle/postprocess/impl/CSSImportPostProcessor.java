@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,6 +33,7 @@ import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver;
+import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
@@ -120,6 +121,7 @@ public class CSSImportPostProcessor extends
 			path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 		}
 		
+		FilePathMappingUtils.addLinkedFilePathMapping(status.getCurrentBundle(), path, status.getRsReader());
 		Reader reader = null;
 		
 		try {

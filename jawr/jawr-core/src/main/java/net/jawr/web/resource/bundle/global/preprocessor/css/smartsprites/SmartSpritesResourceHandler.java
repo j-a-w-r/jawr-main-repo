@@ -196,4 +196,5 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 			throw new BundlingProcessException(e);
 		}
 	}
+	
 }

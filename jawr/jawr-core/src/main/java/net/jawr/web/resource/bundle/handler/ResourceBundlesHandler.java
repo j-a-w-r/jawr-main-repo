@@ -24,6 +24,7 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
+import net.jawr.web.resource.watcher.ResourceWatcher;
 
 /**
  * Main interface to work with resource bundles. It helps in resolving groups of resources
@@ -196,5 +197,17 @@ public interface ResourceBundlesHandler {
 	 * Rebuilds the bundles which needs to be rebuild 
 	 */
 	public void rebuildModifiedBundles();
+
+	/**
+	 * Returns the names of dirty bundles
+	 * @return the names of dirty bundles
+	 */
+	public List<String> getDirtyBundleNames();
+
+	/**
+	 * Sets the resource watcher
+	 * @param watcher the resource watcher to set
+	 */
+	public void setResourceWatcher(ResourceWatcher watcher);
 	
 }

@@ -1,0 +1,13 @@
+/** sprite: mysprite; sprite-image: url('../../img/mysprite-{md5}.png'); sprite-layout: vertical */ 
+
+.tools {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../../img/cog.png"); /** sprite-ref: mysprite; sprite-margin-top: 10px; jawr:base64-skip */
+}
+
+.calendar_view_day {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../../img/calendarIcons/calendar_view_day.png"); /** sprite-ref: mysprite; */
+}

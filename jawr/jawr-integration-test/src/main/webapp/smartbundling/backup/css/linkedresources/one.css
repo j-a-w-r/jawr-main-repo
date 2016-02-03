@@ -1,0 +1,23 @@
+@import url('./two.css');
+
+body {
+	background-image: url("../../img/logo.png");
+	background-repeat: no-repeat;
+}
+
+div {
+
+	padding-top : 8px;		
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../../img/calendarIcons/calendar.png");
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("jar:net/jawr/img/clock.png");
+}

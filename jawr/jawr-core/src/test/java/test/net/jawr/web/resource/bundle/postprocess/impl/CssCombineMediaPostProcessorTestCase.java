@@ -19,31 +19,41 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Mockito.when;
+
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSCombineMediaPostProcessor;
 import net.jawr.web.util.StringUtils;
-import test.net.jawr.web.resource.bundle.MockJoinableResourceBundle;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
 /**
  * @author Ibrahim Chaehoi
  * 
  */
-public class CssCombineMediaPostProcessorTestCase extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class CssCombineMediaPostProcessorTestCase {
 
+	@Mock
 	JoinableResourceBundle bundle;
 	JawrConfig config;
 	BundleProcessingStatus status;
 	CSSCombineMediaPostProcessor processor;
+	
+	@Before
+	public void setUp() throws Exception {
 
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		bundle = buildFakeBundle("/css/bundle.css", "myBundle");
+		when(bundle.getId()).thenReturn("/css/bundle.css");
+		when(bundle.getName()).thenReturn("myBundle");
+		
 		Properties props = new Properties();
 		config = new JawrConfig("css", props);
 		ServletContext servletContext = new MockServletContext();
@@ -77,6 +87,7 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		return generatorRegistry;
 	}
 
+	@Test
 	public void testBasicMediaCssRewriting() {
 
 		// Set the properties
@@ -101,6 +112,7 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 				result);
 	}
 
+	@Test
 	public void testBasicWithoutMediaDefinedCssRewriting() {
 
 		// Set the properties
@@ -122,29 +134,6 @@ public class CssCombineMediaPostProcessorTestCase extends TestCase {
 		String result = processor.postProcessBundle(status, data).toString();
 		assertContentEquals("Content was not rewritten properly", expectedResult,
 				result);
-	}
-	
-	private JoinableResourceBundle buildFakeBundle(final String id,
-			final String name) {
-
-		return new MockJoinableResourceBundle() {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * test.net.jawr.web.resource.bundle.MockJoinableResourceBundle#
-			 * getId()
-			 */
-			public String getId() {
-				return id;
-			}
-
-			public String getName() {
-				return name;
-			}
-		};
-
 	}
 
 }

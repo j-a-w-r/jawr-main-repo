@@ -94,6 +94,40 @@ public final class JmxUtils {
 	}
 	
 	/**
+	 * Unregister the JMX Bean
+	 *  
+	 * @param appConfigMgr The application config manager
+	 * @param servletContext the servlet context
+	 * @param resourceType the resource type
+	 * @param mBeanPrefix the mBeanPrefix 
+	 */
+	public static void unregisterJMXBean(ServletContext servletContext, String resourceType, String mBeanPrefix) {
+	
+		try {
+
+			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+			
+			if(mbs != null){
+				
+				ObjectName jawrConfigMgrObjName = JmxUtils.getMBeanObjectName(servletContext, resourceType, mBeanPrefix);
+				
+				// register the jawrApplicationConfigManager if it's not already done
+				ObjectName appJawrMgrObjectName = JmxUtils.getAppJawrConfigMBeanObjectName(servletContext, mBeanPrefix);
+				if(mbs.isRegistered(appJawrMgrObjectName)){
+					mbs.unregisterMBean(appJawrMgrObjectName);
+				}
+				
+				if(mbs.isRegistered(jawrConfigMgrObjName)){
+					mbs.unregisterMBean(jawrConfigMgrObjName);
+				}
+			}
+			
+		} catch (Exception e) {
+			LOGGER.error("Unable to unregister the Jawr MBean for resource type '"+resourceType+"'", e);
+		}		
+	}
+	
+	/**
 	 * Returns the current MBean server or create a new one if not exist.
 	 * 
 	 * @return the current MBean server or create a new one if not exist.

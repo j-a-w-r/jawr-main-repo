@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,13 +13,15 @@
  */
 package net.jawr.web.config.jmx;
 
+import java.util.List;
 import java.util.Properties;
 
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.servlet.JawrRequestHandler;
 
 /**
- * This class defines the MBean which manage the Jawr configuration for a servlet.
+ * This class defines the MBean which manage the Jawr configuration for a
+ * servlet.
  * 
  * @author Ibrahim Chaehoi
  */
@@ -34,8 +36,10 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	/**
 	 * Constructor
 	 * 
-	 * @param requestHandler the request handler
-	 * @param properties the properties
+	 * @param requestHandler
+	 *            the request handler
+	 * @param properties
+	 *            the properties
 	 */
 	public JawrConfigManager(JawrRequestHandler requestHandler, Properties properties) {
 		this.requestHandler = requestHandler;
@@ -50,20 +54,28 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 		return configProperties.getProperty(JawrConfig.JAWR_URL_CONTEXTPATH_OVERRIDE);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getContextPathSslOverride()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#getContextPathSslOverride(
+	 * )
 	 */
 	public String getContextPathSslOverride() {
-		
+
 		return configProperties.getProperty(JawrConfig.JAWR_URL_CONTEXTPATH_SSL_OVERRIDE);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getUseContextPathOverrideInDebugMode()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#
+	 * getUseContextPathOverrideInDebugMode()
 	 */
 	public boolean getUseContextPathOverrideInDebugMode() {
-	
-		return Boolean.valueOf(configProperties.getProperty(JawrConfig.JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE)).booleanValue();
+
+		return Boolean.valueOf(configProperties.getProperty(JawrConfig.JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE))
+				.booleanValue();
 	}
 
 	/**
@@ -130,14 +142,19 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 		return Boolean.valueOf(configProperties.getProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE)).booleanValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getJawrWorkingDirectory()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#getJawrWorkingDirectory()
 	 */
 	public String getJawrWorkingDirectory() {
 		return configProperties.getProperty(JawrConfig.JAWR_WORKING_DIRECTORY);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#isUseBundleMapping()
 	 */
 	public boolean isUseBundleMapping() {
@@ -168,22 +185,30 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 		configProperties.setProperty(JawrConfig.JAWR_URL_CONTEXTPATH_OVERRIDE, contextPathOverride);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#setContextPathSslOverride(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setContextPathSslOverride(
+	 * java.lang.String)
 	 */
 	public void setContextPathSslOverride(String contextPathOverride) {
-		
+
 		configProperties.setProperty(JawrConfig.JAWR_URL_CONTEXTPATH_SSL_OVERRIDE, contextPathOverride);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#setUseContextPathOverrideInDebugMode(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#
+	 * setUseContextPathOverrideInDebugMode(boolean)
 	 */
 	public void setUseContextPathOverrideInDebugMode(boolean useContextPathOverrideInDebugMode) {
-	
-		configProperties.setProperty(JawrConfig.JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE, Boolean.toString(useContextPathOverrideInDebugMode));
+
+		configProperties.setProperty(JawrConfig.JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE,
+				Boolean.toString(useContextPathOverrideInDebugMode));
 	}
-	
+
 	/**
 	 * @param cssLinkFlavor
 	 * @see net.jawr.web.config.JawrConfig#setCssLinkFlavor(java.lang.String)
@@ -257,23 +282,31 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 	 * @see net.jawr.web.config.JawrConfig#setCssClasspathImageHandledByClasspathCss(boolean)
 	 */
 	public void setCssClasspathImageHandledByClasspathCss(boolean useClasspathCssImgServlet) {
-		configProperties.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, Boolean.toString(useClasspathCssImgServlet));
+		configProperties.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE,
+				Boolean.toString(useClasspathCssImgServlet));
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#setJawrWorkingDirectory(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setJawrWorkingDirectory(
+	 * java.lang.String)
 	 */
 	public void setJawrWorkingDirectory(String jawrWorkingDirectory) {
 		configProperties.setProperty(JawrConfig.JAWR_WORKING_DIRECTORY, jawrWorkingDirectory);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#setUseBundleMapping(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#setUseBundleMapping(
+	 * boolean)
 	 */
 	public void setUseBundleMapping(boolean usBundleMapping) {
 		configProperties.setProperty(JawrConfig.JAWR_USE_BUNDLE_MAPPING, Boolean.toString(usBundleMapping));
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -284,7 +317,9 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 		requestHandler.configChanged(configProperties);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#rebuildDirtyDundles()
 	 */
 	@Override
@@ -292,6 +327,14 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 		requestHandler.rebuildDirtyBundles();
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getDirtyBundles()
+	 */
+	@Override
+	public List<String> getDirtyBundleNames() {
+		return requestHandler.getDirtyBundleNames();
+	}
 
 }
