@@ -23,6 +23,16 @@
 				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-autoconfigure</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.dtrunk90</groupId>
+				<artifactId>thymeleaf-jawr-extension</artifactId>
+				<version>${dialect.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>commons-validator</groupId>

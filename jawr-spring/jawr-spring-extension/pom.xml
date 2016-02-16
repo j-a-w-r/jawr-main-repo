@@ -16,6 +16,16 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.dtrunk90</groupId>
+			<artifactId>thymeleaf-jawr-extension</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>org.mockito</groupId>
