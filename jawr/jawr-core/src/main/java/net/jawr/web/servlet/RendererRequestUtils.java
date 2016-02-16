@@ -64,11 +64,12 @@ public class RendererRequestUtils {
 	 */
 	public static BundleRendererContext getBundleRendererContext(HttpServletRequest request, BundleRenderer renderer) {
 		String bundleRendererCtxAttributeName = BUNDLE_RENDERER_CONTEXT_ATTR_PREFIX+renderer.getResourceType();
+		String jawrErrorDispathAttributeName = JAWR_ERROR_DISPATCH+renderer.getResourceType();
 		
 		// If we are handling a error dispatch, we should remove the current RendererContext to use a new one 
-		if(request.getAttribute(ERROR_EXCEPTION) != null && request.getAttribute(JAWR_ERROR_DISPATCH) == null){
+		if(request.getAttribute(ERROR_EXCEPTION) != null && request.getAttribute(jawrErrorDispathAttributeName) == null){
 				request.removeAttribute(bundleRendererCtxAttributeName);
-				request.setAttribute(JAWR_ERROR_DISPATCH, Boolean.TRUE);
+				request.setAttribute(jawrErrorDispathAttributeName, Boolean.TRUE);
 		}
 		
 		BundleRendererContext ctx = (BundleRendererContext) request.getAttribute(bundleRendererCtxAttributeName);
