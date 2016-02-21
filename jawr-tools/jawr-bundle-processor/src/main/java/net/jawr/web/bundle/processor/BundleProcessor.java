@@ -378,7 +378,7 @@ public class BundleProcessor {
 		// Override spring config file if needed
 		if (StringUtils.isNotEmpty(springConfigFiles)) {
 			servletContextInitParams.put(CONFIG_LOCATION_PARAM,
-					springConfigFiles);
+					springConfigFiles.replace(" ", "%20"));
 		}
 
 		servletContext.setInitParameters(servletContextInitParams);
