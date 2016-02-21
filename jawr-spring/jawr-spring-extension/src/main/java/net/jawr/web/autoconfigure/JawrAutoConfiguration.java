@@ -23,6 +23,7 @@ import net.jawr.web.servlet.JawrSpringController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
@@ -33,8 +34,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
-
-import com.github.dtrunk90.thymeleaf.jawr.dialect.JawrDialect;
 
 /**
  * {@link EnableAutoConfiguration Auto configuration} for Jawr support.
@@ -58,15 +57,6 @@ public class JawrAutoConfiguration {
 			jawrProperties.put("jawr." + entry.getKey(), entry.getValue());
 		}
 		return jawrProperties;
-	}
-
-	@Configuration
-	@ConditionalOnClass(name = "com.github.dtrunk90.thymeleaf.jawr.dialect.JawrDialect")
-	public static class JawrThymeleafConfiguration {
-		@Bean
-		public JawrDialect jawrDialect() {
-			return new JawrDialect();
-		}
 	}
 
 	@Configuration

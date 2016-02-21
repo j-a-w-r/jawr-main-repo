@@ -69,10 +69,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.github.dtrunk90</groupId>
-			<artifactId>thymeleaf-jawr-extension</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>

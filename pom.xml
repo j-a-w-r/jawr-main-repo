@@ -95,7 +95,6 @@
 		<vaadin.saas-compiler.version>0.9.12</vaadin.saas-compiler.version>
 		<maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
 		<spring-boot.version>1.3.2.RELEASE</spring-boot.version>
-		<dialect.version>1.1.1</dialect.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
