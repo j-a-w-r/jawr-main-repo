@@ -79,7 +79,6 @@ public class RendererRequestUtils {
 		}
 		
 		return ctx;
-		
 	}
 
 	/**
