@@ -49,7 +49,7 @@ public class MainPageSpriteTest extends MainPageTest {
 		return "jawr-integration-smartbundling-test-sprite-1";
 	}
 
-	@Ignore("Test failing woth JDK 8")
+	@Ignore("Test failing with JDK 8")
 	@Test
 	public void testPageLoad() throws Exception {
 

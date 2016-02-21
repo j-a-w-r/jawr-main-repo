@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Ignore;
+import org.junit.Test;
 
 import net.jawr.web.test.JawrTestConfigFiles;
 
@@ -21,7 +22,8 @@ public class MainPageSpriteWatcherTest extends MainPageSpriteTest {
 	/* (non-Javadoc)
 	 * @see net.jawr.web.test.smartbundling.sprite.MainPageSpriteTest#testPageLoad()
 	 */
-	@Ignore("Test failing woth JDK 8")
+	@Ignore("Test failing with JDK 8")
+	@Test
 	@Override
 	public void testPageLoad() throws Exception {
 		super.testPageLoad();
