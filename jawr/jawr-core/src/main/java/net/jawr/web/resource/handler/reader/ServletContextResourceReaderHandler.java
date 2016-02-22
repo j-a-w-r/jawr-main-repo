@@ -272,8 +272,13 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 						try {
 							rd = rsReader.getResource(resourceName, processingBundle);
 						} catch (Exception e) {
-							LOGGER.info("An exception occured while trying to read resource '" + resourceName
-									+ "'. Continuing with other readers. Error : ", e);
+							if(LOGGER.isDebugEnabled()){
+								LOGGER.debug("An exception occured while trying to read resource '" + resourceName
+										+ "'. Continuing with other readers. Error : ", e);
+							}else if(LOGGER.isInfoEnabled()){
+								LOGGER.info("An exception occured while trying to read resource '" + resourceName
+										+ "'. Continuing with other readers. Error : "+e.getMessage());
+							}
 						}
 						if (rd != null) {
 							break;
@@ -353,8 +358,13 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 					try {
 						is = rsReader.getResourceAsStream(resourceName);
 					} catch (Exception e) {
-						LOGGER.info("An exception occured while trying to read resource '" + resourceName
-								+ "'. Continuing with other readers. Error : " + e.getMessage());
+						if(LOGGER.isDebugEnabled()){
+							LOGGER.debug("An exception occured while trying to read resource '" + resourceName
+									+ "'. Continuing with other readers. Error : ", e);
+						}else if(LOGGER.isInfoEnabled()){
+							LOGGER.info("An exception occured while trying to read resource '" + resourceName
+									+ "'. Continuing with other readers. Error : "+e.getMessage());
+						}
 					}
 					if (is != null) {
 						break;
