@@ -363,7 +363,7 @@ public final class RhinoScriptEngine extends AbstractScriptEngine
         return compile(new StringReader(script));
     }
 
-    @SuppressWarnings("static-access")
+    @SuppressWarnings({ "static-access", "deprecation" })
 	public CompiledScript compile(java.io.Reader script) throws ScriptException {
         CompiledScript ret = null;
         Context cx = enterContext();
@@ -375,6 +375,7 @@ public final class RhinoScriptEngine extends AbstractScriptEngine
             }
 
             Scriptable scope = getRuntimeScope(context);
+            
             Script scr = cx.compileReader(scope, script, fileName, 1, null);
             ret = new RhinoCompiledScript(this, scr);
         } catch (Exception e) {

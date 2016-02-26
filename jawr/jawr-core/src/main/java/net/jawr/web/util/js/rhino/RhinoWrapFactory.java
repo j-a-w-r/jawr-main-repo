@@ -61,7 +61,8 @@ final class RhinoWrapFactory extends WrapFactory {
 
     // We use instance of this class to wrap security sensitive
     // Java object. Please refer below.
-    private static class RhinoJavaObject extends NativeJavaObject {
+    @SuppressWarnings({"serial", "rawtypes"})
+	private static class RhinoJavaObject extends NativeJavaObject {
         RhinoJavaObject(Scriptable scope, Object obj, Class type) {
             // we pass 'null' to object. NativeJavaObject uses
             // passed 'type' to reflect fields and methods when
@@ -74,7 +75,8 @@ final class RhinoWrapFactory extends WrapFactory {
         }
     }
 
-    public Scriptable wrapAsJavaObject(Context cx, Scriptable scope,
+    @SuppressWarnings({ "rawtypes", "restriction" })
+	public Scriptable wrapAsJavaObject(Context cx, Scriptable scope,
             Object javaObject, Class staticType) {
         SecurityManager sm = System.getSecurityManager();
         ClassShutter classShutter = RhinoClassShutter.getInstance();

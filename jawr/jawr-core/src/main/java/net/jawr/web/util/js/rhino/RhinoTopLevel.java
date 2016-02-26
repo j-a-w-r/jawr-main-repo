@@ -85,7 +85,8 @@ public final class RhinoTopLevel extends ImporterTopLevel {
      *    var b = bindings(page);
      *    // operate on bindings here.
      */
-    public static Object bindings(Context cx, Scriptable thisObj, Object[] args,
+    @SuppressWarnings("static-access")
+	public static Object bindings(Context cx, Scriptable thisObj, Object[] args,
             Function funObj) {
         if (args.length == 1) {
             Object arg = args[0];
@@ -115,7 +116,8 @@ public final class RhinoTopLevel extends ImporterTopLevel {
      *       // code that uses page scope
      *    }
      */
-    public static Object scope(Context cx, Scriptable thisObj, Object[] args,
+    @SuppressWarnings("static-access")
+	public static Object scope(Context cx, Scriptable thisObj, Object[] args,
             Function funObj) {
         if (args.length == 1) {
             Object arg = args[0];
