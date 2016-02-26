@@ -240,12 +240,14 @@ public class SassCssGeneratorTestCase {
 		// Simulate change on a linked resource
 		File f = FileUtils.getClassPathFile("generator/css/sass/_partial-for-import.scss");
 		FileWriter fWriter = new FileWriter(f);
+		System.out.println("Sass Smartbundling - file last modified before change : "+f.lastModified());
 		fWriter.append("@import \"./folder-test2/variables.scss\"; \n" + "$foo : red; \n" + "@mixin caption {\n"
 				+ ".caption { \n" + "$side: right;\n" + "border: 1px solid red;\n" + "background: #ff0000;\n"
 				+ "padding: 5px;\n" + "margin: 5px;" + "}}\n" + "@include caption;\n");
 
 		fWriter.close();
-
+		System.out.println("Sass Smartbundling - file last modified after change : "+f.lastModified());
+		
 		filePathMappings.clear();
 
 		Reader rd = generator.createResource(ctx);
