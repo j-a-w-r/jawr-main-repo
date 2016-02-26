@@ -285,7 +285,7 @@ public class LessCssGeneratorTestCase {
 		FileWriter fWriter = new FileWriter(f);
 		fWriter.append("@import \"import1c.less\";\nimport1a { color: blue;}");
 		fWriter.close();
-		f.setLastModified(Calendar.getInstance().getTimeInMillis());
+		f.setLastModified(Calendar.getInstance().getTimeInMillis()+3);
 		System.out.println("Less Smartbundling - file last modified after change : "+f.lastModified());
 		
 		filePathMappings.clear();

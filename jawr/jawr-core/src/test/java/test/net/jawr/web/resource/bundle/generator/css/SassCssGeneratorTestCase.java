@@ -248,7 +248,7 @@ public class SassCssGeneratorTestCase {
 
 		fWriter.close();
 		
-		f.setLastModified(Calendar.getInstance().getTimeInMillis());
+		f.setLastModified(Calendar.getInstance().getTimeInMillis()+3);
 		System.out.println("Sass Smartbundling - file last modified after change : "+f.lastModified());
 		
 		filePathMappings.clear();
