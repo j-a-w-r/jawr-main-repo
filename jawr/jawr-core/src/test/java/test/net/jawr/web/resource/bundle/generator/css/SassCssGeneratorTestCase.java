@@ -15,6 +15,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -246,6 +247,8 @@ public class SassCssGeneratorTestCase {
 				+ "padding: 5px;\n" + "margin: 5px;" + "}}\n" + "@include caption;\n");
 
 		fWriter.close();
+		
+		f.setLastModified(Calendar.getInstance().getTimeInMillis());
 		System.out.println("Sass Smartbundling - file last modified after change : "+f.lastModified());
 		
 		filePathMappings.clear();

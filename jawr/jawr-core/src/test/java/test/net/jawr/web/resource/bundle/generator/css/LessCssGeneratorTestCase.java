@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -284,6 +285,7 @@ public class LessCssGeneratorTestCase {
 		FileWriter fWriter = new FileWriter(f);
 		fWriter.append("@import \"import1c.less\";\nimport1a { color: blue;}");
 		fWriter.close();
+		f.setLastModified(Calendar.getInstance().getTimeInMillis());
 		System.out.println("Less Smartbundling - file last modified after change : "+f.lastModified());
 		
 		filePathMappings.clear();
