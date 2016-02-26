@@ -281,7 +281,6 @@ public class LessCssGeneratorTestCase {
 
 		// Simulate change on a linked resource
 		File f = FileUtils.getClassPathFile("generator/css/less/import1/import1a.less");
-		System.out.println("Less Smartbundling - file last modified before change : "+f.lastModified());
 		FileWriter fWriter = null;
 		try{
 			fWriter = new FileWriter(f);
@@ -289,8 +288,6 @@ public class LessCssGeneratorTestCase {
 		}finally{
 			IOUtils.close(fWriter);
 		}
-		boolean ok = f.setLastModified(Calendar.getInstance().getTimeInMillis()+3);
-		System.out.println("Less Smartbundling - file last modified : "+ok);
 		
 		filePathMappings.clear();
 		initRsReaderHandler("/import1/import1a.less", "generator/css/less/import1/import1a.less", Calendar.getInstance().getTimeInMillis()+3);
