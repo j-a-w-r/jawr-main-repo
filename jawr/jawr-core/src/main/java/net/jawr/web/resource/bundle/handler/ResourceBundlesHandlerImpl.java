@@ -829,7 +829,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		}
 		composite.setVariants(compositeBundleVariants);
 
-		if (needToSearchForVariantInPostProcess) {
+		if (needToSearchForVariantInPostProcess || hasVariantPostProcessor(composite)) {
 			status.setSearchingPostProcessorVariants(true);
 			joinAndPostProcessBundle(composite, status);
 
@@ -849,6 +849,27 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			status.setSearchingPostProcessorVariants(false);
 			joinAndPostProcessBundle(composite, status);
 		}
+	}
+
+	/**
+	 * Checks if the bundle has variant post processor
+	 * @param bundle the bundle
+	 * @return true if the bundle has variant post processor
+	 */
+	private boolean hasVariantPostProcessor(JoinableResourceBundle bundle) {
+		
+		boolean hasVariantPostProcessor = false;
+		ResourceBundlePostProcessor postProcessor = bundle.getBundlePostProcessor();
+		if(postProcessor != null && ((AbstractChainedResourceBundlePostProcessor)postProcessor).isVariantPostProcessor()){
+			hasVariantPostProcessor = true;
+		}else {
+			postProcessor = bundle.getUnitaryPostProcessor();
+			if(postProcessor != null && ((AbstractChainedResourceBundlePostProcessor)postProcessor).isVariantPostProcessor()){
+				hasVariantPostProcessor = true;
+			}	
+		}
+		
+		return hasVariantPostProcessor;
 	}
 
 	/**
@@ -997,7 +1018,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		JoinableResourceBundleContent store = null;
 
 		// Process the bundle for searching variant
-		if (needToSearchForVariantInPostProcess) {
+		if (needToSearchForVariantInPostProcess || hasVariantPostProcessor(bundle)) {
 			status.setSearchingPostProcessorVariants(true);
 			joinAndPostProcessBundle(bundle, status);
 
