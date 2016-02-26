@@ -27,6 +27,7 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.TextResourceGenerator;
@@ -74,6 +75,9 @@ private static final String WORK_DIR = "workDirClasspathCss";
 	
 	@Mock
 	private GeneratorRegistry generatorRegistry;
+	
+	@Mock
+	private JoinableResourceBundle bundle;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -127,7 +131,7 @@ private static final String WORK_DIR = "workDirClasspathCss";
 	@Test
 	public void testCssBundleGenerator() throws Exception{
 		
-		ctx = new GeneratorContext(config, "/generator/classpath/temp.css");
+		ctx = new GeneratorContext(bundle, config, "/generator/classpath/temp.css");
 		ctx.setResourceReaderHandler(rsReaderHandler);
 		
 		// Check result in Production mode
@@ -145,10 +149,10 @@ private static final String WORK_DIR = "workDirClasspathCss";
 	}
 	
 	@Test
-	@Ignore("Link to isse JAWR-247")
+	@Ignore("Link to issue JAWR-247")
 	public void testClasspathGeneratorWithLessBundle() throws Exception{
 		
-		ctx = new GeneratorContext(config, "/generator/classpath/temp.less");
+		ctx = new GeneratorContext(bundle, config, "/generator/classpath/temp.less");
 		ctx.setResourceReaderHandler(rsReaderHandler);
 		Reader strReader = new StringReader(FileUtils.readClassPathFile("generator/classpath/temp.css"));
 		when(generatorRegistry.isPathGenerated("/generator/classpath/temp.less")).thenReturn(true);
@@ -173,7 +177,7 @@ private static final String WORK_DIR = "workDirClasspathCss";
 	@Test
 	public void testCssBundleGeneratorWithImageReferenceInSubDir() throws Exception{
 		
-		ctx = new GeneratorContext(config, "/generator/classpath/css/temp_in_subdir.css");
+		ctx = new GeneratorContext(bundle, config, "/generator/classpath/css/temp_in_subdir.css");
 		ctx.setResourceReaderHandler(rsReaderHandler);
 		
 		// Check result in Production mode

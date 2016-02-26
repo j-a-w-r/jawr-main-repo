@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,6 +15,8 @@ package net.jawr.web.resource.handler.reader;
 
 import java.io.Reader;
 
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
+
 /**
  * This interface is implemented by objects which can read text resources. (JS or CSS)
  * 
@@ -25,17 +27,19 @@ public interface TextResourceReader extends ResourceReader{
 
 	/**
 	 * Retrieves a single resource. 
+	 * @param bundle a bundle
 	 * @param resourceName String Name of the resource.  
 	 * @return a reader for the resource
 	 */
-	public Reader getResource(String resourceName);
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName);
 	
 	/**
 	 * Retrieves a single resource. 
+	 * @param bundle a bundle
 	 * @param resourceName String Name of the resource.  
 	 * @param processingBundle the flag indicating that we are currently processing the bundles
 	 * @return the reader to the resource
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle);
-	
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle);
+
 }

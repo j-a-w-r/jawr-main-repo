@@ -25,8 +25,7 @@ import javax.servlet.ServletContext;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
-
-
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 
 /**
  * This class defines the resource reader which is based on the servlet context
@@ -38,84 +37,113 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 
 	/** The servlet context */
 	private ServletContext context;
-	
+
 	/** The charset */
 	private Charset charset;
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ServletContextResourceReader#init(javax.servlet.ServletContext, net.jawr.web.config.JawrConfig)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ServletContextResourceReader#init(
+	 * javax.servlet.ServletContext, net.jawr.web.config.JawrConfig)
 	 */
+	@Override
 	public void init(ServletContext context, JawrConfig config) {
 		this.context = context;
 		this.charset = config.getResourceCharset();
 	}
-	
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.
+	 * jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
-	public Reader getResource(String resourceName) {
-		
-		return getResource(resourceName, false);
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName) {
+
+		return getResource(bundle, resourceName, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.
+	 * String, boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle) {
-		
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle) {
+
 		Reader rd = null;
-		if(!resourceName.contains(":")){
+		if (!resourceName.contains(":")) {
 			InputStream is = context.getResourceAsStream(resourceName);
-			if(is != null){
+			if (is != null) {
 				rd = new InputStreamReader(is, charset);
 			}
 		}
 		return rd;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String)
 	 */
+	@Override
 	public InputStream getResourceAsStream(String resourceName) {
-		
+
 		return getResourceAsStream(resourceName, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String, boolean)
 	 */
-	public InputStream getResourceAsStream(String resourceName,
-			boolean processingBundle) {
-		
+	@Override
+	public InputStream getResourceAsStream(String resourceName, boolean processingBundle) {
+
 		InputStream is = null;
-		if(!resourceName.contains(":") &&
-			isAccessPermitted(resourceName)){
+		if (!resourceName.contains(":") && isAccessPermitted(resourceName)) {
 			is = context.getResourceAsStream(resourceName);
 		}
-		return is;  
+		return is;
 	}
-	
+
 	/**
 	 * Checks if the resource should be accessible
-	 * @param resourceName the resource name
+	 * 
+	 * @param resourceName
+	 *            the resource name
 	 * @return true if the resource should be accessible
 	 */
-	protected boolean isAccessPermitted(String resourceName){
-	
-		return !resourceName.startsWith(JawrConstant.WEB_INF_DIR_PREFIX) && !resourceName.startsWith(JawrConstant.META_INF_DIR_PREFIX); 
+	protected boolean isAccessPermitted(String resourceName) {
+
+		return !resourceName.startsWith(JawrConstant.WEB_INF_DIR_PREFIX)
+				&& !resourceName.startsWith(JawrConstant.META_INF_DIR_PREFIX);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceInfoProvider#getResourceNames(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(
+	 * java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public Set<String> getResourceNames(String path) {
 		Set<String> paths = context.getResourcePaths(path);
 		Set<String> names = new HashSet<String>();
 		int length = path.length();
-		if(null != paths) {
-			for(Iterator<String> it = paths.iterator();it.hasNext();) {
+		if (null != paths) {
+			for (Iterator<String> it = paths.iterator(); it.hasNext();) {
 				String resourcePath = (String) it.next();
 				names.add(resourcePath.substring(length, resourcePath.length()));
 			}
@@ -123,18 +151,26 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 		return names;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceInfoProvider#isDirectory(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.
+	 * lang.String)
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public boolean isDirectory(String path) {
 		Set<String> paths = context.getResourcePaths(path);
 		return (null != paths && paths.size() > 0);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.
+	 * lang.String)
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {

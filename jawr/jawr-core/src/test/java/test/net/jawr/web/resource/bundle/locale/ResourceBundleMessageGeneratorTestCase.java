@@ -1,7 +1,5 @@
 package test.net.jawr.web.resource.bundle.locale;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Locale;
@@ -12,21 +10,31 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertEquals;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
 import net.jawr.web.util.js.JavascriptEngine;
 import test.net.jawr.web.FileUtils;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ResourceBundleMessageGeneratorTestCase {
 
 	private ResourceBundleMessagesGenerator generator;
 
 	private Locale defaultLocale;
 
+	@Mock
+	private JoinableResourceBundle bundle;
+	
 	@Before
 	public void setUp() {
 		defaultLocale = Locale.getDefault();
@@ -47,7 +55,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		Properties prop = new Properties();
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
-		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messages");
+		GeneratorContext ctx = new GeneratorContext(bundle, config, "bundleLocale.messages");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
@@ -76,7 +84,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET, "UTF-8");
 		JawrConfig config = new JawrConfig("js", prop);
 
-		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messagesResourceBundleUTF8");
+		GeneratorContext ctx = new GeneratorContext(bundle, config, "bundleLocale.messagesResourceBundleUTF8");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
@@ -118,7 +126,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
-		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messages");
+		GeneratorContext ctx = new GeneratorContext(bundle, config, "bundleLocale.messages");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
@@ -143,7 +151,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "true");
 		JawrConfig config = new JawrConfig("js", prop);
 
-		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messages");
+		GeneratorContext ctx = new GeneratorContext(bundle, config, "bundleLocale.messages");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
@@ -160,7 +168,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
-		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messages|bundleLocale.errors[ui|error]");
+		GeneratorContext ctx = new GeneratorContext(bundle, config, "bundleLocale.messages|bundleLocale.errors[ui|error]");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
@@ -202,7 +210,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, "false");
 		JawrConfig config = new JawrConfig("js", prop);
 
-		GeneratorContext ctx = new GeneratorContext(config, "bundleLocale.messages|bundleLocale.errors(myMessages)");
+		GeneratorContext ctx = new GeneratorContext(bundle, config, "bundleLocale.messages|bundleLocale.errors(myMessages)");
 		ctx.setLocale(null);
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);

@@ -60,7 +60,7 @@ public class BundlesHandlerFactoryTestCase {
 		when(resourceBundleHandler.getResourceType()).thenReturn("css");
 		when(resourceReaderHandler.getResourceNames(Matchers.anyString())).thenReturn(new HashSet<String>());
 		when(resourceReaderHandler.getResource(Matchers.anyString())).thenThrow(new ResourceNotFoundException(""));
-		when(resourceReaderHandler.getResource(Matchers.anyString(), Matchers.anyBoolean())).thenThrow(new ResourceNotFoundException(""));
+		when(resourceReaderHandler.getResource((JoinableResourceBundle) Matchers.any(), Matchers.anyString(), Matchers.anyBoolean())).thenThrow(new ResourceNotFoundException(""));
 	}
 	
 	@Test

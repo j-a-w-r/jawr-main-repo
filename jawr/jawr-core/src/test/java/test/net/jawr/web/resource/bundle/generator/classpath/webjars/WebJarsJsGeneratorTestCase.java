@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsJSGenerator;
@@ -40,6 +41,9 @@ public class WebJarsJsGeneratorTestCase {
 	@Mock
 	private GeneratorRegistry generatorRegistry;
 
+	@Mock
+	private JoinableResourceBundle bundle;
+	
 	@Before
 	public void setUp() throws Exception {
 
@@ -53,7 +57,7 @@ public class WebJarsJsGeneratorTestCase {
 		config.setGeneratorRegistry(generatorRegistry);
 
 		generator = createGenerator();
-		ctx = new GeneratorContext(config, generator.getResolver().getResourcePath(getResourceName()));
+		ctx = new GeneratorContext(bundle, config, generator.getResolver().getResourcePath(getResourceName()));
 		ctx.setResourceReaderHandler(rsReaderHandler);
 	}
 

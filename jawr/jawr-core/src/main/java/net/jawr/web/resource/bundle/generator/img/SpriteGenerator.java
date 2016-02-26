@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -66,6 +66,7 @@ public class SpriteGenerator implements StreamResourceGenerator,
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware#setWorkingDirectory(java.lang.String)
 	 */
+	@Override
 	public void setWorkingDirectory(String workingDir) {
 		workingDirectory = workingDir;
 	}
@@ -73,6 +74,7 @@ public class SpriteGenerator implements StreamResourceGenerator,
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.JawrConfig)
 	 */
+	@Override
 	public void setConfig(JawrConfig config) {
 		
 		this.config = config;
@@ -81,6 +83,7 @@ public class SpriteGenerator implements StreamResourceGenerator,
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator#afterPropertiesSet()
 	 */
+	@Override
 	public void afterPropertiesSet() {
 		
 		rd = new CssSmartSpritesResourceReader(workingDirectory, config);
@@ -93,6 +96,7 @@ public class SpriteGenerator implements StreamResourceGenerator,
 	 * createResourceAsStream
 	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
+	@Override
 	public InputStream createResourceAsStream(GeneratorContext context) {
 
 		String path = context.getPath();
@@ -121,6 +125,5 @@ public class SpriteGenerator implements StreamResourceGenerator,
 
 		return ResourceGenerator.IMG_DEBUGPATH;
 	}
-
 	
 }

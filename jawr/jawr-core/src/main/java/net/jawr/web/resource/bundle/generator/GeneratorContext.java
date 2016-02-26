@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
@@ -31,9 +32,12 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  */
 public class GeneratorContext {
 
+	/** The resource bundle */
+	private JoinableResourceBundle bundle;
+
 	/** The generator mapping helper */
 	private GeneratorMappingHelper helper;
-	
+
 	/** The current Jawr config */
 	private JawrConfig config;
 
@@ -59,22 +63,35 @@ public class GeneratorContext {
 	 * the classpath</li>
 	 * <li>If we are not in processing mode, and we are using the CSS image
 	 * servlet, in that case the resource will be retrieved if we are in in
-	 * debug mode from the temporary folder for the CSS classpath resources.</li>
+	 * debug mode from the temporary folder for the CSS classpath resources.
+	 * </li>
 	 */
 	private boolean processingBundle;
 
 	/**
 	 * Constructor
 	 * 
+	 * @param bundle
+	 *            the resource bundle
 	 * @param config
 	 *            the Jawr config
 	 * @param path
 	 *            the requested path
 	 */
-	public GeneratorContext(JawrConfig config, String requestedPath) {
+	public GeneratorContext(JoinableResourceBundle bundle, JawrConfig config, String requestedPath) {
 
+		this.bundle = bundle;
 		this.config = config;
 		this.helper = new GeneratorMappingHelper(requestedPath);
+	}
+
+	/**
+	 * Returns the bundle
+	 * 
+	 * @return the bundle
+	 */
+	public JoinableResourceBundle getBundle() {
+		return bundle;
 	}
 
 	/**

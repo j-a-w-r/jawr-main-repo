@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,10 +23,22 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.variant.css.CssSkinGenerator;
@@ -34,9 +46,6 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.FileSystemResourceReader;
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
 import net.jawr.web.resource.handler.reader.ServletContextResourceReaderHandler;
-
-import org.apache.commons.io.IOUtils;
-
 import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
@@ -44,10 +53,15 @@ import test.net.jawr.web.servlet.mock.MockServletContext;
  * @author Ibrahim Chaehoi
  *
  */
-public class CssSkinGeneratorTestCase extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class CssSkinGeneratorTestCase {
 
 	private String resourceType = "css";
 	
+	@Mock
+	private JoinableResourceBundle bundle;
+	
+	@Test
 	public void testCssSkinGeneratorBasic() throws Exception {
 		
 		Properties props = new Properties();
@@ -69,6 +83,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertTrue(skinVariants.contains("summer"));
 	}
 	
+	@Test
 	public void testCssSkinGeneratorBasicWithFolderHierarchy() throws Exception {
 		
 		Properties props = new Properties();
@@ -92,6 +107,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertTrue(skinVariants.contains("summer"));
 	}
 	
+	@Test
 	public void testCssSkinGeneratorI18n() throws Exception {
 		
 		Properties props = new Properties();
@@ -125,6 +141,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertTrue(localeVariants.contains("es_ES"));
 	}
 	
+	@Test
 	public void testCssSkinGeneratorI18nLocaleSkinMapping() throws Exception {
 		
 		Properties props = new Properties();
@@ -160,6 +177,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertTrue(localeVariants.contains("es_ES"));
 	}
 	
+	@Test
 	public void testCssSkinGeneratorSkinDirsOverride() throws Exception {
 		
 		Properties props = new Properties();
@@ -179,6 +197,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testCssSkinGeneratorSkinI18nDirsOverride() throws Exception {
 		
 		Properties props = new Properties();
@@ -198,6 +217,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testCssSkinReaderProviderBasicDefaultSkin() throws Exception {
 		
 		Properties props = new Properties();
@@ -212,7 +232,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/basic/default/temp1.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/basic/default/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "default");
 		context.setVariantMap(variantMap);
@@ -227,6 +247,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/basic/default/temp1.css")), writer.getBuffer().toString());
 	}
 	
+	@Test
 	public void testCssSkinReaderProviderBasicSkin() throws Exception {
 		
 		Properties props = new Properties();
@@ -240,7 +261,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		ServletContextResourceReaderHandler rsHandler = createResourceReaderHandler(baseDir, config);
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/basic/default/temp2.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/basic/default/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
 		context.setVariantMap(variantMap);
@@ -263,6 +284,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		return generator;
 	}
 	
+	@Test
 	public void testCssSkinReaderProviderBasicSkinFileExistInDefault() throws Exception {
 		
 		Properties props = new Properties();
@@ -277,7 +299,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/basic/default/temp1.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/basic/default/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
 		context.setVariantMap(variantMap);
@@ -292,6 +314,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/basic/default/temp1.css")), writer.getBuffer().toString());
 	}
 	
+	@Test
 	public void testCssSkinReaderProviderBasicSkinWithLocale() throws Exception {
 		
 		Properties props = new Properties();
@@ -306,7 +329,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp1.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/skin_locale/default/en_US/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "default");
 		variantMap.put(JawrConstant.LOCALE_VARIANT_TYPE, "en_US");
@@ -323,6 +346,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/skin_locale/default/en_US/temp1.css")), writer.getBuffer().toString());
 	}
 
+	@Test
 	public void testCssSkinReaderProviderWinterSkinWithLocale() throws Exception {
 		
 		Properties props = new Properties();
@@ -337,7 +361,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp2.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/skin_locale/default/en_US/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
 		variantMap.put(JawrConstant.LOCALE_VARIANT_TYPE, "en_US");
@@ -354,6 +378,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/skin_locale/winter/en_US/temp2.css")), writer.getBuffer().toString());
 	}
 
+	@Test
 	public void testCssSkinReaderProviderWinterSkinWithLocaleFileInDefault() throws Exception {
 		
 		Properties props = new Properties();
@@ -368,7 +393,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp1.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/skin_locale/default/en_US/temp1.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
 		variantMap.put(JawrConstant.LOCALE_VARIANT_TYPE, "en_US");
@@ -385,6 +410,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/skin_locale/default/en_US/temp1.css")), writer.getBuffer().toString());
 	}
 
+	@Test
 	public void testCssSkinReaderProviderWinterSkinWithNonDefaultLocale() throws Exception {
 		
 		Properties props = new Properties();
@@ -399,7 +425,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp2.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/skin_locale/default/en_US/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
 		variantMap.put(JawrConstant.LOCALE_VARIANT_TYPE, "es_ES");
@@ -416,6 +442,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		assertEquals(FileUtils.readFile(new File(baseDir, "/css/panel/skin_locale/winter/es_ES/temp2.css")), writer.getBuffer().toString());
 	}
 	
+	@Test
 	public void testCssSkinReaderProviderWinterSkinWithNonExistingLocale() throws Exception {
 		
 		Properties props = new Properties();
@@ -430,7 +457,7 @@ public class CssSkinGeneratorTestCase extends TestCase {
 		
 		CssSkinGenerator generator = buildCssSkinGenerator(config, rsHandler);
 		
-		GeneratorContext context = new GeneratorContext(config, "/css/panel/skin_locale/default/en_US/temp2.css");
+		GeneratorContext context = new GeneratorContext(bundle, config, "/css/panel/skin_locale/default/en_US/temp2.css");
 		Map<String, String> variantMap = new HashMap<String, String>();
 		variantMap.put(JawrConstant.SKIN_VARIANT_TYPE, "winter");
 		variantMap.put(JawrConstant.LOCALE_VARIANT_TYPE, "fr_FR");

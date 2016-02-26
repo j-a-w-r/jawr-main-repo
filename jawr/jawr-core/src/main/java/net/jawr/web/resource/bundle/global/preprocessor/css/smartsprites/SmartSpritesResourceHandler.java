@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -106,7 +106,8 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 			throws IOException {
 
 		try {
-			return rsHandler.getResource(resourceName, true);
+			// TODO Bundle should be updated during this process
+			return rsHandler.getResource(null, resourceName, true);
 		} catch (ResourceNotFoundException e) {
 			throw new IOException("The resource '"+resourceName+"' was not found.");
 		}

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Set;
 
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -34,11 +35,14 @@ public class WebJarsBinaryGeneratorTestCase {
 	@Mock
 	private GeneratorRegistry generatorRegistry;
 
+	@Mock
+	private JoinableResourceBundle bundle;
+	
 	@Before
 	public void setUp() throws Exception {
 
 		generator = createGenerator();
-		ctx = new GeneratorContext(config, generator.getResolver().getResourcePath(getResourceName()));
+		ctx = new GeneratorContext(bundle, config, generator.getResolver().getResourcePath(getResourceName()));
 		ctx.setResourceReaderHandler(rsReaderHandler);
 	}
 

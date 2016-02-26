@@ -80,6 +80,10 @@ import net.jawr.web.util.bom.UnicodeBOMReader;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
+/**
+ * 
+ * @author Ibrahim Chaehoi
+ */
 public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 	/** The logger */
@@ -144,7 +148,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 	/** The resource watcher */
 	private ResourceWatcher watcher;
-	
+
 	/**
 	 * Build a ResourceBundlesHandler.
 	 * 
@@ -196,6 +200,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		this.clientSideHandlerGenerator = (ClientSideHandlerGenerator) ClassLoaderResourceUtils
 				.buildObjectInstance(config.getClientSideHandlerGeneratorClass());
 		this.clientSideHandlerGenerator.init(config, globalBundles, contextBundles);
+		
 	}
 
 	/*
@@ -395,9 +400,10 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.jawr.web.resource.bundle.ResourceCollector#writeBundleTo(java.lang
-	 * .String, java.io.Writer)
+	 * net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#writeBundleTo
+	 * (java.lang.String, java.io.Writer)
 	 */
+	@Override
 	public void writeBundleTo(String bundlePath, Writer writer) throws ResourceNotFoundException {
 
 		Reader rd = null;
@@ -407,7 +413,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			// If debug mode is on, resources are retrieved one by one.
 			if (config.isDebugModeOn()) {
 
-				rd = resourceHandler.getResource(bundlePath);
+				rd = resourceHandler.getResource(null, bundlePath);
 			} else {
 				// Prefixes are used only in production mode
 				String path = PathNormalizer.removeVariantPrefixFromPath(bundlePath);
@@ -535,7 +541,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			int storeJawrConfigHashcode = Integer.parseInt(
 					resourceBundleHandler.getJawrBundleMapping().getProperty(JawrConstant.JAWR_CONFIG_HASHCODE));
 			int jawrConfigHashcode = config.getConfigProperties().hashCode();
-			boolean rebuildAllBundles = storeJawrConfigHashcode != jawrConfigHashcode;
+			boolean rebuildAllBundles = !config.getUseSmartBundling() || (storeJawrConfigHashcode != jawrConfigHashcode);
 			if (!rebuildAllBundles) {
 				bundleToProcess = getBundlesToRebuild();
 				if (!bundleToProcess.isEmpty() && LOGGER.isDebugEnabled()) {
@@ -548,39 +554,43 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 					LOGGER.debug(msg.toString());
 				}
 			} else {
-				if (LOGGER.isDebugEnabled()) {
+				if (LOGGER.isDebugEnabled() && storeJawrConfigHashcode != jawrConfigHashcode) {
 					LOGGER.debug("Jawr config has changed since last bundling process. All bundles will be processed.");
 				}
 			}
 
 			forceStoreJawrBundleMapping = !bundleToProcess.isEmpty();
 		}
-		
+
 		// Execute processing
 		build(bundleToProcess, forceStoreJawrBundleMapping, stopWatch);
 	}
 
 	/**
 	 * Executes the global preprocessing
-	 * @param bundlesToBuild The list of bundles to rebuild
+	 * 
+	 * @param bundlesToBuild
+	 *            The list of bundles to rebuild
 	 * 
 	 * @param processBundleFlag
 	 *            the flag indicating if the bundles needs to be processed
 	 * @param stopWatch
 	 *            the stopWatch
 	 */
-	private void executeGlobalPreprocessing(List<JoinableResourceBundle> bundlesToBuild, boolean processBundleFlag, StopWatch stopWatch) {
+	private void executeGlobalPreprocessing(List<JoinableResourceBundle> bundlesToBuild, boolean processBundleFlag,
+			StopWatch stopWatch) {
 		if (resourceTypePreprocessor != null) {
 			if (stopWatch != null) {
 				stopWatch.start("Global preprocessing");
 			}
 			GlobalPreprocessingContext ctx = new GlobalPreprocessingContext(config, resourceHandler, processBundleFlag);
 			resourceTypePreprocessor.processBundles(ctx, bundles);
-			
-			// Update the list of bundle to rebuild if new bundles have been detected as dirty in the global preprocessing phase
+
+			// Update the list of bundle to rebuild if new bundles have been
+			// detected as dirty in the global preprocessing phase
 			List<JoinableResourceBundle> bundles = getBundlesToRebuild();
 			for (JoinableResourceBundle b : bundles) {
-				if(!bundlesToBuild.contains(b)){
+				if (!bundlesToBuild.contains(b)) {
 					bundlesToBuild.add(b);
 				}
 			}
@@ -599,18 +609,23 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	public synchronized void rebuildModifiedBundles() {
 
 		StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
-		
-		List<JoinableResourceBundle> bundlesToRebuild = getBundlesToRebuild();
-		for (JoinableResourceBundle bundle : bundlesToRebuild) {
-			bundle.resetBundleMapping();
-		}
-		build(bundlesToRebuild, true, stopWatch);
-		try {
-			if(watcher != null){
-				watcher.initPathToResourceBundleMap(bundlesToRebuild);
+
+		if (config.getUseSmartBundling()) {
+
+			List<JoinableResourceBundle> bundlesToRebuild = getBundlesToRebuild();
+			for (JoinableResourceBundle bundle : bundlesToRebuild) {
+				bundle.resetBundleMapping();
 			}
-		} catch (IOException e) {
-			throw new BundlingProcessException(e);
+			build(bundlesToRebuild, true, stopWatch);
+			try {
+				if (watcher != null) {
+					watcher.initPathToResourceBundleMap(bundlesToRebuild);
+				}
+			} catch (IOException e) {
+				throw new BundlingProcessException(e);
+			}
+		}else{
+			LOGGER.warn("You should turn of \"smart bundling\" feature to be able to rebuild modified bundles.");
 		}
 	}
 
@@ -622,14 +637,17 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	private List<JoinableResourceBundle> getBundlesToRebuild() {
 		List<JoinableResourceBundle> bundlesToRebuild = new ArrayList<>();
 
-		for (JoinableResourceBundle bundle : globalBundles) {
-			if (bundle.isDirty()) {
-				bundlesToRebuild.add(bundle);
+		if (config.getUseSmartBundling()) {
+
+			for (JoinableResourceBundle bundle : globalBundles) {
+				if (bundle.isDirty()) {
+					bundlesToRebuild.add(bundle);
+				}
 			}
-		}
-		for (JoinableResourceBundle bundle : contextBundles) {
-			if (bundle.isDirty()) {
-				bundlesToRebuild.add(bundle);
+			for (JoinableResourceBundle bundle : contextBundles) {
+				if (bundle.isDirty()) {
+					bundlesToRebuild.add(bundle);
+				}
 			}
 		}
 		return bundlesToRebuild;
@@ -640,21 +658,25 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * 
 	 * @param bundlesToBuild
 	 *            the list of bundle to build
-	 *	@param forceWriteBundleMapping the flag indicating if the bundle mapping must be written in any case
+	 * @param forceWriteBundleMapping
+	 *            the flag indicating if the bundle mapping must be written in
+	 *            any case
 	 * @param stopWatch
 	 *            the stop watch
 	 */
-	public void build(List<JoinableResourceBundle> bundlesToBuild, boolean forceWriteBundleMapping, StopWatch stopWatch) {
+	public void build(List<JoinableResourceBundle> bundlesToBuild, boolean forceWriteBundleMapping,
+			StopWatch stopWatch) {
 
 		boolean mappingFileExists = resourceBundleHandler.isExistingMappingFile();
 		boolean processBundleFlag = !config.getUseBundleMapping() || !mappingFileExists;
 
 		// Global preprocessing
 		executeGlobalPreprocessing(bundlesToBuild, processBundleFlag, stopWatch);
-		
+
 		for (JoinableResourceBundle bundle : bundlesToBuild) {
-			
-			// Clears the linked resource mappings as they will be initialized by the processing 
+
+			// Clears the linked resource mappings as they will be initialized
+			// by the processing
 			bundle.getLinkedFilePathMappings().clear();
 			if (stopWatch != null) {
 				stopWatch.start("Processing bundle '" + bundle.getName() + "'");
@@ -678,12 +700,12 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			}
 
 			bundle.setDirty(false);
-			
+
 			if (stopWatch != null) {
 				stopWatch.stop();
 			}
 		}
-		
+
 		executeGlobalPostProcessing(processBundleFlag, stopWatch);
 		storeJawrBundleMapping(resourceBundleHandler.isExistingMappingFile(), true);
 	}
@@ -821,7 +843,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				JoinableResourceBundle childbundle = (JoinableResourceBundle) it.next();
 
 				if (!childbundle.getInclusionPattern().isIncludeOnlyOnDebug()) {
-					JoinableResourceBundleContent childContent = joinAndPostprocessBundle(childbundle, variants, status);
+					JoinableResourceBundleContent childContent = joinAndPostprocessBundle(childbundle, variants,
+							status);
 					// Do unitary postprocessing.
 					status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
 					StringBuffer content = executeUnitaryPostProcessing(composite, status, childContent.getContent(),
@@ -834,13 +857,10 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			// Post process composite bundle as needed
 			store = postProcessJoinedCompositeBundle(composite, store.getContent(), status);
 
-			//if (processBundle) {
-
-				String variantKey = VariantUtils.getVariantKey(variants);
-				String name = VariantUtils.getVariantBundleName(composite.getId(), variantKey, false);
-				storeBundle(name, store);
-				initBundleDataHashcode(composite, store, variantKey);
-			//}
+			String variantKey = VariantUtils.getVariantKey(variants);
+			String name = VariantUtils.getVariantBundleName(composite.getId(), variantKey, false);
+			storeBundle(name, store);
+			initBundleDataHashcode(composite, store, variantKey);
 		}
 	}
 
@@ -938,39 +958,36 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private void joinAndStoreBundle(JoinableResourceBundle bundle) {
 
-		//if (processBundle) {
+		BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle,
+				resourceHandler, config);
+		JoinableResourceBundleContent store = null;
 
-			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
-					bundle, resourceHandler, config);
-			JoinableResourceBundleContent store = null;
+		// Process the bundle for searching variant
+		status.setSearchingPostProcessorVariants(true);
+		joinAndPostProcessBundle(bundle, status);
 
-			// Process the bundle
-			status.setSearchingPostProcessorVariants(true);
-			joinAndPostProcessBundle(bundle, status);
-
-			Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
-			if (!postProcessVariants.isEmpty()) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(
-							"Post process variants found for bundle " + bundle.getId() + ":" + postProcessVariants);
-				}
-				Map<String, VariantSet> newVariants = VariantUtils.concatVariants(bundle.getVariants(),
-						postProcessVariants);
-				bundle.setVariants(newVariants);
-				status.setSearchingPostProcessorVariants(false);
-				joinAndPostProcessBundle(bundle, status);
+		// Process the bundles
+		status.setSearchingPostProcessorVariants(false);
+		Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
+		if (!postProcessVariants.isEmpty()) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Post process variants found for bundle " + bundle.getId() + ":" + postProcessVariants);
 			}
+			Map<String, VariantSet> newVariants = VariantUtils.concatVariants(bundle.getVariants(),
+					postProcessVariants);
+			bundle.setVariants(newVariants);
+			joinAndPostProcessBundle(bundle, status);
+		}
 
-			// Store the collected resources as a single file, both in text and
-			// gzip
-			// formats.
-			store = joinAndPostprocessBundle(bundle, null, status);
-			storeBundle(bundle.getId(), store);
-			// Set the data hascode in the bundle, in case the prefix needs to
-			// be generated
-			initBundleDataHashcode(bundle, store, null);
+		// Store the collected resources as a single file, both in text and
+		// gzip formats.
+		store = joinAndPostprocessBundle(bundle, null, status);
+		storeBundle(bundle.getId(), store);
 
-		//}
+		// Set the data hascode in the bundle, in case the prefix needs to
+		// be generated
+		initBundleDataHashcode(bundle, store, null);
+
 	}
 
 	/**
@@ -1074,7 +1091,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				Reader rd = null;
 
 				try {
-					rd = resourceHandler.getResource(path, true);
+					rd = resourceHandler.getResource(bundle, path, true);
 				} catch (ResourceNotFoundException e) {
 					// If a mapped file does not exist, a warning is issued and
 					// process continues normally.
@@ -1253,12 +1270,15 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		return !getBundlesToRebuild().isEmpty();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getDirtyBundleNames()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getDirtyBundleNames()
 	 */
 	@Override
 	public List<String> getDirtyBundleNames() {
-		
+
 		List<String> bundleNames = new ArrayList<>();
 		List<JoinableResourceBundle> bundles = getBundlesToRebuild();
 		for (JoinableResourceBundle bundle : bundles) {
@@ -1267,8 +1287,11 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		return bundleNames;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
 	 */
 	@Override
 	public void setResourceWatcher(ResourceWatcher watcher) {

@@ -30,17 +30,30 @@ public class FilePathMapping extends PathMapping {
 	 * 
 	 * @param bundle
 	 *            the bundle
-	 * @param mapping
-	 *            the mapping
+	 * @param filePath
+	 *            the file path
 	 * @param lastModified
 	 *            the last modified date
 	 */
-	public FilePathMapping(JoinableResourceBundle bundle, String mapping, long lastModified) {
-		super(bundle, mapping);
+	public FilePathMapping(JoinableResourceBundle bundle, String filePath, long lastModified) {
+		super(bundle, filePath);
 
 		this.lastModified = lastModified;
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param filePath
+	 *            the file path
+	 * @param lastModified
+	 *            the last modified date
+	 */
+	public FilePathMapping(String filePath, long lastModified) {
+		super(null, filePath);
+		this.lastModified = lastModified;
+	}
+	
 	/**
 	 * @return the lastModified
 	 */

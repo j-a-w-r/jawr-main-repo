@@ -16,7 +16,9 @@ package net.jawr.web.resource.bundle.generator.css.sass;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -29,6 +31,9 @@ import com.vaadin.sass.internal.parser.Parser;
 import com.vaadin.sass.internal.parser.SCSSParseException;
 import com.vaadin.sass.internal.resolver.ScssStylesheetResolver;
 
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+
 /**
  * The Jawr implementation of ScssStylesheet to handle more easily string
  * content
@@ -39,27 +44,35 @@ public class JawrScssStylesheet extends ScssStylesheet {
 
 	/** The serial version UID */
 	private static final long serialVersionUID = 933939723158980010L;
-	
+
 	/** The resource path */
 	private String path;
-	
+
 	/** The stylesheet resolver */
 	private ScssStylesheetResolver resolver;
-	
+
+	/** The linked resources */
+	private List<FilePathMapping> linkedResources = new ArrayList<>();
+
 	/**
 	 * Constructor
 	 * 
+	 * @param bundle
+	 *            the bundle
 	 * @param content
 	 *            the content
 	 * @param path
 	 *            the path
 	 * @param scssResolver
 	 *            the scss resolver
-	 * @throws IOException if an {@link IOException} occurs
-	 * @throws CSSException if a {@link CSSException} occurs
+	 * @throws IOException
+	 *             if an {@link IOException} occurs
+	 * @throws CSSException
+	 *             if a {@link CSSException} occurs
 	 */
-	public JawrScssStylesheet(String content, String path, JawrScssResolver scssResolver, Charset charset) throws CSSException, IOException {
-		
+	public JawrScssStylesheet(JoinableResourceBundle bundle, String content, String path, JawrScssResolver scssResolver,
+			Charset charset) throws CSSException, IOException {
+
 		this.path = path;
 		addSourceUris(Arrays.asList(path));
 		// Use default resolvers
@@ -71,6 +84,15 @@ public class JawrScssStylesheet extends ScssStylesheet {
 		SCSSDocumentHandlerImpl docHandler = new SCSSDocumentHandlerImpl(this);
 		parser.setDocumentHandler(docHandler);
 
+		FilePathMapping fMapping = scssResolver.getFilePathMapping(path);
+		if(fMapping != null){
+			linkedResources.add(fMapping);
+			if (bundle != null) {
+				bundle.getFilePathMappings().add(
+						new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified()));
+			}
+		}
+		
 		try {
 			parser.parseStyleSheet(source);
 		} catch (ParseException e) {
@@ -94,14 +116,34 @@ public class JawrScssStylesheet extends ScssStylesheet {
 		return resolver.resolve(parentStylesheet, identifier);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.vaadin.sass.internal.ScssStylesheet#getFileName()
 	 */
 	@Override
 	public String getFileName() {
-		
+
 		return path;
 	}
 
-	
+	/**
+	 * Returns the list of linked resources
+	 * 
+	 * @return the list of linked resources
+	 */
+	public List<FilePathMapping> getLinkedResources() {
+		return linkedResources;
+	}
+
+	/**
+	 * Adds a linked resource to the less source
+	 * 
+	 * @param linkedResource
+	 *            the linked resource to add
+	 */
+	public void addLinkedResource(FilePathMapping linkedResource) {
+		linkedResources.add(linkedResource);
+	}
+
 }

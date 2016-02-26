@@ -32,28 +32,48 @@ public class FilePathMappingUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilePathMappingUtils.class);
 	
 	/**
-	 * Adds the File path mapping of linked resources for the bundle using the resource reader handler
+	 * Builds the File path mapping
+	 * 
+	 * @param path the resource path
+	 * @param rsHandler the resource reader handler
+	 
+	 * @return the file path mapping
+	 */
+	public static FilePathMapping buildFilePathMapping(String path,
+			ResourceReaderHandler rsHandler) {
+
+		return buildFilePathMapping(null, path, rsHandler);
+	}
+	
+	/**
+	 * Builds the File path mapping and add it to the file mappings of the bundle
 	 * 
 	 * @param bundle the bundle
 	 * @param path the resource path
 	 * @param rsHandler the resource reader handler
+	 * @return the file path mapping
 	 */
-	public static void addLinkedFilePathMapping(JoinableResourceBundle bundle, String path,
+	public static FilePathMapping buildFilePathMapping(JoinableResourceBundle bundle, String path,
 			ResourceReaderHandler rsHandler) {
 
+		FilePathMapping fPathMapping = null;
 		String filePath = rsHandler.getFilePath(path);
 		if(filePath != null){
 			
 			File f = new File(filePath);
 			if(f.exists()){
-				FilePathMapping fPathMapping = new FilePathMapping(bundle, filePath, f.lastModified());
-				bundle.getLinkedFilePathMappings().add(fPathMapping);
+				fPathMapping = new FilePathMapping(bundle, filePath, f.lastModified());
+				if(bundle != null){
+					bundle.getLinkedFilePathMappings().add(fPathMapping);
+				}
 			}else{
 				if(LOGGER.isDebugEnabled()){
 					LOGGER.debug("The file path '"+filePath+"'  associated to the URL '"+path+"' doesn't exixts.");
 				}
 			}
 		}
+		
+		return fPathMapping;
 	}
-
+	
 }

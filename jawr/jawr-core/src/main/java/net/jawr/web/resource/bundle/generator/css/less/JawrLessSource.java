@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Ibrahim Chaehoi
+ * Copyright 2015-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,7 +24,10 @@ import com.github.sommeri.less4j.LessSource.StringSource;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
@@ -36,18 +39,55 @@ public class JawrLessSource extends StringSource {
 
 	/** The resource reader handler */
 	private ResourceReaderHandler rsReaderHandler;
-	
+
+	/** The resource bundle */
+	private JoinableResourceBundle bundle;
+
+	/** The parent less resource */
+	private JawrLessSource parent;
+
+	/** The linked resources */
+	private List<FilePathMapping> linkedResources;
+
 	/**
 	 * Constructor
 	 * 
+	 * @param bundle
+	 *            the bundle
 	 * @param content
 	 *            the content
 	 * @param name
 	 *            the resource name
+	 * @param rsReaderHandler
 	 */
-	public JawrLessSource(String content, String name, ResourceReaderHandler rsReaderHandler) {
+	public JawrLessSource(JoinableResourceBundle bundle, String content, String name,
+			ResourceReaderHandler rsReaderHandler) {
+		this(bundle, content, name, null, rsReaderHandler);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param bundle
+	 *            the bundle
+	 * @param content
+	 *            the content
+	 * @param name
+	 *            the resource name
+	 * @param rsReaderHandler
+	 */
+	public JawrLessSource(JoinableResourceBundle bundle, String content, String name, JawrLessSource parent,
+			ResourceReaderHandler rsReaderHandler) {
 		super(content, name);
+		this.bundle = bundle;
+		this.parent = parent;
 		this.rsReaderHandler = rsReaderHandler;
+
+		this.linkedResources = new ArrayList<>();
+		FilePathMapping fMapping = FilePathMappingUtils.buildFilePathMapping(name, this.rsReaderHandler);
+		if (fMapping != null) {
+			linkedResources.add(fMapping);
+		}
 	}
 
 	/*
@@ -67,13 +107,34 @@ public class JawrLessSource extends StringSource {
 		try {
 			Reader rd = getResourceReader(resource);
 			result = IOUtils.toString(rd);
+			FilePathMapping linkedResource = FilePathMappingUtils.buildFilePathMapping(resource,
+					rsReaderHandler);
+			if (linkedResource != null) {
+				addLinkedResource(linkedResource);
+				if (bundle != null) {
+					bundle.getFilePathMappings().add(
+							new FilePathMapping(bundle, linkedResource.getPath(), linkedResource.getLastModified()));
+				}
+			}
+
 		} catch (ResourceNotFoundException e) {
 			throw new BundlingProcessException(e);
 		} catch (IOException e) {
 			throw new BundlingProcessException(e);
 		}
-		
-		return new JawrLessSource(result, resource, rsReaderHandler);
+
+		return new JawrLessSource(bundle, result, resource, this, rsReaderHandler);
+	}
+
+	/**
+	 * Adds a linked resource to the less source
+	 * @param linkedResource the linked resource to add
+	 */
+	private void addLinkedResource(FilePathMapping linkedResource) {
+		linkedResources.add(linkedResource);
+		if (parent != null) {
+			parent.addLinkedResource(linkedResource);
+		}
 	}
 
 	/**
@@ -88,6 +149,15 @@ public class JawrLessSource extends StringSource {
 	private Reader getResourceReader(String resource) throws ResourceNotFoundException {
 		List<Class<?>> excluded = new ArrayList<Class<?>>();
 		excluded.add(ILessCssResourceGenerator.class);
-		return rsReaderHandler.getResource(resource, false, excluded);
+		return rsReaderHandler.getResource(bundle, resource, false, excluded);
+	}
+
+	/**
+	 * Returns the linked resources
+	 * 
+	 * @return the linked resources
+	 */
+	public List<FilePathMapping> getLinkedResources() {
+		return linkedResources;
 	}
 }

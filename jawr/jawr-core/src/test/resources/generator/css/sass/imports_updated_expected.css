@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+.content-navigation {
+	border-color: #3bbfce;
+	color: #0000ff;
+}
+
+.border {
+	padding: 8px;
+	margin: 8px;
+	border-color: #0000ff;
+}
+
+.caption {
+	border: 1px solid red;
+	background: #ff0000;
+	padding: 5px;
+	margin: 5px;
+}
+
+.text {
+	font-weight: bold;
+	color: red;
+}

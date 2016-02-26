@@ -30,6 +30,7 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.FileNameUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -188,12 +189,14 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		}
 	}
 
-	/**
-	 * Adds the resource reader to the list of available resource readers.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param rd
-	 *            the resource reader
+	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
+	 * addResourceReaderToEnd(net.jawr.web.resource.handler.reader.
+	 * ResourceReader)
 	 */
+	@Override
 	public void addResourceReaderToEnd(ResourceReader rd) {
 
 		if (rd instanceof TextResourceReader) {
@@ -207,12 +210,14 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		initReader(rd);
 	}
 
-	/**
-	 * Adds the resource reader to the list of available resource readers at the
-	 * specified position.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param rd
+	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
+	 * addResourceReaderToStart(net.jawr.web.resource.handler.reader.
+	 * ResourceReader)
 	 */
+	@Override
 	public void addResourceReaderToStart(ResourceReader rd) {
 		if (rd instanceof TextResourceReader) {
 			resourceReaders.add(0, (TextResourceReader) rd);
@@ -228,35 +233,54 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource
-	 * (java.lang.String)
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
+	 * java.lang.String)
 	 */
+	@Override
 	public Reader getResource(String resourceName) throws ResourceNotFoundException {
 
-		return getResource(resourceName, false);
+		return getResource(null, resourceName, false);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String
-	 * , boolean)
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle) throws ResourceNotFoundException {
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName) throws ResourceNotFoundException {
 
-		return getResource(resourceName, processingBundle, new ArrayList<Class<?>>());
+		return getResource(bundle, resourceName, false);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String
-	 * , boolean)
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
+	 * boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle, List<Class<?>> excludedReader)
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle)
 			throws ResourceNotFoundException {
+
+		return getResource(bundle, resourceName, processingBundle, new ArrayList<Class<?>>());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
+	 * boolean, java.util.List)
+	 */
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle,
+			List<Class<?>> excludedReader) throws ResourceNotFoundException {
 
 		Reader rd = null;
 
@@ -270,14 +294,14 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 					if (!(rsReader instanceof ResourceGenerator)
 							|| ((ResourceGenerator) rsReader).getResolver().matchPath(resourceName)) {
 						try {
-							rd = rsReader.getResource(resourceName, processingBundle);
+							rd = rsReader.getResource(bundle, resourceName, processingBundle);
 						} catch (Exception e) {
-							if(LOGGER.isDebugEnabled()){
+							if (LOGGER.isDebugEnabled()) {
 								LOGGER.debug("An exception occured while trying to read resource '" + resourceName
 										+ "'. Continuing with other readers. Error : ", e);
-							}else if(LOGGER.isInfoEnabled()){
+							} else if (LOGGER.isInfoEnabled()) {
 								LOGGER.info("An exception occured while trying to read resource '" + resourceName
-										+ "'. Continuing with other readers. Error : "+e.getMessage());
+										+ "'. Continuing with other readers. Error : " + e.getMessage());
 							}
 						}
 						if (rd != null) {
@@ -326,10 +350,11 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.handler.ResourceReader#getResourceAsStream(java
-	 * .lang.String)
+	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String)
 	 */
+	@Override
 	public InputStream getResourceAsStream(String resourceName) throws ResourceNotFoundException {
 
 		return getResourceAsStream(resourceName, false);
@@ -338,9 +363,11 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#
-	 * getResourceAsStream (java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String, boolean)
 	 */
+	@Override
 	public InputStream getResourceAsStream(String resourceName, boolean processingBundle)
 			throws ResourceNotFoundException {
 
@@ -358,12 +385,12 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 					try {
 						is = rsReader.getResourceAsStream(resourceName);
 					} catch (Exception e) {
-						if(LOGGER.isDebugEnabled()){
+						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("An exception occured while trying to read resource '" + resourceName
 									+ "'. Continuing with other readers. Error : ", e);
-						}else if(LOGGER.isInfoEnabled()){
+						} else if (LOGGER.isInfoEnabled()) {
 							LOGGER.info("An exception occured while trying to read resource '" + resourceName
-									+ "'. Continuing with other readers. Error : "+e.getMessage());
+									+ "'. Continuing with other readers. Error : " + e.getMessage());
 						}
 					}
 					if (is != null) {
@@ -471,9 +498,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getLastModified(java
-	 * .lang.String)
+	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
+	 * getLastModified(java.lang.String)
 	 */
 	@Override
 	public long getLastModified(String filePath) {
@@ -484,5 +510,4 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		}
 		return lastModified;
 	}
-
 }

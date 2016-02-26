@@ -121,11 +121,11 @@ public class CSSImportPostProcessor extends
 			path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 		}
 		
-		FilePathMappingUtils.addLinkedFilePathMapping(status.getCurrentBundle(), path, status.getRsReader());
+		FilePathMappingUtils.buildFilePathMapping(status.getCurrentBundle(), path, status.getRsReader());
 		Reader reader = null;
 		
 		try {
-			reader = status.getRsReader().getResource(path, true);
+			reader = status.getRsReader().getResource(status.getCurrentBundle(), path, true);
 		} catch (ResourceNotFoundException e) {
 			throw new IOException("Css to import '"+path+"' was not found", e);
 		}

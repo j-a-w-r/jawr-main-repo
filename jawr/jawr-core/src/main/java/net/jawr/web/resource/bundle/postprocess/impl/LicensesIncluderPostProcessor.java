@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -86,7 +86,7 @@ public class LicensesIncluderPostProcessor extends
 
 			Reader rd = null;
 			try {
-				rd = status.getRsReader().getResource(path);
+				rd = status.getRsReader().getResource(bundle, path);
 			} catch (ResourceNotFoundException e) {
 				throw new BundlingProcessException(
 						"Unexpected ResourceNotFoundException when reading a sorting file ["

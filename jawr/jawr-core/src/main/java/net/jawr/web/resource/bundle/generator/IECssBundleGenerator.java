@@ -167,8 +167,9 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 
 				tempStatus.setLastPathAdded(resourcePath.getPath());
 				try {
+					JoinableResourceBundle bundle = context.getBundle();
 					Reader cssReader = context.getResourceReaderHandler()
-							.getResource(resourcePath.getPath(), true);
+							.getResource(bundle, resourcePath.getPath(), true);
 					StringWriter writer = new StringWriter();
 					IOUtils.copy(cssReader, writer, true);
 					StringBuffer resourceData = postProcessor

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ package net.jawr.web.resource.handler.reader;
 
 import java.io.InputStream;
 
-
 /**
  * This interface is implemented by objects which can read Stream resources.
  * 
@@ -24,19 +23,24 @@ import java.io.InputStream;
 public interface StreamResourceReader extends ResourceReader {
 
 	/**
-	 * Retrieves the input stream of a resource defined in the web application. 
-	 * @param resourceName the name of the resource.  
+	 * Retrieves the input stream of a resource defined in the web application.
+	 * 
+	 * @param resourceName
+	 *            the name of the resource.
 	 * @return a input stream of the resource
 	 */
 	public InputStream getResourceAsStream(String resourceName);
-	
+
 	/**
-	 * Retrieves the input stream of a resource defined in the web application. 
-	 * @param resourceName the name of the resource.  
-	 * @param processingBundle the flag indicating that we are currently processing the bundles
+	 * Retrieves the input stream of a resource defined in the web application.
+	 * 
+	 * @param resourceName
+	 *            the name of the resource.
+	 * @param processingBundle
+	 *            the flag indicating that we are currently processing the
+	 *            bundles
 	 * @return a input stream of the resource
 	 */
 	public InputStream getResourceAsStream(String resourceName, boolean processingBundle);
-	
-	
+
 }

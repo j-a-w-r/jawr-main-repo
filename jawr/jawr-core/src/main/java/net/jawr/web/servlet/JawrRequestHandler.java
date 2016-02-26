@@ -306,7 +306,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			configChangeListenerThread.start();
 		}
 
-		if (this.bundlesHandler != null) {
+		if (this.bundlesHandler != null && jawrConfig.getUseSmartBundling()) {
 
 			this.watcher = new ResourceWatcher(this.bundlesHandler, this.rsReaderHandler);
 			this.bundlesHandler.setResourceWatcher(watcher);
@@ -1042,7 +1042,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		// Write the content of the CSS in the Stringwriter
 		Writer writer = new StringWriter();
-		Reader rd = rsReaderHandler.getResource(requestedPath);
+		Reader rd = rsReaderHandler.getResource(null, requestedPath);
 		if (rd == null) {
 			throw new ResourceNotFoundException(requestedPath);
 		}

@@ -72,13 +72,13 @@ public class IECssBundleGeneratorTestCase {
 
 	@Mock
 	private JoinableResourceBundle bundle;
-	
+
 	@Mock
 	private ResourceReaderHandler rsReaderHandler;
-	
+
 	@Mock
 	private ResourceReaderHandler binaryRsReaderHandler;
-	
+
 	@Before
 	public void setUp() throws Exception {
 
@@ -90,55 +90,48 @@ public class IECssBundleGeneratorTestCase {
 
 		Map<String, VariantSet> emptyVariants = Collections.emptyMap();
 		when(bundle.getVariants()).thenReturn(emptyVariants);
-		
+
 		when(pathIterator.next()).thenReturn(new BundlePath(null, "/temp.css"), new BundlePath(null, "jar:/style.css"));
-		when(pathIterator.nextPath()).thenReturn(new BundlePath(null, "/temp.css"), new BundlePath(null, "jar:/style.css"));
+		when(pathIterator.nextPath()).thenReturn(new BundlePath(null, "/temp.css"),
+				new BundlePath(null, "jar:/style.css"));
 		when(pathIterator.hasNext()).thenReturn(true, true, true, false, false);
-		when(
-				resourceBundlesHandler.getBundlePaths(Matchers.anyString(),
-						Matchers.any(ConditionalCommentCallbackHandler.class),
-						Matchers.anyMapOf(String.class, String.class)))
-				.thenReturn(pathIterator);
+		when(resourceBundlesHandler.getBundlePaths(Matchers.anyString(),
+				Matchers.any(ConditionalCommentCallbackHandler.class), Matchers.anyMapOf(String.class, String.class)))
+						.thenReturn(pathIterator);
 
 		when(resourceBundlesHandler.resolveBundleForPath("/bundle.css")).thenReturn(bundle);
 		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, resourceBundlesHandler);
-				//getMockBundlesHandler(config, paths));
+		// getMockBundlesHandler(config, paths));
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
 
-		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:")))
-				.thenReturn(true);
-		when(generatorRegistry.isHandlingCssImage(Matchers.startsWith("jar:")))
-				.thenReturn(true);
+		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:"))).thenReturn(true);
+		when(generatorRegistry.isHandlingCssImage(Matchers.startsWith("jar:"))).thenReturn(true);
 		config.setGeneratorRegistry(generatorRegistry);
 
 		generator = new IECssBundleGenerator();
-		ctx = new GeneratorContext(config, bundlePath);
-		
-		Reader tempReader = new StringReader(FileUtils
-						.readClassPathFile("generator/ieCssBundle/temp.css"));
-		when(rsReaderHandler.getResource("/temp.css", true)).thenReturn(tempReader);
-		
-		Reader jarStyleReader = new StringReader(FileUtils
-				.readClassPathFile("generator/ieCssBundle/jar_style.css"));
-		when(rsReaderHandler.getResource("jar:/style.css", true)).thenReturn(jarStyleReader);
-		
+		ctx = new GeneratorContext(bundle, config, bundlePath);
+
+		Reader tempReader = new StringReader(FileUtils.readClassPathFile("generator/ieCssBundle/temp.css"));
+		when(rsReaderHandler.getResource(bundle, "/temp.css", true))
+				.thenReturn(tempReader);
+
+		Reader jarStyleReader = new StringReader(FileUtils.readClassPathFile("generator/ieCssBundle/jar_style.css"));
+		when(rsReaderHandler.getResource(bundle, "jar:/style.css", true))
+				.thenReturn(jarStyleReader);
+
 		ctx.setResourceReaderHandler(rsReaderHandler);
-		generatorRegistry.setResourceReaderHandler(ctx
-				.getResourceReaderHandler());
+		generatorRegistry.setResourceReaderHandler(ctx.getResourceReaderHandler());
 
 		// Set up the Image servlet Jawr config
-		JawrConfig binaryServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE,
-				new Properties());
-		
-		when(binaryGeneratorRegistry.isGeneratedBinaryResource(Matchers.anyString()))
-			.thenReturn(true);
-		when(binaryGeneratorRegistry.isHandlingCssImage(Matchers.anyString()))
-			.thenReturn(true);
+		JawrConfig binaryServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
+
+		when(binaryGeneratorRegistry.isGeneratedBinaryResource(Matchers.anyString())).thenReturn(true);
+		when(binaryGeneratorRegistry.isHandlingCssImage(Matchers.anyString())).thenReturn(true);
 
 		binaryServletJawrConfig.setGeneratorRegistry(generatorRegistry);
-		
+
 		Mockito.doAnswer(new Answer<InputStream>() {
 
 			@Override
@@ -146,13 +139,12 @@ public class IECssBundleGeneratorTestCase {
 				return new ByteArrayInputStream("fakeData".getBytes());
 			}
 		}).when(binaryRsReaderHandler).getResourceAsStream(Matchers.anyString());
-		
+
 		generatorRegistry.setResourceReaderHandler(binaryRsReaderHandler);
 
-		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(
-				binaryServletJawrConfig, binaryRsReaderHandler, null);
-		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE,
-				binaryRsHandler);
+		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(binaryServletJawrConfig,
+				binaryRsReaderHandler, null);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 	}
 
 	@Test
@@ -161,10 +153,7 @@ public class IECssBundleGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		assertEquals(
-				FileUtils
-						.readClassPathFile("generator/ieCssBundle/expected.css"),
-				writer.getBuffer().toString());
+		assertEquals(FileUtils.readClassPathFile("generator/ieCssBundle/expected.css"), writer.getBuffer().toString());
 	}
 
 }

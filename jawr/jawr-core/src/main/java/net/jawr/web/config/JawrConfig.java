@@ -177,6 +177,11 @@ public class JawrConfig implements Serializable {
 	public static final String JAWR_USE_BUNDLE_MAPPING = "jawr.use.bundle.mapping";
 
 	/**
+	 * The property name for the flag indicating if we should use "smart bundling".
+	 */
+	public static final String JAWR_USE_SMART_BUNDLING = "jawr.use.smart.bundling";
+	
+	/**
 	 * The property name for the debug mode system flag
 	 */
 	private static final String DEBUG_MODE_SYSTEM_FLAG = "net.jawr.debug.on";
@@ -316,6 +321,12 @@ public class JawrConfig implements Serializable {
 	 * defaults to false.
 	 */
 	private boolean useBundleMapping = false;
+
+	/**
+	 * Flag which defines if we should use the smart bundling feature.
+	 * defaults to true.
+	 */
+	private boolean useSmartBundling = true;
 
 	/**
 	 * The jawr working directory path
@@ -496,6 +507,8 @@ public class JawrConfig implements Serializable {
 
 		this.useBundleMapping = getBooleanProperty(JAWR_USE_BUNDLE_MAPPING, false);
 
+		this.useSmartBundling = getBooleanProperty(JAWR_USE_SMART_BUNDLING, true);
+		
 		this.jawrWorkingDirectory = getProperty(JAWR_WORKING_DIRECTORY);
 
 		this.gzipResourcesModeOn = getBooleanProperty(JAWR_GZIP_ON, true);
@@ -727,6 +740,25 @@ public class JawrConfig implements Serializable {
 	}
 
 	/**
+	 * Returns the flag indicating if we should use "smart bundling".
+	 * 
+	 * @return the flag indicating if we should use "smart bundling".
+	 */
+	public boolean getUseSmartBundling() {
+		return useSmartBundling;
+	}
+
+	/**
+	 * Sets the flag indicating if we should use "smart bundling".
+	 * 
+	 * @param useSmartBundling
+	 *            the flag to set
+	 */
+	public void setUseSmartBundling(boolean useSmartBundling) {
+		this.useSmartBundling = useSmartBundling;
+	}
+	
+	/**
 	 * Returns the flag indicating if we should use the bundle mapping
 	 * properties file.
 	 * 
@@ -741,7 +773,7 @@ public class JawrConfig implements Serializable {
 	 * Sets the flag indicating if we should use the bundle mapping properties
 	 * file.
 	 * 
-	 * @param bundleMappingPath
+	 * @param useBundleMapping
 	 *            the flag to set
 	 */
 	public void setUseBundleMapping(boolean useBundleMapping) {

@@ -114,6 +114,14 @@ public class FileUtils {
 		File tmp = new File(getResourceURL(pathName).getFile());
 		return tmp;
 	}
+	
+	public static String getClassPathFileAbsolutePath(String pathName) throws Exception {
+		// In windows, pathnames with spaces are returned as %20
+		if (pathName.indexOf("%20") != -1)
+			pathName = pathName.replaceAll("%20", " ");
+		File tmp = new File(getResourceURL(pathName).getFile());
+		return tmp.getAbsolutePath();
+	}
 
 	public static URL getResourceURL(String resource) throws IOException {
 		URL url = null;

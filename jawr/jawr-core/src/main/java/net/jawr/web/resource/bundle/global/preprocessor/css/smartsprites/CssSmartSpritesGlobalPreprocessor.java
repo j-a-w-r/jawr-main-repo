@@ -135,7 +135,7 @@ public class CssSmartSpritesGlobalPreprocessor extends
 						throw new BundlingProcessException("Issue while generating smartsprite bundle", e);
 					}
 				}
-				cssSpriteResourceReader.getResource(path);
+				cssSpriteResourceReader.getResource(bundle, path);
 			}
 		}
 	}

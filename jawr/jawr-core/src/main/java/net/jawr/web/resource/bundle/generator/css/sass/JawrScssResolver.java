@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Ibrahim Chaehoi
+ * Copyright 2015-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,10 @@ import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.resolver.AbstractResolver;
 
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
@@ -39,13 +42,22 @@ public class JawrScssResolver extends AbstractResolver {
 	/** The resource reader handler */
 	private ResourceReaderHandler rsHandler;
 
+	/** The bundle */
+	private JoinableResourceBundle bundle;
+
+	/** The parent SCSS stylesheet */
+	private JawrScssStylesheet parent;
+
 	/**
 	 * Constructor
 	 * 
+	 * @param bundle
+	 *            the bundle
 	 * @param rsHandler
 	 *            the resource reader handler
 	 */
-	public JawrScssResolver(ResourceReaderHandler rsHandler) {
+	public JawrScssResolver(JoinableResourceBundle bundle, ResourceReaderHandler rsHandler) {
+		this.bundle = bundle;
 		this.rsHandler = rsHandler;
 	}
 
@@ -70,9 +82,8 @@ public class JawrScssResolver extends AbstractResolver {
 		}
 
 		// Try to find partial import (_identifier.scss)
-		path = PathNormalizer.getParentPath(path)+"_"+PathNormalizer.getPathName(path);
-        
-		//path = PathNormalizer.concatWebPath(parentStylesheet.getFileName(), identifier);
+		path = PathNormalizer.getParentPath(path) + "_" + PathNormalizer.getPathName(path);
+
 		source = normalizeAndResolve(path);
 
 		if (source != null) {
@@ -100,7 +111,15 @@ public class JawrScssResolver extends AbstractResolver {
 		excluded.add(ISassResourceGenerator.class);
 		Reader rd = null;
 		try {
-			rd = rsHandler.getResource(fileName, false, excluded);
+			rd = rsHandler.getResource(bundle, fileName, false, excluded);
+			FilePathMapping linkedResource = getFilePathMapping(fileName);
+			if (linkedResource != null) {
+				addLinkedResource(linkedResource);
+				if (bundle != null) {
+					bundle.getFilePathMappings().add(
+							new FilePathMapping(bundle, linkedResource.getPath(), linkedResource.getLastModified()));
+				}
+			}
 		} catch (ResourceNotFoundException e) {
 			// Do nothing
 		}
@@ -114,7 +133,39 @@ public class JawrScssResolver extends AbstractResolver {
 		} else {
 			return null;
 		}
+	}
 
+	/**
+	 * Returns the file path mapping
+	 * 
+	 * @param fileName
+	 *            the path
+	 * @return the file path mapping
+	 */
+	public FilePathMapping getFilePathMapping(String fileName) {
+		return FilePathMappingUtils.buildFilePathMapping(fileName, rsHandler);
+	}
+
+	/**
+	 * Sets the parent stylesheet
+	 * 
+	 * @param sheet
+	 *            the Scss stylesheet
+	 */
+	public void setParentScssStyleSheet(JawrScssStylesheet sheet) {
+		this.parent = sheet;
+	}
+
+	/**
+	 * Adds a linked resource to the less source
+	 * 
+	 * @param linkedResource
+	 *            the linked resource to add
+	 */
+	private void addLinkedResource(FilePathMapping linkedResource) {
+		if (parent != null) {
+			parent.addLinkedResource(linkedResource);
+		}
 	}
 
 }

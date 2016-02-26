@@ -223,7 +223,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 			BinaryResourcesHandler binaryRsHandler) throws IOException {
 
 		if(binaryRsHandler != null){
-			FilePathMappingUtils.addLinkedFilePathMapping(status.getCurrentBundle(), url, binaryRsHandler.getRsReaderHandler());
+			FilePathMappingUtils.buildFilePathMapping(status.getCurrentBundle(), url, binaryRsHandler.getRsReaderHandler());
 		}
 		
 		// Try to retrieve the cache busted URL from the bundle processing cache

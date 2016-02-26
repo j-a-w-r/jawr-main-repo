@@ -26,6 +26,7 @@ import java.util.Set;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.util.FileUtils;
 import net.jawr.web.util.StringUtils;
 
@@ -82,15 +83,17 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String)
 	 */
-	public Reader getResource(String resourceName) {
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName) {
 		
-		return getResource(resourceName, false);
+		return getResource(bundle, resourceName, false);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle) {
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle) {
 		
 		Reader rd = null;
 		FileInputStream fis = (FileInputStream) getResourceAsStream(resourceName);
@@ -103,18 +106,19 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResourceAsStream(java.lang.String)
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
+	@Override
 	public InputStream getResourceAsStream(String resourceName) {
 		
 		return getResourceAsStream(resourceName, false);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
 	 */
-	public InputStream getResourceAsStream(String resourceName,
-			boolean processingBundle) {
+	@Override
+	public InputStream getResourceAsStream(String resourceName, boolean processingBundle) {
 		
 		InputStream is = null;
 		try {
@@ -130,6 +134,7 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
 	 */
+	@Override
 	public Set<String> getResourceNames(String path) {
 		path = path.replace('/', File.separatorChar);
 		File resource = new File(baseDir, path);
@@ -139,6 +144,7 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
 	 */
+	@Override
 	public boolean isDirectory(String dirPath) {
 		String path = dirPath.replace('/', File.separatorChar);
 		return new File(baseDir, path).isDirectory();

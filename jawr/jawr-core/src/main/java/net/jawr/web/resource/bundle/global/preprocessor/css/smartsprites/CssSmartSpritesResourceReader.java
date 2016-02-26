@@ -19,6 +19,7 @@ import java.io.Reader;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.handler.reader.FileSystemResourceReader;
 import net.jawr.web.resource.handler.reader.PathPrefixedServletContextResourceReader;
@@ -62,27 +63,27 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String)
+	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
-	public Reader getResource(String resourceName) {
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName) {
 		
 		Reader rd = null;
 		if(!jawrConfig.isDebugModeOn()){
-			((TextResourceReader) resourceReader).getResource(resourceName);
+			((TextResourceReader) resourceReader).getResource(bundle, resourceName);
 		}
 		
 		return rd;
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle) {
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle) {
 		
 		Reader rd = null;
 		if(processingBundle){
 			String path = getCssPath(resourceName);
-			rd = ((TextResourceReader) resourceReader).getResource(path, processingBundle);
+			rd = ((TextResourceReader) resourceReader).getResource(bundle, path, processingBundle);
 		}
 		
 		return rd;
@@ -103,18 +104,19 @@ public class CssSmartSpritesResourceReader implements TextResourceReader, Stream
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String)
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
+	@Override
 	public InputStream getResourceAsStream(String resourceName) {
 		
 		return getResourceAsStream(resourceName, false);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
 	 */
-	public InputStream getResourceAsStream(String resourceName,
-			boolean processingBundle) {
+	@Override
+	public InputStream getResourceAsStream(String resourceName, boolean processingBundle) {
 		
 		String path = resourceName;
 		GeneratorRegistry generatorRegistry = jawrConfig.getGeneratorRegistry();

@@ -29,6 +29,8 @@ Descriptor file syntax
 *---------------+---------+--------------+----------------+
 | jawr.gzip.ie6.on | Boolean | Disable the serving of gzipped resources to Internet Explorer 6 or less. | true    | 
 *---------------+---------+--------------+----------------+
+| jawr.use.smart.bundling | Boolean | Define if we must use the "smart bundling" feature (processing only modified bundle). | true |
+*---------------+---------+--------------+----------------+
 | jawr.use.bundle.mapping | Boolean | Define if we must use the generated bundle mapping or not. | false |
 *---------------+---------+--------------+----------------+
 | jawr.working.directory | String | Path to the jawr working directory. | <javax.servlet.context.tempdir>/jawrTmp

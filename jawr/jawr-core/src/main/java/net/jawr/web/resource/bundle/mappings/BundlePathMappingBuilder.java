@@ -225,7 +225,7 @@ public class BundlePathMappingBuilder {
 
 			Reader reader;
 			try {
-				reader = resourceReaderHandler.getResource(sortFilePath);
+				reader = resourceReaderHandler.getResource(bundle, sortFilePath);
 			} catch (ResourceNotFoundException e) {
 				throw new BundlingProcessException(
 						"Unexpected ResourceNotFoundException when reading a sorting file[" + sortFilePath + "]", e);

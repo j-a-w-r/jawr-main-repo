@@ -71,7 +71,7 @@ public class CoffeeScriptGeneratorTestCase {
 
 	@Mock
 	private ResourceReaderHandler rsReaderHandler;
-
+	
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
@@ -107,13 +107,13 @@ public class CoffeeScriptGeneratorTestCase {
 				config, JawrConstant.JS_TYPE);
 		generator = new CoffeeScriptGenerator();
 
-		ctx = new GeneratorContext(config, bundlePath);
+		ctx = new GeneratorContext(bundle, config, bundlePath);
 
 		Reader tempReader = new StringReader(
 				FileUtils
 						.readClassPathFile("generator/js/coffeescript/temp.coffee"));
 		when(
-				rsReaderHandler.getResource(Matchers.anyString(),
+				rsReaderHandler.getResource(Matchers.any(JoinableResourceBundle.class), Matchers.anyString(),
 						Matchers.anyBoolean(), Matchers.anyList())).thenReturn(
 				tempReader);
 

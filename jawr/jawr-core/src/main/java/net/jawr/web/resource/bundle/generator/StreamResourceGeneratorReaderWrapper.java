@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,49 +20,57 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.StreamResourceReader;
 
 /**
- * This class defines the class which wraps a stream resource generator in a stream resource reader
+ * This class defines the class which wraps a stream resource generator in a
+ * stream resource reader
+ * 
  * @author Ibrahim Chaehoi
  */
 public class StreamResourceGeneratorReaderWrapper implements StreamResourceReader {
 
 	/** The resource generator wrapped */
 	private StreamResourceGenerator generator;
-	
+
 	/** The resource handler */
 	private ResourceReaderHandler rsHandler;
-	
+
 	/** The Jawr config */
 	private JawrConfig config;
-	
+
 	/**
 	 * Constructor
-	 * @param generator the generator
+	 * 
+	 * @param generator
+	 *            the generator
 	 */
-	public StreamResourceGeneratorReaderWrapper(StreamResourceGenerator generator, ResourceReaderHandler rsHandler, JawrConfig config) {
+	public StreamResourceGeneratorReaderWrapper(StreamResourceGenerator generator, ResourceReaderHandler rsHandler,
+			JawrConfig config) {
 		this.generator = generator;
 		this.config = config;
 		this.rsHandler = rsHandler;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String)
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
+	@Override
 	public InputStream getResourceAsStream(String resourceName) {
 		
 		return getResourceAsStream(resourceName, false);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.stream.StreamResourceReader#getResourceAsStream(java.lang.String, boolean)
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
 	 */
-	public InputStream getResourceAsStream(String resourceName,
+	@Override
+	public InputStream getResourceAsStream(String resourceName, 
 			boolean processingBundle) {
-		
-		GeneratorContext context = new GeneratorContext(config, generator.getResolver().getResourcePath(resourceName));
+
+		GeneratorContext context = new GeneratorContext(null, config,
+				generator.getResolver().getResourcePath(resourceName));
 		context.setResourceReaderHandler(rsHandler);
 		context.setProcessingBundle(processingBundle);
-		
+
 		return generator.createResourceAsStream(context);
 	}
-	
+
 }

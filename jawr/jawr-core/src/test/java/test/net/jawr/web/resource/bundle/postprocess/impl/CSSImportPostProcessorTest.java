@@ -279,7 +279,7 @@ public class CSSImportPostProcessorTest {
 							"padding : 0 7px; \n" +
 							"background : url('../img/rainbow.png'); \n"+
 					"}"));
-			when(rsHandler.getResource(expectedCssImportPath, true)).thenReturn(new StringReader(".test { align : left; \n" +
+			when(rsHandler.getResource(bundle, expectedCssImportPath, true)).thenReturn(new StringReader(".test { align : left; \n" +
 					"padding : 0 7px; \n" +
 					"background : url('../img/rainbow.png'); \n"+
 			"}"));

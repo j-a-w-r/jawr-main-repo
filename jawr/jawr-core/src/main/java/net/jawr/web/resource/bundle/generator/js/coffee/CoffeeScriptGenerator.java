@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2015  Ibrahim Chaehoi
+ * Copyright 2012-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -32,6 +32,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
@@ -101,6 +102,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 * net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator
 	 * #setConfig(net.jawr.web.config.JawrConfig)
 	 */
+	@Override
 	public void setConfig(JawrConfig config) {
 		this.config = config;
 	}
@@ -111,6 +113,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 * @see net.jawr.web.resource.bundle.generator.
 	 * PostInitializationAwareResourceGenerator#afterPropertiesSet()
 	 */
+	@Override
 	public void afterPropertiesSet() {
 
 		StopWatch stopWatch = new StopWatch("initializing JS engine for Coffeescript");
@@ -160,17 +163,15 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getResolver
 	 * ()
 	 */
+	@Override
 	public ResourceGeneratorResolver getResolver() {
 		return resolver;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.TextResourceGenerator#createResource
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.TextResourceGenerator#createResource(net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
+	@Override
 	public Reader createResource(GeneratorContext context) {
 
 		String path = context.getPath();
@@ -178,7 +179,8 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		try {
 			List<Class<?>> excluded = new ArrayList<Class<?>>();
 			excluded.add(ICoffeeScriptGenerator.class);
-			rd = context.getResourceReaderHandler().getResource(path, false,
+			JoinableResourceBundle bundle = context.getBundle();
+			rd = context.getResourceReaderHandler().getResource(bundle, path, false,
 					excluded);
 			StringWriter swr = new StringWriter();
 			IOUtils.copy(rd, swr);
@@ -220,6 +222,5 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 			PERF_LOGGER.debug(stopWatch.shortSummary());
 		}
 		return result;
-
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,6 +23,7 @@ import java.util.Map;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -58,26 +59,20 @@ public class ResourceGeneratorReaderWrapper implements TextResourceReader {
 		this.rsHandler = rsHandler;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String
-	 * )
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
-	public Reader getResource(String resourceName) {
-
-		return getResource(resourceName, false);
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName) {
+	
+		return getResource(bundle, resourceName, false);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String
-	 * , boolean)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
 	 */
-	public Reader getResource(String resourceName, boolean processingBundle) {
+	@Override
+	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle) {
 
 		Locale locale = null;
 		String path = generator.getResolver().getResourcePath(resourceName);
@@ -139,7 +134,7 @@ public class ResourceGeneratorReaderWrapper implements TextResourceReader {
 			}
 		}
 
-		GeneratorContext context = new GeneratorContext(config, path);
+		GeneratorContext context = new GeneratorContext(bundle, config, path);
 		context.setVariantMap(contextVariants);
 		context.setVariantSets(variantSets);
 

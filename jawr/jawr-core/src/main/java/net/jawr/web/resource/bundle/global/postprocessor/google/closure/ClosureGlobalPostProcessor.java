@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2015 Ibrahim Chaehoi
+ * Copyright 2011-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -778,6 +778,7 @@ public class ClosureGlobalPostProcessor extends
 
 						if (rd == null) {
 							try {
+								
 								rd = ctx.getRsReaderHandler().getResource(
 										filename);
 							} catch (ResourceNotFoundException e1) {
