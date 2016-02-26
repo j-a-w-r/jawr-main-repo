@@ -62,6 +62,7 @@ import net.jawr.web.resource.bundle.iterator.DebugModePathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.IECssDebugPathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.PathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
+import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.sorting.GlobalResourceBundleComparator;
@@ -149,6 +150,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/** The resource watcher */
 	private ResourceWatcher watcher;
 
+	/** The flag indicating if we need to search for variant in post process */
+	private boolean needToSearchForVariantInPostProcess;
+
 	/**
 	 * Build a ResourceBundlesHandler.
 	 * 
@@ -200,7 +204,30 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		this.clientSideHandlerGenerator = (ClientSideHandlerGenerator) ClassLoaderResourceUtils
 				.buildObjectInstance(config.getClientSideHandlerGeneratorClass());
 		this.clientSideHandlerGenerator.init(config, globalBundles, contextBundles);
-		
+
+		this.needToSearchForVariantInPostProcess = isSearchingForVariantInPostProcessNeeded();
+	}
+
+	/**
+	 * Checks if it is needed to search for variant in post process
+	 * 
+	 * @return true if it is needed to search for variant in post process
+	 */
+	private boolean isSearchingForVariantInPostProcessNeeded() {
+		boolean needToSearch = false;
+
+		ResourceBundlePostProcessor[] postprocessors = new ResourceBundlePostProcessor[] { postProcessor,
+				unitaryCompositePostProcessor, compositePostProcessor, unitaryCompositePostProcessor };
+		for (ResourceBundlePostProcessor resourceBundlePostProcessor : postprocessors) {
+			if (resourceBundlePostProcessor != null
+					&& ((AbstractChainedResourceBundlePostProcessor) resourceBundlePostProcessor)
+							.isVariantPostProcessor()) {
+				needToSearch = true;
+				break;
+			}
+		}
+
+		return needToSearch;
 	}
 
 	/*
@@ -541,7 +568,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			int storeJawrConfigHashcode = Integer.parseInt(
 					resourceBundleHandler.getJawrBundleMapping().getProperty(JawrConstant.JAWR_CONFIG_HASHCODE));
 			int jawrConfigHashcode = config.getConfigProperties().hashCode();
-			boolean rebuildAllBundles = !config.getUseSmartBundling() || (storeJawrConfigHashcode != jawrConfigHashcode);
+			boolean rebuildAllBundles = !config.getUseSmartBundling()
+					|| (storeJawrConfigHashcode != jawrConfigHashcode);
 			if (!rebuildAllBundles) {
 				bundleToProcess = getBundlesToRebuild();
 				if (!bundleToProcess.isEmpty() && LOGGER.isDebugEnabled()) {
@@ -624,7 +652,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			} catch (IOException e) {
 				throw new BundlingProcessException(e);
 			}
-		}else{
+		} else {
 			LOGGER.warn("You should turn of \"smart bundling\" feature to be able to rebuild modified bundles.");
 		}
 	}
@@ -800,21 +828,27 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 						childbundle.getVariants());
 		}
 		composite.setVariants(compositeBundleVariants);
-		status.setSearchingPostProcessorVariants(true);
-		joinAndPostProcessBundle(composite, status);
 
-		Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
-		if (!postProcessVariants.isEmpty()) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Post process variants found for bundle " + composite.getId() + ":" + postProcessVariants);
+		if (needToSearchForVariantInPostProcess) {
+			status.setSearchingPostProcessorVariants(true);
+			joinAndPostProcessBundle(composite, status);
+
+			Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
+			if (!postProcessVariants.isEmpty()) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug(
+							"Post process variants found for bundle " + composite.getId() + ":" + postProcessVariants);
+				}
+				Map<String, VariantSet> newVariants = VariantUtils.concatVariants(composite.getVariants(),
+						postProcessVariants);
+				composite.setVariants(newVariants);
+				status.setSearchingPostProcessorVariants(false);
+				joinAndPostProcessBundle(composite, status);
 			}
-			Map<String, VariantSet> newVariants = VariantUtils.concatVariants(composite.getVariants(),
-					postProcessVariants);
-			composite.setVariants(newVariants);
+		} else {
 			status.setSearchingPostProcessorVariants(false);
 			joinAndPostProcessBundle(composite, status);
 		}
-
 	}
 
 	/**
@@ -963,19 +997,25 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		JoinableResourceBundleContent store = null;
 
 		// Process the bundle for searching variant
-		status.setSearchingPostProcessorVariants(true);
-		joinAndPostProcessBundle(bundle, status);
+		if (needToSearchForVariantInPostProcess) {
+			status.setSearchingPostProcessorVariants(true);
+			joinAndPostProcessBundle(bundle, status);
 
-		// Process the bundles
-		status.setSearchingPostProcessorVariants(false);
-		Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
-		if (!postProcessVariants.isEmpty()) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Post process variants found for bundle " + bundle.getId() + ":" + postProcessVariants);
+			// Process the bundles
+			status.setSearchingPostProcessorVariants(false);
+			Map<String, VariantSet> postProcessVariants = status.getPostProcessVariants();
+			if (!postProcessVariants.isEmpty()) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug(
+							"Post process variants found for bundle " + bundle.getId() + ":" + postProcessVariants);
+				}
+				Map<String, VariantSet> newVariants = VariantUtils.concatVariants(bundle.getVariants(),
+						postProcessVariants);
+				bundle.setVariants(newVariants);
+				joinAndPostProcessBundle(bundle, status);
 			}
-			Map<String, VariantSet> newVariants = VariantUtils.concatVariants(bundle.getVariants(),
-					postProcessVariants);
-			bundle.setVariants(newVariants);
+		} else {
+			status.setSearchingPostProcessorVariants(false);
 			joinAndPostProcessBundle(bundle, status);
 		}
 

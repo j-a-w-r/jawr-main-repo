@@ -184,13 +184,16 @@ public class LessCssGenerator extends AbstractCSSGenerator
 
 	/**
 	 * Retrieves the resource from cache if it exists
-	 * @param path the resource path
-	 * @param context the generator context
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param context
+	 *            the generator context
 	 * 
 	 * @return the reader to the resource
 	 */
 	private Reader retrieveFromCache(String path, GeneratorContext context) {
-		
+
 		Reader rd = null;
 		String filePath = getTempFilePath(context);
 		FileInputStream fis = null;
@@ -343,7 +346,7 @@ public class LessCssGenerator extends AbstractCSSGenerator
 	 * @return the temporary directory
 	 */
 	private String getTempDirectoryName() {
-		return "lessCss";
+		return "lessCss/";
 	}
 
 	/*
@@ -364,7 +367,7 @@ public class LessCssGenerator extends AbstractCSSGenerator
 	 * @return the file path of the less generator cache
 	 */
 	private String getCacheFilePath() {
-		return this.workingDir + getTempDirectoryName() + "lessGeneratorCache.txt";
+		return this.workingDir +"/"+ getTempDirectoryName() + "lessGeneratorCache.txt";
 	}
 
 	/**
@@ -377,21 +380,30 @@ public class LessCssGenerator extends AbstractCSSGenerator
 		// TODO put in place PostProcessBundling event for this type of action
 		StringBuilder strb = new StringBuilder();
 		for (Map.Entry<String, List<FilePathMapping>> entry : linkedResourceMap.entrySet()) {
-			strb.append(entry.getKey() + "=");
-			for (Iterator<FilePathMapping> iter = entry.getValue().iterator(); iter.hasNext();) {
-				FilePathMapping fMapping = iter.next();
-				strb.append(fMapping.getPath() + "#" + fMapping.getLastModified());
-				if (iter.hasNext()) {
-					strb.append(";");
+
+			Iterator<FilePathMapping> iter = entry.getValue().iterator();
+			if (iter.hasNext()) {
+
+				strb.append(entry.getKey() + "=");
+				for (; iter.hasNext();) {
+					FilePathMapping fMapping = iter.next();
+					strb.append(fMapping.getPath() + "#" + fMapping.getLastModified());
+					if (iter.hasNext()) {
+						strb.append(";");
+					}
 				}
 			}
 		}
-		FileWriter fw = new FileWriter(getCacheFilePath());
+		
+		File f = new File(getCacheFilePath());
+		if(!f.getParentFile().exists()){
+			f.getParentFile().mkdirs();
+		}
+		FileWriter fw = new FileWriter(f);
 		try {
 			fw.append(strb);
 		} finally {
 			IOUtils.close(fw);
-
 		}
 	}
 

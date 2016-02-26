@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2012 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +19,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
@@ -27,9 +30,6 @@ import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProce
 import net.jawr.web.resource.bundle.postprocess.impl.PostProcessorCssImageUrlRewriter;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.util.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class defines the post processor which encodes resources (background
@@ -68,6 +68,7 @@ public class Base64ImageEncoderPostProcessor extends
 	 */
 	public Base64ImageEncoderPostProcessor() {
 		super(PostProcessFactoryConstant.BASE64_IMAGE_ENCODER);
+		isVariantPostProcessor = true;
 	}
 
 	/*

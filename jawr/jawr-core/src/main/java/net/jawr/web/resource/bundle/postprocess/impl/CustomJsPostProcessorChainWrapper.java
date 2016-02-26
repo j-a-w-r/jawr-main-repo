@@ -19,31 +19,42 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 
 /**
- * Wrapper class for custom JS user made postprocessors. Adds chaining functionality to the 
- * custom postprocessor. 
+ * Wrapper class for custom JS user made postprocessors. Adds chaining
+ * functionality to the custom postprocessor.
  * 
  * @author Ibrahim Chaehoi
  */
 public class CustomJsPostProcessorChainWrapper extends AbstractJsChainedResourceBundlePostProcessor {
-	
+
 	/** The custom post processor */
 	private ResourceBundlePostProcessor customPostProcessor;
 
 	/**
 	 * Constructor
-	 * @param customPostProcessor Custom implementation of ResourceBundlePostProcessor to wrap with chaining. 
+	 * @param id the ID of the postprocessor 
+	 * @param customPostProcessor
+	 *            Custom implementation of ResourceBundlePostProcessor to wrap
+	 *            with chaining.
+	 * @param isVariantPostProcessor the flag indicating if it's a variant bundle 
 	 */
-	public CustomJsPostProcessorChainWrapper(
-			ResourceBundlePostProcessor customPostProcessor, String id) {
-		
+	public CustomJsPostProcessorChainWrapper(String id, ResourceBundlePostProcessor customPostProcessor,
+			boolean isVariantPostProcessor) {
+
 		super(id);
 		this.customPostProcessor = customPostProcessor;
+		this.isVariantPostProcessor = isVariantPostProcessor;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus, java.lang.StringBuffer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.postprocess.
+	 * AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.
+	 * web.resource.bundle.postprocess.BundleProcessingStatus,
+	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) throws IOException {
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 		return customPostProcessor.postProcessBundle(status, bundleData);
 	}
 

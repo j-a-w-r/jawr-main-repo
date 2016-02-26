@@ -378,7 +378,7 @@ public class SassGenerator extends AbstractCSSGenerator
 	 * @return the temporary directory
 	 */
 	private String getTempDirectoryName() {
-		return "sassCss";
+		return "sassCss/";
 	}
 
 	/**
@@ -388,11 +388,11 @@ public class SassGenerator extends AbstractCSSGenerator
 	 * @return the file path of the less generator cache
 	 */
 	private String getCacheFilePath() {
-		return this.workingDir + getTempDirectoryName() + "lessGeneratorCache.txt";
+		return this.workingDir +"/"+ getTempDirectoryName() + "sassGeneratorCache.txt";
 	}
 
 	/**
-	 * Serialize the less resource mapping to a cache file
+	 * Serialize the cache file mapping
 	 * 
 	 * @throws IOException
 	 *             if an IO exception occurs
@@ -401,26 +401,35 @@ public class SassGenerator extends AbstractCSSGenerator
 		// TODO put in place PostProcessBundling event for this type of action
 		StringBuilder strb = new StringBuilder();
 		for (Map.Entry<String, List<FilePathMapping>> entry : linkedResourceMap.entrySet()) {
-			strb.append(entry.getKey() + "=");
-			for (Iterator<FilePathMapping> iter = entry.getValue().iterator(); iter.hasNext();) {
-				FilePathMapping fMapping = iter.next();
-				strb.append(fMapping.getPath() + "#" + fMapping.getLastModified());
-				if (iter.hasNext()) {
-					strb.append(";");
+
+			Iterator<FilePathMapping> iter = entry.getValue().iterator();
+			if (iter.hasNext()) {
+
+				strb.append(entry.getKey() + "=");
+				for (; iter.hasNext();) {
+					FilePathMapping fMapping = iter.next();
+					strb.append(fMapping.getPath() + "#" + fMapping.getLastModified());
+					if (iter.hasNext()) {
+						strb.append(";");
+					}
 				}
 			}
 		}
-		FileWriter fw = new FileWriter(getCacheFilePath());
+		
+		File f = new File(getCacheFilePath());
+		if(!f.getParentFile().exists()){
+			f.getParentFile().mkdirs();
+		}
+		FileWriter fw = new FileWriter(f);
 		try {
 			fw.append(strb);
 		} finally {
 			IOUtils.close(fw);
-
 		}
 	}
 
 	/**
-	 * Loads the cache file mapping
+	 * Loads the less file mapping
 	 */
 	private void loadCacheMapping() {
 		File f = new File(getCacheFilePath());

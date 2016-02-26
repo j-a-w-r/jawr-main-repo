@@ -37,6 +37,9 @@ public abstract class AbstractChainedResourceBundlePostProcessor implements
 	/** The next post processor */
 	protected ChainedResourceBundlePostProcessor nextProcessor;
 
+	/** The flag indicating if the post processor is able to search and generate variant for resource bundle */
+	protected boolean isVariantPostProcessor = false;
+	
 	/** The ID of the chained bundle post processor */
 	private String id;
 
@@ -64,6 +67,14 @@ public abstract class AbstractChainedResourceBundlePostProcessor implements
 		return strId.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.postprocess.ChainedResourceBundlePostProcessor#isVariantPostProcessor()
+	 */
+	@Override
+	public boolean isVariantPostProcessor() {
+		return isVariantPostProcessor;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -99,6 +110,9 @@ public abstract class AbstractChainedResourceBundlePostProcessor implements
 	 */
 	public void addNextProcessor(
 			ChainedResourceBundlePostProcessor nextProcessor) {
+		if(!isVariantPostProcessor){
+			isVariantPostProcessor = nextProcessor.isVariantPostProcessor();
+		}
 		if (this.nextProcessor == null) {
 			this.nextProcessor = nextProcessor;
 		} else {

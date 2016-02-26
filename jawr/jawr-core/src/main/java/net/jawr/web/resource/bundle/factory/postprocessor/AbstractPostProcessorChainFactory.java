@@ -16,8 +16,8 @@ package net.jawr.web.resource.bundle.factory.postprocessor;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
@@ -25,6 +25,7 @@ import net.jawr.web.resource.bundle.postprocess.ChainedResourceBundlePostProcess
 import net.jawr.web.resource.bundle.postprocess.EmptyResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
+import net.jawr.web.resource.bundle.postprocess.VariantPostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CustomPostProcessorChainWrapper;
 import net.jawr.web.resource.bundle.postprocess.impl.LicensesIncluderPostProcessor;
 
@@ -34,8 +35,9 @@ import net.jawr.web.resource.bundle.postprocess.impl.LicensesIncluderPostProcess
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractPostProcessorChainFactory implements	PostProcessorChainFactory {
+public abstract class AbstractPostProcessorChainFactory implements PostProcessorChainFactory {
 
+	
 	/** The map of custom postprocessor */
 	private Map<String, ChainedResourceBundlePostProcessor> customPostProcessors;
 	
@@ -92,6 +94,7 @@ public abstract class AbstractPostProcessorChainFactory implements	PostProcessor
 
 		if (customPostProcessors.get(key) == null) {
 			toAdd = buildProcessorByKey(key);
+			
 		} else{
 			toAdd = (AbstractChainedResourceBundlePostProcessor) customPostProcessors
 				.get(key);
@@ -135,9 +138,9 @@ public abstract class AbstractPostProcessorChainFactory implements	PostProcessor
 			Entry<String, String> entry = it.next();
 			ResourceBundlePostProcessor customProcessor = 
 				(ResourceBundlePostProcessor) ClassLoaderResourceUtils.buildObjectInstance((String) entry.getValue());
-			
+			boolean isVariantPostProcessor = customProcessor.getClass().getAnnotation(VariantPostProcessor.class) != null;
 			String key = (String) entry.getKey();			
-			customPostProcessors.put(key, getCustomProcessorWrapper(customProcessor, key));
+			customPostProcessors.put(key, getCustomProcessorWrapper(customProcessor, key, isVariantPostProcessor));
 			
 		}		
 	}
@@ -146,11 +149,12 @@ public abstract class AbstractPostProcessorChainFactory implements	PostProcessor
 	 * Returns the custom processor wrapper
 	 * @param customProcessor the custom processor
 	 * @param key the id of the custom processor
+	 * @param isVariantPostProcessor the flag indicating if it's a variant postprocessor
 	 * @return the custom processor wrapper
 	 */
 	protected ChainedResourceBundlePostProcessor getCustomProcessorWrapper(
-			ResourceBundlePostProcessor customProcessor, String key) {
-		return new CustomPostProcessorChainWrapper(key, customProcessor);
+			ResourceBundlePostProcessor customProcessor, String key, boolean isVariantPostProcessor) {
+		return new CustomPostProcessorChainWrapper(key, customProcessor, isVariantPostProcessor);
 	}
 
 }

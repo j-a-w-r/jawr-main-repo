@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -36,9 +36,9 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 	 */
 	@Override
 	protected ChainedResourceBundlePostProcessor getCustomProcessorWrapper(
-			ResourceBundlePostProcessor customProcessor, String key) {
+			ResourceBundlePostProcessor customProcessor, String key, boolean isVariantPostProcessor) {
 		
-		return new CustomJsPostProcessorChainWrapper(customProcessor, key);
+		return new CustomJsPostProcessorChainWrapper(key, customProcessor, isVariantPostProcessor);
 	}
 
 	/* (non-Javadoc)

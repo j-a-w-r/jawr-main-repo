@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,32 +20,45 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 
 /**
- * Wrapper class for custom user made postprocessors. Adds chaining functionality to the 
- * custom postprocessor. 
+ * Wrapper class for custom user made postprocessors. Adds chaining
+ * functionality to the custom postprocessor.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public class CustomPostProcessorChainWrapper extends AbstractChainedResourceBundlePostProcessor {
-	
+
 	/** The custom post processor */
 	private ResourceBundlePostProcessor customPostProcessor;
 
 	/**
 	 * Constructor
-	 * @param customPostProcessor Custom implementation of ResourceBundlePostProcessor to wrap with chaining. 
+	 * 
+	 * @param id
+	 *            the ID of the post processor
+	 * @param customPostProcessor
+	 *            Custom implementation of ResourceBundlePostProcessor to wrap
+	 *            with chaining.
+	 * @param isVariantPostProcessor the flag indicating if it's a variant post processor
 	 */
-	public CustomPostProcessorChainWrapper(String id,
-			ResourceBundlePostProcessor customPostProcessor) {
-		
+	public CustomPostProcessorChainWrapper(String id, ResourceBundlePostProcessor customPostProcessor,
+			boolean isVariantPostProcessor) {
+
 		super(id);
 		this.customPostProcessor = customPostProcessor;
+		this.isVariantPostProcessor = isVariantPostProcessor;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus, java.lang.StringBuffer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.postprocess.
+	 * AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.
+	 * web.resource.bundle.postprocess.BundleProcessingStatus,
+	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) throws IOException {
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 		return customPostProcessor.postProcessBundle(status, bundleData);
 	}
 
