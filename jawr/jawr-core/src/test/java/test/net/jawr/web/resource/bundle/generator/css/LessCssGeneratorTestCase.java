@@ -282,14 +282,18 @@ public class LessCssGeneratorTestCase {
 		// Simulate change on a linked resource
 		File f = FileUtils.getClassPathFile("generator/css/less/import1/import1a.less");
 		System.out.println("Less Smartbundling - file last modified before change : "+f.lastModified());
-		FileWriter fWriter = new FileWriter(f);
+		FileWriter fWriter = null;
+		try{
+			fWriter = new FileWriter(f);
 		fWriter.append("@import \"import1c.less\";\nimport1a { color: blue;}");
-		fWriter.close();
+		}finally{
+			IOUtils.close(fWriter);
+		}
 		boolean ok = f.setLastModified(Calendar.getInstance().getTimeInMillis()+3);
 		System.out.println("Less Smartbundling - file last modified : "+ok);
 		
 		filePathMappings.clear();
-		initRsReaderHandler("/import1/import1a.less", "generator/css/less/import1/import1a.less");
+		initRsReaderHandler("/import1/import1a.less", "generator/css/less/import1/import1a.less", Calendar.getInstance().getTimeInMillis()+3);
 
 		ctx.setProcessingBundle(true);
 		Reader rd = generator.createResource(ctx);
@@ -351,6 +355,23 @@ public class LessCssGeneratorTestCase {
 		String filePath = f.getAbsolutePath();
 		when(rsReaderHandler.getFilePath(resourceName)).thenReturn(filePath);
 		when(rsReaderHandler.getLastModified(filePath)).thenReturn(f.lastModified());
+		Mockito.doAnswer(new Answer<Reader>() {
+
+			@Override
+			public Reader answer(InvocationOnMock invocation) throws Throwable {
+				return new StringReader(lessContent);
+			}
+		}).when(rsReaderHandler).getResource(Matchers.any(JoinableResourceBundle.class), Matchers.eq(resourceName),
+				Matchers.anyBoolean(), (List<Class<?>>) Matchers.any());
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void initRsReaderHandler(String resourceName, String resourcePath, long lastModified) throws Exception {
+		final String lessContent = FileUtils.readClassPathFile(resourcePath);
+		File f = FileUtils.getClassPathFile(resourcePath);
+		String filePath = f.getAbsolutePath();
+		when(rsReaderHandler.getFilePath(resourceName)).thenReturn(filePath);
+		when(rsReaderHandler.getLastModified(filePath)).thenReturn(lastModified);
 		Mockito.doAnswer(new Answer<Reader>() {
 
 			@Override
