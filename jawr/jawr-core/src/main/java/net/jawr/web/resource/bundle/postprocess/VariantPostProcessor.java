@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for Post processor which needs to search for variant like Base64ImageEncoderPostProcessor. 
+ * This allow JAWR to do search variant only when post processor are variant post processors. 
  * 
  * @author ibrahim Chaehoi
  */
