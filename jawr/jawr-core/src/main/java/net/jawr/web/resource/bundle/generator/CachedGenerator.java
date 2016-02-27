@@ -47,4 +47,20 @@ public @interface CachedGenerator {
 	 * @return cache directory name
 	 */
 	String cacheDirectory();
+	
+	CacheMode mode() default CacheMode.PROD;
+	
+	/**
+	 * The cache mode.
+	 * With DEBUG, only debug content will be cached
+	 * With PROD, only production content will be cached
+	 * With ALL, debug and production content will be cached
+	 */
+	public enum CacheMode {
+		
+		DEBUG,
+		PROD,
+		ALL;
+	}
+	
 }

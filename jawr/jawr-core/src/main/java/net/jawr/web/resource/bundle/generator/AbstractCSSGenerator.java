@@ -55,23 +55,6 @@ public abstract class AbstractCSSGenerator extends AbstractCachedGenerator
 		return path.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.TextResourceGenerator#
-	 * createResource(net.jawr.web.resource.bundle.generator.GeneratorContext)
-	 */
-	@Override
-	public Reader createResource(GeneratorContext context) {
-
-		Reader rd = super.createResource(context);
-		if (!context.isProcessingBundle()) {
-			rd = generateResourceForDebug(rd, context);
-		}
-
-		return rd;
-	}
-
 	/**
 	 * Returns the resource in debug mode. Here an extra step is used to rewrite
 	 * the URL in debug mode

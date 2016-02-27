@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
@@ -75,6 +76,9 @@ public abstract class AbstractCachedGenerator
 	/** The flag indicating that we are using cache */
 	protected boolean useCache = false;
 
+	/** The cache mode */
+	protected CacheMode cacheMode;
+
 	/**
 	 * Constructor
 	 */
@@ -89,6 +93,7 @@ public abstract class AbstractCachedGenerator
 			if (cacheDirectory.endsWith(URL_SEPARATOR)) {
 				cacheDirectory = cacheDirectory + URL_SEPARATOR;
 			}
+			cacheMode = annotation.mode();
 		}
 	}
 
@@ -143,8 +148,8 @@ public abstract class AbstractCachedGenerator
 	 *            the generator context
 	 * @return the file path of the temporary resource
 	 */
-	protected String getTempFilePath(GeneratorContext context) {
-		return workingDir + "/" + getTempDirectoryName()
+	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
+		return workingDir + URL_SEPARATOR + getTempDirectoryName() + cacheMode + URL_SEPARATOR
 				+ context.getPath().replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, URL_SEPARATOR);
 	}
 
@@ -188,7 +193,16 @@ public abstract class AbstractCachedGenerator
 			if (fMappings != null && !checkResourcesModified(context, fMappings)) {
 				// Retrieve from cache
 				// Checks if temp resource is already created
-				rd = retrieveFromCache(path, context);
+				if (context.isProcessingBundle()) {
+
+					if (cacheMode.equals(CacheMode.PROD) || cacheMode.equals(CacheMode.ALL)) {
+						rd = retrieveFromCache(path, context, CacheMode.PROD);
+					}
+				} else {
+					if (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL)) {
+						rd = retrieveFromCache(path, context, CacheMode.DEBUG);
+					}
+				}
 			}
 		}
 
@@ -204,7 +218,15 @@ public abstract class AbstractCachedGenerator
 					serializeCacheMapping();
 				}
 				if (rd != null) {
-					rd = createTempResource(context, rd);
+					if (cacheMode.equals(CacheMode.PROD) || cacheMode.equals(CacheMode.ALL)) {
+						rd = createTempResource(context, CacheMode.PROD, rd);
+					}
+				}
+				if (!context.isProcessingBundle()) {
+					rd = generateResourceForDebug(rd, context);
+					if (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL)) {
+						rd = createTempResource(context, CacheMode.DEBUG, rd);
+					}
 				}
 			}
 		}
@@ -218,13 +240,37 @@ public abstract class AbstractCachedGenerator
 	}
 
 	/**
+	 * Generates the resource content for debug mode
+	 * 
+	 * @param rd
+	 *            the reader to the resource
+	 * @param context
+	 *            the context
+	 * @return the resource content for debug mode
+	 */
+	protected Reader generateResourceForDebug(Reader rd, GeneratorContext context) {
+		return rd;
+	}
+
+	/**
 	 * Generates the resource which will be cached
+	 * 
 	 * @param path
 	 *            the resource path
 	 * @param context
 	 *            the generator context
 	 */
-	protected abstract Reader generateResource(String path, GeneratorContext context);
+	protected Reader generateResource(String path, GeneratorContext context){
+
+		/**
+		 * This method should have been declared as abstract.
+		 * The cache feature was lately, and some older generators override directly the method :
+		 * 		public Reader createResource(GeneratorContext context)
+		 * 
+		 * So to keep backward compatibility, this method has not been created in abstract.
+		 */
+		throw new BundlingProcessException("Please override the method if you're using the generator cache feature.");
+	}
 
 	/**
 	 * Checks if the resources have been modified
@@ -253,13 +299,14 @@ public abstract class AbstractCachedGenerator
 	 *            the resource path
 	 * @param context
 	 *            the generator context
-	 * 
+	 * @param cacheMode
+	 *            the cache mode
 	 * @return the reader to the resource
 	 */
-	private Reader retrieveFromCache(String path, GeneratorContext context) {
+	protected Reader retrieveFromCache(String path, GeneratorContext context, CacheMode cacheMode) {
 
 		Reader rd = null;
-		String filePath = getTempFilePath(context);
+		String filePath = getTempFilePath(context, cacheMode);
 		FileInputStream fis = null;
 		File file = new File(filePath);
 		if (file.exists()) {
@@ -284,12 +331,14 @@ public abstract class AbstractCachedGenerator
 	 * 
 	 * @param context
 	 *            the context
+	 * @param cacheMode
+	 *            the cache mode
 	 * @param rd
 	 *            the reader of the compiled resource
 	 * @return the reader
 	 */
-	protected Reader createTempResource(GeneratorContext context, Reader rd) {
-		String filePath = getTempFilePath(context);
+	protected Reader createTempResource(GeneratorContext context, CacheMode cacheMode, Reader rd) {
+		String filePath = getTempFilePath(context, cacheMode);
 		FileWriter fwr = null;
 		try {
 			File f = new File(filePath);
@@ -315,7 +364,7 @@ public abstract class AbstractCachedGenerator
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	private void serializeCacheMapping() {
+	protected void serializeCacheMapping() {
 		// TODO put in place PostProcessBundling event for this type of action
 		StringBuilder strb = new StringBuilder();
 		for (Map.Entry<String, List<FilePathMapping>> entry : linkedResourceMap.entrySet()) {

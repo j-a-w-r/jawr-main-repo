@@ -39,6 +39,7 @@ import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.util.StopWatch;
@@ -49,14 +50,15 @@ import net.jawr.web.util.js.JavascriptEngine;
  * 
  * @author ibrahim Chaehoi
  */
-@CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt")
+@CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt", mode = CacheMode.ALL)
 public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implements ConfigurationAwareResourceGenerator,
 		PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
 
-	private static final String COFEE_SCRIPT_DEFAULT_OPTIONS = "";
-
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
+	
+	/** The default coffee script options */
+	private static final String COFFEE_SCRIPT_DEFAULT_OPTIONS = "";
 
 	/** The coffee script suffix */
 	private static final String COFFEE_SCRIPT_SUFFIX = "coffee";
@@ -115,7 +117,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 	 */
 	@Override
 	public void afterPropertiesSet() {
-		
+
 		super.afterPropertiesSet();
 		StopWatch stopWatch = new StopWatch("initializing JS engine for Coffeescript");
 		stopWatch.start();
@@ -125,7 +127,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 		jsEngine = new JavascriptEngine(config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
 		InputStream inputStream = getResourceInputStream(script);
 		jsEngine.evaluate("coffee-script.js", inputStream);
-		String strOptions = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFEE_SCRIPT_DEFAULT_OPTIONS);
+		String strOptions = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFFEE_SCRIPT_DEFAULT_OPTIONS);
 		options = jsEngine.execEval(strOptions);
 		coffeeScript = jsEngine.execEval("CoffeeScript");
 		stopWatch.stop();
