@@ -14,15 +14,10 @@
 package net.jawr.web.resource.bundle.generator.classpath;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.util.Set;
 
 import net.jawr.web.config.JawrConfig;
@@ -40,7 +35,6 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
-import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
 
 /**
  * This class defines the generator for the CSS defined in the classpath.
@@ -48,8 +42,8 @@ import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class ClassPathCSSGenerator extends AbstractCSSGenerator implements ResourceBrowser,
-		ConfigurationAwareResourceGenerator, WorkingDirectoryLocationAware {
+public class ClassPathCSSGenerator extends AbstractCSSGenerator
+		implements ResourceBrowser, ConfigurationAwareResourceGenerator {
 
 	/** the class path generator helper */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
@@ -65,9 +59,6 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 
 	/** The classpath generator helper */
 	private ClassPathGeneratorHelper helper;
-
-	/** The working directory */
-	private String workingDir;
 
 	/**
 	 * The flag indicating if the generator is handling the Css Image ressources
@@ -166,20 +157,48 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#
-	 * generateResourceForBundle(net.jawr.web.resource.bundle.generator.
-	 * GeneratorContext)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * java.lang.String)
 	 */
 	@Override
-	protected Reader generateResourceForBundle(GeneratorContext context) {
+	protected Reader generateResource(String path, GeneratorContext context) {
 
 		Reader reader = helper.createResource(context);
 
-		if (reader != null) {
-			reader = createTempResource(context, reader);
-		}
+		// if (reader != null) {
+		// reader = createTempResource(context, reader);
+		// }
 
 		return reader;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#rewriteUrl(
+	 * net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * java.lang.String)
+	 */
+	@Override
+	protected String rewriteUrl(GeneratorContext context, String content) throws IOException {
+
+		// Here we create a new context where the bundle name is the Jawr
+		// generator CSS path
+		// The version of the CSS classpath for debug mode will be different
+		// compare to the standard one
+		JoinableResourceBundle tempBundle = new JoinableResourceBundleImpl(ResourceGenerator.CSS_DEBUGPATH, null, null,
+				null, null, null, context.getConfig().getGeneratorRegistry());
+		BundleProcessingStatus tempStatus = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
+				tempBundle, context.getResourceReaderHandler(), context.getConfig());
+
+		CSSURLPathRewriterPostProcessor postProcessor = new CSSURLPathRewriterPostProcessor();
+		String resourcePath = context.getPath();
+		tempStatus.setLastPathAdded(getGeneratorPrefix() + GeneratorRegistry.PREFIX_SEPARATOR + resourcePath);
+		StringBuffer resourceData = postProcessor.postProcessBundle(tempStatus, new StringBuffer(content));
+		return resourceData.toString();
+
 	}
 
 	/*
@@ -190,9 +209,8 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
 	@Override
-	protected Reader generateResourceForDebug(GeneratorContext context) {
+	protected Reader generateResourceForDebug(Reader rd, GeneratorContext context) {
 
-		Reader rd = null;
 		// The following section is executed in DEBUG mode to retrieve the
 		// classpath CSS from the temporary folder,
 		// if the user defines that the image servlet should be used to retrieve
@@ -200,28 +218,29 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 		// It's not executed at the initialization process to be able to read
 		// data from classpath.
 		if (context.getConfig().isCssClasspathImageHandledByClasspathCss()) {
-
-			FileInputStream fis = null;
-			File file = new File(workingDir + "/" + getTempDirectoryName(), context.getPath());
-			if (file.exists()) {
-				try {
-					fis = new FileInputStream(file);
-				} catch (FileNotFoundException e) {
-					throw new BundlingProcessException(
-							"An error occured while creating temporary resource for " + context.getPath(), e);
-				}
-				FileChannel inchannel = fis.getChannel();
-				rd = Channels.newReader(inchannel, context.getConfig().getResourceCharset().newDecoder(), -1);
-			}else{
-				rd = helper.createResource(context);
-				if(rd != null){
-					rd = createTempResource(context, rd);
-				}
-			}
-		} else {
-
-			rd = helper.createResource(context);
+			rd = super.generateResourceForDebug(rd, context);
+			// rd = createTempResource(context, rd);
+			// FileInputStream fis = null;
+			// File file = new File(workingDir + "/" + getTempDirectoryName(),
+			// context.getPath());
+			// if (file.exists()) {
+			// try {
+			// fis = new FileInputStream(file);
+			// } catch (FileNotFoundException e) {
+			// throw new BundlingProcessException(
+			// "An error occured while creating temporary resource for " +
+			// context.getPath(), e);
+			// }
+			// FileChannel inchannel = fis.getChannel();
+			// rd = Channels.newReader(inchannel,
+			// context.getConfig().getResourceCharset().newDecoder(), -1);
 		}
+		// else{
+		// if(rd != null){
+		// createTempResource(context, rd);
+		// }
+		// }
+		// }
 
 		return rd;
 
@@ -237,29 +256,11 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 	 *            the reader
 	 * @return the reader to the temporary processed resource
 	 */
-	private Reader createTempResource(GeneratorContext generatorContext, Reader rd) {
+	protected Reader createTempResource(GeneratorContext context, Reader rd) {
 
-		Reader result = null;
-
-		// Here we create a new context where the bundle name is the Jawr
-		// generator CSS path
-		// The version of the CSS classpath for debug mode will be different
-		// compare to the standard one
-		JoinableResourceBundle tempBundle = new JoinableResourceBundleImpl(ResourceGenerator.CSS_DEBUGPATH, null, null,
-				null, null, null, generatorContext.getConfig().getGeneratorRegistry());
-		BundleProcessingStatus tempStatus = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
-				tempBundle, generatorContext.getResourceReaderHandler(), generatorContext.getConfig());
-
-		CSSURLPathRewriterPostProcessor postProcessor = new CSSURLPathRewriterPostProcessor();
-		String resourcePath = generatorContext.getPath();
-		tempStatus.setLastPathAdded(getGeneratorPrefix() + GeneratorRegistry.PREFIX_SEPARATOR + resourcePath);
 		FileWriter fWriter = null;
+		String resourcePath = context.getPath();
 		try {
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(rd, writer, true);
-			result = new StringReader(writer.getBuffer().toString());
-			StringBuffer resourceData = postProcessor.postProcessBundle(tempStatus, writer.getBuffer());
-
 			String tempCssClasspathDir = workingDir + "/" + getTempDirectoryName();
 			File cssTempFile = new File(tempCssClasspathDir, resourcePath);
 			File tempCssDir = cssTempFile.getParentFile();
@@ -272,33 +273,49 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 			}
 
 			fWriter = new FileWriter(cssTempFile);
-			IOUtils.copy(new StringReader(resourceData.toString()), fWriter, true);
+			String content = rewriteUrl(context, IOUtils.toString(rd));
+			fWriter.append(content);
+			rd = new StringReader(content);
 		} catch (IOException e) {
 			throw new BundlingProcessException("An error occured while creating temporary resource for " + resourcePath,
 					e);
+		}finally{
+			IOUtils.close(fWriter);
 		}
-
-		return result;
+		
+		return rd;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(
+	 * java.lang.String)
 	 */
 	@Override
 	public Set<String> getResourceNames(String path) {
 		return helper.getResourceNames(resolver.getResourcePath(path));
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.
+	 * lang.String)
 	 */
 	@Override
 	public boolean isDirectory(String path) {
 		return helper.isDirectory(path);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.
+	 * lang.String)
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {

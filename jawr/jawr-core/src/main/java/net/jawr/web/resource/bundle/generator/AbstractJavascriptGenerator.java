@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés
+ * Copyright 2008-2016 Jordi Hernández Sellés
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import net.jawr.web.JawrConstant;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractJavascriptGenerator implements TextResourceGenerator, SpecificCDNDebugPathResourceGenerator{
+public abstract class AbstractJavascriptGenerator extends AbstractCachedGenerator implements TextResourceGenerator, SpecificCDNDebugPathResourceGenerator{
 
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getDebugModeRequestPath()

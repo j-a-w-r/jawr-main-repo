@@ -241,19 +241,14 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 		return availableVariants;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#
-	 * generateResourceForBundle
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
 	 */
 	@Override
-	protected Reader generateResourceForBundle(GeneratorContext context) {
-
+	protected Reader generateResource(String path, GeneratorContext context) {
+		
 		Reader reader = null;
 		ResourceReaderHandler readerHandler = context.getResourceReaderHandler();
-		String path = context.getPath();
 
 		String skinRootDir = getSkinRootDir(path, skinMapping.keySet());
 		Map<String, VariantSet> ctxVariantSetMap = skinMapping.get(skinRootDir);

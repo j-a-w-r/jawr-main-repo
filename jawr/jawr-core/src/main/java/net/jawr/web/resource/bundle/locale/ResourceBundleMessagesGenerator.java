@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2011 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -75,7 +75,7 @@ public class ResourceBundleMessagesGenerator extends
 	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
 	 * (java.lang.String, java.nio.charset.Charset)
 	 */
-	public Reader createResource(GeneratorContext context) {
+	public Reader generateResource(String path, GeneratorContext context) {
 		MessageBundleScriptCreator creator = new MessageBundleScriptCreator(
 				context);
 		return creator.createScript(context.getCharset());

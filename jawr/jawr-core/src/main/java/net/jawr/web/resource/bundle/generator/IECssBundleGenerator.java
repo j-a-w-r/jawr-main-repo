@@ -82,21 +82,17 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 		return resolver;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
 	 */
 	public Reader createResource(GeneratorContext context) {
 
-		return generateResourceForBundle(context);
+		return generateResource(context.getPath(), context);
 	}
 
 	@Override
-	protected Reader generateResourceForBundle(GeneratorContext context) {
-
+	protected Reader generateResource(String path, GeneratorContext context) {
+	
 		ResourceBundlesHandler bundlesHandler = (ResourceBundlesHandler) context
 				.getServletContext().getAttribute(
 						JawrConstant.CSS_CONTEXT_ATTRIBUTE);
@@ -286,3 +282,4 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 	}
 
 }
+

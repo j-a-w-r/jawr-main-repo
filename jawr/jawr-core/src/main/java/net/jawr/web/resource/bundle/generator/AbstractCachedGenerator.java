@@ -14,6 +14,7 @@
 package net.jawr.web.resource.bundle.generator;
 
 import static net.jawr.web.JawrConstant.URL_SEPARATOR;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,26 +43,54 @@ import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
 import net.jawr.web.util.StopWatch;
 
 /**
- * This class defines CSS generator which handles cache for generated resource
+ * This class defines JS generator which handles cache for generated resource
  * 
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator implements
-
-		PostInitializationAwareResourceGenerator, WorkingDirectoryLocationAware,
+public abstract class AbstractCachedGenerator
+		implements TextResourceGenerator, PostInitializationAwareResourceGenerator, WorkingDirectoryLocationAware,
 		ResourceReaderHandlerAwareResourceGenerator {
 
 	/** The Perf Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The Logger */
-	private static Logger LOGGER = LoggerFactory.getLogger(AbstractCssCachedGenerator.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(AbstractCachedGenerator.class);
 
 	/** The ResourceReaderHandler */
 	protected ResourceReaderHandler rsHandler;
 
 	/** The working directory */
 	protected String workingDir;
+
+	/** The name of the generator used to log info */
+	protected String name;
+
+	/** The cache mapping file name */
+	protected String cacheMappingFileName;
+
+	/** The cache directory */
+	protected String cacheDirectory;
+
+	/** The flag indicating that we are using cache */
+	protected boolean useCache = false;
+
+	/**
+	 * Constructor
+	 */
+	public AbstractCachedGenerator() {
+
+		CachedGenerator annotation = getClass().getAnnotation(CachedGenerator.class);
+		if (annotation != null) {
+			useCache = true;
+			name = annotation.name();
+			cacheMappingFileName = annotation.mappingFileName();
+			cacheDirectory = annotation.cacheDirectory();
+			if (cacheDirectory.endsWith(URL_SEPARATOR)) {
+				cacheDirectory = cacheDirectory + URL_SEPARATOR;
+			}
+		}
+	}
 
 	/**
 	 * The map which links a less resource path and the resources which it is
@@ -89,7 +118,9 @@ public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator im
 	@Override
 	public void afterPropertiesSet() {
 
-		loadCacheMapping();
+		if (useCache) {
+			loadCacheMapping();
+		}
 	}
 
 	/*
@@ -118,28 +149,31 @@ public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator im
 	}
 
 	/**
-	 * Returns the temporary directory
+	 * Returns the temporary directory or null if the generator don't use cache
 	 * 
-	 * @return the temporary directory
+	 * @return the temporary directory or null if the generator don't use cache
 	 */
-	protected abstract String getTempDirectoryName();
+	protected String getTempDirectoryName() {
+		return cacheDirectory;
+	}
 
 	/**
 	 * Returns the name of the generator. This is used to log information.
 	 * 
 	 * @return the name of the generator.
 	 */
-	protected abstract String getName();
+	protected String getName() {
+		return name != null ? name : getClass().getSimpleName();
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#
-	 * generateResourceForBundle
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	 * @see net.jawr.web.resource.bundle.generator.TextResourceGenerator#
+	 * createResource(net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
 	@Override
-	protected Reader generateResourceForBundle(GeneratorContext context) {
+	public Reader createResource(GeneratorContext context) {
 
 		String path = context.getPath();
 		StopWatch stopWatch = null;
@@ -149,23 +183,29 @@ public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator im
 		}
 
 		Reader rd = null;
-		List<FilePathMapping> fMappings = linkedResourceMap.get(path);
-		if (fMappings != null && !checkResourcesModified(context, fMappings)) {
-			// Retrieve from cache
-			// Checks if temp resource is already created
-			rd = retrieveFromCache(path, context);
+		if (useCache) {
+			List<FilePathMapping> fMappings = linkedResourceMap.get(path);
+			if (fMappings != null && !checkResourcesModified(context, fMappings)) {
+				// Retrieve from cache
+				// Checks if temp resource is already created
+				rd = retrieveFromCache(path, context);
+			}
 		}
 
 		if (rd == null) {
 
-			rd = generateResource(context, path);
-			// Update the cache
-			if (context.isProcessingBundle()) {
-				// TODO Remove this when PostBundling process event is in place
-				serializeCacheMapping();
-			}
-			if (rd != null) {
-				rd = createTempResource(context, rd);
+			rd = generateResource(path, context);
+			if (useCache) {
+
+				// Update the cache
+				if (context.isProcessingBundle()) {
+					// TODO Remove this when PostBundling process event is in
+					// place
+					serializeCacheMapping();
+				}
+				if (rd != null) {
+					rd = createTempResource(context, rd);
+				}
 			}
 		}
 
@@ -175,18 +215,16 @@ public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator im
 		}
 
 		return rd;
-
 	}
 
 	/**
 	 * Generates the resource which will be cached
-	 * 
-	 * @param context
-	 *            the generator context
 	 * @param path
 	 *            the resource path
+	 * @param context
+	 *            the generator context
 	 */
-	protected abstract Reader generateResource(GeneratorContext context, String path);
+	protected abstract Reader generateResource(String path, GeneratorContext context);
 
 	/**
 	 * Checks if the resources have been modified
@@ -325,7 +363,9 @@ public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator im
 	 * 
 	 * @return the cache mapping file name
 	 */
-	protected abstract String getCacheFileName();
+	protected String getCacheFileName() {
+		return cacheMappingFileName;
+	}
 
 	/**
 	 * Loads the less file mapping
@@ -360,7 +400,7 @@ public abstract class AbstractCssCachedGenerator extends AbstractCSSGenerator im
 					}
 				}
 			} catch (IOException e) {
-				throw new BundlingProcessException("Unable to initialize Less Generator cache", e);
+				throw new BundlingProcessException("Unable to initialize " + getName() + " Generator cache", e);
 			} finally {
 				IOUtils.close(rd);
 			}

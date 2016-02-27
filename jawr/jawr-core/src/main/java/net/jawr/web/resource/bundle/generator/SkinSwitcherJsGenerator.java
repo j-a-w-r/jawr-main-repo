@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2012 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -70,14 +70,10 @@ public class SkinSwitcherJsGenerator extends AbstractJavascriptGenerator {
 		return resolver;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
 	 */
-	public Reader createResource(GeneratorContext context) {
+	public Reader generateResource(String path, GeneratorContext context) {
 		JawrConfig config = context.getConfig();
 		String skinCookieName = config.getSkinCookieName();
 		String script = createScript(skinCookieName);

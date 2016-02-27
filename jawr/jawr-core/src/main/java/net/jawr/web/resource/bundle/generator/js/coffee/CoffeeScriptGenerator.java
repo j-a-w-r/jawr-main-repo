@@ -35,6 +35,7 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
@@ -48,21 +49,21 @@ import net.jawr.web.util.js.JavascriptEngine;
  * 
  * @author ibrahim Chaehoi
  */
-public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
-		implements ConfigurationAwareResourceGenerator,
+@CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt")
+public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implements ConfigurationAwareResourceGenerator,
 		PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
 
 	private static final String COFEE_SCRIPT_DEFAULT_OPTIONS = "";
 
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
-	
+
 	/** The coffee script suffix */
 	private static final String COFFEE_SCRIPT_SUFFIX = "coffee";
 
 	/** The coffee script options property name */
 	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE = "jawr.js.generator.coffee.script.js.engine";
-	
+
 	/** The coffee script options property name */
 	private static final String JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS = "jawr.js.generator.coffee.script.options";
 
@@ -78,9 +79,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	/** The jawr config */
 	private JawrConfig config;
 
-	/** The coffeeScript object*/
+	/** The coffeeScript object */
 	private Object coffeeScript;
-	
+
 	/** The coffee script options */
 	private Object options;
 
@@ -91,15 +92,14 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 * Constructor
 	 */
 	public CoffeeScriptGenerator() {
-		resolver = ResourceGeneratorResolverFactory
-				.createSuffixResolver(COFFEE_SCRIPT_SUFFIX);
+		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(COFFEE_SCRIPT_SUFFIX);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * ConfigurationAwareResourceGenerator
 	 * #setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	@Override
@@ -115,23 +115,21 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	@Override
 	public void afterPropertiesSet() {
-
+		
+		super.afterPropertiesSet();
 		StopWatch stopWatch = new StopWatch("initializing JS engine for Coffeescript");
 		stopWatch.start();
-		
+
 		// Load JavaScript Script Engine
-		String script = config.getProperty(
-				JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION,
-				DEFAULT_COFFEE_SCRIPT_JS_LOCATION);
+		String script = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION);
 		jsEngine = new JavascriptEngine(config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
 		InputStream inputStream = getResourceInputStream(script);
 		jsEngine.evaluate("coffee-script.js", inputStream);
-		String strOptions = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS,
-				COFEE_SCRIPT_DEFAULT_OPTIONS);
+		String strOptions = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFEE_SCRIPT_DEFAULT_OPTIONS);
 		options = jsEngine.execEval(strOptions);
 		coffeeScript = jsEngine.execEval("CoffeeScript");
 		stopWatch.stop();
-		if(PERF_LOGGER.isDebugEnabled()){
+		if (PERF_LOGGER.isDebugEnabled()) {
 			PERF_LOGGER.debug(stopWatch.shortSummary());
 		}
 	}
@@ -168,20 +166,22 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 		return resolver;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.TextResourceGenerator#createResource(net.jawr.web.resource.bundle.generator.GeneratorContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * java.lang.String)
 	 */
 	@Override
-	public Reader createResource(GeneratorContext context) {
+	public Reader generateResource(String path, GeneratorContext context) {
 
-		String path = context.getPath();
 		Reader rd = null;
 		try {
 			List<Class<?>> excluded = new ArrayList<Class<?>>();
 			excluded.add(ICoffeeScriptGenerator.class);
 			JoinableResourceBundle bundle = context.getBundle();
-			rd = context.getResourceReaderHandler().getResource(bundle, path, false,
-					excluded);
+			rd = context.getResourceReaderHandler().getResource(bundle, path, false, excluded);
 			StringWriter swr = new StringWriter();
 			IOUtils.copy(rd, swr);
 
@@ -206,9 +206,6 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	public String compile(String resourcePath, String coffeeScriptSource) {
 
-		StopWatch stopWatch = new StopWatch("Compiling resource '"+resourcePath+"' with CoffeeScript");
-		stopWatch.start();
-
 		String result = null;
 		try {
 			result = (String) jsEngine.invokeMethod(coffeeScript, "compile", coffeeScriptSource, options);
@@ -216,11 +213,6 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 			throw new BundlingProcessException(e);
 		}
 
-		
-		stopWatch.stop();
-		if(PERF_LOGGER.isDebugEnabled()){
-			PERF_LOGGER.debug(stopWatch.shortSummary());
-		}
 		return result;
 	}
 }

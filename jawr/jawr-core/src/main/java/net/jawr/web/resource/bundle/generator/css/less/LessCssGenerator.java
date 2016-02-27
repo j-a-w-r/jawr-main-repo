@@ -30,7 +30,8 @@ import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator;
+import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
@@ -41,7 +42,8 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  * 
  * @author Ibrahim Chaehoi
  */
-public class LessCssGenerator extends AbstractCssCachedGenerator
+@CachedGenerator(name="less", cacheDirectory="lessCss", mappingFileName="lessGeneratorCache.txt")
+public class LessCssGenerator extends AbstractCSSGenerator
 		implements ILessCssResourceGenerator {
 
 	/** The resolver */
@@ -60,14 +62,6 @@ public class LessCssGenerator extends AbstractCssCachedGenerator
 		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(GeneratorRegistry.LESS_GENERATOR_SUFFIX);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator#getName()
-	 */
-	@Override
-	protected String getName() {
-		return "Less";
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -97,14 +91,14 @@ public class LessCssGenerator extends AbstractCssCachedGenerator
 
 	/**
 	 * Generates the less resource
-	 * 
-	 * @param context
-	 *            the generator context
 	 * @param path
 	 *            the path
+	 * @param context
+	 *            the generator context
+	 * 
 	 * @return the generated resource
 	 */
-	protected Reader generateResource(GeneratorContext context, String path) {
+	protected Reader generateResource(String path, GeneratorContext context) {
 
 		Reader rd = null;
 		try {
@@ -149,24 +143,6 @@ public class LessCssGenerator extends AbstractCssCachedGenerator
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
 		}
 
-	}
-
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator#getTempDirectoryName()
-	 */
-	@Override
-	protected String getTempDirectoryName() {
-		return "lessCss/";
-	}
-
-	/**
-	 * Returns the file path of the less generator cache, which contains for
-	 * each less resource, the linked resources and their last modification date
-	 * 
-	 * @return the file path of the less generator cache
-	 */
-	protected String getCacheFileName() {
-		return "lessGeneratorCache.txt";
 	}
 	
 }

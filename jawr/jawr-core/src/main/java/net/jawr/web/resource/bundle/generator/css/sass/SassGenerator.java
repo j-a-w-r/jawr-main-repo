@@ -29,7 +29,8 @@ import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
-import net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator;
+import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -41,9 +42,9 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  * 
  * @author Ibrahim Chaehoi
  */
-public class SassGenerator extends AbstractCssCachedGenerator
-		implements ISassResourceGenerator,
-		ConfigurationAwareResourceGenerator {
+@CachedGenerator(name = "sass", cacheDirectory = "sassCss", mappingFileName = "sassGeneratorCache.txt")
+public class SassGenerator extends AbstractCSSGenerator
+		implements ISassResourceGenerator, ConfigurationAwareResourceGenerator {
 
 	/** The Sass generator URL mode property name */
 	public static final String SAAS_GENERATOR_URL_MODE = "jawr.css.saas.generator.urlMode";
@@ -66,15 +67,6 @@ public class SassGenerator extends AbstractCssCachedGenerator
 		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(GeneratorRegistry.SASS_GENERATOR_SUFFIX);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator#getName()
-	 */
-	@Override
-	protected String getName() {
-		return "Saas";
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -101,12 +93,16 @@ public class SassGenerator extends AbstractCssCachedGenerator
 		urlMode = UrlMode.valueOf(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator#
+	 * generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * java.lang.String)
 	 */
 	@Override
-	protected Reader generateResource(GeneratorContext context, String path) {
-	
+	protected Reader generateResource(String path, GeneratorContext context) {
+
 		Reader rd = null;
 
 		try {
@@ -131,7 +127,7 @@ public class SassGenerator extends AbstractCssCachedGenerator
 
 		return rd;
 	}
-	
+
 	/**
 	 * Compile the SASS source to a CSS source
 	 * 
@@ -152,27 +148,11 @@ public class SassGenerator extends AbstractCssCachedGenerator
 			sheet.compile(urlMode);
 			String parsedScss = sheet.printState();
 			linkedResourceMap.put(path, new CopyOnWriteArrayList<>(sheet.getLinkedResources()));
-		
+
 			return parsedScss;
 		} catch (Exception e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCssCachedGenerator#getTempDirectoryName()
-	 */
-	@Override
-	protected String getTempDirectoryName() {
-		return "sassCss/";
-	}
-
-	/**
-	 * @return
-	 */
-	@Override
-	protected String getCacheFileName() {
-		return "sassGeneratorCache.txt";
 	}
 
 }

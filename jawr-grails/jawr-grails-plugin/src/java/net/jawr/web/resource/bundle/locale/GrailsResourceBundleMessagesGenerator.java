@@ -121,15 +121,11 @@ public class GrailsResourceBundleMessagesGenerator extends
 		rsHandler.init(servletContext, config);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-	 * (java.lang.String, java.nio.charset.Charset)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
 	 */
-	public Reader createResource(GeneratorContext context) {
-		
+	public Reader generateResource(String path, GeneratorContext context) {
+	
 		MessageBundleScriptCreator creator = new GrailsMessageBundleScriptCreator(
 				context);
 		return creator.createScript(context.getCharset());

@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012  Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016  Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -74,15 +74,11 @@ public class CommonsValidatorGenerator extends AbstractJavascriptGenerator {
 				.createPrefixResolver(GeneratorRegistry.COMMONS_VALIDATOR_PREFIX);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
-	 * (java.lang.String, javax.servlet.ServletContext,
-	 * java.nio.charset.Charset)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
 	 */
-	public Reader createResource(GeneratorContext context) {
+	public Reader generateResource(String path, GeneratorContext context) {
+	
 		Locale locale = null == context.getLocale() ? Locale.getDefault()
 				: context.getLocale();
 		String validators = context.getPath();
