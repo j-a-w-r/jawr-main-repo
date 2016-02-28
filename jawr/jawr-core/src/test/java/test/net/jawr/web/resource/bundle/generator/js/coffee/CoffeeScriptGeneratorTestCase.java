@@ -166,6 +166,7 @@ public class CoffeeScriptGeneratorTestCase {
 		return JSEngineUtils.isJsEngineAvailable(jsEngineName, LOGGER);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testBundleGenerator() throws Exception {
 		if (isJsEngineAvailable()) {
@@ -191,6 +192,24 @@ public class CoffeeScriptGeneratorTestCase {
 			Assert.assertEquals(FileUtils.readClassPathFile("generator/js/coffeescript/expected.js"), content);
 
 			FileUtils.copyFile("generator/js/coffeescript/temp2.coffee", "generator/js/coffeescript/temp.coffee");
+			Mockito.doAnswer(new Answer<Reader>() {
+
+				@Override
+				public Reader answer(InvocationOnMock invocation) throws Throwable {
+					Object[] args = invocation.getArguments();
+					Reader rd = null;
+					try {
+						final String content = FileUtils.readClassPathFile("generator/js/coffeescript" + args[1]);
+						rd = new StringReader(content);
+					} catch (IOException ex) {
+						// Do nothing
+					}
+					return rd;
+				}
+			}).when(rsReaderHandler).getResource(Matchers.any(JoinableResourceBundle.class), Matchers.anyString(),
+					Matchers.anyBoolean(), (List<Class<?>>) Matchers.any());
+
+			
 			ctx.setProcessingBundle(true);
 
 			// Retrieve updated version in production mode
