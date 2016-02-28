@@ -26,8 +26,7 @@ public class FileUtils {
 		try {
 			fis = new FileInputStream(toRead);
 			FileChannel inchannel = fis.getChannel();
-			rd = Channels.newReader(inchannel, Charset.forName("UTF-8")
-					.newDecoder(), -1);
+			rd = Channels.newReader(inchannel, Charset.forName("UTF-8").newDecoder(), -1);
 			int i;
 			while ((i = rd.read()) != -1)
 				sw.write(i);
@@ -39,14 +38,12 @@ public class FileUtils {
 		return Utils.removeCarriageReturn(sw.toString());
 	}
 
-	public static String readContent(Class<?> clazz, String path)
-			throws Exception {
+	public static String readContent(Class<?> clazz, String path) throws Exception {
 		InputStream is = clazz.getResourceAsStream(path);
 		if (is == null) {
 			is = FileUtils.class.getResourceAsStream(path);
 			if (is == null) {
-				throw new Exception("File '" + clazz.getPackage().getName()
-						+ "." + path + "' doesn't exist");
+				throw new Exception("File '" + clazz.getPackage().getName() + "." + path + "' doesn't exist");
 			}
 		}
 		return readContent(is);
@@ -84,5 +81,49 @@ public class FileUtils {
 		if (url == null)
 			throw new IOException("Resource " + resource + " was not found");
 		return url;
+	}
+
+	public static boolean deleteDirectory(File dir) {
+		
+		boolean deleted = false;
+		if (dir.exists()) {
+			File[] files = dir.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleted &= deleteDirectory(files[i]);
+				} else {
+					deleted &= deleteFile(files[i]);
+				}
+			}
+		}
+		
+		return deleted;
+	}
+	
+	public static boolean deleteFile(File file) {
+		// do not try to delete non existing files
+		if (!file.exists()) {
+			return false;
+		}
+
+		// some OS such as Windows can have problem doing delete IO operations
+		// so we may need to
+		// retry a couple of times to let it work
+		boolean deleted = false;
+		int count = 0;
+		while (!deleted && count < 3) {
+
+			deleted = file.delete();
+			if (!deleted && count > 0) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+			count++;
+		}
+
+		return deleted;
 	}
 }

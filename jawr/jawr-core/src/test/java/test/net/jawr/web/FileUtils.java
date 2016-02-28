@@ -2,6 +2,7 @@ package test.net.jawr.web;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.nio.channels.FileChannel;
 import net.jawr.web.resource.bundle.IOUtils;
 
 public class FileUtils {
+	
+	public static final int BUFFER_SIZE = 128 * 1024;
 
 	public static File createDir(String pathName) throws Exception {
 		File dir = new File(getClasspathRootDir(), pathName);
@@ -138,16 +141,33 @@ public class FileUtils {
 		return url;
 	}
 
+	@SuppressWarnings("resource")
+	public static void copyFile(File from, File to) throws IOException {
+		FileChannel in = null;
+		FileChannel out = null;
+		try {
+			in = new FileInputStream(from).getChannel();
+			out = new FileOutputStream(to).getChannel();
+
+			long size = in.size();
+			long position = 0;
+			while (position < size) {
+				position += in.transferTo(position, BUFFER_SIZE, out);
+			}
+		} finally {
+			IOUtils.close(in);
+			IOUtils.close(out);
+		}
+	}
+
 	public static void copyFile(String srcFile, String destFile) throws Exception {
-		File destF = new File(FileUtils
-				.getClassPathFileAbsolutePath(destFile));
+		File destF = new File(FileUtils.getClassPathFileAbsolutePath(destFile));
 		if (!destF.exists() && !destF.getParentFile().exists()) {
 			destF.getParentFile().mkdirs();
 		}
-		
+
 		FileWriter fw = new FileWriter(destF);
-		FileReader fr = new FileReader(new File(FileUtils
-				.getClassPathFileAbsolutePath(srcFile)));
+		FileReader fr = new FileReader(new File(FileUtils.getClassPathFileAbsolutePath(srcFile)));
 		IOUtils.copy(fr, fw, true);
 	}
 }

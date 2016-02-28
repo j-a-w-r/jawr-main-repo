@@ -124,7 +124,7 @@ public abstract class AbstractCachedGenerator
 	 * @return the generator working directory
 	 */
 	protected String getGeneratorWorkingDir(){
-		return this.workingDir+"generator"+URL_SEPARATOR;
+		return this.workingDir+JawrConstant.GENERATOR_CACHE_DIR+URL_SEPARATOR;
 	}
 	/*
 	 * (non-Javadoc)
@@ -171,7 +171,7 @@ public abstract class AbstractCachedGenerator
 	 * @return the temporary directory or null if the generator don't use cache
 	 */
 	protected String getTempDirectory() {
-		return this.workingDir+"generator"+URL_SEPARATOR+cacheDirectory+URL_SEPARATOR;
+		return this.workingDir+JawrConstant.GENERATOR_CACHE_DIR+URL_SEPARATOR+cacheDirectory+URL_SEPARATOR;
 	}
 
 	/**

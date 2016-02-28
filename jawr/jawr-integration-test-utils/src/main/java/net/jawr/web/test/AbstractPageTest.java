@@ -11,8 +11,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jawr.web.test.utils.Utils;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,6 +30,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlScript;
+
+import net.jawr.web.test.utils.Utils;
 
 /**
  * The base class for integration tests in Jawr. This class is responsible of
@@ -71,7 +71,7 @@ public abstract class AbstractPageTest {
 		LOGGER.debug("****** Start Test "+getClass()+" *********");
 		initConfigFile();
 		JawrIntegrationServer.getInstance().setup();
-
+		
 		webClient = createWebClient();
 		collectedAlerts = new ArrayList<String>();
 		webClient.setAlertHandler(new CollectingAlertHandler(collectedAlerts));

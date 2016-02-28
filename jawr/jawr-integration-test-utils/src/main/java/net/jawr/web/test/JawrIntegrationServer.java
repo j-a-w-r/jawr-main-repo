@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2013 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,7 +33,11 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.jawr.web.test.utils.FileUtils;
+
 /**
+ * The Jawr integration server
+ * 
  * @author Ibrahim Chaehoi
  *
  */
@@ -239,6 +243,13 @@ public class JawrIntegrationServer {
 		jettyWebAppContext.setClassLoader(webAppClassLoader);
 		// Fix issue with web app context reloading on Windows where deleting temporary directory fails because of locked files
 		jettyWebAppContext.setPersistTempDirectory(true);
+		
+		File tempDirectory = jettyWebAppContext.getTempDirectory();
+		// Clean generator cache directory
+		File generatorCacheDir = new File(tempDirectory, "generatorCache");
+		if(generatorCacheDir.exists()){
+			FileUtils.deleteDirectory(generatorCacheDir);
+		}
 		
 		if (server.isStopped()) {
 			LOGGER.info("Start jetty server....");

@@ -141,6 +141,9 @@ public class JawrConstant {
 	/** The META-INF directory  */
 	public static final String META_INF_DIR = "/META-INF";
 	
+	/** The generator cache directory name */
+	public static final String GENERATOR_CACHE_DIR = "generatorCache";
+	
 	/** The directory for CSS created by sprite generators */
 	public static final String SPRITE_GENERATED_CSS_DIR = "/generatedCss/";
 
