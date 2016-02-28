@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Ibrahim Chaehoi
+ * Copyright 2014-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,9 @@
  */
 package net.jawr.web.resource.bundle.generator.classpath.webjars;
 
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 
 /**
@@ -21,6 +23,7 @@ import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
  * 
  * @author Ibrahim Chaehoi
  */
+@CachedGenerator(name = "Webjars JS", cacheDirectory = "webJarsJs", mappingFileName = "webJarsJsMapping.txt", mode = CacheMode.ALL)
 public class WebJarsJSGenerator extends ClasspathJSGenerator {
 
 	/**

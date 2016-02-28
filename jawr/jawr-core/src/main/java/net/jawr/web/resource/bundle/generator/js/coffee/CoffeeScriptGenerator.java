@@ -36,12 +36,13 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
-import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
-import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.js.JavascriptEngine;
 
@@ -52,7 +53,7 @@ import net.jawr.web.util.js.JavascriptEngine;
  */
 @CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt", mode = CacheMode.ALL)
 public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implements ConfigurationAwareResourceGenerator,
-		PostInitializationAwareResourceGenerator, ICoffeeScriptGenerator {
+		ICoffeeScriptGenerator {
 
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
@@ -183,13 +184,19 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 			List<Class<?>> excluded = new ArrayList<Class<?>>();
 			excluded.add(ICoffeeScriptGenerator.class);
 			JoinableResourceBundle bundle = context.getBundle();
-			rd = context.getResourceReaderHandler().getResource(bundle, path, false, excluded);
+			rd = rsHandler.getResource(bundle, path, false, excluded);
 			StringWriter swr = new StringWriter();
 			IOUtils.copy(rd, swr);
 
 			String result = compile(path, swr.toString());
 			rd = new StringReader(result);
-
+		
+			// Update linked resource map
+			FilePathMapping fMapping = FilePathMappingUtils.buildFilePathMapping(path, rsHandler);
+			if(fMapping != null){
+				addLinkedResources(path, fMapping);
+			}
+		
 		} catch (ResourceNotFoundException e) {
 			throw new BundlingProcessException(e);
 		} catch (IOException e) {

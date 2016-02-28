@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,10 +19,12 @@ import java.util.Set;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
 
 /**
@@ -31,6 +33,7 @@ import net.jawr.web.resource.handler.reader.ResourceBrowser;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
+@CachedGenerator(name = "Classpath JS", cacheDirectory = "jsClasspath", mappingFileName = "jsClasspathMapping.txt")
 public class ClasspathJSGenerator extends AbstractJavascriptGenerator implements ResourceBrowser {
 
 	/** the class path generator helper  */
@@ -90,8 +93,14 @@ public class ClasspathJSGenerator extends AbstractJavascriptGenerator implements
 	protected Reader generateResource(String path, GeneratorContext context) {
 		
 		Reader rd = null;
-		if(FileNameUtils.isExtension(context.getPath(), JawrConstant.JS_TYPE)){
+		if(FileNameUtils.isExtension(path, JawrConstant.JS_TYPE)){
 			rd = helper.createResource(context);
+			String filePath = helper.getFilePath(path);
+			if(filePath != null){
+				long lastModified = rsHandler.getLastModified(filePath);
+				FilePathMapping fMapping = new FilePathMapping(filePath, lastModified);
+				addLinkedResources(path, fMapping);
+			}
 		}
 		return rd;
 	}

@@ -15,6 +15,7 @@ package net.jawr.web.resource.bundle.generator;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -28,6 +29,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
+@Inherited
 public @interface CachedGenerator {
 
 	/**
@@ -48,7 +50,7 @@ public @interface CachedGenerator {
 	 */
 	String cacheDirectory();
 	
-	CacheMode mode() default CacheMode.PROD;
+	CacheMode mode() default CacheMode.ALL;
 	
 	/**
 	 * The cache mode.

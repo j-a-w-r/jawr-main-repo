@@ -23,8 +23,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -177,6 +179,7 @@ public abstract class AbstractCachedGenerator
 	 * @see net.jawr.web.resource.bundle.generator.TextResourceGenerator#
 	 * createResource(net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public Reader createResource(GeneratorContext context) {
 
@@ -222,11 +225,24 @@ public abstract class AbstractCachedGenerator
 						rd = createTempResource(context, CacheMode.PROD, rd);
 					}
 				}
-				if (!context.isProcessingBundle()) {
-					rd = generateResourceForDebug(rd, context);
-					if (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL)) {
-						rd = createTempResource(context, CacheMode.DEBUG, rd);
+			}
+			if (context.isProcessingBundle()){
+				if (useCache && (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL))) {
+					// Create debug cache while processing bundle if cache is allowed in debug 
+					String content = null;
+					try {
+						content = IOUtils.toString(rd);
+					} catch (IOException e) {
+						throw new BundlingProcessException(e);
 					}
+					Reader dRd = generateResourceForDebug(new StringReader(content), context);
+					createTempResource(context, CacheMode.DEBUG, dRd);
+					rd = new StringReader(content);
+				}
+			}else{
+				rd = generateResourceForDebug(rd, context);
+				if (useCache && (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL))) {
+					rd = createTempResource(context, CacheMode.DEBUG, rd);
 				}
 			}
 		}
@@ -237,6 +253,24 @@ public abstract class AbstractCachedGenerator
 		}
 
 		return rd;
+	}
+	
+	/**
+	 * Adds the linked resource to the linked resource map
+	 * @param path the resource path
+	 * @param fMapping the file path mapping linked to the resource
+	 */
+	public void addLinkedResources(String path, FilePathMapping fMappings){
+		addLinkedResources(path, Arrays.asList(fMappings));
+	}
+	
+	/**
+	 * Adds the linked resource to the linked resource map
+	 * @param path the resource path
+	 * @param fMappings the list of mappings linked to the resource
+	 */
+	public void addLinkedResources(String path, List<FilePathMapping> fMappings){
+		linkedResourceMap.put(path, new CopyOnWriteArrayList<>(fMappings));
 	}
 
 	/**
@@ -345,9 +379,10 @@ public abstract class AbstractCachedGenerator
 			if (!f.getParentFile().exists()) {
 				f.getParentFile().mkdirs();
 			}
+			String content = IOUtils.toString(rd);
 			fwr = new FileWriter(filePath);
-			IOUtils.copy(rd, fwr);
-			rd.reset();
+			fwr.append(content);
+			rd = new StringReader(content);
 		} catch (IOException e) {
 			throw new BundlingProcessException("Unable to create temporary resource for '" + context.getPath() + "'",
 					e);

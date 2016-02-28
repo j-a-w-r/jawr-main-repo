@@ -34,13 +34,4 @@ public class SampleCssGenerator extends AbstractCSSGenerator {
 		return new PrefixedPathResolver("testCss");
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCSSGenerator#generateResourceForBundle(net.jawr.web.resource.bundle.generator.GeneratorContext)
-	 */
-	@Override
-	protected Reader generateResourceForBundle(GeneratorContext ctx) {
-		
-		return createResource(ctx);
-	}
-
 }

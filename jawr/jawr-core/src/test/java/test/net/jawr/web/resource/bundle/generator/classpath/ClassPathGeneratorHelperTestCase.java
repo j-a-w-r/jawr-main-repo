@@ -35,9 +35,10 @@ public class ClassPathGeneratorHelperTestCase {
 	public void testGetResourcesNameFromClassOnFileSystem(){
 		helper = new ClassPathGeneratorHelper();
 		Set<String> resources = helper.getResourceNames("generator/classpath/");
-		assertEquals(6, resources.size());
+		assertEquals(7, resources.size());
 		assertTrue(resources.contains("a file with space.css"));
 		assertTrue(resources.contains("css/"));
+		assertTrue(resources.contains("js/"));
 		assertTrue(resources.contains("expected/"));
 		assertTrue(resources.contains("img/"));
 		assertTrue(resources.contains("temp.css"));

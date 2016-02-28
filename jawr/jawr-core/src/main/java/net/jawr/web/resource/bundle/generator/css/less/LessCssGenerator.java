@@ -18,7 +18,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.github.sommeri.less4j.Less4jException;
 import com.github.sommeri.less4j.LessCompiler;
@@ -42,9 +41,8 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
  * 
  * @author Ibrahim Chaehoi
  */
-@CachedGenerator(name="less", cacheDirectory="lessCss", mappingFileName="lessGeneratorCache.txt")
-public class LessCssGenerator extends AbstractCSSGenerator
-		implements ILessCssResourceGenerator {
+@CachedGenerator(name = "less", cacheDirectory = "lessCss", mappingFileName = "lessGeneratorCache.txt")
+public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssResourceGenerator {
 
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
@@ -91,6 +89,7 @@ public class LessCssGenerator extends AbstractCSSGenerator
 
 	/**
 	 * Generates the less resource
+	 * 
 	 * @param path
 	 *            the path
 	 * @param context
@@ -137,12 +136,12 @@ public class LessCssGenerator extends AbstractCSSGenerator
 		JawrLessSource source = new JawrLessSource(bundle, content, path, rsHandler);
 		try {
 			CompilationResult result = compiler.compile(source, lessConfig);
-			linkedResourceMap.put(path, new CopyOnWriteArrayList<>(source.getLinkedResources()));
+			addLinkedResources(path, source.getLinkedResources());
 			return result.getCss();
 		} catch (Less4jException e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
 		}
 
 	}
-	
+
 }

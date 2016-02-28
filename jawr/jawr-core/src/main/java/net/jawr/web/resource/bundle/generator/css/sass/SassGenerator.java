@@ -19,7 +19,6 @@ import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.vaadin.sass.internal.ScssContext;
 import com.vaadin.sass.internal.ScssContext.UrlMode;
@@ -147,7 +146,7 @@ public class SassGenerator extends AbstractCSSGenerator
 			scssResolver.setParentScssStyleSheet(sheet);
 			sheet.compile(urlMode);
 			String parsedScss = sheet.printState();
-			linkedResourceMap.put(path, new CopyOnWriteArrayList<>(sheet.getLinkedResources()));
+			addLinkedResources(path, sheet.getLinkedResources());
 
 			return parsedScss;
 		} catch (Exception e) {

@@ -16,6 +16,7 @@ package test.net.jawr.web.resource.bundle.generator.classpath;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -112,6 +113,14 @@ private static final String WORK_DIR = "workDirClasspathCss";
 			}
 		}).when(binaryRsReaderHandler).getResourceAsStream(Matchers.anyString());
 		
+		Mockito.doAnswer(new Answer<Long>() {
+			@Override
+			public Long answer(InvocationOnMock invocation) throws Throwable {
+				File f = new File((String) invocation.getArguments()[0]);
+				return f.lastModified();
+			}
+		}).when(rsReaderHandler).getLastModified(Matchers.anyString());
+				
 		
 		BinaryResourcesHandler binaryRsHandler = new BinaryResourcesHandler(binaryServletJawrConfig, binaryRsReaderHandler, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
@@ -121,6 +130,7 @@ private static final String WORK_DIR = "workDirClasspathCss";
 		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:"))).thenReturn(true);
 		
 		generator.setWorkingDirectory(FileUtils.getClasspathRootDir()+"/"+WORK_DIR);
+		generator.setResourceReaderHandler(rsReaderHandler);
 	}
 	
 	@After
@@ -138,6 +148,11 @@ private static final String WORK_DIR = "workDirClasspathCss";
 		ctx.setProcessingBundle(true);
 		Reader rd = generator.createResource(ctx);
 		String result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_expected.css"), result);
+		
+		// Check retrieve from cache in Production mode
+		rd = generator.createResource(ctx);
+		result = FileUtils.removeCarriageReturn(IOUtils.toString(rd));
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/classpath/expected/style_expected.css"), result);
 		
 		// Check result in debug mode

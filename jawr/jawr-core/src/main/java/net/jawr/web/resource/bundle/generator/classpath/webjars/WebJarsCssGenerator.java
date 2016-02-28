@@ -13,7 +13,9 @@
  */
 package net.jawr.web.resource.bundle.generator.classpath.webjars;
 
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 
 /**
@@ -21,13 +23,8 @@ import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
  * 
  * @author Ibrahim Chaehoi
  */
+@CachedGenerator(name = "Webjars CSS", cacheDirectory = "webJarsCss", mappingFileName = "webJarsCssMapping.txt", mode = CacheMode.ALL)
 public class WebJarsCssGenerator extends ClassPathCSSGenerator {
-
-	/**
-	 * The name of the directory which contain the CSS defined using webjar for
-	 * the DEBUG mode
-	 */
-	private static final String TEMP_CSS_CLASSPATH_SUBDIR = "webJarsCss";
 
 	/**
 	 * Constructor
@@ -59,18 +56,6 @@ public class WebJarsCssGenerator extends ClassPathCSSGenerator {
 	@Override
 	protected String getClassPathGeneratorHelperPrefix() {
 		return GeneratorRegistry.WEBJARS_GENERATOR_HELPER_PREFIX;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator
-	 * #getTempDirectoryName()
-	 */
-	@Override
-	protected String getTempDirectoryName() {
-		return TEMP_CSS_CLASSPATH_SUBDIR;
 	}
 
 }

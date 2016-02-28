@@ -172,6 +172,9 @@ public class LessCssGeneratorTestCase {
 		assertEquals(0, filePathMappings.size());
 
 		// Checks retrieve from cache
+		when(rsReaderHandler.getResource(Matchers.any(JoinableResourceBundle.class), Matchers.eq("/temp.less"),
+				Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		
 		ctx.setProcessingBundle(false);
 		rd = generator.createResource(ctx);
 		writer = new StringWriter();
