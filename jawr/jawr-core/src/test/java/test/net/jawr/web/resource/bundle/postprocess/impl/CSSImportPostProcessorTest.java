@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.StringReader;
 import java.util.Properties;
 
@@ -29,6 +30,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
 /**
@@ -37,6 +39,8 @@ import test.net.jawr.web.servlet.mock.MockServletContext;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CSSImportPostProcessorTest {
+
+	private static String WORK_DIR = "workDirCssImport";
 
 	@Mock
 	JoinableResourceBundle bundle;
@@ -77,6 +81,9 @@ public class CSSImportPostProcessorTest {
 		BinaryResourcesHandler imgRsHandler = new BinaryResourcesHandler(imgConfig, null, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, imgRsHandler);
 		
+		FileUtils.clearDirectory(FileUtils.getClasspathRootDir() + File.separator + WORK_DIR);
+		FileUtils.createDir(WORK_DIR);
+		when(rsHandler.getWorkingDirectory()).thenReturn(FileUtils.getClasspathRootDir() + File.separator + WORK_DIR);
 		processor = new CSSImportPostProcessor();
 	}
 
