@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -116,7 +117,8 @@ public class CoffeeScriptGeneratorTestCase {
 		// Make sure that the version of temp.coffee is the right one
 		FileUtils.copyFile("generator/js/coffeescript/temp.coffee.backup", "generator/js/coffeescript/temp.coffee");
 
-		when(rsReaderHandler.getFilePath(Matchers.anyString())).thenReturn(FileUtils.getClassPathFileAbsolutePath("generator/js/coffeescript/temp.coffee"));
+		when(rsReaderHandler.getFilePath(Matchers.anyString()))
+				.thenReturn(FileUtils.getClassPathFileAbsolutePath("generator/js/coffeescript/temp.coffee"));
 		Mockito.doAnswer(new Answer<Long>() {
 
 			@Override
@@ -127,7 +129,7 @@ public class CoffeeScriptGeneratorTestCase {
 				return result;
 			}
 		}).when(rsReaderHandler).getLastModified(Matchers.anyString());
-		
+
 		Mockito.doAnswer(new Answer<Reader>() {
 
 			@Override
@@ -145,7 +147,6 @@ public class CoffeeScriptGeneratorTestCase {
 		}).when(rsReaderHandler).getResource(Matchers.any(JoinableResourceBundle.class), Matchers.anyString(),
 				Matchers.anyBoolean(), (List<Class<?>>) Matchers.any());
 
-		
 		generator.setResourceReaderHandler(rsReaderHandler);
 		generator.setConfig(config);
 		generator.afterPropertiesSet();
@@ -166,7 +167,6 @@ public class CoffeeScriptGeneratorTestCase {
 		return JSEngineUtils.isJsEngineAvailable(jsEngineName, LOGGER);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testBundleGenerator() throws Exception {
 		if (isJsEngineAvailable()) {
@@ -192,24 +192,9 @@ public class CoffeeScriptGeneratorTestCase {
 			Assert.assertEquals(FileUtils.readClassPathFile("generator/js/coffeescript/expected.js"), content);
 
 			FileUtils.copyFile("generator/js/coffeescript/temp2.coffee", "generator/js/coffeescript/temp.coffee");
-			Mockito.doAnswer(new Answer<Reader>() {
+			when(rsReaderHandler.getLastModified("generator/js/coffeescript/temp.coffee"))
+					.thenReturn(Calendar.getInstance().getTimeInMillis() + 3);
 
-				@Override
-				public Reader answer(InvocationOnMock invocation) throws Throwable {
-					Object[] args = invocation.getArguments();
-					Reader rd = null;
-					try {
-						final String content = FileUtils.readClassPathFile("generator/js/coffeescript" + args[1]);
-						rd = new StringReader(content);
-					} catch (IOException ex) {
-						// Do nothing
-					}
-					return rd;
-				}
-			}).when(rsReaderHandler).getResource(Matchers.any(JoinableResourceBundle.class), Matchers.anyString(),
-					Matchers.anyBoolean(), (List<Class<?>>) Matchers.any());
-
-			
 			ctx.setProcessingBundle(true);
 
 			// Retrieve updated version in production mode
