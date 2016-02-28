@@ -92,7 +92,7 @@ public abstract class AbstractCachedGenerator
 			name = annotation.name();
 			cacheMappingFileName = annotation.mappingFileName();
 			cacheDirectory = annotation.cacheDirectory();
-			if (cacheDirectory.endsWith(URL_SEPARATOR)) {
+			if (!cacheDirectory.endsWith(URL_SEPARATOR)) {
 				cacheDirectory = cacheDirectory + URL_SEPARATOR;
 			}
 			cacheMode = annotation.mode();
@@ -114,8 +114,18 @@ public abstract class AbstractCachedGenerator
 	@Override
 	public void setWorkingDirectory(String workingDir) {
 		this.workingDir = workingDir;
+		if (!this.workingDir.endsWith(URL_SEPARATOR)) {
+			this.workingDir = this.workingDir + URL_SEPARATOR;
+		}
 	}
 
+	/**
+	 * Returns the generator working directory
+	 * @return the generator working directory
+	 */
+	protected String getGeneratorWorkingDir(){
+		return this.workingDir+"generator"+URL_SEPARATOR;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -151,8 +161,8 @@ public abstract class AbstractCachedGenerator
 	 * @return the file path of the temporary resource
 	 */
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
-		return workingDir + URL_SEPARATOR + getTempDirectoryName() + cacheMode + URL_SEPARATOR
-				+ context.getPath().replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, URL_SEPARATOR);
+		return  getTempDirectory() + cacheMode + URL_SEPARATOR
+				+ context.getPath().replace(GeneratorRegistry.PREFIX_SEPARATOR, URL_SEPARATOR);
 	}
 
 	/**
@@ -160,8 +170,8 @@ public abstract class AbstractCachedGenerator
 	 * 
 	 * @return the temporary directory or null if the generator don't use cache
 	 */
-	protected String getTempDirectoryName() {
-		return cacheDirectory;
+	protected String getTempDirectory() {
+		return this.workingDir+"generator"+URL_SEPARATOR+cacheDirectory+URL_SEPARATOR;
 	}
 
 	/**
@@ -413,6 +423,8 @@ public abstract class AbstractCachedGenerator
 					strb.append(fMapping.getPath() + "#" + fMapping.getLastModified());
 					if (iter.hasNext()) {
 						strb.append(";");
+					}else{
+						strb.append("\n");
 					}
 				}
 			}
@@ -439,7 +451,7 @@ public abstract class AbstractCachedGenerator
 	 * @return the file path of the cache file
 	 */
 	protected String getCacheFilePath() {
-		return this.workingDir + URL_SEPARATOR + getTempDirectoryName() + getCacheFileName();
+		return getTempDirectory() + getCacheFileName();
 	}
 
 	/**
