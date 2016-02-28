@@ -192,8 +192,9 @@ public class CoffeeScriptGeneratorTestCase {
 			Assert.assertEquals(FileUtils.readClassPathFile("generator/js/coffeescript/expected.js"), content);
 
 			FileUtils.copyFile("generator/js/coffeescript/temp2.coffee", "generator/js/coffeescript/temp.coffee");
-			when(rsReaderHandler.getLastModified("generator/js/coffeescript/temp.coffee"))
-					.thenReturn(Calendar.getInstance().getTimeInMillis() + 3);
+			when(rsReaderHandler
+					.getLastModified(FileUtils.getClassPathFileAbsolutePath("generator/js/coffeescript/temp.coffee")))
+							.thenReturn(Calendar.getInstance().getTimeInMillis() + 3);
 
 			ctx.setProcessingBundle(true);
 
