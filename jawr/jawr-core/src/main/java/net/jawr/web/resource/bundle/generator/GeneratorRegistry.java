@@ -41,7 +41,7 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorBi
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
-import net.jawr.web.resource.bundle.generator.css.sass.SassGenerator;
+import net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;

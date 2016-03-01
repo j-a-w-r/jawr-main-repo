@@ -11,7 +11,7 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle.generator.css.sass;
+package net.jawr.web.resource.bundle.generator.css.sass.vaadin;
 
 import java.io.Reader;
 import java.util.ArrayList;

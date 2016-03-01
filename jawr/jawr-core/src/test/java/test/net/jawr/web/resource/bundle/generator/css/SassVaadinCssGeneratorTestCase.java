@@ -1,7 +1,7 @@
 package test.net.jawr.web.resource.bundle.generator.css;
 
-import static net.jawr.web.resource.bundle.generator.css.sass.SassGenerator.SAAS_GENERATOR_URL_MODE;
-import static net.jawr.web.resource.bundle.generator.css.sass.SassGenerator.SASS_GENERATOR_DEFAULT_URL_MODE;
+import static net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassGenerator.SAAS_GENERATOR_URL_MODE;
+import static net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassGenerator.SASS_GENERATOR_DEFAULT_URL_MODE;
 import static org.mockito.Matchers.anyString;
 
 import java.io.ByteArrayInputStream;
@@ -45,7 +45,7 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.css.sass.SassGenerator;
+import net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -53,7 +53,7 @@ import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SassCssGeneratorTestCase {
+public class SassVaadinCssGeneratorTestCase {
 
 	private static String WORK_DIR = "workDirSass";
 

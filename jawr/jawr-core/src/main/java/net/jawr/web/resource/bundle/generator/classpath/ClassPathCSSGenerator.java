@@ -18,8 +18,6 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
@@ -35,6 +33,7 @@ import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
 import net.jawr.web.resource.handler.reader.ResourceBrowser;
+import net.jawr.web.util.StringUtils;
 
 /**
  * This class defines the generator for the CSS defined in the classpath.

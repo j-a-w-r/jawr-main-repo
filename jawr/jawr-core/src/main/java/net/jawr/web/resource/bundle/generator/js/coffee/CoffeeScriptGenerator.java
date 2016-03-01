@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.script.ScriptException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +44,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.util.StopWatch;
+import net.jawr.web.util.StringUtils;
 import net.jawr.web.util.js.JavascriptEngine;
 
 /**

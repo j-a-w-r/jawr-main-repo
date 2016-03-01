@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.CharSequenceUtils;
+
 /**
  * 
  * Utility method for String manipulation.
@@ -126,6 +128,23 @@ public class StringUtils {
      */
     public static boolean isNotEmpty(String str) {
         return !StringUtils.isEmpty(str);
+    }
+    
+    /**
+     * Checks if 2 Strings are equals.
+     * @param cs1 the first string 
+     * @param cs2 the second string
+     * @return true if the 2 Strings are equals.
+     */
+    public static boolean equals(final String cs1, final String cs2) {
+        if (cs1 == cs2) {
+            return true;
+        }
+        if (cs1 == null || cs2 == null) {
+            return false;
+        }
+        
+        return cs1.equals(cs2);
     }
     
 	// Count matches
