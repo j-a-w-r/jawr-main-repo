@@ -18,6 +18,8 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
@@ -53,6 +55,9 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	/** The classpath generator helper */
 	private ClassPathGeneratorHelper helper;
 
+	/** The JAWR config */
+	protected JawrConfig config;
+	
 	/**
 	 * The flag indicating if the generator is handling the Css Image ressources
 	 */
@@ -95,6 +100,35 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		return GeneratorRegistry.CLASSPATH_RESOURCE_BUNDLE_PREFIX;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#isCacheValid()
+	 */
+	@Override
+	protected boolean isCacheValid() {
+		
+		boolean isValid = false;
+		String servletMapping = config.getServletMapping();
+		boolean isHandlingCssCPImage = config.isCssClasspathImageHandledByClasspathCss();
+		if(StringUtils.equals(servletMapping, cacheProperties.getProperty("jawr.servlet.mapping"))
+				&& StringUtils.equals(cacheProperties.getProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE), Boolean.toString(isHandlingCssCPImage))){
+			isValid = false;
+		}
+		
+		return isValid;
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache()
+	 */
+	@Override
+	protected void resetCache() {
+		super.resetCache();
+		cacheProperties.put("jawr.servlet.mapping", config.getServletMapping());
+		cacheProperties.put(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, Boolean.toString(isHandlingCssImage));
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -103,6 +137,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	 * #setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	public void setConfig(JawrConfig config) {
+		this.config = config;
 		this.isHandlingCssImage = config.isCssClasspathImageHandledByClasspathCss();
 	}
 

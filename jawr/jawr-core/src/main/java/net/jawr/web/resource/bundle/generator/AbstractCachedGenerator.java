@@ -27,9 +27,11 @@ import java.io.StringReader;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -60,6 +62,15 @@ public abstract class AbstractCachedGenerator
 	/** The Logger */
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractCachedGenerator.class);
 
+	/** The separator for file mappings */
+	private static final String SEMICOLON = ";";
+
+	/** The last modification separator in file mapping  */
+	private static final String MAPPING_TIMESTAMP_SEPARATOR = "#";
+
+	/** The cache mapping prefix */
+	private static final String JAWR_MAPPING_PREFIX = "jawr.cache.mapping.";
+
 	/** The ResourceReaderHandler */
 	protected ResourceReaderHandler rsHandler;
 
@@ -80,6 +91,9 @@ public abstract class AbstractCachedGenerator
 
 	/** The cache mode */
 	protected CacheMode cacheMode;
+
+	/** The cache properties */
+	protected Properties cacheProperties = new Properties();
 
 	/**
 	 * Constructor
@@ -121,11 +135,13 @@ public abstract class AbstractCachedGenerator
 
 	/**
 	 * Returns the generator working directory
+	 * 
 	 * @return the generator working directory
 	 */
-	protected String getGeneratorWorkingDir(){
-		return this.workingDir+JawrConstant.GENERATOR_CACHE_DIR+URL_SEPARATOR;
+	protected String getGeneratorWorkingDir() {
+		return this.workingDir + JawrConstant.GENERATOR_CACHE_DIR + URL_SEPARATOR;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -137,6 +153,15 @@ public abstract class AbstractCachedGenerator
 
 		if (useCache) {
 			loadCacheMapping();
+			
+			// reset cache if invalid
+			if(!isCacheValid()){
+				
+				if(LOGGER.isDebugEnabled()){
+					LOGGER.debug("Cache of "+getName()+" generator is invalid. Reset cache...");
+				}
+				resetCache();
+			}
 		}
 	}
 
@@ -161,7 +186,7 @@ public abstract class AbstractCachedGenerator
 	 * @return the file path of the temporary resource
 	 */
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
-		return  getTempDirectory() + cacheMode + URL_SEPARATOR
+		return getTempDirectory() + cacheMode + URL_SEPARATOR
 				+ context.getPath().replace(GeneratorRegistry.PREFIX_SEPARATOR, URL_SEPARATOR);
 	}
 
@@ -171,7 +196,7 @@ public abstract class AbstractCachedGenerator
 	 * @return the temporary directory or null if the generator don't use cache
 	 */
 	protected String getTempDirectory() {
-		return this.workingDir+JawrConstant.GENERATOR_CACHE_DIR+URL_SEPARATOR+cacheDirectory+URL_SEPARATOR;
+		return this.workingDir + JawrConstant.GENERATOR_CACHE_DIR + URL_SEPARATOR + cacheDirectory + URL_SEPARATOR;
 	}
 
 	/**
@@ -236,9 +261,10 @@ public abstract class AbstractCachedGenerator
 					}
 				}
 			}
-			if (context.isProcessingBundle()){
+			if (context.isProcessingBundle()) {
 				if (useCache && (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL))) {
-					// Create debug cache while processing bundle if cache is allowed in debug 
+					// Create debug cache while processing bundle if cache is
+					// allowed in debug
 					String content = null;
 					try {
 						content = IOUtils.toString(rd);
@@ -249,7 +275,7 @@ public abstract class AbstractCachedGenerator
 					createTempResource(context, CacheMode.DEBUG, dRd);
 					rd = new StringReader(content);
 				}
-			}else{
+			} else {
 				rd = generateResourceForDebug(rd, context);
 				if (useCache && (cacheMode.equals(CacheMode.DEBUG) || cacheMode.equals(CacheMode.ALL))) {
 					rd = createTempResource(context, CacheMode.DEBUG, rd);
@@ -264,22 +290,28 @@ public abstract class AbstractCachedGenerator
 
 		return rd;
 	}
-	
+
 	/**
 	 * Adds the linked resource to the linked resource map
-	 * @param path the resource path
-	 * @param fMapping the file path mapping linked to the resource
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param fMapping
+	 *            the file path mapping linked to the resource
 	 */
-	public void addLinkedResources(String path, FilePathMapping fMappings){
+	public void addLinkedResources(String path, FilePathMapping fMappings) {
 		addLinkedResources(path, Arrays.asList(fMappings));
 	}
-	
+
 	/**
 	 * Adds the linked resource to the linked resource map
-	 * @param path the resource path
-	 * @param fMappings the list of mappings linked to the resource
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param fMappings
+	 *            the list of mappings linked to the resource
 	 */
-	public void addLinkedResources(String path, List<FilePathMapping> fMappings){
+	public void addLinkedResources(String path, List<FilePathMapping> fMappings) {
 		linkedResourceMap.put(path, new CopyOnWriteArrayList<>(fMappings));
 	}
 
@@ -304,14 +336,15 @@ public abstract class AbstractCachedGenerator
 	 * @param context
 	 *            the generator context
 	 */
-	protected Reader generateResource(String path, GeneratorContext context){
+	protected Reader generateResource(String path, GeneratorContext context) {
 
 		/**
-		 * This method should have been declared as abstract.
-		 * The cache feature was lately, and some older generators override directly the method :
-		 * 		public Reader createResource(GeneratorContext context)
+		 * This method should have been declared as abstract. The cache feature
+		 * was lately, and some older generators override directly the method :
+		 * public Reader createResource(GeneratorContext context)
 		 * 
-		 * So to keep backward compatibility, this method has not been created in abstract.
+		 * So to keep backward compatibility, this method has not been created
+		 * in abstract.
 		 */
 		throw new BundlingProcessException("Please override the method if you're using the generator cache feature.");
 	}
@@ -404,29 +437,44 @@ public abstract class AbstractCachedGenerator
 	}
 
 	/**
+	 * Resets the cache
+	 */
+	protected void resetCache() {
+		cacheProperties.clear();
+		linkedResourceMap.clear();
+	}
+
+	/**
+	 * Returns true if the cache is valid
+	 * 
+	 * @return true if the cache is valid
+	 */
+	protected boolean isCacheValid() {
+		return true;
+	}
+
+	/**
 	 * Serialize the cache file mapping
 	 * 
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected void serializeCacheMapping() {
+	protected synchronized void serializeCacheMapping() {
 		// TODO put in place PostProcessBundling event for this type of action
-		StringBuilder strb = new StringBuilder();
 		for (Map.Entry<String, List<FilePathMapping>> entry : linkedResourceMap.entrySet()) {
 
+			StringBuilder strb = new StringBuilder();
 			Iterator<FilePathMapping> iter = entry.getValue().iterator();
 			if (iter.hasNext()) {
 
-				strb.append(entry.getKey() + "=");
 				for (; iter.hasNext();) {
 					FilePathMapping fMapping = iter.next();
-					strb.append(fMapping.getPath() + "#" + fMapping.getLastModified());
+					strb.append(fMapping.getPath() + MAPPING_TIMESTAMP_SEPARATOR + fMapping.getLastModified());
 					if (iter.hasNext()) {
-						strb.append(";");
-					}else{
-						strb.append("\n");
+						strb.append(SEMICOLON);
 					}
 				}
+				cacheProperties.put(JAWR_MAPPING_PREFIX + entry.getKey(), strb.toString());
 			}
 		}
 
@@ -437,7 +485,7 @@ public abstract class AbstractCachedGenerator
 		FileWriter fw = null;
 		try {
 			fw = new FileWriter(f);
-			fw.append(strb);
+			cacheProperties.store(fw, "Cache properties of " + getName() + " generator");
 		} catch (IOException e) {
 			throw new BundlingProcessException("Unable to save cache file mapping ", e);
 		} finally {
@@ -471,30 +519,37 @@ public abstract class AbstractCachedGenerator
 		if (f.exists()) {
 			BufferedReader rd = null;
 			try {
-				rd = new BufferedReader(new FileReader(f));
-				String line = null;
-				while ((line = rd.readLine()) != null) {
-					String[] resourceMapping = line.split("=");
-					String lessResource = resourceMapping[0];
-					String[] mappings = resourceMapping[1].split(";");
-					List<FilePathMapping> fMappings = new CopyOnWriteArrayList<>();
-					boolean mappingModified = true;
-					for (String fmapping : mappings) {
-						String[] mapping = fmapping.split("#");
-						long lastModified = Long.parseLong(mapping[1]);
-						String filePath = mapping[0];
-						if (rsHandler.getLastModified(filePath) != lastModified) {
-							mappingModified = false;
-							break;
-						}
-						FilePathMapping fmap = new FilePathMapping(filePath, lastModified);
-						fMappings.add(fmap);
-					}
+				cacheProperties.load(new FileInputStream(f));
 
-					if (mappingModified) {
-						linkedResourceMap.put(lessResource, fMappings);
+				rd = new BufferedReader(new FileReader(f));
+				for (Enumeration<?> properyNames = cacheProperties.propertyNames(); properyNames.hasMoreElements();) {
+					String name = (String) properyNames.nextElement();
+					if (name.startsWith(JAWR_MAPPING_PREFIX)) {
+
+						String value = cacheProperties.getProperty(name);
+
+						String resourceMapping = value.substring(JAWR_MAPPING_PREFIX.length());
+						String[] mappings = value.split(SEMICOLON);
+						List<FilePathMapping> fMappings = new CopyOnWriteArrayList<>();
+						boolean mappingModified = true;
+						for (String fmapping : mappings) {
+							String[] mapping = fmapping.split(MAPPING_TIMESTAMP_SEPARATOR);
+							long lastModified = Long.parseLong(mapping[1]);
+							String filePath = mapping[0];
+							if (rsHandler.getLastModified(filePath) != lastModified) {
+								mappingModified = false;
+								break;
+							}
+							FilePathMapping fmap = new FilePathMapping(filePath, lastModified);
+							fMappings.add(fmap);
+						}
+
+						if (mappingModified) {
+							linkedResourceMap.put(resourceMapping, fMappings);
+						}
 					}
 				}
+
 			} catch (IOException e) {
 				throw new BundlingProcessException("Unable to initialize " + getName() + " Generator cache", e);
 			} finally {

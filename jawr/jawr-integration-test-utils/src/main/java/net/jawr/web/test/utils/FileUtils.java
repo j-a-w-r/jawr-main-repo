@@ -95,6 +95,7 @@ public class FileUtils {
 					deleted &= deleteFile(files[i]);
 				}
 			}
+			deleteFile(dir);
 		}
 		
 		return deleted;

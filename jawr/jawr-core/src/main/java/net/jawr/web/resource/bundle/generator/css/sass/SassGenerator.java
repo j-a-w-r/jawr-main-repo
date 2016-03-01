@@ -20,6 +20,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.vaadin.sass.internal.ScssContext;
 import com.vaadin.sass.internal.ScssContext.UrlMode;
 
@@ -54,11 +56,12 @@ public class SassGenerator extends AbstractCSSGenerator
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 
-	/**
-	 * The URL mode handling for binary resource URL present in the Scss file
-	 */
+	/** The URL mode handling for binary resource URL present in the Scss file */
 	private ScssContext.UrlMode urlMode;
 
+	/** The Jawr config */
+	private JawrConfig config;
+	
 	/**
 	 * Constructor
 	 */
@@ -88,7 +91,8 @@ public class SassGenerator extends AbstractCSSGenerator
 	@Override
 	public void setConfig(JawrConfig config) {
 
-		String value = config.getProperty(SAAS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE);
+		this.config = config;
+		String value = this.config.getProperty(SAAS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE);
 		urlMode = UrlMode.valueOf(value);
 	}
 
@@ -125,6 +129,25 @@ public class SassGenerator extends AbstractCSSGenerator
 		}
 
 		return rd;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache()
+	 */
+	@Override
+	protected void resetCache() {
+		super.resetCache();
+		cacheProperties.put(SAAS_GENERATOR_URL_MODE, urlMode.toString());
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#isCacheValid()
+	 */
+	@Override
+	protected boolean isCacheValid() {
+		
+		String cachedUrlMode = cacheProperties.getProperty(SAAS_GENERATOR_URL_MODE);
+		return StringUtils.equals(cachedUrlMode, config.getProperty(SAAS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
 	}
 
 	/**

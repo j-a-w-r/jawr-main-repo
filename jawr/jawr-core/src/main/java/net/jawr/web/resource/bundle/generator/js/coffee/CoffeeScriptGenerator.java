@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.script.ScriptException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,12 +53,12 @@ import net.jawr.web.util.js.JavascriptEngine;
  * @author ibrahim Chaehoi
  */
 @CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt", mode = CacheMode.ALL)
-public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implements ConfigurationAwareResourceGenerator,
-		ICoffeeScriptGenerator {
+public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
+		implements ConfigurationAwareResourceGenerator, ICoffeeScriptGenerator {
 
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
-	
+
 	/** The default coffee script options */
 	private static final String COFFEE_SCRIPT_DEFAULT_OPTIONS = "";
 
@@ -190,13 +191,13 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 
 			String result = compile(path, swr.toString());
 			rd = new StringReader(result);
-		
+
 			// Update linked resource map
 			FilePathMapping fMapping = FilePathMappingUtils.buildFilePathMapping(path, rsHandler);
-			if(fMapping != null){
+			if (fMapping != null) {
 				addLinkedResources(path, fMapping);
 			}
-		
+
 		} catch (ResourceNotFoundException e) {
 			throw new BundlingProcessException(e);
 		} catch (IOException e) {
@@ -204,6 +205,40 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 		}
 
 		return rd;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache
+	 * ()
+	 */
+	@Override
+	protected void resetCache() {
+		super.resetCache();
+		cacheProperties.put(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION,
+				config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION));
+		cacheProperties.put(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS,
+				config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFFEE_SCRIPT_DEFAULT_OPTIONS));
+		cacheProperties.put(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE,
+				config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * isCacheValid()
+	 */
+	@Override
+	protected boolean isCacheValid() {
+		return StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION),
+				config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION))
+				&& StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS),
+						config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFFEE_SCRIPT_DEFAULT_OPTIONS))
+				&& StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE),
+						config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
 	}
 
 	/**

@@ -36,6 +36,8 @@ import test.net.jawr.web.servlet.mock.MockServletContext;
 @RunWith(MockitoJUnitRunner.class)
 public class WebJarsJsGeneratorTestCase {
 
+	private static final String WORK_DIR = "workDirWebJars";
+
 	private JawrConfig config;
 	private GeneratorContext ctx;
 	private WebJarsJSGenerator generator;
@@ -51,6 +53,9 @@ public class WebJarsJsGeneratorTestCase {
 	
 	@Before
 	public void setUp() throws Exception {
+
+		FileUtils.clearDirectory(FileUtils.getClasspathRootDir() + "/" + WORK_DIR);
+		FileUtils.createDir(WORK_DIR);
 
 		config = new JawrConfig(JawrConstant.JS_TYPE, new Properties());
 		ServletContext servletContext = new MockServletContext();
@@ -74,6 +79,7 @@ public class WebJarsJsGeneratorTestCase {
 			}
 		}).when(rsReaderHandler).getLastModified(Matchers.anyString());
 
+		generator.setWorkingDirectory(FileUtils.getClasspathRootDir() + "/" + WORK_DIR);
 		generator.afterPropertiesSet();
 	}
 

@@ -33,8 +33,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.jawr.web.test.utils.FileUtils;
-
 /**
  * The Jawr integration server
  * 
@@ -44,8 +42,7 @@ import net.jawr.web.test.utils.FileUtils;
 public class JawrIntegrationServer {
 
 	/** The logger */
-	private static Logger LOGGER = LoggerFactory
-			.getLogger(JawrIntegrationServer.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(JawrIntegrationServer.class);
 
 	/** The properties file name */
 	private static final String PROP_FILE_NAME = "jawr-integration-server.properties";
@@ -98,8 +95,7 @@ public class JawrIntegrationServer {
 	JawrIntegrationServer() {
 
 		Properties prop = new Properties();
-		InputStream inStream = getClass().getClassLoader().getResourceAsStream(
-				PROP_FILE_NAME);
+		InputStream inStream = getClass().getClassLoader().getResourceAsStream(PROP_FILE_NAME);
 		if (inStream != null) {
 			try {
 				prop.load(inStream);
@@ -109,54 +105,48 @@ public class JawrIntegrationServer {
 			IOUtils.closeQuietly(inStream);
 		}
 
-		serverPort = Integer.parseInt(prop.getProperty(PORT_PROPERTY_NAME,
-				DEFAULT_PORT));
+		serverPort = Integer.parseInt(prop.getProperty(PORT_PROPERTY_NAME, DEFAULT_PORT));
 		server = new Server(serverPort);
 		// Setup JMX
-		MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
+		MBeanContainer mbContainer = new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
 		server.addEventListener(mbContainer);
 		server.addBean(mbContainer);
-		
+
 		try {
-			
+
 			String host = "localhost";
 			int jmxPort = 1099;
 			String urlPath = String.format("/jndi/rmi://%s:%s/jmxrmi", host, jmxPort);
-	        JMXServiceURL serviceURL = new JMXServiceURL("rmi", host, jmxPort, urlPath);
-	        ConnectorServer connectorServer = new ConnectorServer(serviceURL, "org.eclipse.jetty.jmx:name=rmiconnectorserver");
+			JMXServiceURL serviceURL = new JMXServiceURL("rmi", host, jmxPort, urlPath);
+			ConnectorServer connectorServer = new ConnectorServer(serviceURL,
+					"org.eclipse.jetty.jmx:name=rmiconnectorserver");
 			connectorServer.start();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		server.setStopAtShutdown(true);
-		String webappName = prop.getProperty(WEBAPP_PROPERTY_NAME,
-				DEFAULT_WEBAPP_NAME);
+		String webappName = prop.getProperty(WEBAPP_PROPERTY_NAME, DEFAULT_WEBAPP_NAME);
 		try {
-			webAppRootDir = new File(TARGET_ROOT_DIR + webappName)
-					.getCanonicalFile().getAbsolutePath();
+			webAppRootDir = new File(TARGET_ROOT_DIR + webappName).getCanonicalFile().getAbsolutePath();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 
-		boolean useEmptyContextPath = Boolean.parseBoolean(prop.getProperty(
-				USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME,
-				DONT_USE_DEFAULT_CONTEXT_PATH));
+		boolean useEmptyContextPath = Boolean
+				.parseBoolean(prop.getProperty(USE_DEFAULT_CONTEXT_PATH_PROPERTY_NAME, DONT_USE_DEFAULT_CONTEXT_PATH));
 		String webAppCtx = "";
 		if (!useEmptyContextPath) {
 			webAppCtx = "/" + webappName;
 		}
 
 		jettyWebAppContext = new WebAppContext(webAppRootDir, webAppCtx);
-		jettyWebAppContext.setConfigurationClasses(new String[] {
-				"org.eclipse.jetty.webapp.WebInfConfiguration",
-				"org.eclipse.jetty.webapp.WebXmlConfiguration",
-				"org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
+		jettyWebAppContext.setConfigurationClasses(new String[] { "org.eclipse.jetty.webapp.WebInfConfiguration",
+				"org.eclipse.jetty.webapp.WebXmlConfiguration", "org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
 				"org.eclipse.jetty.annotations.AnnotationConfiguration" });
 
 		ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
-		contextHandlerCollection
-				.setHandlers(new Handler[] { jettyWebAppContext });
+		contextHandlerCollection.setHandlers(new Handler[] { jettyWebAppContext });
 		server.setHandler(contextHandlerCollection);
 	}
 
@@ -215,9 +205,7 @@ public class JawrIntegrationServer {
 
 	public void setup() throws Exception {
 
-		LOGGER.info("Jawr integration server "
-				+ (webAppConfigInitialized ? "is already started"
-						: "will start now."));
+		LOGGER.info("Jawr integration server " + (webAppConfigInitialized ? "is already started" : "will start now."));
 		if (!webAppConfigInitialized) {
 			// Starts the web application
 			startWebApplication();
@@ -238,19 +226,12 @@ public class JawrIntegrationServer {
 
 		// Create a new class loader to take in account the changes of the jawr
 		// config file in the WEB-INF/classes
-		WebAppClassLoader webAppClassLoader = new WebAppClassLoader(
-				jettyWebAppContext);
+		WebAppClassLoader webAppClassLoader = new WebAppClassLoader(jettyWebAppContext);
 		jettyWebAppContext.setClassLoader(webAppClassLoader);
-		// Fix issue with web app context reloading on Windows where deleting temporary directory fails because of locked files
+		// Fix issue with web app context reloading on Windows where deleting
+		// temporary directory fails because of locked files
 		jettyWebAppContext.setPersistTempDirectory(true);
-		
-		File tempDirectory = jettyWebAppContext.getTempDirectory();
-		// Clean generator cache directory
-		File generatorCacheDir = new File(tempDirectory, "generatorCache");
-		if(generatorCacheDir.exists()){
-			FileUtils.deleteDirectory(generatorCacheDir);
-		}
-		
+
 		if (server.isStopped()) {
 			LOGGER.info("Start jetty server....");
 			server.start();
