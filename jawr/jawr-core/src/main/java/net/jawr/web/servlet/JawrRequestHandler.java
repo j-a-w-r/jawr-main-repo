@@ -1253,7 +1253,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			// clears resource bundle cache for the refresh
 			ResourceBundle.clearCache();
 			StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
-			if (stopWatch.isRunning()) {
+			if (stopWatch != null && stopWatch.isRunning()) {
 				stopWatch.stop();
 			}
 
