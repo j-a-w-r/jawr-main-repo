@@ -10,7 +10,7 @@
 	<artifactId>jawr-dwr3.x-parent</artifactId>
 	<packaging>pom</packaging>
 	<properties>
-		<dwr.version>3.0.0-rc3-RELEASE</dwr.version>
+		<dwr.version>3.0.1-RELEASE</dwr.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>

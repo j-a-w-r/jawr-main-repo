@@ -5,7 +5,6 @@ if (typeof dwr == 'undefined' || dwr.engine == undefined) throw new Error('You m
     var p;
     
     p = {};
-    p._path = '/jawr-dwr3.x-integration-test/dwr';
 
     /**
      * @param {class java.lang.String} p0 a param

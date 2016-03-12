@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
- 
+
 
 
 
@@ -81,6 +81,13 @@ dwr.engine._timeout = timeout;
 
 
 
+dwr.engine.setPollTimeout = function(timeout) {
+dwr.engine._pollTimeout = timeout;
+};
+
+
+
+
 
 dwr.engine.setPreHook = function(handler) {
 dwr.engine._preHook = handler;
@@ -92,6 +99,30 @@ dwr.engine._preHook = handler;
 
 dwr.engine.setPostHook = function(handler) {
 dwr.engine._postHook = handler;
+};
+
+
+
+
+
+dwr.engine.setOverridePath = function(path) {
+dwr.engine._overridePath = path;
+};
+
+
+
+
+
+dwr.engine.setOverrideContextPath = function(path) {
+dwr.engine._overrideContextPath = path;
+};
+
+
+
+
+
+dwr.engine.setCookieAttributes = function(attributeString) {
+dwr.engine._cookieAttributes = attributeString;
 };
 
 
@@ -139,6 +170,7 @@ if (dwr.engine._activeReverseAjax) return;
 
 if (!dwr.engine._retryIntervals || dwr.engine._retryIntervals.length === 0) { dwr.engine._retryIntervals = dwr.engine._defaultRetryIntervals; }
 dwr.engine._activeReverseAjax = true;
+if (dwr.engine._initializing) return;
 dwr.engine._poll();
 }
 else {
@@ -168,8 +200,9 @@ dwr.engine._isNotifyServerOnPageUnload = notify;
 
 dwr.engine.setNotifyServerOnPageLoad = function(notify) {
 dwr.engine._isNotifyServerOnPageLoad = notify;
-if (notify) {
+if (notify && !dwr.engine._initializing && !dwr.engine._isNotifyServerOnPageLoadSent) {
 eval("dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'pageLoaded', [ function() { dwr.engine._ordered = false; }]);");
+dwr.engine._isNotifyServerOnPageLoadSent = true;
 }
 };
 
@@ -196,9 +229,9 @@ dwr.engine._retryIntervals = intervalsArray;
 
 dwr.engine.defaultErrorHandler = function(message, ex) {
 dwr.engine._debug("Error: " + ex.name + ", " + ex.message, true);
+if (!message) message = "A server error has occurred.";
 
 if (message.indexOf("0x80040111") != -1) return;
-if (message === null || message === "") message = "A server error has occurred.";
 if ("false" == "true") alert(message);
 };
 
@@ -313,12 +346,12 @@ build:parseInt("-1", 10),
 
 
 
-title:"RC3-dev",
+title:"FINAL",
 
 
 
 
-label:"3.0.0-RC3-dev"
+label:"3.0.0-FINAL"
 };
 
 
@@ -326,25 +359,39 @@ label:"3.0.0-RC3-dev"
 
 
 
-dwr.engine._allowGetForSafariButMakeForgeryEasier = "false";
+dwr.engine._initializing = true;
+
+
+dwr.engine._allowGetButMakeForgeryEasier = "false";
 
 
 dwr.engine._scriptTagProtection = "true";
 
 
-
-
-
-
-if (typeof pathToDwrServlet != "undefined") {
-dwr.engine._pathToDwrServlet = pathToDwrServlet;
-}
-else {
 dwr.engine._pathToDwrServlet = "/jawr-dwr3.x-integration-test/dwr";
+
+
+dwr.engine._overridePath = "";
+if (typeof pathToDwrServlet != "undefined") {
+dwr.engine._overridePath = pathToDwrServlet;
 }
+
+dwr.engine._effectivePath = function() {
+return dwr.engine._overridePath || dwr.engine._pathToDwrServlet;
+};
 
 
 dwr.engine._contextPath = "/jawr-dwr3.x-integration-test";
+
+
+dwr.engine._overrideContextPath = "";
+
+dwr.engine._effectiveContextPath = function() {
+return dwr.engine._overrideContextPath || dwr.engine._contextPath;
+};
+
+
+dwr.engine._cookieAttributes = "";
 
 
 dwr.engine._useStreamingPoll = "false";
@@ -409,6 +456,9 @@ dwr.engine._reverseAjaxQueue = {};
 dwr.engine._pollBatch = null;
 
 
+dwr.engine._pollTimeout = 0;
+
+
 dwr.engine._pollCometInterval = 200;
 
 
@@ -455,6 +505,7 @@ dwr.engine._isNotifyServerOnPageUnload = false;
 
 
 dwr.engine._isNotifyServerOnPageLoad = false;
+dwr.engine._isNotifyServerOnPageLoadSent = false;
 
 
 dwr.engine._asyncUnload = false;
@@ -491,6 +542,9 @@ dwr.engine._ieConditions = {};
 
 
 dwr.engine._beforeUnloading = false;
+
+
+dwr.engine._queuedBatchException = null;
 
 
 
@@ -542,7 +596,6 @@ paramCount:0, isPoll:false, async:dwr.engine._asyncUnload,
 headers:{}, preHooks:[], postHooks:[],
 timeout:dwr.engine._timeout,
 errorHandler:null, globalErrorHandler:dwr.engine._errorHandler, warningHandler:null, textHtmlHandler:null, globalTextHtmlHandler:null,
-path:dwr.engine._pathToDwrServlet,
 handlers:[{ exceptionHandler:null, callback:null }]
 };
 dwr.engine.transport.send(batch);
@@ -588,11 +641,27 @@ dwr.engine._instanceId = g.dwr._.length;
 g.dwr._[dwr.engine._instanceId] = dwr;
 },
 
+loadDwrConfig: function() {
+if (typeof dwrConfig != "undefined") {
+for(p in dwrConfig) {
+var methodName = "set" + p.charAt(0).toUpperCase() + p.substring(1);
+var setter = dwr.engine[methodName];
+if (setter) setter(dwrConfig[p]);
+}
+}
+},
+
 init: function() {
 dwr.engine._initializer.preInit();
+dwr.engine._initializer.loadDwrConfig();
+dwr.engine._initializing = false;
 
 if (dwr.engine._isNotifyServerOnPageLoad) {
 eval("dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'pageLoaded', [ function() { dwr.engine._ordered = false; }]);");
+dwr.engine._isNotifyServerOnPageLoadSent = true;
+}
+if (dwr.engine._activeReverseAjax) {
+dwr.engine._poll();
 }
 }
 };
@@ -607,7 +676,8 @@ eval("dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'pageLoaded'
 
 
 
-dwr.engine._execute = function(path, scriptName, methodName, args) {
+dwr.engine._execute = function(overridePath, scriptName, methodName, args) {
+var path = overridePath || dwr.engine._effectivePath();
 dwr.engine._singleShot = false;
 if (dwr.engine._batch == null) {
 dwr.engine.beginBatch();
@@ -687,7 +757,7 @@ return (batch.map && batch.map['c0-methodName'] === 'checkHeartbeat' && batch.ma
 
 
 dwr.engine._handleError = function(batch, ex) {
-if (dwr.engine._isHeartbeatBatch(batch)) {
+if (batch && dwr.engine._isHeartbeatBatch(batch)) {
 return;
 }
 var errorHandlers = [];
@@ -713,7 +783,9 @@ ignoreIfUnloading(batch, function() {
 if (batch) {
 var textHtmlHandler = batch.textHtmlHandler || batch.globalTextHtmlHandler;
 if (ex.name === "dwr.engine.textHtmlReply" && textHtmlHandler) {
+dwr.engine.util.logHandlerEx(function() {
 textHtmlHandler(ex);
+});
 return;
 }
 }
@@ -753,7 +825,7 @@ dwr.engine._handlePollStatusChange(false, ex, batch);
 
 var heartbeatInterval = setInterval(function() {
 if (dwr.engine._maxRetries === -1 || dwr.engine._retries < dwr.engine._maxRetries) {
-dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'checkHeartbeat', [ function() {
+dwr.engine._execute(null, '__System', 'checkHeartbeat', [ function() {
 
 clearInterval(heartbeatInterval);
 dwr.engine._poll();
@@ -813,7 +885,7 @@ dwr.engine._retries = 1;
 
 
 dwr.engine._handleWarning = function(batch, ex) {
-if (dwr.engine._isHeartbeatBatch(batch)) {
+if (batch && dwr.engine._isHeartbeatBatch(batch)) {
 return;
 }
 ignoreIfUnloading(batch, function() {
@@ -873,12 +945,13 @@ dwr.engine._global = (function(){return this;}).call(null);
 
 dwr.engine._getObject = function(prop) {
 var parts = prop.split(".");
-var value;
+var value = undefined;
 var scope = dwr.engine._global;
 while(parts.length > 0) {
 var currprop = parts.shift();
+if (!scope) return undefined;
 value = scope[currprop];
-if (parts.length > 0 && value == null) return undefined;
+if (value && value.tagName && document.getElementById(currprop) == value) return undefined;
 scope = value;
 }
 return value;
@@ -900,7 +973,7 @@ scope[currprop] = obj;
 }
 else {
 level = scope[currprop];
-if (level == null) {
+if (level == null || level.tagName && document.getElementById(currprop) == level) {
 scope[currprop] = level = {};
 }
 scope = level;
@@ -968,7 +1041,10 @@ else {
 batch.handlers[callId].completed = true;
 if (typeof handlers.callback == "function") {
 dwr.engine.util.logHandlerEx(function() {
-handlers.callback.apply(handlers.callbackScope, [ reply, handlers.callbackArg ]);
+if(handlers.callbackArg !== undefined)
+handlers.callback.call(handlers.callbackScope, reply, handlers.callbackArg);
+else
+handlers.callback.call(handlers.callbackScope, reply);
 });
 }
 }
@@ -1040,7 +1116,10 @@ ex.message = "";
 
 dwr.engine.util.logHandlerEx(function() {
 if (typeof handlers.exceptionHandler == "function") {
+if (handlers.exceptionArg !== undefined)
 handlers.exceptionHandler.call(handlers.exceptionScope, ex.message, ex, handlers.exceptionArg);
+else
+handlers.exceptionHandler.call(handlers.exceptionScope, ex.message, ex);
 }
 else if (typeof handlers.errorHandler == "function") {
 handlers.errorHandler(ex.message, ex);
@@ -1080,18 +1159,11 @@ dwr.engine._nextReverseAjaxIndex++;
 handleBatchException:function(ex, batchId) {
 var batch = dwr.engine._batches[batchId];
 if (ex.message === undefined) ex.message = "";
+if (batch) {
 dwr.engine._handleError(batch, ex);
-},
-
-
-
-
-handleNewWindowName:function(windowName) {
-dwr.engine._debug("Setting new window name: " + windowName);
-if (window.name != null && window.name !== "") {
-dwr.engine._debug("- Warning: This will override existing name of: " + window.name);
+} else {
+dwr.engine._queuedBatchException = ex;
 }
-window.name = windowName;
 },
 
 
@@ -1423,6 +1495,9 @@ dwr.engine.transport = {
 
 
 send:function(batch) {
+if (batch.path == null) {
+batch.path = dwr.engine._effectivePath();
+}
 dwr.engine.transport.updateDwrSessionFromCookie();
 if (!dwr.engine._dwrSessionId) {
 dwr.engine._internalOrdered = true;
@@ -1471,9 +1546,6 @@ dwr.engine.batch.prepareToSend(batch);
 
 
 var isCrossDomain = false;
-if (batch.path == null) {
-batch.path = dwr.engine._pathToDwrServlet;
-}
 if (batch.path.indexOf("http://") === 0 || batch.path.indexOf("https://") === 0) {
 var dwrShortPath = batch.path.split("/", 3).join("/");
 var hrefShortPath = window.location.href.split("/", 3).join("/");
@@ -1535,7 +1607,14 @@ dwr.engine.batch.remove(batch);
 
 setDwrSession:function(dwrsess) {
 dwr.engine._dwrSessionId = dwrsess;
-document.cookie = "DWRSESSIONID=" + dwrsess + "; path=" + (dwr.engine._contextPath !== "" ? dwr.engine._contextPath : "/");
+var attrs = "";
+if (!dwr.engine._cookieAttributes.match(/^path=/i)) {
+attrs = "; path=" + (dwr.engine._effectiveContextPath() || "/");
+}
+if (dwr.engine._cookieAttributes) {
+attrs += "; " + dwr.engine._cookieAttributes;
+}
+document.cookie = "DWRSESSIONID=" + dwrsess + attrs;
 dwr.engine._scriptSessionId = dwrsess + "/" + dwr.engine._pageId;
 },
 
@@ -1598,23 +1677,6 @@ dwr.engine.transport.xhr.stateChange(batch);
 }
 
 httpMethod = dwr.engine.transport.xhr.httpMethod;
-
-
-var indexSafari = navigator.userAgent.indexOf("Safari/");
-if (indexSafari >= 0) {
-var version = navigator.userAgent.substring(indexSafari + 7);
-if (parseInt(version, 10) < 400) {
-if (dwr.engine._allowGetForSafariButMakeForgeryEasier == "true") {
-httpMethod = "GET";
-}
-else {
-dwr.engine._handleWarning(batch, {
-name: "dwr.engine.oldSafari",
-message: "Safari GET support disabled. See allowGetForSafariButMakeForgeryEasier setting."
-});
-}
-}
-}
 
 batch.mode = batch.isPoll ? dwr.engine._ModePlainPoll : dwr.engine._ModePlainCall;
 var request = dwr.engine.batch.constructRequest(batch, httpMethod);
@@ -1866,11 +1928,26 @@ batch.div1.innerHTML = "<iframe frameborder='0' style='width:0px;height:0px;bord
 batch.iframe = batch.div1.firstChild;
 batch.document = document;
 batch.iframe.batch = batch;
+batch.fileInputs = [];
 dwr.engine.util.addEventListener(batch.iframe, "load", function(ev) {
 
 if (!batch.loadingStarted) return;
 
+while(batch.fileInputs.length > 0) {
+var entry = batch.fileInputs.pop();
+entry.original.setAttribute("id", entry.clone.getAttribute("id"));
+entry.original.setAttribute("name", entry.clone.getAttribute("name"));
+entry.original.style.display = entry.clone.style.display;
+entry.clone.parentNode.replaceChild(entry.original, entry.clone);
+}
+
 if (batch.completed) return;
+
+if (dwr.engine._queuedBatchException) {
+dwr.engine._handleError(batch, dwr.engine._queuedBatchException);
+dwr.engine._queuedBatchException = null;
+return;
+}
 
 try {
 var contentDoc = batch.iframe.contentDocument || batch.iframe.contentWindow.document;
@@ -1928,12 +2005,15 @@ if (typeof value != "function") {
 if (value && value.tagName && value.tagName.toLowerCase() == "input" && value.type && value.type.toLowerCase() == "file") {
 
 
+
+if (value.parentNode) {
 var clone = value.cloneNode(true);
-value.removeAttribute("id", prop);
+value.parentNode.replaceChild(clone, value);
+batch.fileInputs.push({original:value, clone:clone});
+}
+value.removeAttribute("id");
 value.setAttribute("name", prop);
 value.style.display = "none";
-value.parentNode.insertBefore(clone, value);
-value.parentNode.removeChild(value);
 batch.form.appendChild(value);
 } else {
 var formInput = batch.document.createElement("input");
@@ -2086,7 +2166,7 @@ async:dwr.engine._async,
 charsProcessed:0,
 handlers:[],
 isPoll:false,
-map:{ callCount:0, windowName:window.name },
+map:{ callCount:0 },
 paramCount:0,
 preHooks:[],
 postHooks:[],
@@ -2126,13 +2206,11 @@ setTimeout(dwr.engine._poll, pause);
 }
 }],
 isPoll:true,
-map:{ windowName:window.name, callCount:1, nextReverseAjaxIndex:dwr.engine._nextReverseAjaxIndex},
+map:{ callCount:1, nextReverseAjaxIndex:dwr.engine._nextReverseAjaxIndex},
 paramCount:0,
-path:dwr.engine._pathToDwrServlet,
 preHooks:[],
 postHooks:[],
-timeout:0,
-windowName:window.name
+timeout:dwr.engine._pollTimeout
 };
 dwr.engine.batch.populateHeadersAndAttributes(batch);
 return batch;
@@ -2187,10 +2265,10 @@ stopAt = args.length;
 if (dwr.engine._singleShot) dwr.engine.batch.merge(batch, callData);
 batch.handlers[batch.map.callCount] = {
 callback:callData.callbackHandler || callData.callback,
-callbackArg:callData.callbackArg || callData.arg || null,
+callbackArg:callData.callbackArg || callData.arg,
 callbackScope:callData.callbackScope || callData.scope || window,
 exceptionHandler:callData.exceptionHandler,
-exceptionArg:callData.exceptionArg || callData.arg || null,
+exceptionArg:callData.exceptionArg || callData.arg,
 exceptionScope:callData.exceptionScope || callData.scope || window,
 errorHandler:callData.errorHandler
 };
@@ -2254,7 +2332,6 @@ batch.map.instanceId = dwr.engine._instanceId;
 
 batch.map.page = encodeURIComponent(window.location.pathname + window.location.search);
 batch.map.scriptSessionId = dwr.engine._scriptSessionId;
-batch.map.windowName = window.name;
 
 for (var i = 0; i < batch.preHooks.length; i++) {
 batch.preHooks[i]();
@@ -2371,7 +2448,10 @@ if (batch.handlers[i].completed === true) {
 repliesReceived++;
 }
 }
-if (repliesReceived < batch.map.callCount) {
+if (repliesReceived == 0 && dwr.engine._queuedBatchException) {
+dwr.engine._handleError(batch, dwr.engine._queuedBatchException);
+dwr.engine._queuedBatchException = null;
+} else if (repliesReceived < batch.map.callCount) {
 dwr.engine._handleError(batch, { name:"dwr.engine.incompleteReply", message:"Incomplete reply from server" });
 }
 }
@@ -2501,7 +2581,7 @@ dwr.hub = {
 
 
 publish:function(topicName, data) {
-dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'publish', topicName, data, {});
+dwr.engine._execute(null, '__System', 'publish', topicName, data, {});
 },
 
 
@@ -2520,7 +2600,7 @@ callback:callback,
 scope:scope,
 subscriberData:subscriberData
 };
-dwr.engine._execute(dwr.engine._pathToDwrServlet, '__System', 'subscribe', topicName, subscription, {});
+dwr.engine._execute(null, '__System', 'subscribe', topicName, subscription, {});
 return subscription;
 },
 
@@ -2620,7 +2700,7 @@ region.sort[index].descending = false;
 }
 if (!region.query) region.query = {};
 
-return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'viewRegion', [ this.storeId, region, this.listener, callbackObj ]);
+return dwr.engine._execute(null, '__Data', 'viewRegion', [ this.storeId, region, this.listener, callbackObj ]);
 };
 
 
@@ -2629,7 +2709,7 @@ return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'viewRegion',
 
 
 dwr.data.Cache.prototype.viewItem = function(itemId, callbackObj) {
-return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'viewItem', [ this.storeId, itemId, this.listener, callbackObj ]);
+return dwr.engine._execute(null, '__Data', 'viewItem', [ this.storeId, itemId, this.listener, callbackObj ]);
 };
 
 
@@ -2638,7 +2718,7 @@ return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'viewItem', [
 
 dwr.data.Cache.prototype.unsubscribe = function(callbackObj) {
 if (this.listener) {
-return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'unsubscribe', [ this.storeId, this.listener, callbackObj ]);
+return dwr.engine._execute(null, '__Data', 'unsubscribe', [ this.storeId, this.listener, callbackObj ]);
 }
 };
 
@@ -2648,7 +2728,7 @@ return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'unsubscribe'
 
 
 dwr.data.Cache.prototype.update = function(items, callbackObj) {
-return dwr.engine._execute(dwr.engine._pathToDwrServlet, '__Data', 'update', [ this.storeId, items, callbackObj ]);
+return dwr.engine._execute(null, '__Data', 'update', [ this.storeId, items, callbackObj ]);
 };
 
 })();

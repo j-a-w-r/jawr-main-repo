@@ -68,7 +68,7 @@ public class MainPageTest extends AbstractDwrPageTest {
 		assertEquals(2, scripts.size());
 		HtmlScript script = scripts.get(0);
 		assertEquals(
-				getUrlPrefix()+"/jawr/N1702504798/bundles/global.js",
+				getUrlPrefix()+"/jawr/826075590/bundles/global.js",
 				script.getSrcAttribute());
 		script = scripts.get(1);
 		assertEquals(
