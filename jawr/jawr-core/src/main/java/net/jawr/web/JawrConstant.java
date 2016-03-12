@@ -317,4 +317,25 @@ public class JawrConstant {
 	/** The JAWR config hashcode property name */
 	public static final String JAWR_CONFIG_HASHCODE = "jawr.config.hashcode";
 
+	/** The Sass generator property name. */
+	public static final String SASS_GENERATOR_TYPE = "jawr.css.sass.generator";
+
+	/** The Sass Vaadin generator name. */
+	public static final String SASS_GENERATOR_VAADIN = "vaadin";
+
+	/** The Sass Ruby generator name. */
+	public static final String SASS_GENERATOR_RUBY = "ruby";
+
+	/** The Sass generator URL mode property name */
+	public static final String SASS_GENERATOR_URL_MODE = "jawr.css.sass.generator.urlMode";
+
+	/** The absolute URL mode */
+	public static final String SASS_GENERATOR_ABSOLUTE_URL_MODE = "absolute";
+
+	/** The relative URL mode */
+	public static final String SASS_GENERATOR_RELATIVE_URL_MODE = "relative";
+
+	/** The mixed URL mode */
+	public static final String SASS_GENERATOR_MIXED_URL_MODE = "mixed";
+
 }

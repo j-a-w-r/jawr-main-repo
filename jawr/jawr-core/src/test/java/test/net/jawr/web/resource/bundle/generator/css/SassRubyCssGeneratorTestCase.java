@@ -1,6 +1,7 @@
 package test.net.jawr.web.resource.bundle.generator.css;
 
-import static net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassVaadinGenerator.SASS_GENERATOR_DEFAULT_URL_MODE;
+import static net.jawr.web.JawrConstant.*;
+import static net.jawr.web.resource.bundle.generator.css.sass.ruby.SassRubyGenerator.*;
 import static org.mockito.Matchers.anyString;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +44,7 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
-import net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassVaadinGenerator;
+import net.jawr.web.resource.bundle.generator.css.sass.ruby.SassRubyGenerator;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -51,11 +52,11 @@ import test.net.jawr.web.FileUtils;
 import test.net.jawr.web.servlet.mock.MockServletContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SassVaadinCssGeneratorTestCase {
+public class SassRubyCssGeneratorTestCase {
 
-	private static String WORK_DIR = "workDirSass";
+	private static String WORK_DIR = "workDirSassRuby";
 
-	private SassVaadinGenerator generator;
+	private SassRubyGenerator generator;
 
 	@Mock
 	private JawrConfig config;
@@ -91,7 +92,7 @@ public class SassVaadinCssGeneratorTestCase {
 		when(config.getContext()).thenReturn(servletContext);
 		when(config.getResourceCharset()).thenReturn(Charset.forName("UTF-8"));
 		when(config.getServletMapping()).thenReturn("/css");
-		when(config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE))
+		when(config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_ABSOLUTE_URL_MODE))
 				.thenReturn(SASS_GENERATOR_DEFAULT_URL_MODE);
 
 		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:"))).thenReturn(true);
@@ -103,8 +104,7 @@ public class SassVaadinCssGeneratorTestCase {
 		when(bundle.getFilePathMappings()).thenReturn(filePathMappings);
 
 		// GeneratorRegistry generatorRegistry =
-		// addGeneratorRegistryToConfig(config, JawrConstant.CSS_TYPE);
-		generator = new SassVaadinGenerator();
+		generator = new SassRubyGenerator();
 		FileUtils.clearDirectory(FileUtils.getClasspathRootDir() + File.separator + WORK_DIR);
 		FileUtils.createDir(WORK_DIR);
 
@@ -194,7 +194,7 @@ public class SassVaadinCssGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/functions_expected.css"),
+		assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/functions_expected.css"),
 				writer.getBuffer().toString());
 	}
 
@@ -212,7 +212,7 @@ public class SassVaadinCssGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/imports_expected.css"),
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/imports_expected.css"),
 				writer.getBuffer().toString());
 
 		assertEquals(2, filePathMappings.size());
@@ -226,7 +226,7 @@ public class SassVaadinCssGeneratorTestCase {
 		rd = generator.createResource(ctx);
 		writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/imports_expected.css"),
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/imports_expected.css"),
 				writer.getBuffer().toString());
 
 	}
@@ -257,7 +257,7 @@ public class SassVaadinCssGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/imports_updated_expected.css"),
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/imports_updated_expected.css"),
 				writer.getBuffer().toString());
 
 		assertEquals(3, filePathMappings.size());
@@ -284,7 +284,7 @@ public class SassVaadinCssGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/mixins_expected.css"),
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/mixins_expected.css"),
 				writer.getBuffer().toString());
 	}
 
@@ -305,29 +305,16 @@ public class SassVaadinCssGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/parent-import-expected.css"),
-				writer.getBuffer().toString());
-	}
-
-	@Test
-	public void testSassCompass() throws Exception {
-
-		when(ctx.getPath()).thenReturn("/compass-test/compass-import.scss");
-		when(rsReaderHandler.getResourceAsStream(anyString()))
-				.thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
-
-		ctx.setProcessingBundle(true);
-		Reader rd = generator.createResource(ctx);
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/compass-import-expected.css"),
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/parent-import-expected.css"),
 				writer.getBuffer().toString());
 	}
 
 	@Test
 	public void testSassCompassWithUrlRelativeMode() throws Exception {
 
-		when(config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE)).thenReturn("RELATIVE");
+		when(config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE)).thenReturn(SASS_GENERATOR_RELATIVE_URL_MODE);
+		generator.setConfig(config);
+		
 		when(ctx.getPath()).thenReturn("/compass-test/compass-import.scss");
 		when(rsReaderHandler.getResourceAsStream(anyString()))
 				.thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
@@ -336,7 +323,7 @@ public class SassVaadinCssGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
-		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/compass-import-expected.css"),
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/compass-import-expected.css"),
 				writer.getBuffer().toString());
 	}
 
@@ -355,7 +342,7 @@ public class SassVaadinCssGeneratorTestCase {
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
 		Assert.assertEquals(
-				FileUtils.readClassPathFile("generator/css/sass/expected/vaadin/compass-import-absolute-url-expected.css"),
+				FileUtils.readClassPathFile("generator/css/sass/expected/ruby/compass-import-absolute-url-expected.css"),
 				writer.getBuffer().toString());
 	}
 

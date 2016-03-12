@@ -64,6 +64,25 @@
 			<artifactId>vaadin-sass-compiler</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.jruby</groupId>
+			<artifactId>jruby-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jruby</groupId>
+			<artifactId>jruby-stdlib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.darrinholst</groupId>
+			<artifactId>sass-java-gems</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jruby</groupId>
+					<artifactId>jruby-complete</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-maven-plugin</artifactId>
 			<version>${jetty.version}</version>

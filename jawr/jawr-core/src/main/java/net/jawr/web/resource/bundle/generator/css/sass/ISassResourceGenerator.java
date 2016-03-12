@@ -11,7 +11,7 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle.generator.css.sass.vaadin;
+package net.jawr.web.resource.bundle.generator.css.sass;
 
 /**
  * The interface for the SASS resource generator

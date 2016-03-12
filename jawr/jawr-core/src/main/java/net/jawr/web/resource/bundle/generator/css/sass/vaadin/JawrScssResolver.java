@@ -25,6 +25,7 @@ import com.vaadin.sass.internal.resolver.AbstractResolver;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
+import net.jawr.web.resource.bundle.generator.css.sass.ISassResourceGenerator;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.mappings.FilePathMappingUtils;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -45,8 +46,8 @@ public class JawrScssResolver extends AbstractResolver {
 	/** The bundle */
 	private JoinableResourceBundle bundle;
 
-	/** The parent SCSS stylesheet */
-	private JawrScssStylesheet parent;
+	/** The linked resources */
+	private List<FilePathMapping> linkedResources = new ArrayList<>();
 
 	/**
 	 * Constructor
@@ -147,25 +148,22 @@ public class JawrScssResolver extends AbstractResolver {
 	}
 
 	/**
-	 * Sets the parent stylesheet
+	 * Returns the list of linked resources
 	 * 
-	 * @param sheet
-	 *            the Scss stylesheet
+	 * @return the list of linked resources
 	 */
-	public void setParentScssStyleSheet(JawrScssStylesheet sheet) {
-		this.parent = sheet;
+	public List<FilePathMapping> getLinkedResources() {
+		return linkedResources;
 	}
 
 	/**
-	 * Adds a linked resource to the less source
+	 * Adds a linked resource to the sass source
 	 * 
 	 * @param linkedResource
 	 *            the linked resource to add
 	 */
-	private void addLinkedResource(FilePathMapping linkedResource) {
-		if (parent != null) {
-			parent.addLinkedResource(linkedResource);
-		}
+	public void addLinkedResource(FilePathMapping linkedResource) {
+		linkedResources.add(linkedResource);
 	}
 
 }

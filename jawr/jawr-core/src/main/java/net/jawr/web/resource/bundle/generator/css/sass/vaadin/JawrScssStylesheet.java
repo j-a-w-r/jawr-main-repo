@@ -16,9 +16,7 @@ package net.jawr.web.resource.bundle.generator.css.sass.vaadin;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -50,9 +48,6 @@ public class JawrScssStylesheet extends ScssStylesheet {
 
 	/** The stylesheet resolver */
 	private ScssStylesheetResolver resolver;
-
-	/** The linked resources */
-	private List<FilePathMapping> linkedResources = new ArrayList<>();
 
 	/**
 	 * Constructor
@@ -86,7 +81,7 @@ public class JawrScssStylesheet extends ScssStylesheet {
 
 		FilePathMapping fMapping = scssResolver.getFilePathMapping(path);
 		if(fMapping != null){
-			linkedResources.add(fMapping);
+			scssResolver.addLinkedResource(fMapping);
 			if (bundle != null) {
 				bundle.getFilePathMappings().add(
 						new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified()));
@@ -125,25 +120,6 @@ public class JawrScssStylesheet extends ScssStylesheet {
 	public String getFileName() {
 
 		return path;
-	}
-
-	/**
-	 * Returns the list of linked resources
-	 * 
-	 * @return the list of linked resources
-	 */
-	public List<FilePathMapping> getLinkedResources() {
-		return linkedResources;
-	}
-
-	/**
-	 * Adds a linked resource to the less source
-	 * 
-	 * @param linkedResource
-	 *            the linked resource to add
-	 */
-	public void addLinkedResource(FilePathMapping linkedResource) {
-		linkedResources.add(linkedResource);
 	}
 
 }

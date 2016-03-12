@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2014 Jordi Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -12,6 +12,10 @@
  * and limitations under the License.
  */
 package net.jawr.web.resource.bundle.generator;
+
+import static net.jawr.web.JawrConstant.SASS_GENERATOR_RUBY;
+import static net.jawr.web.JawrConstant.SASS_GENERATOR_TYPE;
+import static net.jawr.web.JawrConstant.SASS_GENERATOR_VAADIN;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -27,12 +31,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
-import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathBinaryResourceGenerator;
+import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsCssGenerator;
@@ -41,7 +48,8 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorBi
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCssGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorJSGenerator;
 import net.jawr.web.resource.bundle.generator.css.less.LessCssGenerator;
-import net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassGenerator;
+import net.jawr.web.resource.bundle.generator.css.sass.ruby.SassRubyGenerator;
+import net.jawr.web.resource.bundle.generator.css.sass.vaadin.SassVaadinGenerator;
 import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
@@ -59,9 +67,6 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
 import net.jawr.web.servlet.JawrRequestHandler;
 import net.jawr.web.util.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registry for resource generators, which create scripts or CSS data
@@ -165,7 +170,12 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public GeneratorRegistry(String resourceType) {
 		this.resourceType = resourceType;
+	}
 
+	/**
+	 * Initialize the common generators
+	 */
+	protected void initCommonGenerators() {
 		commonGenerators.put(new PrefixedPathResolver(MESSAGE_BUNDLE_PREFIX),
 				ResourceBundleMessagesGenerator.class);
 		Class<?> classPathGeneratorClass = null;
@@ -225,9 +235,21 @@ public class GeneratorRegistry implements Serializable {
 			commonGenerators.put(
 					new SuffixedPathResolver(LESS_GENERATOR_SUFFIX),
 					LessCssGenerator.class);
-			commonGenerators.put(
-					new SuffixedPathResolver(SASS_GENERATOR_SUFFIX),
-					SassGenerator.class);
+			
+			String sassGenerator = config.getProperty(SASS_GENERATOR_TYPE, SASS_GENERATOR_VAADIN);
+			if(!sassGenerator.equals(SASS_GENERATOR_VAADIN) && !sassGenerator.equals(SASS_GENERATOR_RUBY)){
+				throw new BundlingProcessException("The value '"+sassGenerator+"' is not allowed for property '"+SASS_GENERATOR_TYPE+"'. Please check your configuration.");
+			}
+			if(sassGenerator.equals(SASS_GENERATOR_VAADIN)){
+				commonGenerators.put(
+						new SuffixedPathResolver(SASS_GENERATOR_SUFFIX),
+						SassVaadinGenerator.class);
+			}else{
+				commonGenerators.put(
+						new SuffixedPathResolver(SASS_GENERATOR_SUFFIX),
+						SassRubyGenerator.class);	
+			}
+			
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
@@ -245,6 +267,7 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public void setConfig(JawrConfig config) {
 		this.config = config;
+		initCommonGenerators();
 	}
 
 	/**

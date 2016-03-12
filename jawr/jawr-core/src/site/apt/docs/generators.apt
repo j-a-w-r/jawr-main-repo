@@ -219,12 +219,14 @@ Jawr Generators
 	
 	[]
 
-{<<SASS generator>>}
+
+{<<SASS Ruby generator>>}
 
 	* <<Suffix>>: .scss
 
 	This one will handle SASS resources to compile them to plain CSS resources.\
-	This generator is based on vaadin saas compiler : {{https://github.com/vaadin/sass-compiler}}.
+	This generator is based on Ruby sass-gems. It is direct implementation of {{{http://sass-lang.com/}sass-lang}}
+	based on the {{{https://github.com/sass/sass}Ruby implementation}}.
 	
 	Here is an example of mapping :
 
@@ -232,18 +234,49 @@ Jawr Generators
 	jawr.css.bundle.styles.mappings=/css/foo.scss,/css/bar.scss	
 +------------------------------------------+	
 
-	To be able to use the SASS generator, you need to add vaadin saas compiler library in you classpath.
-	For maven user, you'll need to add a dependency in your pom.xml :
+	To be able to use the SASS Ruby generator, you need to set the property *jawr.css.sass.generator* as follow :
+	
++------------------------------------------+
+	jawr.css.sass.generator=ruby	
++------------------------------------------+	
+	
+	An you'll need also to add JRuby and sass-gems in your classpath.
+	For maven users, you'll need to add the following dependencies in your pom.xml :
       			
 +------------------------------------------+
-		<dependency>
-			<groupId>com.vaadin</groupId>
-        	<artifactId>vaadin-sass-compiler</artifactId>
-        	<version>0.9.12</version>
-        </dependency>
+			<dependency>
+				<groupId>org.jruby</groupId>
+				<artifactId>jruby-core</artifactId>
+				<version>9.0.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jruby</groupId>
+				<artifactId>jruby-stdlib</artifactId>
+				<version>9.0.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.darrinholst</groupId>
+				<artifactId>sass-java-gems</artifactId>
+				<version>3.4.4.3</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.jruby</groupId>
+						<artifactId>jruby-complete</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 
 +------------------------------------------+
+
+	* <<Configuration properties>>
 	
+	Jawr provides the following properties to configure the Sass Ruby generator. 
+
+*---------------+---------+--------------+
+| <<Property name>> | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+
+| jawr.css.sass.generator.urlMode  | Defines the way the resource reference (image, font) will be handled. Possible values : "absolute" or "relative" |  absolute   |
+*---------------*---------*--------------+
 
 	Known limitation :
 	
@@ -256,6 +289,58 @@ Jawr Generators
 	 
 	[]
 	
+{<<SASS Vaadin generator>>}
+
+	* <<Suffix>>: .scss
+
+	This one will handle SASS resources to compile them to plain CSS resources.\
+	Jawr provides 2 types of Sass generator. One based on {{{https://github.com/vaadin/sass-compiler}Vaadin sass compiler}}, the other based one the sass-gems ruby.
+	
+	Here is an example of Sass resource mapping :
+
++------------------------------------------+
+	jawr.css.bundle.styles.mappings=/css/foo.scss,/css/bar.scss	
++------------------------------------------+	
+
+	To be able to use the SASS Vaadin generator, you need to set the property *jawr.css.sass.generator* as follow :
+	
++------------------------------------------+
+	jawr.css.sass.generator=vaadin	
++------------------------------------------+	
+
+	And you need to add vaadin sass compiler library in you classpath.
+	For maven user, you'll need to add a dependency in your pom.xml :
+      			
++------------------------------------------+
+		<dependency>
+			<groupId>com.vaadin</groupId>
+        	<artifactId>vaadin-sass-compiler</artifactId>
+        	<version>0.9.12</version>
+        </dependency>
+
++------------------------------------------+
+	
+	* <<Configuration properties>>
+	
+	Jawr provides the following properties to configure the Sass Vaadin generator. 
+
+*---------------+---------+--------------+
+| <<Property name>> | <<Purpose>>      | <<Default value>>  | 
+*---------------+---------+--------------+
+| jawr.css.sass.generator.urlMode  | Defines the way the resource reference (image, font) will be handled. Possible values : "absolute", "mixed" or "relative" |  mixed   |
+*---------------*---------*--------------+
+
+	Known limitation :
+	
+	It's not possible to use sass resource from classpath.\
+	The below mapping will not work :
+	 
++------------------------------------------+
+	jawr.css.bundle.styles.mappings=jar:/css/foo.scss,jar:/css/bar.scss	
++------------------------------------------+
+	 
+	[]
+
 {<<CofeeScript generator>>}
 
 	* <<Suffix>>: .coffee
