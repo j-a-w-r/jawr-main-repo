@@ -23,6 +23,16 @@ Introduction
 	Now Jawr checks also if the content of the files associated to the bundles have changed.
 	This means that if a file content changed Jawr will rebuild the bundles.
 	
+* Enabling "Smart bundling"
+	 
+	By default, the smart bundling feature is activated.
+	The property <<jawr.use.smart.bundling>> can be used to unable or disable it.
+	
++------------------------------------------+
+	jawr.use.smart.bundling=true #This will enable the smaty bundling feature
++------------------------------------------+
+	
+	
 * Smart bundling with automatic bundle processing when application is started
 	 
 	If you want to use the automatic bundle processing when your application is started, you have update your Jawr configuration file like below :
