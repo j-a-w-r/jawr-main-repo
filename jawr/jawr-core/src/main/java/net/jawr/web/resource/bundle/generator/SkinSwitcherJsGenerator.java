@@ -32,7 +32,7 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 /**
- * This generator defines the generator which generates the themeSwicther
+ * This generator defines the generator which generates the themeSwitcher
  * javascript file.
  * 
  * @author Ibrahim Chaehoi

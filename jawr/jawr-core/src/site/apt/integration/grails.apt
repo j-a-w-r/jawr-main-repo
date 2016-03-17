@@ -6,7 +6,7 @@
 
 Jawr plugin for Grails
 
-	For a Grails user, it is easy to instal Jawr and start using it. The steps to follow are to install the plugin, configure it with the same 
+	For a Grails user, it is easy to install Jawr and start using it. The steps to follow are to install the plugin, configure it with the same 
 	properties format used in the standard version, and add a couple of URL mapping statements.     
 	
 =====================
@@ -44,7 +44,7 @@ Jawr plugin for Grails
 	Keep in mind that there are a few property keys that don't apply when using 
 	Jawr with Grails. Those are: 
 	
-	* <<jawr.config.reload.interval>>: The Jawr servlet can be configured to listen to changes to the .properies file to reload it when it changes. 
+	* <<jawr.config.reload.interval>>: The Jawr servlet can be configured to listen to changes to the .properties file to reload it when it changes. 
 	In Grails, Jawr will instead listen to changes to the Config.groovy script to reload its configuration. This happens automatically when you 
 	start grails in development mode (but keep in mind that the changes are applied after you refresh a page in your browser). 
 	
@@ -68,7 +68,7 @@ Jawr plugin for Grails
 	To enable the Jawr Binary servlet, which handle images and fonts, you need to define one of the following property :
 		* jawr.img.mapping
 		* jawr.css.classpath.handle.image
-		* jawr.binay.* (Any property which starts with jawr.binary)
+		* jawr.binary.* (Any property which starts with jawr.binary)
 		
 ** URL mapping
 

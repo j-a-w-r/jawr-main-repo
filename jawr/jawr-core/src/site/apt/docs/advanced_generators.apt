@@ -178,7 +178,7 @@ Jawr Advanced Generators
 [../images/generator/jawr_resourceBrowserGenerator.png] Resource Browser interface
 	
 	** <<net.jawr.web.resource.handler.reader.ResourceBrowser>>\
-	This interface is implemented by the generators, which are able to handle hierachical generated resource search.
+	This interface is implemented by the generators, which are able to handle hierarchical generated resource search.
 	
 	
 +------------------------------------------+

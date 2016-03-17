@@ -34,7 +34,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
       </bean>
       
       <!-- CSS controller -->
-      <bean id="jawrCSSController"  parent="jawrBase">
+      <bean id="jawrCSSController" parent="jawrBase" depends-on="jawrBinaryController">
       	<property name="type" value="css" />
       </bean>
       

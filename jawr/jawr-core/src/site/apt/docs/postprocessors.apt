@@ -12,7 +12,7 @@ Jawr Postprocessors
 	have been joined into it. \ 
 	
 	Normally, you won't need to worry about postprocessors, since Jawr will use them automatically: javascript will be minified using JSMin, and the 
-	lincense comments (if any) will be added afterwards. CSS files will also be minified ,license comments will be added and their image URLs will 
+	license comments (if any) will be added afterwards. CSS files will also be minified ,license comments will be added and their image URLs will 
 	be rewritten so they keep working from within a bundle. 
 	But there are countless combinations you can use, plus you may create and use your own postprocessors, so here is how to configure the filter chain 
 	applied to files and bundles. 
@@ -28,7 +28,7 @@ Jawr Postprocessors
 	jawr.css.bundle.factory.filepostprocessors=csspathrewriter
 +------------------------------------------+
 	
-	As you see, we specify a couple of bundle posprocessors for both js and css resources, plus a file postprocessor for css files. We didn't specify 
+	As you see, we specify a couple of bundle postprocessors for both js and css resources, plus a file postprocessor for css files. We didn't specify 
 	any file postprocessor for javascript because, at the time of writing, there is none available yet. \ 
 	Note that the previous example configuration matches the default behavior os Jawr, so it actually makes no difference wether you include it in your 
 	descriptor or not. You would set these parameters only to change the default behavior, like for example, to remove minification:  
@@ -74,14 +74,14 @@ Jawr Postprocessors
 	public StringBuffer postProcessBundle(BundleProcessingStatus status,StringBuffer bundleString);
 +------------------------------------------+	
 
-	The first parameter is an object which encapsulates the status of a bundling process and also gives you acces to Jawr configuration plus other 
+	The first parameter is an object which encapsulates the status of a bundling process and also gives you access to Jawr configuration plus other 
 	data which may be useful under certain circumstances. Most of the time, though, you won't need to use it at all. 
 	
 	The bundleString StringBuffer will contain different data depending on wether the postprocessor is used as a bundle postprocessor or a file postprocessor. In the
 	first case, it will contain the text for the whole bundle, while in the latter case it will contain the text for just a single item in the bundle. 
 	
 	Finally, the return StringBuffer should contain the bundleString data after it is modified by the postprocessor. As an example, here is an 
-	implementation of a postprocessor which we would use to wrap all our scripts in a function that is inmediately executed: 
+	implementation of a postprocessor which we would use to wrap all our scripts in a function that is immediately executed: 
 		
 +------------------------------------------+
 package net.jawr.test;
@@ -206,7 +206,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	
 	
 	
-	This processor uses {{{http://www.crockford.com/javascript/jsmin.html}Douglas Crockford's JSMin}}  minificator. It will remove any comments in code and unnecesary whitespace in a very safe manner.  
+	This processor uses {{{http://www.crockford.com/javascript/jsmin.html}Douglas Crockford's JSMin}}  minificator. It will remove any comments in code and unnecessary whitespace in a very safe manner.  
 
 ***{<<Uglify>>}
 	
@@ -224,7 +224,7 @@ jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
 	The default JS engine used in Jawr is the Rhino javascript engine. You can also use Nashorn engine since Java 8.
 	Please check {{{../tutorial/howToSetJsEngine.html}the tutorial about the use of JS engine}} for more info. 
 	To use the Rhino engine, you'll have to add it to your project classpath to be able to us this postprocessor.
-	For maven user, you can add the following snipset configuration to your pom.xml :
+	For maven user, you can add the following snippet configuration to your pom.xml :
 	
 +-------------------------------+
 

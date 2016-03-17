@@ -30,19 +30,19 @@
 			</li> 
 			
 			<li> <strong>Proxy-friendly gzip support</strong>: For each bundle there are two URLs that point to a gzipped and a regular version of the resource. Since the URLs 
-			are be generated within a JSP, the request headers are analyzed to decide if the browser will support gzipping and the appropiate URL is written out. 
+			are be generated within a JSP, the request headers are analyzed to decide if the browser will support gzipping and the appropriate URL is written out. 
 			With this system, caching proxies will not be a problem since it works around known Internet Explorer problems with the VARY header.</li> 
 			
 			
 			<li> <strong>Caching enforcement</strong>: Jawr will try its best to force your clients to cache the resources. If a browser asks if a file changed, a 304 (not modified) 
 			header is sent back with no content. On the other hand, with Jawr you will be 100% sure that new versions of your bundles are downloaded by all 
 			clients. Every URL to your resources will include an automatically generated, content-based prefix that changes automatically whenever a 
-			resurce is updated. Once you deploy a new version, the URL to the bundle will change as well so it will be impossible that a client uses an 
+			resource is updated. Once you deploy a new version, the URL to the bundle will change as well so it will be impossible that a client uses an 
 			older, cached version.</li> 
 			
 			
-			<li> <strong>Flexible bundling scheme</strong>: Choose which files go into which bundle, and in which order. Choose wether you want a bundle minified or not. 
-			Choose wether a bundle will be used only in development mode (for adding things such as console loggers). Create partially minified bundles. 
+			<li> <strong>Flexible bundling scheme</strong>: Choose which files go into which bundle, and in which order. Choose whether you want a bundle minified or not. 
+			Choose whether a bundle will be used only in development mode (for adding things such as console loggers). Create partially minified bundles. 
 			Create bundles which are automatically added within an Internet Explorer conditional comment.  
 			All with a very easy to use configuration system. 
 			 <a href="./docs/custom_bundles.html" > Learn more</a>. </li> 

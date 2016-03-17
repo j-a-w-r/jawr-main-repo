@@ -240,7 +240,7 @@ p {
 					YAHOO.util.Event.addListener("localeMsgButton", "click",
 							displayLocaleMsg);
 
-					// Initialize the theme swicther select box
+					// Initialize the theme switcher select box
 					var themeSwitcher = document
 							.getElementById("themeSwitcher");
 					themeSwitcher.value = JAWR.skin.getCurrentSkin();

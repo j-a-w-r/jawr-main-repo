@@ -107,7 +107,7 @@ public ConfigPropertiesAugmenter(Properties configProperties,Set privateConfigPr
 	 jawr.js.bundle.one.mappings=/js/someFile.js, /js/someOtherFile.js, /javascript/userProvidedScript.js
 +------------------------------------------+
 
-	In this example the user augments the mappings of a framework-provided bundle with his own content, thus reduceing the total number of 
+	In this example the user augments the mappings of a framework-provided bundle with his own content, thus reducing the total number of 
 	required downloads to access his application. 
 	
 	The augmentable properties are the following: 
@@ -239,7 +239,7 @@ boolean useGzip = RendererRequestUtils.isRequestGzippable(request,rsHandler.getC
 		[]
 		
 	And this basically covers it. If you want a sample, check out the <<net.jawr.web.taglib>> package sources
-	(Jawr sources are available for download and also the SVN is publicly accesible). In this package are 
+	(Jawr sources are available for download and also the SVN is publicly accessible). In this package are 
 	all the current implementations of tag libraries used by Jawr, so 
 	you can probably get ideas from there.  
 		

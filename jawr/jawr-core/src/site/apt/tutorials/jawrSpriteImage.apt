@@ -13,7 +13,7 @@ Introduction
 	The reference documentation for <<smartsprites>>, containing the different annotations can be found on the {{{http://csssprites.org/}smartsprites}} project site.\ 
 	
 	It is important to note that the sprite generation feature works only in production mode. \
-	Jawr will not generate the reference the image sprites in the CSS files if you are in debug mode.
+	Jawr will not generate the referenced image sprites in the CSS files if you are in debug mode.
 	
 * Requirements
 
@@ -21,8 +21,8 @@ Introduction
 
 * How it works ?
 	
-	Smartsprites is a tool, which helps the developper to generate sprites from special annotations in the CSS files.
-	When the user enable the sprite generation feature, Jawr will first let smartsprites process all the CSS files available in the CSS bundles
+	Smartsprites is a tool, which helps the developer to generate sprites from special annotations in the CSS files.
+	When the user enables the sprite generation feature, Jawr will first let smartsprites process all the CSS files available in the CSS bundles
 	to generate the CSS sprites, and then it will process the CSS files to generate the bundles.
 		
 * Set up Jawr in your project
@@ -44,14 +44,14 @@ Introduction
 	<dependency>
 		<groupId>com.carrotsearch</groupId>
 		<artifactId>smartsprites</artifactId>
-		<version>0.2.10</version>
+		<version>0.2.12</version>
 	</dependency>
 +------------------------------------------+
 
 * Configure instances of the Jawr Servlet
 
 	You must configure Jawr to use the CSS and the image servlets. \
-	Please check the {{{./howToUseJawrToServeImage.html}tutorial}} on how set up jawr to serve image.  
+	Please check the {{{./howToUseJawrToServeImage.html}tutorial}} on how to setup jawr to serve images.  
 	
 * Jawr configuration file
 
@@ -63,7 +63,7 @@ Introduction
 	jawr.css.bundle.factory.global.preprocessors=smartsprites
 +------------------------------------------+
 	 
-	With this property set, when you will start your application in production mode, jawr will generate the image sprite,
+	With this property set, when you start your application in production mode, jawr will generate the image sprite,
 	and these image sprites will be referenced in the bundles. 
 	
 	

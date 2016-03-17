@@ -278,7 +278,7 @@ public class DWRBeanGenerator extends AbstractJavascriptGenerator {
 
 
 	/**
-	 * Gets the appropiate path replacement string for a DWR container
+	 * Gets the appropriate path replacement string for a DWR container
 	 * @param container
 	 * @return
 	 */

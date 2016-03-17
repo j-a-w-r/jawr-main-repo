@@ -18,7 +18,7 @@ Debug and production modes
 =====================
 
 	While running in production mode, you may view your bundles in debug mode by using jawr.debug.overrideKey.  
-	This can be very helpfull when you need to debug issues in a production environment.
+	This can be very helpful when you need to debug issues in a production environment.
 	Simply append overrideKey=(jawr.debug.overrideKey value) to the end of the url.  Now your production bundles 
 	will be exploded; but only for that request.  You may also view individual css and js files by adding the 
 	overrideKey to the end of the request.
@@ -36,7 +36,7 @@ Debug and production modes
 
 	
 	The main difference between production and development modes is that bundle files are not served directly. Rather, each of the components in a bundle 
-	will be served sepparately in the same order that it would be included in the bundle. To understand this, we need an example. Imagine we had a very 
+	will be served separately in the same order that it would be included in the bundle. To understand this, we need an example. Imagine we had a very 
 	simple directory structure like this one: 	
 	
 [../images/modes/sample_dirs.png] A sample directory structure

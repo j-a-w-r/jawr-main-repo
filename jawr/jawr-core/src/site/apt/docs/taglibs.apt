@@ -101,7 +101,7 @@ Jawr JSP tag libraries
 
 	This might be unexpected: a link to the global bundle was written first, even though no specific tag invoked it. That is precisely what global bundles 
 	are about: they will always be included whenever you use a Jawr tag in a page, before any other bundle. This way, commonly used libraries are 
-	implicitly availabe everywhere. \ 
+	implicitly available everywhere. \ 
 	
 	Although we wrote two tags in the JSP with paths corresponding to the foo bundle, only one script link is written out. It would be pointless to link 
 	twice to the same resource in a page, so Jawr will only write each different link once. \ 
@@ -160,7 +160,7 @@ Jawr JSP tag libraries
 
 	* Alternate / title attribute
 	
-		Jawr allows you to define alternate stylesheets and to set the title attibute of your CSS links.
+		Jawr allows you to define alternate stylesheets and to set the title attribute of your CSS links.
 		
 +------------------------------------------+
 
@@ -206,14 +206,14 @@ Jawr JSP tag libraries
 	
 +------------------------------------------+
 	
-	Jawr provides also a Javascript generator <<skinSwitcher>>, whose defined a function to swicth from one skin to another.\
+	Jawr provides also a Javascript generator <<skinSwitcher>>, whose defined a function to switch from one skin to another.\
 	You need to add the skinSwitcher to a JS bundle and then you will be able to use the following function.
 	
 +------------------------------------------+
 	JAWR.skin.switchToStyle("aqua"); 
 +------------------------------------------+
 	 
-	The above code snipset will set the current user skin to "aqua" in the cookie and it will switch the current skin to "aqua".\ 
+	The above code snippet will set the current user skin to "aqua" in the cookie and it will switch the current skin to "aqua".\ 
 	For more information about the <<skinSwitcher>> generator, please take a look at the {{{./generators.html}generators}} documentation.
 	
 	To sum up:

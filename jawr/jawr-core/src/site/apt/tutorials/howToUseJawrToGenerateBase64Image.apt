@@ -259,7 +259,7 @@ jawr.css.bundle.childTwo.bundlepostprocessors=none
 	Deploy your application to a server.
 	Open the JSP you created with a firefox browser. 
 	If you take a look to the content of the CSS bundle, you should find the data URI reference of your image.
-	You can also check with Firebug that there is no extra HTTP rquest made for your image.
+	You can also check with Firebug that there is no extra HTTP request made for your image.
 	
 	Then open the JSP you created with an IE6 or IE7 browser.
 	If you take a look to the content of the CSS bundle, you should find the MHTML part at the top of your bundle.
