@@ -196,6 +196,7 @@ public class JawrMojo extends AbstractMojo {
 			}else{
 				logger.log(Level.SEVERE, null, ex);
 			}
+			throw new MojoFailureException("JAWR Maven plugin failed: " + ex.getLocalizedMessage());
 		}
 	}
 
