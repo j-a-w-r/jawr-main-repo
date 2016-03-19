@@ -1,6 +1,4 @@
-#Tutorial : Jawr with smartsprites 
-
-Introduction
+How to generate image sprites with Jawr
 ------------
 
 The goal of this tutorial is to explain how to set up Jawr to generate

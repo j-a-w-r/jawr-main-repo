@@ -1,4 +1,4 @@
-Introduction
+How to enable performance logging in Jawr
 ------------
 
 The goal of this tutorial is to enable performance logging in Jawr.  

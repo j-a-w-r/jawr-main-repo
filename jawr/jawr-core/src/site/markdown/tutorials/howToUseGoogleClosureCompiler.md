@@ -1,4 +1,4 @@
-Introduction
+How to use Google closure compiler with Jawr
 ------------
 
 The goal of this tutorial is to explain how to use with Jawr.  

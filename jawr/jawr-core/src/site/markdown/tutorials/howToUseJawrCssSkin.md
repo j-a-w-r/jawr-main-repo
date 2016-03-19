@@ -1,4 +1,4 @@
-Introduction
+How to use Jawr Css skin feature
 ------------
 
 The goal of this tutorial is to explain how to create and use CSS skin

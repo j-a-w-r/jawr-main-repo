@@ -1,7 +1,7 @@
-Introduction
+How to use Jawr with Servlet 3 API
 ------------
 
-### Servlet 3 API
+### Introduction
 
 Since Java EE6, users can define there application using Servlet 3 API.
 This allows in particular to create servlet programmatically by moving

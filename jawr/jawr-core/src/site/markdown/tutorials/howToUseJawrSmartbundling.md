@@ -1,4 +1,4 @@
-Introduction
+How to use Smart bundling feature in Jawr
 ------------
 
 ### Smart bundling feature

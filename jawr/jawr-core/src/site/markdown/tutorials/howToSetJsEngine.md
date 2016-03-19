@@ -1,4 +1,4 @@
-Introduction
+How to setup JS engine in Jawr
 ------------
 
 The goal of this tutorial is to explain how to set JS engine for
