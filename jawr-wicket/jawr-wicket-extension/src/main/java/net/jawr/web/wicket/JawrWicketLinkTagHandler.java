@@ -28,7 +28,7 @@ import org.apache.wicket.util.value.IValueMap;
  * attribute and which are not Wicket specific components and flags these tags
  * (ComponentTag) as modified component. A component resolver
  * (JawrWicketLinkResolver) will later resolve the href and automatically
- * generate the right component wich will be rendered on the page.
+ * generate the right component which will be rendered on the page.
  * <p>
  * 
  * @author Ibrahim Chaehoi

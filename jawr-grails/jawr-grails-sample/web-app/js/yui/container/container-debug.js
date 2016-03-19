@@ -6022,7 +6022,7 @@ version: 2.8.1
         /**
          * Sets up a tab, shift-tab loop between the first and last elements
          * provided. NOTE: Sets up the preventBackTab and preventTabOut KeyListener
-         * instance properties, which are reset everytime this method is invoked.
+         * instance properties, which are reset every time this method is invoked.
          *
          * @method setTabLoop
          * @param {HTMLElement} firstElement
@@ -7673,7 +7673,7 @@ version: 2.8.1
         /**
          * Sets up a tab, shift-tab loop between the first and last elements
          * provided. NOTE: Sets up the preventBackTab and preventTabOut KeyListener
-         * instance properties, which are reset everytime this method is invoked.
+         * instance properties, which are reset every time this method is invoked.
          *
          * @method setTabLoop
          * @param {HTMLElement} firstElement

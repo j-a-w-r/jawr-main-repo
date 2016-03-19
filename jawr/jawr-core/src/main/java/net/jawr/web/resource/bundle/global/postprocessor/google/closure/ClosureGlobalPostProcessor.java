@@ -594,8 +594,8 @@ public class ClosureGlobalPostProcessor extends
 				if(matcher.find()){
 					String dep = matcher.group(1);
 					if(dep != null){
-						List<String> moduleDepdendencies = Arrays.asList(dep.split(MODULE_DEPENDENCIES_SEPARATOR));
-						if(moduleDepdendencies.contains(moduleName)){
+						List<String> moduleDependencies = Arrays.asList(dep.split(MODULE_DEPENDENCIES_SEPARATOR));
+						if(moduleDependencies.contains(moduleName)){
 							break;
 						}
 					}

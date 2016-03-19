@@ -14,7 +14,7 @@ The Jawr servlet
 	servlet to initialize with your application server. \ 
 	
 	For every request, the servlet will make an attempt at forcing the client to keep a resource in cache for as long as possible using response headers. 
-	Also, if a request containt the If-Modified-Since header, the response status is set to 304(not modified) and no content is sent since such header 
+	Also, if a request contains the If-Modified-Since header, the response status is set to 304(not modified) and no content is sent since such header 
 	means that the resource is already cached by the client.  \ 
 	
 	Here is an example configuration of the servlet in a web.xml file: 	

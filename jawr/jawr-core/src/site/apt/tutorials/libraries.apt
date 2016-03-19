@@ -9,7 +9,7 @@ Using popular open source libraries with Jawr
 	 This guide will give you basic guidelines and hint to use popular javascript libraries in your web applications, taking full advantage 
 	 of Jawr. Note that there is no attempt at documenting how any of these libraries work. Please refer to the official documentation of each
 	 library for that. \ 
-	 All the tutorials assume you have succesfully installed Jawr in your web application. If you haven't refer to the manual for installation. \ 
+	 All the tutorials assume you have successfully installed Jawr in your web application. If you haven't refer to the manual for installation. \ 
 	 
 
 * jQuery
@@ -116,7 +116,7 @@ $(function()
 	would be to {{{http://script.aculo.us/downloads}download the script.aculo.us distribution}} which already includes the prototype library. 
 	
 	Create a /js/lib directory at the root of your web application and copy prototype.js there. Prototype must be loaded first in order for 
-	script.aculo.us to work, so what we will do is to create a subdirectory (/js/lib/sriptaculous for instance) and put there the 
+	script.aculo.us to work, so what we will do is to create a subdirectory (/js/lib/scriptaculous for instance) and put there the 
 	script.aculo.us. files. Using a recurring mapping we make sure this way that prototype goes first. Note that for this example we are 
 	including every one of the script.aculo.us components, but keep in mind that in a real application you would only add the ones you were 
 	going to use. 
@@ -135,14 +135,14 @@ $(function()
 	There are possibly better ways to accomplish this but this one is the fastest to implement and will do the trick. 
 	
 	Another thing to keep in mind is that the effects.js file must be loaded before the others, so we will create a .sorting file at 
-	/js/lib/sriptaculous, with the following content: 
+	/js/lib/scriptaculous, with the following content: 
 	
 +------------------------------------------+
 	effects.js
 +------------------------------------------+
 	
 	Now we need to create a license file with the copyright information. Since these libraries are being minified, all comments are removed but 
-	we are required to include the copyright notice in our bundle. To solve this, create a file named <.license> at /js/lib/. Now open protoype.js
+	we are required to include the copyright notice in our bundle. To solve this, create a file named <.license> at /js/lib/. Now open prototype.js
 	and copy and paste the copyright notice to the license file. Do the same with the scriptaculous.js. You should en up with a .license file 
 	containing this text: 
 	
@@ -191,7 +191,7 @@ jawr.js.bundle.lib.mappings=/js/lib/**
 +------------------------------------------+
 	
 	With this mapping, the bundle	with an id of /bundles/lib.js will contain prototype and all the script.aculo.us files, all minified and 
-	with the appropiate licensing info at the top. For a gzip enabled client, the download will be of approximately 50KB, and for a non-gzip enabled 
+	with the appropriate licensing info at the top. For a gzip enabled client, the download will be of approximately 50KB, and for a non-gzip enabled 
 	client the size would be at around 182KB. In your project, the files comprising the bundle will be at around 262KB. 
 	This means you can get up to a 5-1 compression ratio using Jawr. 
 	
@@ -218,13 +218,13 @@ Event.observe(window, 'load', attachFadeOutBehavior);
 </head>
 <body>
 	<div id="fadeOut">
-		If everything is setup correctly, this will dissapear when you click on it. 
+		If everything is setup correctly, this will disappear when you click on it. 
 	</div>	
 </body>
 </html>
 +------------------------------------------+
 	 
-	 When you open the page in your browser, you should be able to make the text dissapear by clicking on it. Yoy will then be ready to use Prototype and 
+	 When you open the page in your browser, you should be able to make the text disappear by clicking on it. Yoy will then be ready to use Prototype and 
 	 script.aculo.us in your Jawr enabled application. 
 	 
 	
@@ -243,7 +243,7 @@ Event.observe(window, 'load', attachFadeOutBehavior);
 	
 	Within each script directory, javascript files come in three flavors: a normal, uncompressed version, another one targeted at debugging which 
 	writes to a console component, and a minified version. As we will see, having a debug version plays well with the debug-only bundles feature 
-	in Jawr. Many compontents depend on others to be loaded in order to work, you will need to check the documentation to find out about this 
+	in Jawr. Many components depend on others to be loaded in order to work, you will need to check the documentation to find out about this 
 	dependencies. \ 
 	
 	For the example we will use the modules that make up for the YUI Panel component. The required scripts are the following:  
@@ -278,15 +278,15 @@ Event.observe(window, 'load', attachFadeOutBehavior);
 	 more widgets from YUI, you will simply add them this directory. These are minified versions of the YUI libraries, and likely will be smaller 
 	 than if you used Jawr to do the minification (at least for as long as Jawr does not support the YUI compressor). However, there is one thing 
 	 you can do to optimize the size even further. Every file will contain the copyright license, which will add unneeded weight to the bundle 
-	 (there is no point to repeat the same coypright notice n times in the same script). Thus, remove the copyright notice from these files. 
+	 (there is no point to repeat the same copyright notice n times in the same script). Thus, remove the copyright notice from these files. 
 	 
 	 
 	 * From each directory of the list above, copy the debug scripts(those whose end with -debug) to the <</js/yui_debug>> folder.
 	 
 	 * Copy the build/logger dir to the <</js/yui_debug>> dir in your app.  
 	 
-	 * Optionally, create a script at <</js/yui_debug/logger>> that creates a console component everytime a page is loaded. It will only execute 
-	 in debug mode, so that you get all neede logging messages. You can name it anyway you want, just copy the following code into it: 
+	 * Optionally, create a script at <</js/yui_debug/logger>> that creates a console component every time a page is loaded. It will only execute 
+	 in debug mode, so that you get all needed logging messages. You can name it anyway you want, just copy the following code into it: 
 
 +------------------------------------------+
 	function createLogPanel() {

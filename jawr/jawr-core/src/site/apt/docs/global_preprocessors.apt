@@ -48,13 +48,13 @@ Jawr Global Preprocessors
 	public void processBundles(GlobalPreprocessingContext ctx, List bundles);
 +------------------------------------------+	
 
-	The first parameter is an object which defines the global preprocessing context and also gives you acces to Jawr configuration plus other 
+	The first parameter is an object which defines the global preprocessing context and also gives you access to Jawr configuration plus other 
 	data which may be useful under certain circumstances. 
 	
 	The second parameter is the list of bundles defined in your configuration. 
 	
 	To use this global preprocessor in our application, we need to declare it in the properties configuration, by giving it a name and declaring the class 
-	so that Jawr may create an instance when starting up. The name you give to your global preprocessor can then be used to define the gobal factory 
+	so that Jawr may create an instance when starting up. The name you give to your global preprocessor can then be used to define the global factory 
 	properties, thus allowing you to create a chain that combines your global preprocessor with those of Jawr. 
 	
 	The name and class are defined by declaring a property in the form jawr.custom.global.preprocessor.[name].class=[class].

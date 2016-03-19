@@ -13,7 +13,7 @@ JMX support in JAWR
 	For example, the user will be able to pass an entire application from production mode to debug mode and vice versa.
 	The user will also be able to set one session in debug mode, while the rest of the application will still be in production mode.
 
-	This is a really powerfull way to interact with Jawr at runtime.
+	This is a really powerful way to interact with Jawr at runtime.
 	To access to the Jawr MBeans, you will have to use a JMX console, like JConsole, which is provided in the JDK since Java 5.0. \
 	The Jawr MBeans are available accessible with the type <<net.jawr.web.jmx>>.
 	
@@ -67,7 +67,7 @@ JMX support in JAWR
 		
 		* <<cssLinkFlavor>> the CSS link flavor
 		
-		* <<debugModeOn>> the flag indicatin if we are in debug mode or not
+		* <<debugModeOn>> the flag indicating if we are in debug mode or not
 		
 		* <<debugOverrideKey>> the debug override key
 		

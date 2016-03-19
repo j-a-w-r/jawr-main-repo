@@ -17,7 +17,7 @@ Introduction
 	To define CSS skins, Jawr uses a directory hierarchy convention.\
 	The user needs to define the default CSS skin root directory. All the directory defined at the same level will be considered as a skin variant.\
 	To define the default skin root directory, the user must set the property <<jawr.css.skin.default.root.dirs>>. \
-	This property defines the list of default CSS root directories. So with Jawr, you can handle mutliple CSS skin root directories.
+	This property defines the list of default CSS root directories. So with Jawr, you can handle multiple CSS skin root directories.
 		
 	For instance, if you define the default skin root directory as : /css/skins/defaultSkin.\
 	And you have a directory structure like this :
@@ -141,8 +141,8 @@ Introduction
 	
 +-------------------------
 	# Add theme switcher
-	jawr.js.skinSwitcher.id=/js/skinSwicther
-	jawr.js.skinSwitcher.mapping=skinSwicther:switcher.js
+	jawr.js.skinSwitcher.id=/js/skinSwitcher
+	jawr.js.skinSwitcher.mapping=skinSwitcher:switcher.js
 	
 	jawr.css.skin.default.root.dirs=/css/skins/defaultSkin
 	jawr.css.bundle.skinnedBundle.id=/css/skinnedBundle.css
@@ -223,11 +223,11 @@ Introduction
 <html>
 <head>
 	<jawr:style src="/css/skinnedBundle.css" displayAlternate="true" media="all"/>
-	<jawr:script src="/js/skinSwicther.js" />
+	<jawr:script src="/js/skinSwitcher.js" />
 </head>
 <body>
 	...
-	<select name="theme" id="skinSwicther" onchange="JAWR.skin.switchToStyle(this.value);">
+	<select name="theme" id="skinswitcher" onchange="JAWR.skin.switchToStyle(this.value);">
 		<option value="">&nbsp;</option>
 		<option value="blueSkin">Blue Skin</option>
 		<option value="greenSkin">Green Skin</option>
@@ -287,8 +287,8 @@ jawr.css.skin.type.mapping=locale_skin
 +------------------------------------------+	
 	
 	# Add theme switcher
-	jawr.js.skinSwitcher.id=/js/skinSwicther
-	jawr.js.skinSwitcher.mapping=skinSwicther:switcher.js
+	jawr.js.skinSwitcher.id=/js/skinswitcher
+	jawr.js.skinSwitcher.mapping=skinswitcher:switcher.js
 	
 	jawr.css.skin.default.root.dirs=/css/skins/defaultSkin/en_US
 	# We can omit the following setting as it's the default one
@@ -407,11 +407,11 @@ jawr.css.skin.type.mapping=locale_skin
 <html>
 <head>
 	<jawr:style src="/css/skinnedBundle.css" displayAlternate="true" media="all"/>
-	<jawr:script src="/js/skinSwicther.js" />
+	<jawr:script src="/js/skinswitcher.js" />
 </head>
 <body>
 	...
-	<select name="skinSwicther" id="skinSwicther" onchange="JAWR.skin.switchToStyle(this.value);">
+	<select name="skinswitcher" id="skinswitcher" onchange="JAWR.skin.switchToStyle(this.value);">
 		<option value="">&nbsp;</option>
 		<option value="blueSkin">Blue Skin</option>
 		<option value="greenSkin">Green Skin</option>

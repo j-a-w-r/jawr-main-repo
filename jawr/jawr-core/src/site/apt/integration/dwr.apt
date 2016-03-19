@@ -15,7 +15,7 @@ Using DWR with Jawr
 	
 	DWR already has a method to minify and compress javascript, but Jawr adds extra functionality so that you serve your resources more 
 	consistently. Specifically, with JAWR you can serve all the static .js files in one bundle. You can also combine these with other scripts. 
-	For instance, you could have a javascript bundle containng Prototype.js, script.aculo.us, your own infrastructure and the DWR static scripts. 
+	For instance, you could have a javascript bundle containing Prototype.js, script.aculo.us, your own infrastructure and the DWR static scripts. 
 	
 	Also, you can bundle together the generated javascript stubs which normally must be requested separately. For pages that use several remote 
 	objects, this can speed up loading. 
@@ -36,7 +36,7 @@ Using DWR with Jawr
     
 +------------------------------------------+	
 	
-	There is a sample application that you can download to chek out how integration with DWR works, which you can download from 
+	There is a sample application that you can download to check out how integration with DWR works, which you can download from 
 	{{{https://svn.java.net/svn/jawr~svn/extensions/dwr2.x/trunk/jawr-dwr2.x-webapp-sample}this link}}. 
 	
 	Jawr supports also DWR 3.x  using the <jawr-dwr3.x-extension> extension module.
@@ -96,7 +96,7 @@ Using DWR with Jawr
 	
 +------------------------------------------+	
 
-	Jawr needs to know the sevlet mapping that points to DWR. Therefore, in the properties config you must set up the <<jawr.dwr.mapping>> 
+	Jawr needs to know the servlet mapping that points to DWR. Therefore, in the properties config you must set up the <<jawr.dwr.mapping>> 
 	parameter to the same value (without the wildcard) that you use for the DWR servlet: 
 	
 +------------------------------------------+	
@@ -186,7 +186,7 @@ Using DWR with Jawr
 | dwr:_actionutil | DWRActionUtil.js (webwork integration)  | 
 *---------------+---------+
 
-	The engine.js script should always be included first since others depend on it. Note that this file is not completaly static, since 
+	The engine.js script should always be included first since others depend on it. Note that this file is not completely static, since 
 	DWR generates some variables depending on the user's request. This is not optimal, since users will get a new copy on every new session with 
 	the application. Jawr solves this by generating these parameters in a very small inline script that contains only the dynamic variables. 
 	

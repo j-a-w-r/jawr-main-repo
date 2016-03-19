@@ -26,7 +26,7 @@ Introduction
 
 * Hashcode bundle generator setting
 
-	To set the bundle Hashcode generator which you want to use, you should use the folowing jawrconfigration property.
+	To set the bundle Hashcode generator which you want to use, you should use the following jawrconfiguration property.
 
 *---------------+---------+--------------+----------------+
 | <<Property name>> | <<Type>>    | <<Purpose>>      | <<Default value>>  | 

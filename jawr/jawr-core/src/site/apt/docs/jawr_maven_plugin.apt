@@ -6,7 +6,7 @@
 
 Jawr maven plugin
 
-	The goal of the Jawr maven plugin is to simplify the use of the bundle preprocessing in the maven build life cycle.
+	The goal of the Jawr maven plugin is to simplify the use of the bundle preprocessing in the maven build lifecycle.
 	If you have not read the documentation of the bundle preprocessing, please take a look at it before continuing.
 	
 
@@ -27,7 +27,7 @@ Jawr maven plugin
 	* <<destDirPath>> The path to the destination directory.
 	Default value: ${project.build.directory}/jawr/bundles
 	
-	* <<servletsToInitialize>> The comma separated list of servlets name to initialize
+	* <<servletsToInitialize>> The comma separated list of servlet names to initialize
 	Default value: ""
 	
 	* <<springConfigFiles>> the comma separated list of spring configuration files, which will be used to initialize the Jawr spring controller.
@@ -42,9 +42,9 @@ Jawr maven plugin
 
 +------------------------------------------+	
 	<plugin>
-	        <groupId>net.jawr</groupId>
-	        <artifactId>maven-jawr-plugin</artifactId>
-	        <version>1.0</version>
+	        <groupId>net.jawr.tools</groupId>
+	        <artifactId>jawr-maven-plugin</artifactId>
+	        <version>3.8</version>
 	        <executions>
 	          <execution>
 	            <!-- Use this phase so that we could deal with the war folder just before the war package -->
@@ -64,9 +64,9 @@ Jawr maven plugin
 	
 +------------------------------------------+	
 	<plugin>
-	        <groupId>net.jawr</groupId>
-	        <artifactId>maven-jawr-plugin</artifactId>
-	        <version>1.0</version>
+	        <groupId>net.jawr.tools</groupId>
+	        <artifactId>jawr-maven-plugin</artifactId>
+	        <version>3.8</version>
 	        <executions>
 	          <execution>
 	            <!-- Use this phase so that we could deal with the war folder just before the war package -->
@@ -93,16 +93,16 @@ Jawr maven plugin
 	   	
 * Classpath issue
 
-	As you know, the bundle processor fakes the server startup. In the current implementation, the bundle processor will add the WEB-INF/lib directory in the classpath.
-	But you could face some issue, if you are using some jar files, which are define in the application server itself.
+	As you know, the bundle processor fakes the server startup. In the current implementation, the bundle processor will add the WEB-INF/lib directory to the classpath.
+	But you could face some issue if you are using some jar files which are defined in the application server itself.
 	
 	To resolve this issue, you can use the classpath property in the plugin definition like below:
 	
 +------------------------------------------+	
 	<plugin>
-	        <groupId>net.jawr</groupId>
-	        <artifactId>maven-jawr-plugin</artifactId>
-	        <version>1.0</version>
+	        <groupId>net.jawr.tools</groupId>
+	        <artifactId>jawr-maven-plugin</artifactId>
+	        <version>3.8</version>
 	        <executions>
 	          <execution>
 	            <!-- Use this phase so that we could deal with the war folder just before the war package -->

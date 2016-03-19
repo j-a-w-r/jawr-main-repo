@@ -10,20 +10,20 @@ Spring MVC integration
 	you can keep all your configuration in a single consistent format and benefit with the incredibly flexible configuration system 
 	that ships with Spring. The version supported is the 2.0.x version of spring MVC 
 	
-		Note that if you are new to Jawr, reading this guide alone will not suffice to understand how Jawr works, so do chek out 
+		Note that if you are new to Jawr, reading this guide alone will not suffice to understand how Jawr works, so do check out 
 	the rest of the documentation because here you will only find the instructions to plug it into Spring. 
 	
 	     
 * Basic configuration
 
-	The first thing to do is to add the jawr-spring-2.0.x-extension module in your classpath.
+	The first thing to do is to add the jawr-spring-extension module in your classpath.
 	For maven users, you'll need to add the following dependency in your pom file :
 	
 +------------------------------------------+		
     <dependency>
       <groupId>net.jawr.extensions</groupId>
-      <artifactId>jawr-spring-2.0.x-extension</artifactId>
-      <version>3.5</version>
+      <artifactId>jawr-spring-extension</artifactId>
+      <version>3.8</version>
     </dependency>
 +------------------------------------------+	
 	
@@ -50,7 +50,7 @@ Spring MVC integration
 <bean id="jawrJsController" parent="jawrBase" />
   
 <!-- CSS controller -->
-<bean id="jawrCSSController"  parent="jawrBase">
+<bean id="jawrCSSController" parent="jawrBase">
 	<property name="type" value="css" />
 </bean>
 +------------------------------------------+
@@ -107,7 +107,7 @@ Spring MVC integration
 +------------------------------------------+
 	 
 	 You may have noticed the *.jpg and *.png mappings in the example. The reason for adding these is to handle background images referenced 
-	 at css files, when Jawr is in debug mode. This is due to a known problem which will be addressed in future versions. 
+	 in css files, when Jawr is in debug mode. This is due to a known problem which will be addressed in future versions. 
 	 
 	 If for some reason you need to add some kind of prefixing to the mappings, there is extra work to be done. For instance, if you mapped 
 	 like this: 
@@ -126,7 +126,7 @@ Spring MVC integration
 +------------------------------------------+
 
 	For this configuration, you will need to let the controllers know the extra path information. The reason for this is that Jawr needs not  
-	only to attend to requests, but also to generate URLs which will match its own controllers (incidentially, that's the same reason to need 
+	only to attend to requests, but also to generate URLs which will match its own controllers (incidentally, that's the same reason to need 
 	the <mapping> configuration attribute too). Note that the additional images mapping is simpler now, reduced to '/jawr/**/*' to cover all 
 	types. The <<controllerMapping>> configuration attribute comes into play under this configuration. You will need 
 	to set it with the value of the additional prefixing: 
@@ -156,7 +156,7 @@ Spring MVC integration
 * Using Spring's LocaleResolver with the i18n generator. 
 
 	If you will be using Spring's i18n facilities and want to generate 18n message scripts (check the 18n generator docs), you can integrate 
-	boths systems by letting Jawr use Spring's LocaleResolver. Jawr has its own way of resolving the locale of a request and a bit of extra 
+	both systems by letting Jawr use Spring's LocaleResolver. Jawr has its own way of resolving the locale of a request and a bit of extra 
 	configuration is needed to have it delegate in Spring. Actually, this single line in your jawr.properties file will do: 
 	
 +------------------------------------------+	

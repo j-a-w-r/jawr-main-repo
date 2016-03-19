@@ -124,7 +124,7 @@ while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
 
 	* Jawr Project modules
 	
-	For better maintanability, the jawr project has been divided in multiple modules.
+	For better maintainability, the jawr project has been divided in multiple modules.
 	
 	Since, the version 3.5, Jawr has the following modules :
 	
@@ -220,7 +220,7 @@ while the 3.3.x required at least the use of java 1.4 and servlet API 2.3
 	* Generators
 
 	Since the version 3.5, Jawr allows the users to define their custom GeneratorPathResolver. 
-	This means that the users can now define generators, wich will be triggered by prefix path 
+	This means that the users can now define generators, which will be triggered by prefix path 
 	(like built-in 'jar:' or 'message:' prefixes) or with for example a specific path suffix (like '*.less' resources).
 
 	In the version 3.3.x, the generator should implement the method "getMappingPrefix". This method has been replaced by "ResourceGeneratorResolver getResolver()" method.
