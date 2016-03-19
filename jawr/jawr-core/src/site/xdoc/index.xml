@@ -817,7 +817,7 @@
       		 	Look for the CSS tag at the <a href="./docs/taglibs.html">tag library doc</a> for extra info.
       		 </li>
       		 <li>
-      		 	The Jawr skin swicther javascript generator has been created to generate the javascript file for the skin switcher.
+      		 	The Jawr skin switcher javascript generator has been created to generate the javascript file for the skin switcher.
       		 	You can take a look to the <a href="./docs/generators.html">generators documentation</a> for more info.
       		 </li>
       		 <li>
@@ -1242,7 +1242,7 @@
       		 </li>
       		 <li>
       			It is possible to request debug debug mode for a page in production mode. The purpose is to be able to have a javascript 
-      			debugging session in a deployed application. The bundle members will be requested sepparately as if Jawr were in debug mode 
+      			debugging session in a deployed application. The bundle members will be requested separately as if Jawr were in debug mode 
       			easing debug operations without having to redeploy. This is done by adding a special request parameter which is defined in 
       			configuration.  Look for <em>jawr.debug.overrideKey</em> at the  
 				<a href="./docs/modes.html">debug and production modes documentation</a> for extra info.    

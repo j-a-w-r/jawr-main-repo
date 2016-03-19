@@ -44,7 +44,7 @@ Introduction
 	The bundles are served by a servlet which will use gzip compression for compatible browsers. The bundles are created at startup time, in a 
 	gzipped and not gzipped version, so no processing overhead is added to requests. The zipped and unzipped versions will have different URLs, 
 	so caching proxies will pose no problems when using Jawr. Also, every bundle will have a version prefix in its URl which will be changed 
-	by modifying the configuration file. Jawr will use aggresive caching headers to ensure the bundles are requested only once by each client, and 
+	by modifying the configuration file. Jawr will use aggressive caching headers to ensure the bundles are requested only once by each client, and 
 	the versioning prefix will be used to force clients to update to newer versions of the files. \ 
 	
 	Additionally, Jawr can bundle CSS files as well. Minification is provided as well, and any relative URL within a CSS added to a bundle will be

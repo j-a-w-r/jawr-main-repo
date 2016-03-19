@@ -9,7 +9,7 @@ Source ordering within bundles
 	Both Javascript and CSS are interpreted in source order, which means that often you will need the files within a bundle to follow a certain sequence. 
 	For instance, if your project uses both Prototype.js and Script.aculo.us you will probably need them to be bundled together, but you need to make sure 
 	that Prototype is always loaded first since Script.aculo.us depends on it in order to work. If the generated bundle had Script.aculo.us first, 
-	there would be an inmediate Javascript error in any page that loaded it. \ 	
+	there would be an immediate Javascript error in any page that loaded it. \ 	
 	
 	For example, say you have this directory structure containing both Prototype and Srcipt.aculo.us. You need to load prototype.js first, and 
 	then everything else: 
@@ -49,7 +49,7 @@ Source ordering within bundles
 	the Prototype library first, and then the rest of our files. 
 	
 	<<Note :>> \
-	If you use a mapping like "/js/lib/" or "/js/lib/**", by default Jawr will sort the resources in the directory by alphabetical order.\
+	If you use a mapping like "/js/lib/" or "/js/lib/**", by default Jawr will sort the resources in the directory in alphabetical order.\
 	 
 	
 	* <<Explicitly order files using a sorting file>> \ 

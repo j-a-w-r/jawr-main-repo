@@ -95,7 +95,7 @@ jawr.charset.name=UTF-8
 jawr.js.bundle.basedir=/js
 
 # All files within /js/lib will be together in a bundle. 
-# The remaining scripts will be served sepparately. 
+# The remaining scripts will be served separately. 
 jawr.js.bundle.lib.id=/bundles/lib.js
 jawr.js.bundle.lib.mappings=/js/lib/**
 
@@ -162,5 +162,5 @@ log4j.logger.net.jawr=INFO
 	
 	Finally, change the jawr.debug.on property in the descriptor file to <<true>> and redeploy the application. Visit the page again and you will see 
 	how each file is imported separately. If you have used an exploded deployment directory instead of a WAR archived file, you can now change 
-	any of the script or css files and see the changes inmediately by refreshing the page. 
+	any of the script or css files and see the changes immediately by refreshing the page. 
 	

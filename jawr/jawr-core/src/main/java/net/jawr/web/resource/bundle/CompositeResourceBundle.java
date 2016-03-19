@@ -25,7 +25,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  * This class acts as a proxy for a group of bundles which are created
  * independently but share a common id and act as a single bundle in runtime. It
  * allows to join bundles which have different configuration, such as different
- * posprocessing filters.
+ * postprocessing filters.
  * 
  * 
  * @author Jordi Hernández Sellés

@@ -1136,7 +1136,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	}
 
 	/**
-	 * Adds aggresive caching headers to the response in order to prevent
+	 * Adds aggressive caching headers to the response in order to prevent
 	 * browsers requesting the same file twice.
 	 * 
 	 * @param resp

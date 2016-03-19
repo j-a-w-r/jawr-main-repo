@@ -1148,7 +1148,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Adding file [" + path + "] to bundle " + bundle.getId());
 
-				// Get a reader on the resource, with appropiate encoding
+				// Get a reader on the resource, with appropriate encoding
 				Reader rd = null;
 
 				try {

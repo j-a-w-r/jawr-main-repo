@@ -17,7 +17,7 @@ Changes and new features in version 2.0
 	
 	* <<Grails support>>: a plugin has been created to use with Grails (AKA Groovy on rails). Documentation can be found at {{{../integration/grails.html}this page}}. 
 	
-	* <<Facelets support>>: Jawr can now be used wiithin Facelets applications, using a newly created, specific tag library. Check {{{../integration/facelets.html}the documentation}}.
+	* <<Facelets support>>: Jawr can now be used within Facelets applications, using a newly created, specific tag library. Check {{{../integration/facelets.html}the documentation}}.
 	
 	* <<Internet Explorer only bundles>>: now a bundle can be declared with a conditional comment expression, using the property 
 	jawr.[type].bundle.[name].ieonly.condition (for instance, 'jawr.js.bundle.mybundle.ieonly.condition=if lte IE 6'). 

@@ -139,7 +139,7 @@ Jawr Generators
 	
 	This generator allows you to include resources which are stored in a webjars files.
 	WebJars are client-side web libraries (e.g. jQuery & Bootstrap) packaged into JAR files.
-	You will have to include your webjars as depdendencies of your project and then reference them as follow : 
+	You will have to include your webjars as dependencies of your project and then reference them as follow : 
 	
 +------------------------------------------+
 	jawr.js.bundle.foo.mappings=webjars:/jquery/1.11.1/jquery.js, /js/foo.js	
@@ -376,7 +376,7 @@ Jawr Generators
 	This one will help you to define CSS skin in your bundles. Full docs  {{{../tutorials/howToUseJawrCssSkin.html}here}}.
 	 
 	
-{<<Skin swicther generator>>}  
+{<<Skin switcher generator>>}  
 
 	* <<Prefix>>: skinSwitcher
 	
