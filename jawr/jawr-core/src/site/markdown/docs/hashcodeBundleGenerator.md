@@ -1,0 +1,41 @@
+
+Introduction
+------------
+
+To increase performance, Jawr generates IDs (hashcode) for each bundles,
+which is integrated in the resource URL, so the browser will be able to
+cache a bundle if it didn't change.
+
+By default, Jawr uses the String **hashcode** method to define the ID of the bundle.  
+Since the version 3.3, Jawr allows users to define their own hashcode bundle generator.
+
+
+### Hashcode bundle generator
+
+A new interface
+**net.jawr.web.resource.bundle.hashcode.BundleHashcodeGenerator** has
+been created to allow the user to define their own hashcode bundle
+generator.
+
+![Hashcode bundle generator class
+diagram](../images/bundleHashcodeGenerator/bundleHashcodeGenerator.jpg)
+
+-   BundleHashcodeGenerator : This interface defines the method which is
+    used to determine the hashcode of a bundle.
+-   BundleStringHashcodeGnerator : This class defines the hashcode
+    generator which uses the String hashcode method as the hashcode of
+    a bundle.
+-   MD5BundleHashcodeGnerator : This class defines the hashcode
+    generator which uses the MD5 hashcode of the bundle content as the
+    hashcode of a bundle.
+
+
+### Hashcode bundle generator setting
+
+To set the bundle Hashcode generator which you want to use, you should
+use the following jawr configuration property.
+
+| **Property name** | **Type** | **Purpose** | **Default value** |
+|-------------------|----------|-------------|-------------------|
+| jawr.bundle.hashcode.generator | String | The class name of the hashcode bundle generator or MD5 if you want to use the MD5 algorithm for the hashcode. | none |
+
