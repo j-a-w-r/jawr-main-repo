@@ -118,21 +118,21 @@ public class JawrAutoConfiguration {
 		private JawrSpringController jawrBinaryController;
 
 		@Bean
-		public HandlerMapping handlerMapping() {
+		public HandlerMapping jawrHandlerMapping() {
 			SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
 			handlerMapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
 
 			Map<String, Object> urlMap = new HashMap<String, Object>();
-			urlMap.put("**.css", jawrCssController);
-			urlMap.put("**.eot", jawrBinaryController);
-			urlMap.put("**.gif", jawrBinaryController);
-			urlMap.put("**.ico", jawrBinaryController);
-			urlMap.put("**.jpg", jawrBinaryController);
-			urlMap.put("**.jpeg", jawrBinaryController);
-			urlMap.put("**.js", jawrJsController);
-			urlMap.put("**.png", jawrBinaryController);
-			urlMap.put("**.ttf", jawrBinaryController);
-			urlMap.put("**.woff", jawrBinaryController);
+			urlMap.put("**/*.css", jawrCssController);
+			urlMap.put("**/*.eot", jawrBinaryController);
+			urlMap.put("**/*.gif", jawrBinaryController);
+			urlMap.put("**/*.ico", jawrBinaryController);
+			urlMap.put("**/*.jpg", jawrBinaryController);
+			urlMap.put("**/*.jpeg", jawrBinaryController);
+			urlMap.put("**/*.js", jawrJsController);
+			urlMap.put("**/*.png", jawrBinaryController);
+			urlMap.put("**/*.ttf", jawrBinaryController);
+			urlMap.put("**/*.woff", jawrBinaryController);
 			handlerMapping.setUrlMap(urlMap);
 
 			return handlerMapping;
