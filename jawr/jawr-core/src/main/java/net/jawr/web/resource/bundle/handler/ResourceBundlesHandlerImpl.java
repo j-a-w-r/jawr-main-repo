@@ -1313,8 +1313,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	@Override
 	public void notifyModification(List<JoinableResourceBundle> bundles) {
 		for (JoinableResourceBundle bundle : bundles) {
-			if (LOGGER.isDebugEnabled() && !bundle.isDirty()) {
-				LOGGER.debug("The bundle '" + bundle.getId() + "' has been modified and needs to be rebuild.");
+			if (LOGGER.isInfoEnabled() && !bundle.isDirty()) {
+				LOGGER.info("The bundle '" + bundle.getId() + "' has been modified and needs to be rebuild.");
 			}
 			bundle.setDirty(true);
 		}
