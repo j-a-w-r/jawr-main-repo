@@ -19,9 +19,6 @@ import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
@@ -48,12 +45,9 @@ import net.jawr.web.util.StringUtils;
 public class CSSImportPostProcessor extends
 		AbstractChainedResourceBundlePostProcessor {
 
-	/**The Logger */
-	private static final Logger LOGGER = LoggerFactory.getLogger(CSSImportPostProcessor.class);
-	
 	/** The url pattern */
 	private static final Pattern IMPORT_PATTERN = Pattern.compile(	"@import\\s*url\\(\\s*" // 'url(' and any number of whitespaces 
-																+ "[\"']?([^\"')]*)[\"']?" // any sequence of characters, except an unescaped ')'
+																+ "[\"']?(?!(https?:)|(//))([^\"')]*)[\"']?" // any sequence of characters, except an unescaped ')'
 																+ "\\s*\\)\\s*(\\w+)?\\s*;?",  // Any number of whitespaces, then ')'
 																Pattern.CASE_INSENSITIVE); // works with 'URL('
 	
@@ -82,7 +76,7 @@ public class CSSImportPostProcessor extends
 		StringBuffer sb = new StringBuffer();
 		while(matcher.find()) {
 		
-			String content = getCssPathContent(matcher.group(1), matcher.group(2), status);
+			String content = getCssPathContent(matcher.group(3), matcher.group(4), status);
 			matcher.appendReplacement(sb, RegexUtil.adaptReplacementToMatcher(content));
 		}
 		matcher.appendTail(sb);
@@ -105,11 +99,6 @@ public class CSSImportPostProcessor extends
 		String path = cssPathToImport;
 
 		JawrConfig jawrConfig = status.getJawrConfig();
-		
-		if(cssPathToImport.startsWith("http://") || cssPathToImport.startsWith("https://") || cssPathToImport.startsWith("//")){
-			LOGGER.warn("In the CSS '"+currentCssPath+"', the HTTP URL '"+cssPathToImport+"' is not handled by Jawr.");
-			return "";
-		}
 		
 		if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
 			

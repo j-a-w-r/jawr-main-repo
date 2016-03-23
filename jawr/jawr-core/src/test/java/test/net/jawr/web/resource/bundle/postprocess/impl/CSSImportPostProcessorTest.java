@@ -94,7 +94,7 @@ public class CSSImportPostProcessorTest {
 				".blue { color : #0000FF } ");
 		
 		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
-		String expectedContent = "\n" +
+		String expectedContent = "@import url(\"http://fonts.googleapis.com/css?family=Lobster|Cabin:400,700\");\n" +
 				".blue { color : #0000FF } ";
 		
 		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
@@ -109,7 +109,7 @@ public class CSSImportPostProcessorTest {
 				".blue { color : #0000FF } ");
 		
 		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
-		String expectedContent = "\n" +
+		String expectedContent = "@import url(\"https://fonts.googleapis.com/css?family=Lobster|Cabin:400,700\");\n" +
 				".blue { color : #0000FF } ";
 		
 		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
@@ -124,7 +124,7 @@ public class CSSImportPostProcessorTest {
 				".blue { color : #0000FF } ");
 		
 		String filePath = "/css/folder/subfolder/subfolder/someCSS.css";
-		String expectedContent = "\n" +
+		String expectedContent = "@import url(\"//fonts.googleapis.com/css?family=Lobster|Cabin:400,700\");\n" +
 				".blue { color : #0000FF } ";
 		
 		status = getBundleProcessingStatus(filePath, "/css/folder/subfolder/subfolder/temp.css");
