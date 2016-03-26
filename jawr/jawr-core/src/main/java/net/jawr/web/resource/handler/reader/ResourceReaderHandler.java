@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -61,7 +61,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
-	public Reader getResource(String resourceName) throws ResourceNotFoundException;
+	Reader getResource(String resourceName) throws ResourceNotFoundException;
 
 	/**
 	 * Retrieves a single resource.
@@ -123,7 +123,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
-	public InputStream getResourceAsStream(String resourceName) throws ResourceNotFoundException;
+	InputStream getResourceAsStream(String resourceName) throws ResourceNotFoundException;
 
 	/**
 	 * Retrieves the input stream of a resource defined in the web application.
@@ -137,7 +137,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
-	public InputStream getResourceAsStream(String resourceName, boolean processingBundle)
+	InputStream getResourceAsStream(String resourceName, boolean processingBundle)
 			throws ResourceNotFoundException;
 
 	/**
