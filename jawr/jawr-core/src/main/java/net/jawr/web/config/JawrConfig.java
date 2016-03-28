@@ -328,6 +328,9 @@ public class JawrConfig implements Serializable {
 	 */
 	private boolean useSmartBundling = true;
 
+	/** The delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
+	private int delayAfterLastEvent = JawrConstant.DEFAULT_DELAY_AFTER_LAST_EVENT;
+	
 	/**
 	 * The jawr working directory path
 	 */
@@ -508,6 +511,11 @@ public class JawrConfig implements Serializable {
 		this.useBundleMapping = getBooleanProperty(JAWR_USE_BUNDLE_MAPPING, false);
 
 		this.useSmartBundling = getBooleanProperty(JAWR_USE_SMART_BUNDLING, true);
+		
+		String value = getProperty(JawrConstant.JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT);
+		if(StringUtils.isNotEmpty(value)){
+			delayAfterLastEvent = Integer.parseInt(value)*1000;
+		}
 		
 		this.jawrWorkingDirectory = getProperty(JAWR_WORKING_DIRECTORY);
 
@@ -756,6 +764,14 @@ public class JawrConfig implements Serializable {
 	 */
 	public void setUseSmartBundling(boolean useSmartBundling) {
 		this.useSmartBundling = useSmartBundling;
+	}
+	
+	/**
+	 * Returns the delay after the last event before performing a build
+	 * @return the delay after the last event before performing a build
+	 */
+	public int getSmartBundlingDelayAfterLastEvent() {
+		return delayAfterLastEvent;
 	}
 	
 	/**

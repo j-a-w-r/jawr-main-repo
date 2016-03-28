@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
+import net.jawr.web.resource.bundle.CheckSumUtils;
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
@@ -62,6 +64,7 @@ import net.jawr.web.resource.bundle.iterator.DebugModePathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.IECssDebugPathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.PathsIteratorImpl;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
@@ -79,10 +82,6 @@ import net.jawr.web.util.bom.UnicodeBOMReader;
  * Default implementation of ResourceBundlesHandler
  * 
  * @author Jordi Hernández Sellés
- * @author Ibrahim Chaehoi
- */
-/**
- * 
  * @author Ibrahim Chaehoi
  */
 public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
@@ -147,8 +146,13 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/** The bundle mapping */
 	private Properties bundleMapping;
 
+	/** The flag indicating if we are processing bundles */
+	private AtomicBoolean processingBundle = new AtomicBoolean(false);
+
 	/** The resource watcher */
 	private ResourceWatcher watcher;
+
+	private List<BundlingProcessLifeCycleListener> lifeCycleListeners = new CopyOnWriteArrayList<>();
 
 	/** The flag indicating if we need to search for variant in post process */
 	private boolean needToSearchForVariantInPostProcess;
@@ -206,6 +210,34 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		this.clientSideHandlerGenerator.init(config, globalBundles, contextBundles);
 
 		this.needToSearchForVariantInPostProcess = isSearchingForVariantInPostProcessNeeded();
+
+		// register bundle life cycle listeners
+		List<BundlingProcessLifeCycleListener> generatorLifeCycleListeners = config.getGeneratorRegistry()
+				.getBundlingProcessLifeCycleListeners();
+		lifeCycleListeners.addAll(generatorLifeCycleListeners);
+		
+		if (config.getUseSmartBundling()) {
+
+			this.watcher = new ResourceWatcher(this, this.resourceHandler);
+			try {
+				this.watcher.initPathToResourceBundleMap(globalBundles);
+				this.watcher.initPathToResourceBundleMap(contextBundles);
+			} catch (IOException e) {
+				throw new BundlingProcessException("Impossible to initialize Jawr Resource Watcher", e);
+			}
+			
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * isProcessingBundle()
+	 */
+	@Override
+	public AtomicBoolean isProcessingBundle() {
+		return processingBundle;
 	}
 
 	/**
@@ -565,11 +597,11 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		List<JoinableResourceBundle> bundleToProcess = this.bundles;
 		boolean forceStoreJawrBundleMapping = false;
 		if (!processBundleFlag) {
-			int storeJawrConfigHashcode = Integer.parseInt(
-					resourceBundleHandler.getJawrBundleMapping().getProperty(JawrConstant.JAWR_CONFIG_HASHCODE));
-			int jawrConfigHashcode = config.getConfigProperties().hashCode();
+			String storeJawrConfigHashcode = resourceBundleHandler.getJawrBundleMapping()
+					.getProperty(JawrConstant.JAWR_CONFIG_HASHCODE);
+			String jawrConfigHashcode = getJawrConfigHashcode();
 			boolean rebuildAllBundles = !config.getUseSmartBundling()
-					|| (storeJawrConfigHashcode != jawrConfigHashcode);
+					|| (!jawrConfigHashcode.equals(storeJawrConfigHashcode));
 			if (!rebuildAllBundles) {
 				bundleToProcess = getBundlesToRebuild();
 				if (!bundleToProcess.isEmpty() && LOGGER.isDebugEnabled()) {
@@ -582,7 +614,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 					LOGGER.debug(msg.toString());
 				}
 			} else {
-				if (LOGGER.isDebugEnabled() && storeJawrConfigHashcode != jawrConfigHashcode) {
+				if (LOGGER.isDebugEnabled() && !jawrConfigHashcode.equals(storeJawrConfigHashcode)) {
 					LOGGER.debug("Jawr config has changed since last bundling process. All bundles will be processed.");
 				}
 			}
@@ -592,6 +624,19 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		// Execute processing
 		build(bundleToProcess, forceStoreJawrBundleMapping, stopWatch);
+	}
+
+	/**
+	 * Returns the jawr config hashcode
+	 * 
+	 * @return the jawr config hashcode
+	 */
+	protected String getJawrConfigHashcode() {
+		try {
+			return CheckSumUtils.getMD5Checksum(config.getConfigProperties().toString());
+		} catch (IOException e) {
+			throw new BundlingProcessException("Unable to calculate Jawr config checksum", e);
+		}
 	}
 
 	/**
@@ -640,20 +685,28 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		if (config.getUseSmartBundling()) {
 
+			// Wait until all watch event has been processed
+			if (watcher != null) {
+				while (!watcher.hasNoEventToProcess()) {
+					try {
+						if (LOGGER.isInfoEnabled()) {
+							LOGGER.info("Wait until there is no more watch event to process");
+						}
+						Thread.sleep(config.getSmartBundlingDelayAfterLastEvent());
+					} catch (InterruptedException e) {
+						// Do nothing
+					}
+				}
+			}
+
 			List<JoinableResourceBundle> bundlesToRebuild = getBundlesToRebuild();
 			for (JoinableResourceBundle bundle : bundlesToRebuild) {
 				bundle.resetBundleMapping();
 			}
 			build(bundlesToRebuild, true, stopWatch);
-			try {
-				if (watcher != null) {
-					watcher.initPathToResourceBundleMap(bundlesToRebuild);
-				}
-			} catch (IOException e) {
-				throw new BundlingProcessException(e);
-			}
+
 		} else {
-			LOGGER.warn("You should turn of \"smart bundling\" feature to be able to rebuild modified bundles.");
+			LOGGER.warn("You should turn on \"smart bundling\" feature to be able to rebuild modified bundles.");
 		}
 	}
 
@@ -694,6 +747,12 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	public void build(List<JoinableResourceBundle> bundlesToBuild, boolean forceWriteBundleMapping,
 			StopWatch stopWatch) {
+
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Starting bundle processing");
+		}
+
+		notifyStartBundlingProcess();
 
 		boolean mappingFileExists = resourceBundleHandler.isExistingMappingFile();
 		boolean processBundleFlag = !config.getUseBundleMapping() || !mappingFileExists;
@@ -736,6 +795,51 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		executeGlobalPostProcessing(processBundleFlag, stopWatch);
 		storeJawrBundleMapping(resourceBundleHandler.isExistingMappingFile(), true);
+
+		// Update the watcher with the path to watch
+		try {
+			if (watcher != null) {
+				watcher.initPathToResourceBundleMap(bundlesToBuild);
+			}
+		} catch (IOException e) {
+			throw new BundlingProcessException(e);
+		}
+
+		notifyEndBundlingProcess();
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("End of bundle processing");
+		}
+
+	}
+
+	/**
+	 * Notify the start of the bundling process
+	 */
+	protected void notifyStartBundlingProcess() {
+
+		for (BundlingProcessLifeCycleListener listener : lifeCycleListeners) {
+			listener.beforeBundlingProcess();
+		}
+		processingBundle.set(true);
+		synchronized (processingBundle) {
+			processingBundle.notifyAll();
+		}
+	}
+
+	/**
+	 * Notify the start of the bundling process
+	 */
+	protected void notifyEndBundlingProcess() {
+
+		processingBundle.set(false);
+		synchronized (processingBundle) {
+			processingBundle.notifyAll();
+		}
+
+		for (BundlingProcessLifeCycleListener listener : lifeCycleListeners) {
+			listener.afterBundlingProcess();
+		}
+
 	}
 
 	/**
@@ -748,8 +852,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private void storeJawrBundleMapping(boolean mappingFileExists, boolean force) {
 		if (config.getUseBundleMapping() && (!mappingFileExists || force)) {
-			bundleMapping.setProperty(JawrConstant.JAWR_CONFIG_HASHCODE,
-					Integer.toString(config.getConfigProperties().hashCode()));
+			bundleMapping.setProperty(JawrConstant.JAWR_CONFIG_HASHCODE, getJawrConfigHashcode());
 			resourceBundleHandler.storeJawrBundleMapping(bundleMapping);
 
 			if (resourceBundleHandler.getResourceType().equals(JawrConstant.CSS_TYPE)) {
@@ -853,22 +956,26 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 	/**
 	 * Checks if the bundle has variant post processor
-	 * @param bundle the bundle
+	 * 
+	 * @param bundle
+	 *            the bundle
 	 * @return true if the bundle has variant post processor
 	 */
 	private boolean hasVariantPostProcessor(JoinableResourceBundle bundle) {
-		
+
 		boolean hasVariantPostProcessor = false;
 		ResourceBundlePostProcessor postProcessor = bundle.getBundlePostProcessor();
-		if(postProcessor != null && ((AbstractChainedResourceBundlePostProcessor)postProcessor).isVariantPostProcessor()){
+		if (postProcessor != null
+				&& ((AbstractChainedResourceBundlePostProcessor) postProcessor).isVariantPostProcessor()) {
 			hasVariantPostProcessor = true;
-		}else {
+		} else {
 			postProcessor = bundle.getUnitaryPostProcessor();
-			if(postProcessor != null && ((AbstractChainedResourceBundlePostProcessor)postProcessor).isVariantPostProcessor()){
+			if (postProcessor != null
+					&& ((AbstractChainedResourceBundlePostProcessor) postProcessor).isVariantPostProcessor()) {
 				hasVariantPostProcessor = true;
-			}	
+			}
 		}
-		
+
 		return hasVariantPostProcessor;
 	}
 
@@ -1348,15 +1455,24 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		return bundleNames;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getResourceWatcher()
+	 */
+	@Override
+	public ResourceWatcher getResourceWatcher() {
+		return this.watcher;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
-	 * setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
+	 * setBundlingProcessLifeCycleListeners(java.util.List)
 	 */
 	@Override
-	public void setResourceWatcher(ResourceWatcher watcher) {
-		this.watcher = watcher;
+	public void setBundlingProcessLifeCycleListeners(List<BundlingProcessLifeCycleListener> listeners) {
+		this.lifeCycleListeners.clear();
+		this.lifeCycleListeners.addAll(listeners);
 	}
 
 }

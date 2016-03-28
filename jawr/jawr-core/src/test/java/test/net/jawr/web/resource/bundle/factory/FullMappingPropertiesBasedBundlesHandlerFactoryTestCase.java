@@ -18,9 +18,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Mockito.when;
 
@@ -213,7 +213,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -277,7 +277,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -343,7 +343,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -405,7 +405,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -470,7 +470,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -566,7 +566,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -674,7 +674,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -741,7 +741,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 
@@ -866,7 +866,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler, generatorRegistry, chainFactory);
+				"js", rsHandler , generatorRegistry,  chainFactory);
 
 		Properties props = new Properties();
 

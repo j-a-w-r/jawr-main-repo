@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.jawr.web.DebugMode;
 import net.jawr.web.config.JawrConfig;
@@ -24,6 +25,7 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.watcher.ResourceWatcher;
 
 /**
@@ -205,9 +207,22 @@ public interface ResourceBundlesHandler {
 	public List<String> getDirtyBundleNames();
 
 	/**
-	 * Sets the resource watcher
-	 * @param watcher the resource watcher to set
+	 * Returns the resource watcher
+	 * @return the resource watcher
 	 */
-	public void setResourceWatcher(ResourceWatcher watcher);
+	public ResourceWatcher getResourceWatcher();
+	
+	/**
+	 * Returns true if the bundle are being processed
+	 * @return true if the bundle are being processed
+	 */
+	public AtomicBoolean isProcessingBundle();
+
+	/**
+	 * Sets the bundling life cycle listeners
+	 * @param listeners the listeners to set
+	 */
+	public void setBundlingProcessLifeCycleListeners(
+			List<BundlingProcessLifeCycleListener> listeners);
 	
 }

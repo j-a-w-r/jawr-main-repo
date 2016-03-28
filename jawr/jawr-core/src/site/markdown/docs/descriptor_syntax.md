@@ -21,6 +21,7 @@ qualified name containing package prefix is expected.
 | jawr.gzip.ie6.on | Boolean | Disable the serving of gzipped resources to Internet Explorer 6 or less.| true |
 | jawr.use.smart.bundling | Boolean | Define if we must use the "smart bundling" feature (processing only modified bundle). | true |
 | jawr.use.bundle.mapping | Boolean | Define if we must use the generated bundle mapping or not. | false |
+| jawr.smart.bundling.delay.after.last.event | Integer | Defines the delay after the last event before starting the bundle processing (in second) | 2 |
 | jawr.working.directory | String | Path to the jawr working directory. | *javax.servlet.context.tempdir*/jawrTmp |
 | jawr.basecontext.directory | String | the path to the external base context directory where the resource can be found |	none |      
 | jawr.basecontext.directory.high.priority | Boolean | the flag indicating if the resource must be searched in priority in the basecontext directory of not | false |

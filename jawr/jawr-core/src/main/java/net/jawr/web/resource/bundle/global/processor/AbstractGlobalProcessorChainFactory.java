@@ -13,14 +13,17 @@
  */
 package net.jawr.web.resource.bundle.global.processor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 
 /**
  * This class defines the global preprocessor factory.
@@ -34,6 +37,9 @@ public abstract class AbstractGlobalProcessorChainFactory<T extends AbstractGlob
 	/** The user-defined postprocessors */
 	private Map<String, ChainedGlobalProcessor<T>> customPostprocessors = new HashMap<String, ChainedGlobalProcessor<T>>();
 
+	/** The bundling process life cycle listeners */
+	private List<BundlingProcessLifeCycleListener> listeners = new ArrayList<>();
+	
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.global.processor.GlobalProcessorChainFactory#setCustomGlobalProcessors(java.util.Map)
 	 */
@@ -102,6 +108,11 @@ public abstract class AbstractGlobalProcessorChainFactory<T extends AbstractGlob
 				.get(key);
 		}
 		
+		if(toAdd instanceof BundlingProcessLifeCycleListener &&
+				!listeners.contains(toAdd)){
+			listeners.add((BundlingProcessLifeCycleListener)toAdd);
+		}
+		
 		AbstractChainedGlobalProcessor<T> newChainResult = null;
 		if (chain == null) {
 			newChainResult = toAdd;
@@ -121,4 +132,13 @@ public abstract class AbstractGlobalProcessorChainFactory<T extends AbstractGlob
 	 */
 	protected abstract AbstractChainedGlobalProcessor<T> buildProcessorByKey(String key);
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleProvider#getBundlingProcessLifeCycleListeners()
+	 */
+	@Override
+	public List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
+		return listeners;
+	}
+
+	
 }

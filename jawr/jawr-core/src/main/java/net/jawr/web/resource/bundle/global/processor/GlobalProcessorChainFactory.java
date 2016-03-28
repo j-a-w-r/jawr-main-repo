@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Ibrahim Chaehoi
+ * Copyright 2011-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@ package net.jawr.web.resource.bundle.global.processor;
 import java.util.Map;
 
 import net.jawr.web.resource.bundle.global.processor.GlobalProcessor;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleProvider;
 
 /**
  * Interface for a factory of chained preprocessor objects. It is meant to ease 
@@ -24,20 +25,20 @@ import net.jawr.web.resource.bundle.global.processor.GlobalProcessor;
  * @author Ibrahim Chaehoi
  *
  */
-public interface GlobalProcessorChainFactory<T extends AbstractGlobalProcessingContext> {
+public interface GlobalProcessorChainFactory<T extends AbstractGlobalProcessingContext> extends BundlingProcessLifeCycleProvider {
 
 	/**
 	 * Builds the default chain of processors for resources, be it javascript or css ones. 
 	 * @return the default chain of processors
 	 */
-	public abstract GlobalProcessor<T> buildDefaultProcessorChain();
+	GlobalProcessor<T> buildDefaultProcessorChain();
 
 	/**
 	 * Builds a chain of processors based on a comma-separated list of processor keys. 
 	 * @param processorKeys the comma-separated list of processor keys.
 	 * @return a chain of processors
 	 */
-	public abstract GlobalProcessor<T> buildProcessorChain(String processorKeys);
+	GlobalProcessor<T> buildProcessorChain(String processorKeys);
 	
 	
 	/**
@@ -48,6 +49,6 @@ public interface GlobalProcessorChainFactory<T extends AbstractGlobalProcessingC
 	 * 
 	 * @param keysClassNames the map associated the keys and the class names.
 	 */
-	public abstract void setCustomGlobalProcessors(Map<String, String> keysClassNames);
+	void setCustomGlobalProcessors(Map<String, String> keysClassNames);
 
 }

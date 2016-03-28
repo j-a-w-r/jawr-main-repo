@@ -13,14 +13,12 @@
  */
 package test.net.jawr.web.resource.watcher;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +30,16 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.mappings.PathMapping;
@@ -59,7 +67,9 @@ public class ResourceWatcherTestCase {
 	@Mock
 	private JoinableResourceBundle b;
 
-	private int waitTime = 1000;
+	private AtomicBoolean processingBundle;
+	
+	private int waitTime = 500;
 
 	/**
 	 * Set up
@@ -72,7 +82,10 @@ public class ResourceWatcherTestCase {
 
 		when(bundlesHandler.getGlobalBundles()).thenReturn(new ArrayList<JoinableResourceBundle>());
 		when(bundlesHandler.getContextBundles()).thenReturn(Arrays.asList(b));
-	
+		when(bundlesHandler.getResourceType()).thenReturn(JawrConstant.JS_TYPE);
+		processingBundle = new AtomicBoolean(false);
+		when(bundlesHandler.isProcessingBundle()).thenReturn(processingBundle);
+		
 		invocationCount[0] = 0;
 		
 		doAnswer(new Answer<Object>() {
@@ -177,7 +190,8 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/init.js")).thenReturn(path);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
+		
 		watcher.start();
 
 		// Modify the file
@@ -187,6 +201,16 @@ public class ResourceWatcherTestCase {
 		Thread.sleep(waitTime);
 		watcher.stopWatching();
 		verify(bundlesHandler, atLeastOnce()).notifyModification(Matchers.eq(Arrays.asList(b)));
+	}
+
+	/**
+	 * Initialize the resource watcher
+	 * 
+	 * @throws IOException if an IOException occurs 
+	 */
+	protected void initWatcher() throws IOException {
+		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		watcher.initPathToResourceBundleMap(bundlesHandler.getContextBundles());
 	}
 
 	@Test
@@ -204,7 +228,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/scriptToBeCreated.js")).thenReturn(path);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create a new file in the same directory
@@ -231,7 +255,7 @@ public class ResourceWatcherTestCase {
 
 		when(rsReader.getFilePath("/js/lib/scriptToBeDeleted.js")).thenReturn(path);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Delete the file
@@ -257,7 +281,7 @@ public class ResourceWatcherTestCase {
 		File fToCreate = new File(f.getParent() + "/init2.js");
 		deleteFileIfExists(fToCreate);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create a new file in the same directory
@@ -278,7 +302,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Modify the file
@@ -304,7 +328,7 @@ public class ResourceWatcherTestCase {
 		File fToCreate = new File(f, "scriptToBeCreated.js");
 		deleteFileIfExists(fToCreate);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 
 		watcher.start();
 
@@ -331,7 +355,7 @@ public class ResourceWatcherTestCase {
 		File dirToCreate = new File(f, "tempDir");
 		deleteFileIfExists(dirToCreate);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create a file
@@ -358,7 +382,7 @@ public class ResourceWatcherTestCase {
 		File fToDelete = new File(f, "scriptToBeDeleted1.js");
 		createOrModifyFile(fToDelete);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Delete a file
@@ -378,7 +402,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Modify the file
@@ -407,7 +431,7 @@ public class ResourceWatcherTestCase {
 		File fToCreate = new File(f, "diagram/scriptToBeCreated1.js");
 		deleteFileIfExists(fToCreate);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create the file
@@ -432,7 +456,7 @@ public class ResourceWatcherTestCase {
 		File fToDelete = new File(f, "diagram/scriptToBeDeleted1.js");
 		createOrModifyFile(fToDelete);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Delete a file
@@ -454,7 +478,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Modify the file
@@ -482,7 +506,7 @@ public class ResourceWatcherTestCase {
 		File fToCreate2 = new File(f, "diagram/scriptToBeCreated1.js");
 		deleteFileIfExists(fToCreate2);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create one file
@@ -519,7 +543,7 @@ public class ResourceWatcherTestCase {
 		File dirToCreate2 = new File(f, "diagram/tempDir/");
 		deleteFileIfExists(dirToCreate2);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create a directory
@@ -560,7 +584,7 @@ public class ResourceWatcherTestCase {
 		File fToDelete2 = new File(f, "/diagram/scriptToBeDeleted2.js");
 		createOrModifyFile(fToDelete2);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Delete a file
@@ -598,7 +622,7 @@ public class ResourceWatcherTestCase {
 		// Wait a little bit
 		Thread.sleep(waitTime);
 	
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Modify the file
@@ -624,7 +648,7 @@ public class ResourceWatcherTestCase {
 		// watcher
 		File fToCreate = new File(f.getParentFile(), "/vertex/scriptToBeCreated.js");
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create the file
@@ -650,7 +674,7 @@ public class ResourceWatcherTestCase {
 		File dirToCreate = new File(f.getAbsolutePath() + "/diagram/tempDir/");
 		deleteFileIfExists(dirToCreate);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Create a file
@@ -677,7 +701,7 @@ public class ResourceWatcherTestCase {
 		File fToDelete = new File(f.getParentFile(), "vertex/cube/scriptToBeDeleted.js");
 		createOrModifyFile(fToDelete);
 
-		watcher = new ResourceWatcher(bundlesHandler, rsReader);
+		initWatcher();
 		watcher.start();
 
 		// Delete a file
@@ -688,5 +712,41 @@ public class ResourceWatcherTestCase {
 		watcher.stopWatching();
 	
 		verify(bundlesHandler, never()).notifyModification(Matchers.eq(Arrays.asList(b)));
+	}
+	
+	@Test
+	public void testModifyOneAssetMappingWhileProcessingBundle() throws Exception {
+
+		setBundleMapping("/js/lib/init.js");
+
+		File f = FileUtils.getClassPathFile("watcher/js/lib/init.js");
+		String path = f.getAbsolutePath();
+		when(rsReader.getFilePath("/js/lib/init.js")).thenReturn(path);
+
+		initWatcher();
+		
+		// Simulate bundle processing
+		processingBundle.set(true);
+		
+		watcher.start();
+
+		// Modify the file
+		createOrModifyFile(f);
+		// Wait a little bit
+		Thread.sleep(waitTime);
+		
+		// No notification should be called until the end of the bundling process 
+		verify(bundlesHandler, never()).notifyModification(Matchers.eq(Arrays.asList(b)));
+		
+		// Simulate the end of processing
+		processingBundle.set(false);
+		synchronized (processingBundle) {
+			processingBundle.notifyAll();
+		}
+		
+		// Wait a little bit
+		Thread.sleep(waitTime);
+		
+		verify(bundlesHandler, atLeastOnce()).notifyModification(Matchers.eq(Arrays.asList(b)));
 	}
 }

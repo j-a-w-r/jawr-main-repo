@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.CharSequenceUtils;
-
 /**
  * 
  * Utility method for String manipulation.

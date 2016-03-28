@@ -43,7 +43,25 @@ for generator initialization.
 
                 public void afterPropertiesSet();
 
+### Bundle processing aware generator
 
+Jawr allows you to create generators, which can listen to bundle processing event (start and end of the process).  
+For this, the generator should implements the following interface 
+-   **net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener**  
+    This interface provides two methods, which are called during the bundling process.
+
+               /**
+	 			  * This method is called before the bundling process 
+	 			 */
+				public void beforeBundlingProcess();
+	
+	
+				/**
+				 * This method is called after the bundling process 
+				 */
+				public void afterBundlingProcess();
+
+    
 ### Locale aware generator
 
 Jawr allows you to create generators, which can create resources

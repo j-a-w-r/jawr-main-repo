@@ -338,4 +338,10 @@ public class JawrConstant {
 	/** The mixed URL mode */
 	public static final String SASS_GENERATOR_MIXED_URL_MODE = "mixed";
 
+	/** The delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
+	public static final int DEFAULT_DELAY_AFTER_LAST_EVENT = 2000;
+
+	/** The property name which defines the delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
+	public static final String JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT = "jawr.smart.bundling.delay.after.last.event";
+
 }

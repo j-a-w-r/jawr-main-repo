@@ -59,6 +59,7 @@ import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver;
 import net.jawr.web.resource.bundle.generator.validator.CommonsValidatorGenerator;
 import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.generator.variant.css.CssSkinGenerator;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
 import net.jawr.web.resource.bundle.variant.VariantResolver;
 import net.jawr.web.resource.bundle.variant.VariantSet;
@@ -142,6 +143,9 @@ public class GeneratorRegistry implements Serializable {
 
 	/** The binary resource prefix registry */
 	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
+
+	/** The bundling process life cycle listeners */
+	private final List<BundlingProcessLifeCycleListener> bundlingProcesslifeCycleListeners = new CopyOnWriteArrayList<BundlingProcessLifeCycleListener>();
 
 	/** The resource type */
 	private String resourceType;
@@ -350,6 +354,9 @@ public class GeneratorRegistry implements Serializable {
 			if (((CssResourceGenerator) generator).isHandlingCssImage()) {
 				cssImageResourceGeneratorRegistry.add(generator);
 			}
+		}
+		if(generator instanceof BundlingProcessLifeCycleListener){
+			bundlingProcesslifeCycleListeners.add((BundlingProcessLifeCycleListener)generator);
 		}
 	}
 
@@ -781,5 +788,13 @@ public class GeneratorRegistry implements Serializable {
 			availableVariantMap.put(variantType, variant);
 		}
 		return availableVariantMap;
+	}
+
+	/**
+	 * @return
+	 */
+	public List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
+		
+		return bundlingProcesslifeCycleListeners;
 	}
 }

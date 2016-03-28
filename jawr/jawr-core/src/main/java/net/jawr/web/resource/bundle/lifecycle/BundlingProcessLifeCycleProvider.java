@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2016 Ibrahim Chaehoi
+ * Copyright 2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -11,18 +11,21 @@
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package net.jawr.web.resource.bundle.factory.global.preprocessor;
+package net.jawr.web.resource.bundle.lifecycle;
 
-import net.jawr.web.resource.bundle.global.processor.GlobalProcessorChainFactory;
+import java.util.List;
 
 /**
- * Interface for a factory of chained preprocessor objects. It is meant to ease 
- * configuration implementations. 
+ * This interface is implemented by class which can provide bundling process life cycle listener 
  * 
  * @author Ibrahim Chaehoi
- *
  */
-public interface GlobalPreprocessorChainFactory extends GlobalProcessorChainFactory<GlobalPreprocessingContext> {
+public interface BundlingProcessLifeCycleProvider {
 
-
+	/**
+	 * Returns the list of life cycle listeners
+	 * @return the list of life cycle listeners
+	 */
+	List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners();
+	
 }

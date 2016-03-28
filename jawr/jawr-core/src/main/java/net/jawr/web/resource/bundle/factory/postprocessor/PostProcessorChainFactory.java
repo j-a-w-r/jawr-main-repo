@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,8 +13,10 @@
  */
 package net.jawr.web.resource.bundle.factory.postprocessor;
 
+
 import java.util.Map;
 
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleProvider;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 
 /**
@@ -24,7 +26,7 @@ import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
  * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
  */
-public interface PostProcessorChainFactory {
+public interface PostProcessorChainFactory extends BundlingProcessLifeCycleProvider {
 
 	/**
 	 * Builds the default chain for resources, be it javascript or css ones. 
@@ -66,5 +68,5 @@ public interface PostProcessorChainFactory {
 	 * @param keysClassNames
 	 */
 	public void setCustomPostprocessors(Map<String, String> keysClassNames);
-
+	
 }

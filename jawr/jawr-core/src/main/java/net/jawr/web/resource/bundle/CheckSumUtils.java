@@ -157,6 +157,7 @@ public final class CheckSumUtils {
 	 * Returns the MD5 Checksum of the string passed in parameter
 	 * 
 	 * @param is the input stream
+	 * @param charset the content charset
 	 * 
 	 * @return the Checksum of the input stream
 	 * @throws IOException if an IO exception occurs
@@ -164,6 +165,20 @@ public final class CheckSumUtils {
 	public static String getMD5Checksum(String str, Charset charset) throws IOException {
 
 		InputStream is = new ByteArrayInputStream(str.getBytes(charset.name()));
+		return getMD5Checksum(is);
+	}
+	
+	/**
+	 * Returns the MD5 Checksum of the string passed in parameter
+	 * 
+	 * @param is the input stream
+	 * 
+	 * @return the Checksum of the input stream
+	 * @throws IOException if an IO exception occurs
+	 */
+	public static String getMD5Checksum(String str) throws IOException {
+
+		InputStream is = new ByteArrayInputStream(str.getBytes());
 		return getMD5Checksum(is);
 	}
 	

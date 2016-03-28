@@ -22,6 +22,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.jawr.web.DebugMode;
 import net.jawr.web.cache.JawrCacheManager;
@@ -33,8 +34,8 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.watcher.ResourceWatcher;
-
 
 /**
  * ResourceBundlesHandler wrapper implementation that uses a ConcurrentHashMap
@@ -51,16 +52,16 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 
 	/** The prefix for text element in cache */
 	private static String TEXT_CACHE_PREFIX = "TEXT.";
-	
+
 	/** The prefix for zipped element in cache */
 	private static String ZIP_CACHE_PREFIX = "ZIP.";
-	
+
 	/** The resource bundle handler */
 	private ResourceBundlesHandler rsHandler;
 
 	/** The cache manager */
 	private JawrCacheManager cacheMgr;
-	
+
 	/**
 	 * Build a cached wrapper around the supplied ResourceBundlesHandler.
 	 * 
@@ -72,21 +73,23 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 		cacheMgr = CacheManagerFactory.getCacheManager(rsHandler.getConfig(), rsHandler.getResourceType());
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getResourceType()
-	 */
-	@Override
-	public String getResourceType() {
-		
-		return rsHandler.getResourceType();
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getGlobalBundles
-	 * ()
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getResourceType()
+	 */
+	@Override
+	public String getResourceType() {
+
+		return rsHandler.getResourceType();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getGlobalBundles ()
 	 */
 	@Override
 	public List<JoinableResourceBundle> getGlobalBundles() {
@@ -96,9 +99,8 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getContextBundles
-	 * ()
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getContextBundles ()
 	 */
 	@Override
 	public List<JoinableResourceBundle> getContextBundles() {
@@ -108,18 +110,15 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getBundlePaths
-	 * (java.lang.String,
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getBundlePaths (java.lang.String,
 	 * net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler,
 	 * java.util.Map)
 	 */
 	@Override
 	public ResourceBundlePathsIterator getBundlePaths(String bundleId,
-			ConditionalCommentCallbackHandler commentCallbackHandler,
-			Map<String, String> variants) {
-		return rsHandler.getBundlePaths(bundleId, commentCallbackHandler,
-				variants);
+			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
+		return rsHandler.getBundlePaths(bundleId, commentCallbackHandler, variants);
 	}
 
 	/*
@@ -130,12 +129,9 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * .lang.String)
 	 */
 	@Override
-	public ResourceBundlePathsIterator getBundlePaths(DebugMode debugMode,
-			String bundleId,
-			ConditionalCommentCallbackHandler commentCallbackHandler,
-			Map<String, String> variants) {
-		return rsHandler.getBundlePaths(debugMode, bundleId,
-				commentCallbackHandler, variants);
+	public ResourceBundlePathsIterator getBundlePaths(DebugMode debugMode, String bundleId,
+			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
+		return rsHandler.getBundlePaths(debugMode, bundleId, commentCallbackHandler, variants);
 	}
 
 	/*
@@ -178,12 +174,11 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * .lang.String, java.io.OutputStream)
 	 */
 	@Override
-	public void streamBundleTo(String bundlePath, OutputStream out)
-			throws ResourceNotFoundException {
+	public void streamBundleTo(String bundlePath, OutputStream out) throws ResourceNotFoundException {
 
 		try {
-			//byte[] gzip = gzipCache.get(bundlePath);
-			byte[] gzip = (byte[]) cacheMgr.get(ZIP_CACHE_PREFIX+bundlePath);
+			// byte[] gzip = gzipCache.get(bundlePath);
+			byte[] gzip = (byte[]) cacheMgr.get(ZIP_CACHE_PREFIX + bundlePath);
 			// If it's not cached yet
 			if (null == gzip) {
 				// Stream the stored data
@@ -196,16 +191,14 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 				gzip = baOs.toByteArray();
 
 				// Cache the byte array
-				cacheMgr.put(ZIP_CACHE_PREFIX+bundlePath, gzip);
+				cacheMgr.put(ZIP_CACHE_PREFIX + bundlePath, gzip);
 			}
 
 			// Write bytes to the outputstream
 			IOUtils.write(gzip, out);
-			
+
 		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"Unexpected IOException writing bundle[" + bundlePath + "]",
-					e);
+			throw new BundlingProcessException("Unexpected IOException writing bundle[" + bundlePath + "]", e);
 		}
 
 	}
@@ -218,21 +211,19 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * .lang.String, java.io.Writer)
 	 */
 	@Override
-	public void writeBundleTo(String bundlePath, Writer writer)
-			throws ResourceNotFoundException {
-		//String text = (String) textCache.get(bundlePath);
-		String text = (String) cacheMgr.get(TEXT_CACHE_PREFIX+bundlePath);
+	public void writeBundleTo(String bundlePath, Writer writer) throws ResourceNotFoundException {
+		// String text = (String) textCache.get(bundlePath);
+		String text = (String) cacheMgr.get(TEXT_CACHE_PREFIX + bundlePath);
 		try {
 			// If it's not cached yet
 			if (null == text) {
-				String charsetName = rsHandler.getConfig().getResourceCharset()
-						.name();
+				String charsetName = rsHandler.getConfig().getResourceCharset().name();
 				ByteArrayOutputStream baOs = new ByteArrayOutputStream();
 				WritableByteChannel wrChannel = Channels.newChannel(baOs);
 				Writer tempWriter = Channels.newWriter(wrChannel, charsetName);
 				rsHandler.writeBundleTo(bundlePath, tempWriter);
 				text = baOs.toString(charsetName);
-				cacheMgr.put(TEXT_CACHE_PREFIX+bundlePath, text);
+				cacheMgr.put(TEXT_CACHE_PREFIX + bundlePath, text);
 			}
 
 			// Write the text to the outputstream
@@ -240,9 +231,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 			writer.flush();
 
 		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"Unexpected IOException writing bundle[" + bundlePath + "]",
-					e);
+			throw new BundlingProcessException("Unexpected IOException writing bundle[" + bundlePath + "]", e);
 		}
 	}
 
@@ -266,13 +255,10 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * java.util.Map)
 	 */
 	@Override
-	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-			String bundleId,
-			ConditionalCommentCallbackHandler commentCallbackHandler,
-			Map<String, String> variants) {
+	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(String bundleId,
+			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
 
-		return rsHandler.getGlobalResourceBundlePaths(bundleId,
-				commentCallbackHandler, variants);
+		return rsHandler.getGlobalResourceBundlePaths(bundleId, commentCallbackHandler, variants);
 	}
 
 	/*
@@ -284,13 +270,10 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 * java.util.Map)
 	 */
 	@Override
-	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-			DebugMode debugMode,
-			ConditionalCommentCallbackHandler commentCallbackHandler,
-			Map<String, String> variants) {
+	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(DebugMode debugMode,
+			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
 
-		return rsHandler.getGlobalResourceBundlePaths(debugMode,
-				commentCallbackHandler, variants);
+		return rsHandler.getGlobalResourceBundlePaths(debugMode, commentCallbackHandler, variants);
 	}
 
 	/*
@@ -303,10 +286,8 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 */
 	@Override
 	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(
-			ConditionalCommentCallbackHandler commentCallbackHandler,
-			Map<String, String> variants) {
-		return rsHandler.getGlobalResourceBundlePaths(commentCallbackHandler,
-				variants);
+			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
+		return rsHandler.getGlobalResourceBundlePaths(commentCallbackHandler, variants);
 	}
 
 	/*
@@ -342,40 +323,55 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 		return rsHandler.getBundleTextDirPath();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getBundleZipDirPath()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getBundleZipDirPath()
 	 */
 	@Override
 	public String getBundleZipDirPath() {
 		return rsHandler.getBundleZipDirPath();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#notifyModification(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * notifyModification(java.util.List)
 	 */
 	@Override
 	public void notifyModification(List<JoinableResourceBundle> bundles) {
 		rsHandler.notifyModification(bundles);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#rebuildModifiedBundles()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * rebuildModifiedBundles()
 	 */
 	@Override
 	public void rebuildModifiedBundles() {
 		rsHandler.rebuildModifiedBundles();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#bundlesNeedToBeRebuild()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * bundlesNeedToBeRebuild()
 	 */
 	@Override
 	public boolean bundlesNeedToBeRebuild() {
 		return rsHandler.bundlesNeedToBeRebuild();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getDirtyBundleNames()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getDirtyBundleNames()
 	 */
 	@Override
 	public List<String> getDirtyBundleNames() {
@@ -383,11 +379,32 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getResourceWatcher()
 	 */
 	@Override
-	public void setResourceWatcher(ResourceWatcher watcher) {
-		rsHandler.setResourceWatcher(watcher);
+	public ResourceWatcher getResourceWatcher() {
+		return rsHandler.getResourceWatcher();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * isProcessingBundle()
+	 */
+	@Override
+	public AtomicBoolean isProcessingBundle() {
+		return rsHandler.isProcessingBundle();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * setBundlingProcessLifeCycleListeners(java.util.List)
+	 */
+	@Override
+	public void setBundlingProcessLifeCycleListeners(List<BundlingProcessLifeCycleListener> listeners) {
+		this.rsHandler.setBundlingProcessLifeCycleListeners(listeners);
+	}
 }

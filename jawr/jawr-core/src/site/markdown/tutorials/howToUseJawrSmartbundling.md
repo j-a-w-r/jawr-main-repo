@@ -34,6 +34,7 @@ By default, the smart bundling feature is activated. The property
 
 
             jawr.use.smart.bundling=true #This will enable the smart bundling feature
+            jawr.use.bundle.mapping=true #This will make allow Jawr to cache information on resource bundling
 
 
 ### Smart bundling with automatic bundle processing when application is started
@@ -79,6 +80,7 @@ If you want to use the automatic bundle processing when your application
 is started, and also being able to force the refresh using a key, you
 have update your Jawr configuration file like below :
 
+            jawr.use.bundle.mapping=true #This will make allow Jawr to cache information on resource bundling
             jawr.config.reload.interval=3600 #Here we configured Jawr to check for update every hour
             jawr.config.reload.refreshKey=mySecretKey #To force a refresh of bundles which needs to be rebuild, hit any bundle URL and add ?refreshKey=mySecretKey to reload the bundles.
             
@@ -95,12 +97,23 @@ you only have to set the **jawr.use.bundle.mapping** property to
 **true**, in your Jawr configuration file like below :
 
 
-            jawr.use.bundle.mapping=true
+            jawr.use.bundle.mapping=true #This will make allow Jawr to cache information on resource bundling
 
 
 Using this configuration, if a change is detected on a bundle when the
 server is started, the bundle will not be rebuild until next server
 restart.
+
+### Delay since last resource event
+
+Jawr watch resources on server to detect resource creation, modification or deletion using WatchService.
+When there are a lot of events, to ensure that all events have been processed before staart the bundling process, Jawr use a delay after the last event to make sure that there no more event to process before starting the bundling process.
+
+This delay is configurable using the property **jawr.smart.bundling.delay.after.last.event** :
+
+| **Property name** | **Type** | **Purpose** | **Default value** |
+|-------------------|----------|-------------|-------------------|
+| jawr.smart.bundling.delay.after.last.event | Integer | Defines the delay after the last event before starting the bundle processing (in second) | 2 |
 
 
 ### Global processing
@@ -130,3 +143,22 @@ property in the image of the sprite-ref, like below :
             height : 74px;
     }
 
+
+### Force complete rebuild
+
+There is two way to force the complete rebuild :
+ - Clean the web application working directory where the files for cache are stored
+ - Modify your Jawr configuration file
+
+
+### Known limitations
+
+For the time being, this feature only works with modification on the file resources associated to bundle like :
+ - modifying a resource
+ - creating or deleting a resource on a bundle which has a mapping defines with wildcards
+ For example, if you have a bundle mapping like '/css/**', adding a resource to '/css' or deleting one will be handle as a bundle modification
+   
+If you modify your configuration, Jawr will consider this as a complete modification and will rebuild all the bundles.
+So a modification in your configuration will trigger a full bundling process.
+
+Jawr doesn't detect modification on Processor or Generator class. So if a Processor or a Generator has been modified, you'll have to clean your cache so Jawr will rebuild the bundles with this modification.

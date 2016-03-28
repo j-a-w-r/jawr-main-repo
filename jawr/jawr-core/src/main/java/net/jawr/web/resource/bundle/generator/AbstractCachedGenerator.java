@@ -42,6 +42,7 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
@@ -54,7 +55,7 @@ import net.jawr.web.util.StopWatch;
  */
 public abstract class AbstractCachedGenerator
 		implements TextResourceGenerator, PostInitializationAwareResourceGenerator, WorkingDirectoryLocationAware,
-		ResourceReaderHandlerAwareResourceGenerator {
+		ResourceReaderHandlerAwareResourceGenerator, BundlingProcessLifeCycleListener {
 
 	/** The Perf Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
@@ -249,12 +250,6 @@ public abstract class AbstractCachedGenerator
 			rd = generateResource(path, context);
 			if (useCache) {
 
-				// Update the cache
-				if (context.isProcessingBundle()) {
-					// TODO Remove this when PostBundling process event is in
-					// place
-					serializeCacheMapping();
-				}
 				if (rd != null) {
 					if (cacheMode.equals(CacheMode.PROD) || cacheMode.equals(CacheMode.ALL)) {
 						rd = createTempResource(context, CacheMode.PROD, rd);
@@ -460,7 +455,6 @@ public abstract class AbstractCachedGenerator
 	 *             if an IO exception occurs
 	 */
 	protected synchronized void serializeCacheMapping() {
-		// TODO put in place PostProcessBundling event for this type of action
 		for (Map.Entry<String, List<FilePathMapping>> entry : linkedResourceMap.entrySet()) {
 
 			StringBuilder strb = new StringBuilder();
@@ -557,4 +551,25 @@ public abstract class AbstractCachedGenerator
 			}
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.BundlingProcessLifeCycleListener#beforeBundlingProcess()
+	 */
+	@Override
+	public void beforeBundlingProcess() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.handler.BundlingProcessLifeCycleListener#afterBundlingProcess()
+	 */
+	@Override
+	public void afterBundlingProcess() {
+		
+		if(useCache){
+			// Update the cache
+			serializeCacheMapping();
+		}
+	}
+	
 }

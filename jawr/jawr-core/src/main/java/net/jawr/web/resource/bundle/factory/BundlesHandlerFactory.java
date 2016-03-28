@@ -13,6 +13,7 @@
  */
 package net.jawr.web.resource.bundle.factory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import net.jawr.web.exception.BundleDependencyException;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.resource.FileNameUtils;
+import net.jawr.web.resource.bundle.CheckSumUtils;
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.DebugInclusion;
 import net.jawr.web.resource.bundle.InclusionPattern;
@@ -54,6 +56,7 @@ import net.jawr.web.resource.bundle.global.processor.GlobalProcessor;
 import net.jawr.web.resource.bundle.handler.CachedResourceBundlesHandler;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandlerImpl;
+import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -179,31 +182,35 @@ public class BundlesHandlerFactory {
 	 */
 	public ResourceBundlesHandler buildResourceBundlesHandler()
 			throws DuplicateBundlePathException, BundleDependencyException {
-		if (LOGGER.isInfoEnabled())
+		if (LOGGER.isInfoEnabled()){
 			LOGGER.info("Building resources handler... ");
-
+		}
+		
 		// Ensure state is correct
-		if (null == jawrConfig)
+		if (null == jawrConfig){
 			throw new IllegalStateException(
 					"Must set the JawrConfig for this factory before invoking buildResourceBundlesHandler(). ");
-
-		if (null == resourceReaderHandler)
+		}
+		
+		if (null == resourceReaderHandler){
 			throw new IllegalStateException(
 					"Must set the resourceHandler for this factory before invoking buildResourceBundlesHandler(). ");
-		if (useSingleResourceFactory && null == singleFileBundleName)
+		}
+		
+		if (useSingleResourceFactory && null == singleFileBundleName){
 			throw new IllegalStateException(
 					"Must set the singleFileBundleName when useSingleResourceFactory is set to true. Please check the documentation. ");
-
+		}
+		
 		initCustomPostProcessors();
 
 		// List of bundles
 		List<JoinableResourceBundle> resourceBundles = new ArrayList<JoinableResourceBundle>();
 
-		boolean processBundle = !jawrConfig.getUseBundleMapping() || !resourceBundleHandler.isExistingMappingFile();
-		if (processBundle) {
-			initResourceBundles(resourceBundles);
-		} else {
+		if (isProcessingBundleFromCacheMapping()) {
 			initResourceBundlesFromFullMapping(resourceBundles);
+		} else {
+			initResourceBundles(resourceBundles);
 		}
 
 		// Build the postprocessor for bundles
@@ -213,7 +220,7 @@ public class BundlesHandlerFactory {
 		} else {
 			processor = this.chainFactory.buildPostProcessorChain(globalPostProcessorKeys);
 		}
-
+		
 		// Build the postprocessor to use on resources before adding them to the
 		// bundle.
 		ResourceBundlePostProcessor unitProcessor = null;
@@ -266,11 +273,15 @@ public class BundlesHandlerFactory {
 			resourceTypePostprocessor = this.resourceTypePostprocessorChainFactory
 					.buildProcessorChain(resourceTypePostprocessorKeys);
 
+		
 		// Build the handler
 		ResourceBundlesHandler collector = new ResourceBundlesHandlerImpl(resourceBundles, resourceReaderHandler,
 				resourceBundleHandler, jawrConfig, processor, unitProcessor, compositeBundleProcessor,
 				compositeUnitProcessor, resourceTypePreprocessor, resourceTypePostprocessor);
 
+		// Initialize life cycle listeners
+		collector.setBundlingProcessLifeCycleListeners(getBundlingProcessLifeCycleListeners());
+		
 		// Use the cached proxy if specified when debug mode is off.
 		if (useCacheManager && !jawrConfig.isDebugModeOn())
 			collector = new CachedResourceBundlesHandler(collector);
@@ -278,6 +289,41 @@ public class BundlesHandlerFactory {
 		collector.initAllBundles();
 
 		return collector;
+	}
+
+	/**
+	 * Returns true if the bundle should be processed using cache mapping information
+	 * @return true if the bundle should be processed using cache mapping information
+	 */
+	protected boolean isProcessingBundleFromCacheMapping() {
+		boolean processBundleFromCacheMapping = false;
+		if(jawrConfig.getUseBundleMapping() && resourceBundleHandler.isExistingMappingFile()){
+			Properties cachedMappingProperties = resourceBundleHandler.getJawrBundleMapping();
+			String storedHashcode = cachedMappingProperties.getProperty(JawrConstant.JAWR_CONFIG_HASHCODE);
+			String currentHashcode = null;
+			try {
+				currentHashcode = CheckSumUtils.getMD5Checksum(jawrConfig.getConfigProperties().toString());
+			} catch (IOException e) {
+				throw new BundlingProcessException("Unable to calculate checksum for current Jawr config");
+			}
+			if(currentHashcode.equals(storedHashcode)){
+				processBundleFromCacheMapping = true;
+			}
+		}
+		return processBundleFromCacheMapping;
+	}
+
+	/**
+	 * @return
+	 */
+	protected List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
+		List<BundlingProcessLifeCycleListener> lifeCycleListeners = new ArrayList<>();
+		List<BundlingProcessLifeCycleListener> generatorLifeCycleListeners = jawrConfig.getGeneratorRegistry().getBundlingProcessLifeCycleListeners();
+		lifeCycleListeners.addAll(generatorLifeCycleListeners);
+		lifeCycleListeners.addAll(this.resourceTypePreprocessorChainFactory.getBundlingProcessLifeCycleListeners());
+		lifeCycleListeners.addAll(this.chainFactory.getBundlingProcessLifeCycleListeners());
+		lifeCycleListeners.addAll(this.resourceTypePostprocessorChainFactory.getBundlingProcessLifeCycleListeners());
+		return lifeCycleListeners;
 	}
 
 	/**

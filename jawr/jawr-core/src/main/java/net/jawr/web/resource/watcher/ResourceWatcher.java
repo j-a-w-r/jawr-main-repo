@@ -37,13 +37,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
@@ -78,6 +79,12 @@ public class ResourceWatcher extends Thread {
 	/** The map between path and resource bundle */
 	private final Map<Path, List<PathMapping>> pathToResourceBundle = new ConcurrentHashMap<>();
 
+	/** The Jawr watch event processor */
+	private JawrWatchEventProcessor jawrEvtProcessor;
+	
+	/** The watch events */
+	private Queue<JawrWatchEvent> watchEvents = new ConcurrentLinkedDeque<JawrWatchEvent>();
+	
 	/**
 	 * Constructor
 	 * 
@@ -94,11 +101,14 @@ public class ResourceWatcher extends Thread {
 
 		try {
 			this.watchService = FileSystems.getDefault().newWatchService();
-			initPathToResourceBundleMap();
+			//initPathToResourceBundleMap();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 
+		jawrEvtProcessor = new JawrWatchEventProcessor(this, watchEvents);
+		jawrEvtProcessor.start();
+		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -108,6 +118,20 @@ public class ResourceWatcher extends Thread {
 	}
 
 	/**
+	 * @return the bundlesHandler
+	 */
+	public ResourceBundlesHandler getBundlesHandler() {
+		return bundlesHandler;
+	}
+
+	/**
+	 * @return the pathToResourceBundle
+	 */
+	public Map<Path, List<PathMapping>> getPathToResourceBundle() {
+		return pathToResourceBundle;
+	}
+	
+	/**
 	 * Sets the flag indicating if we must stop the resource watching
 	 */
 	public void stopWatching() {
@@ -116,18 +140,8 @@ public class ResourceWatcher extends Thread {
 		}
 
 		this.stopWatching.set(true);
-	}
-
-	/**
-	 * Initialize the map which link path to resource bundle
-	 * 
-	 * @throws IOException
-	 *             if an {@link IOException} occurs
-	 */
-	private void initPathToResourceBundleMap() throws IOException {
-
-		initPathToResourceBundleMap(bundlesHandler.getGlobalBundles());
-		initPathToResourceBundleMap(bundlesHandler.getContextBundles());
+		jawrEvtProcessor.stopProcessing();
+		jawrEvtProcessor.interrupt();
 	}
 
 	/**
@@ -255,7 +269,7 @@ public class ResourceWatcher extends Thread {
 	 * 
 	 * @param pathMapping
 	 */
-	private void registerAll(final Path start, final List<PathMapping> pathMappings) throws IOException {
+	void registerAll(final Path start, final List<PathMapping> pathMappings) throws IOException {
 		// register directory and sub-directories
 		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
 			@Override
@@ -318,53 +332,8 @@ public class ResourceWatcher extends Thread {
 						dirPath = resolvedPath.getParent();
 					}
 
-					List<PathMapping> mappings = pathToResourceBundle.get(dirPath);
-					if (mappings != null) {
-
-						List<JoinableResourceBundle> bundles = new ArrayList<>();
-						List<PathMapping> recursivePathMappings = new ArrayList<>();
-						for (PathMapping mapping : mappings) {
-
-							if (mapping.isAsset()) {
-								String fileName = FileNameUtils.getName(resolvedPath.toFile().getAbsolutePath());
-								if (fileName.equals(FileNameUtils.getName(mapping.getPath()))) {
-									bundles.add(mapping.getBundle());
-								}
-							} else {
-								if (isDir) {
-									if (mapping.isRecursive()) {
-										bundles.add(mapping.getBundle());
-									}
-								} else {
-									bundles.add(mapping.getBundle());
-								}
-								if (mapping.isRecursive()) {
-									recursivePathMappings.add(mapping);
-								}
-							}
-						}
-
-						if (!bundles.isEmpty()) {
-							bundlesHandler.notifyModification(bundles);
-						}
-
-						if (!recursivePathMappings.isEmpty()) {
-
-							// if directory is created, and watching
-							// recursively,
-							// then
-							// register it and its sub-directories
-							if (kind == ENTRY_CREATE && isDir) {
-								try {
-									registerAll(resolvedPath, recursivePathMappings);
-								} catch (IOException e) {
-									if (LOGGER.isWarnEnabled()) {
-										LOGGER.warn(e.getMessage());
-									}
-								}
-							}
-						}
-					}
+					JawrWatchEvent evt = new JawrWatchEvent(kind, resolvedPath, dirPath);
+					watchEvents.add(evt);
 				}
 
 				// reset key and remove from set if directory no longer
@@ -383,4 +352,11 @@ public class ResourceWatcher extends Thread {
 		close();
 	}
 
+	/**
+	 * Returns true if there is no more event to process
+	 * @return true if there is no more event to process
+	 */
+	public boolean hasNoEventToProcess(){
+		return jawrEvtProcessor.hasNoEventToProcess();
+	}
 }
