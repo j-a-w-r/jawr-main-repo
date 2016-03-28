@@ -283,6 +283,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 
 		if (!hasDebugURL) {
 
+			// Add the mappings
+			bundle.setMappings(mappings);
+
 			// Checks if the bundle files have been modified
 			verifyIfBundleIsModified(bundleName, bundle, props);
 

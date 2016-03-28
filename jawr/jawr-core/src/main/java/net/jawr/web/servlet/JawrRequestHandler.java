@@ -308,10 +308,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		if (this.bundlesHandler != null && jawrConfig.getUseSmartBundling()) {
 
-//			this.watcher = new ResourceWatcher(this.bundlesHandler, this.rsReaderHandler);
-//			this.bundlesHandler.setResourceWatcher(watcher);
-//			this.watcher.start();
-			this.watcher = this.bundlesHandler.getResourceWatcher();
+			this.watcher = new ResourceWatcher(this.bundlesHandler, this.rsReaderHandler);
+			this.bundlesHandler.setResourceWatcher(watcher);
+			try {
+				this.watcher.initPathToResourceBundleMap(this.bundlesHandler.getGlobalBundles());
+				this.watcher.initPathToResourceBundleMap(this.bundlesHandler.getContextBundles());
+			} catch (IOException e) {
+				throw new BundlingProcessException("Impossible to initialize Jawr Resource Watcher", e);
+			}
+		
 			this.watcher.start();
 		}
 

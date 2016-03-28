@@ -379,11 +379,11 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getResourceWatcher()
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
 	 */
 	@Override
-	public ResourceWatcher getResourceWatcher() {
-		return rsHandler.getResourceWatcher();
+	public void setResourceWatcher(ResourceWatcher watcher) {
+		rsHandler.setResourceWatcher(watcher);
 	}
 
 	/*

@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
@@ -216,17 +217,6 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				.getBundlingProcessLifeCycleListeners();
 		lifeCycleListeners.addAll(generatorLifeCycleListeners);
 		
-		if (config.getUseSmartBundling()) {
-
-			this.watcher = new ResourceWatcher(this, this.resourceHandler);
-			try {
-				this.watcher.initPathToResourceBundleMap(globalBundles);
-				this.watcher.initPathToResourceBundleMap(contextBundles);
-			} catch (IOException e) {
-				throw new BundlingProcessException("Impossible to initialize Jawr Resource Watcher", e);
-			}
-			
-		}
 	}
 
 	/*
@@ -319,6 +309,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		contextBundles = new CopyOnWriteArrayList<JoinableResourceBundle>();
 		contextBundles.addAll(tmpContext);
+		
 	}
 
 	/*
@@ -1424,6 +1415,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				LOGGER.info("The bundle '" + bundle.getId() + "' has been modified and needs to be rebuild.");
 			}
 			bundle.setDirty(true);
+			
+			
 		}
 	}
 
@@ -1456,11 +1449,11 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#getResourceWatcher()
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
 	 */
 	@Override
-	public ResourceWatcher getResourceWatcher() {
-		return this.watcher;
+	public void setResourceWatcher(ResourceWatcher watcher) {
+		this.watcher = watcher;
 	}
 
 	/*

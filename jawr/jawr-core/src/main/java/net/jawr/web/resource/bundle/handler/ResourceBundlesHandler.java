@@ -207,10 +207,10 @@ public interface ResourceBundlesHandler {
 	public List<String> getDirtyBundleNames();
 
 	/**
-	 * Returns the resource watcher
-	 * @return the resource watcher
+	 * Sets the resource watcher
+	 * @param watcher the resource watcher to set
 	 */
-	public ResourceWatcher getResourceWatcher();
+	public void setResourceWatcher(ResourceWatcher watcher);
 	
 	/**
 	 * Returns true if the bundle are being processed
