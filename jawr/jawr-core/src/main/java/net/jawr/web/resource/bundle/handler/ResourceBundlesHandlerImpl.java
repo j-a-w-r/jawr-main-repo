@@ -105,6 +105,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private List<JoinableResourceBundle> contextBundles;
 
+	/** The map which map a child bundle to a composite parent bundle */
+	private Map<String, List<JoinableResourceBundle>> compositeResourceBundleMap = new ConcurrentHashMap<>();
+	
 	/**
 	 * The bundles that will be processed once when the server will be up and
 	 * running.
@@ -310,6 +313,28 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		contextBundles = new CopyOnWriteArrayList<JoinableResourceBundle>();
 		contextBundles.addAll(tmpContext);
 		
+		initCompositeBundleMap(globalBundles);
+		initCompositeBundleMap(contextBundles);
+	}
+
+	/**
+	 * Initialize the composite bundle map
+	 * @param bundles list of resource bundle
+	 */
+	private void initCompositeBundleMap(List<JoinableResourceBundle> bundles) {
+		for(JoinableResourceBundle bundle : bundles){
+			if(bundle.isComposite()){
+				List<JoinableResourceBundle> childBundles = ((CompositeResourceBundle) bundle).getChildBundles();
+				for(JoinableResourceBundle childBundle : childBundles){
+					List<JoinableResourceBundle> associatedBundles = compositeResourceBundleMap.get(childBundle.getId());
+					if(associatedBundles == null){
+						associatedBundles = new ArrayList<>();
+					}
+					associatedBundles.add(bundle);
+					compositeResourceBundleMap.put(childBundle.getId(), associatedBundles);
+				}
+			}
+		}
 	}
 
 	/*
@@ -1416,7 +1441,16 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			}
 			bundle.setDirty(true);
 			
-			
+			// Update the composite bundles which are linked to this bundle if they exists
+			List<JoinableResourceBundle> linkedBundles = compositeResourceBundleMap.get(bundle.getId());
+			if(linkedBundles != null){
+				for (JoinableResourceBundle compositeBundle : linkedBundles) {
+					if (LOGGER.isInfoEnabled() && !compositeBundle.isDirty()) {
+						LOGGER.info("The composite bundle '" + compositeBundle.getId() + "', whose child has been modified, needs to be rebuild.");
+					}
+					compositeBundle.setDirty(true);
+				}
+			}
 		}
 	}
 

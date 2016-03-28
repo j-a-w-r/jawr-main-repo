@@ -2,9 +2,13 @@ package test.net.jawr.web.resource.bundle.handler;
 
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.exception.BundleDependencyException;
+import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -123,4 +127,41 @@ public class ResourceBundlesHandlerImplTest  extends  ResourceHandlerBasedTest {
 		assertEquals("Get script by script name failed","/global.js", simpleHandler.resolveBundleForPath("/js/global/global.js").getId());
 	}
 
+	public void testNotificationOnCompositeBundle() throws DuplicateBundlePathException, BundleDependencyException{
+		
+		Charset charsetUtf = Charset.forName("UTF-8"); 
+		JawrConfig simpleConfig = new JawrConfig("js",new Properties());
+		simpleConfig.setCharsetName("UTF-8");
+		simpleConfig.setDebugModeOn(true);
+		GeneratorRegistry debugGeneratorRegistry = new GeneratorRegistry();
+		simpleConfig.setGeneratorRegistry(debugGeneratorRegistry);
+		simpleConfig.setContext(new MockServletContext());
+		debugGeneratorRegistry.setConfig(simpleConfig);
+		
+		ResourceReaderHandler handlerSimple = createResourceReaderHandler(ROOT_SIMPLE_FOLDER,"js",charsetUtf);
+		ResourceBundleHandler bundleHandlerSimple = createResourceBundleHandler(ROOT_SIMPLE_FOLDER,charsetUtf);
+		ResourceBundlesHandler bundlesHandler = PredefinedBundlesHandlerUtil.buildSimpleCompositeBundles(handlerSimple, bundleHandlerSimple, "/js","js", simpleConfig);
+		
+		List<JoinableResourceBundle> bundles = bundlesHandler.getContextBundles();
+		JoinableResourceBundle bundleChild2 = null;
+		for(JoinableResourceBundle bundle : bundles){
+			if(bundle.getName().equals("libraryChild2")){
+				bundleChild2 = bundle;
+				break;
+			}
+		}
+		
+		bundlesHandler.notifyModification(Arrays.asList(bundleChild2));
+		for(JoinableResourceBundle bundle : bundles){
+			if(bundle.getName().equals("libraryChild1")){
+				assertFalse(bundle.isDirty());
+			}
+			if(bundle.getName().equals("libraryChild2")){
+				assertTrue(bundle.isDirty());
+			}
+			if(bundle.getName().equals("library")){
+				assertTrue(bundle.isDirty());
+			}
+		}
+	}
 }

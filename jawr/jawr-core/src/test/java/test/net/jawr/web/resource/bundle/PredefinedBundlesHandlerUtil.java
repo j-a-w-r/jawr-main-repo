@@ -100,6 +100,46 @@ public class PredefinedBundlesHandlerUtil {
 		return factory.buildResourceBundlesHandler();
 	}
 
+	public static final ResourceBundlesHandler buildSimpleCompositeBundles(
+			ResourceReaderHandler handler,
+			ResourceBundleHandler rsBundleHandler, String baseDir, String type,
+			JawrConfig config) throws DuplicateBundlePathException,
+			BundleDependencyException {
+
+		GeneratorRegistry generatorRegistry = new GeneratorRegistry(type);
+		generatorRegistry.setResourceReaderHandler(handler);
+		config.setGeneratorRegistry(generatorRegistry);
+		BundlesHandlerFactory factory = new BundlesHandlerFactory(config);
+		factory.setResourceReaderHandler(handler);
+		factory.setResourceBundleHandler(rsBundleHandler);
+		factory.setBaseDir(baseDir);
+		factory.setBundlesType(type);
+
+		Set<ResourceBundleDefinition> customBundles = new HashSet<ResourceBundleDefinition>();
+
+		ResourceBundleDefinition def1 = new ResourceBundleDefinition();
+		def1.setMappings(Collections.singletonList(baseDir + "/lib/**"));
+		def1.setBundleName("libraryChild1");
+		def1.setBundleId("/libraryChild1." + type);
+		customBundles.add(def1);
+
+		ResourceBundleDefinition def2 = new ResourceBundleDefinition();
+		def2.setMappings(Collections.singletonList(baseDir + "/global/**"));
+		def2.setBundleName("libraryChild2");
+		def2.setBundleId("/libraryChild2." + type);
+		customBundles.add(def2);
+
+		ResourceBundleDefinition def = new ResourceBundleDefinition();
+		def.setBundleName("library");
+		def.setBundleId("/library." + type);
+		def.setComposite(true);
+		def.setChildren(Arrays.asList(def1, def2));
+		customBundles.add(def);
+
+		factory.setBundleDefinitions(customBundles);
+		return factory.buildResourceBundlesHandler();
+	}
+	
 	public static final ResourceBundlesHandler buildSimpleBundlesWithDependencies(
 			ResourceReaderHandler handler,
 			ResourceBundleHandler rsBundleHandler, String baseDir, String type,
