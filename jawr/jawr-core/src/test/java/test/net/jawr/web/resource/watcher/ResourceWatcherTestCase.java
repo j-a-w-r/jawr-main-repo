@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,6 +78,10 @@ public class ResourceWatcherTestCase {
 	@Before
 	public void setUp() {
 
+		// Make sure we are not using java 8 for this test.
+		String javaVersion = System.getProperty("java.version");
+		Assume.assumeFalse(javaVersion.startsWith("1.8"));
+		
 		when(b.getId()).thenReturn("/js/bundle1.js");
 		when(b.getName()).thenReturn("bundle1");
 
