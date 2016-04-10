@@ -107,8 +107,10 @@ public class ResourceWatcherTestCase {
 
 	@After
 	public void tearDown() {
-		watcher.stopWatching();
-		watcher.interrupt();
+		if(watcher != null){
+			watcher.stopWatching();
+			watcher.interrupt();
+		}
 	}
 
 	/**
