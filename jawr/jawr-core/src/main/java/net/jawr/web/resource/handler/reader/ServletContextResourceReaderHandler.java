@@ -28,7 +28,9 @@ import javax.servlet.ServletContext;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.exception.InterruptBundlingProcessException;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
@@ -282,6 +284,9 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle,
 			List<Class<?>> excludedReader) throws ResourceNotFoundException {
 
+		if(ThreadLocalJawrContext.isInterruptingProcessingBundle()){
+			throw new InterruptBundlingProcessException();
+		}
 		Reader rd = null;
 
 		String resourceExtension = FileNameUtils.getExtension(resourceName);
@@ -371,6 +376,10 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	public InputStream getResourceAsStream(String resourceName, boolean processingBundle)
 			throws ResourceNotFoundException {
 
+		if(ThreadLocalJawrContext.isInterruptingProcessingBundle()){
+			throw new InterruptBundlingProcessException();
+		}
+		
 		generatorRegistry.loadGeneratorIfNeeded(resourceName);
 		InputStream is = null;
 

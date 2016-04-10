@@ -132,6 +132,22 @@ public final class ThreadLocalJawrContext {
 	}
 	
 	/**
+	 * Returns true if the processing bundle should be interrupted
+	 * @return true if the processing bundle should be interrupted
+	 */
+	public static boolean isInterruptingProcessingBundle() {
+		return jawrContext.get().isInterruptingProcessingBundle();
+	}
+
+	/**
+	 * Sets the flag which indicate that the processing bundle should be interrupted
+	 * @param interruptProcessingBundle the flag to set
+	 */
+	public static void setInterruptProcessingBundle(boolean interruptProcessingBundle) {
+		jawrContext.get().setInterruptProcessingBundle(interruptProcessingBundle);
+	}
+	
+	/**
 	 * Sets the mbean object name
 	 * @param mbeanObjectName the mbean object name
 	 */

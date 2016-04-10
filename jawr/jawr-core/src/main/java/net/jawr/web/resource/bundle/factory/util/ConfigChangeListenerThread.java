@@ -19,6 +19,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.jawr.web.exception.InterruptBundlingProcessException;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 
 /**
@@ -68,9 +69,10 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	 * @param secondsToWait
 	 *            the second to wait between each check
 	 */
-	public ConfigChangeListenerThread(String resourceType, ConfigPropertiesSource propertiesSource, Properties overriddenProperties,
-			ConfigChangeListener listener, ResourceBundlesHandler bundlesHandler, long secondsToWait) {
-		super(resourceType+ " Config Change listener Thread");
+	public ConfigChangeListenerThread(String resourceType, ConfigPropertiesSource propertiesSource,
+			Properties overriddenProperties, ConfigChangeListener listener, ResourceBundlesHandler bundlesHandler,
+			long secondsToWait) {
+		super(resourceType + " Config Change listener Thread");
 		this.propertiesSource = propertiesSource;
 		this.overriddenProperties = overriddenProperties;
 		this.listener = listener;
@@ -101,7 +103,7 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 							props.putAll(overriddenProperties);
 						}
 						listener.configChanged(props);
-					}else if(bundlesHandler != null && bundlesHandler.bundlesNeedToBeRebuild()){
+					} else if (bundlesHandler != null && bundlesHandler.bundlesNeedToBeRebuild()) {
 						listener.rebuildDirtyBundles();
 					}
 				}
@@ -110,6 +112,10 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 
 			} catch (InterruptedException e) {
 				// Nothing to do
+			} catch (InterruptBundlingProcessException e) {
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info("Bundling processed stopped");
+				}
 			}
 		}
 	}
@@ -118,10 +124,10 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	 * Causes the thread to stop polling for changes.
 	 */
 	public void stopPolling() {
-		if (LOGGER.isDebugEnabled()){
+		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Stopping the configuration change polling");
 		}
-		
+
 		continuePolling = false;
 	}
 

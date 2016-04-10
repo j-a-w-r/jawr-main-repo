@@ -13,6 +13,8 @@
  */
 package net.jawr.web.context;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.management.ObjectName;
 
 import net.jawr.web.util.StopWatch;
@@ -41,6 +43,26 @@ public class JawrContext {
 	/** The stop watch */
 	private StopWatch stopWatch;
 	
+	/** The flag indicating if we shoudl stop the processing */
+	private AtomicBoolean interruptProcessingBundle = new AtomicBoolean(false);
+
+	
+	/**
+	 * Returns true if the processing bundle should be interrupted
+	 * @return true if the processing bundle should be interrupted
+	 */
+	public boolean isInterruptingProcessingBundle() {
+		return interruptProcessingBundle.get();
+	}
+
+	/**
+	 * Sets the flag which indicate that the processing bundle should be interrupted
+	 * @param interruptProcessingBundle the flag to set
+	 */
+	public void setInterruptProcessingBundle(boolean interruptProcessingBundle) {
+		this.interruptProcessingBundle.set(interruptProcessingBundle);
+	}
+
 	/**
 	 * Constructor. 
 	 */
@@ -140,6 +162,7 @@ public class JawrContext {
 		this.bundleProcessingAtBuildTime = false;
 		this.requestURL = null;
 		this.stopWatch = null;
+		this.interruptProcessingBundle.set(false);
 	}
 
 }

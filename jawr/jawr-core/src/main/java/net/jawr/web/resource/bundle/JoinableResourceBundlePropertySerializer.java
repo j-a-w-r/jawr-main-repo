@@ -65,7 +65,6 @@ public class JoinableResourceBundlePropertySerializer {
 	public static void serializeInProperties(JoinableResourceBundle bundle,
 			String type, Properties props) {
 
-
 		String bundleName = bundle.getName();
 		String prefix = PropertiesBundleConstant.PROPS_PREFIX + type + "."+ PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY + bundleName;
 		InclusionPattern inclusion = bundle.getInclusionPattern();

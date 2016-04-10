@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.channels.Channels;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
@@ -31,7 +32,9 @@ import java.util.StringTokenizer;
 import java.util.zip.GZIPOutputStream;
 
 import net.jawr.web.JawrConstant;
+import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.exception.InterruptBundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundleContent;
@@ -560,7 +563,9 @@ public abstract class AbstractResourceBundleHandler implements
 				IOUtils.close(wr);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(ThreadLocalJawrContext.isInterruptingProcessingBundle() || e instanceof ClosedByInterruptException){
+				throw new InterruptBundlingProcessException();
+			}
 			throw new BundlingProcessException(
 					"Unexpected IOException creating temporary jawr file", e);
 		}

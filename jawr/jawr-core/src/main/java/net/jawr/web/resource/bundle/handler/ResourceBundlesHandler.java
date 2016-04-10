@@ -224,5 +224,5 @@ public interface ResourceBundlesHandler {
 	 */
 	public void setBundlingProcessLifeCycleListeners(
 			List<BundlingProcessLifeCycleListener> listeners);
-	
+
 }

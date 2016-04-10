@@ -46,6 +46,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.exception.InterruptBundlingProcessException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.CheckSumUtils;
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
@@ -156,6 +157,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/** The resource watcher */
 	private ResourceWatcher watcher;
 
+	/** The life cycle listeners */
 	private List<BundlingProcessLifeCycleListener> lifeCycleListeners = new CopyOnWriteArrayList<>();
 
 	/** The flag indicating if we need to search for variant in post process */
@@ -601,6 +603,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	public void initAllBundles() {
 
+		stopProcessIfNeeded();
+		
 		if (config.getUseBundleMapping()) {
 			bundleMapping = resourceBundleHandler.getJawrBundleMapping();
 		}
@@ -668,6 +672,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private void executeGlobalPreprocessing(List<JoinableResourceBundle> bundlesToBuild, boolean processBundleFlag,
 			StopWatch stopWatch) {
+		
+		stopProcessIfNeeded();
+		
 		if (resourceTypePreprocessor != null) {
 			if (stopWatch != null) {
 				stopWatch.start("Global preprocessing");
@@ -697,6 +704,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	public synchronized void rebuildModifiedBundles() {
 
+		stopProcessIfNeeded();
+		
 		StopWatch stopWatch = ThreadLocalJawrContext.getStopWatch();
 
 		if (config.getUseSmartBundling()) {
@@ -764,6 +773,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	public void build(List<JoinableResourceBundle> bundlesToBuild, boolean forceWriteBundleMapping,
 			StopWatch stopWatch) {
 
+		stopProcessIfNeeded();
+		
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("Starting bundle processing");
 		}
@@ -778,6 +789,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		for (JoinableResourceBundle bundle : bundlesToBuild) {
 
+			stopProcessIfNeeded();
+			
 			// Clears the linked resource mappings as they will be initialized
 			// by the processing
 			bundle.getLinkedFilePathMappings().clear();
@@ -797,7 +810,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				joinAndStoreBundle(bundle);
 			}
 
-			if (config.getUseBundleMapping() && (!mappingFileExists || bundle.isDirty())) {
+			if (config.getUseBundleMapping()) {
 				JoinableResourceBundlePropertySerializer.serializeInProperties(bundle,
 						resourceBundleHandler.getResourceType(), bundleMapping);
 			}
@@ -826,6 +839,15 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			LOGGER.info("End of bundle processing");
 		}
 
+	}
+
+	/**
+	 * Stop the bundling process if needed
+	 */
+	protected void stopProcessIfNeeded() {
+		if(ThreadLocalJawrContext.isInterruptingProcessingBundle()){
+			throw new InterruptBundlingProcessException();
+		}
 	}
 
 	/**
@@ -935,6 +957,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private void joinAndStoreCompositeResourcebundle(CompositeResourceBundle composite) {
 
+		stopProcessIfNeeded();
+		
 		BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE,
 				composite, resourceHandler, config);
 
@@ -1008,6 +1032,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	private void joinAndPostProcessBundle(CompositeResourceBundle composite, BundleProcessingStatus status) {
 		JoinableResourceBundleContent store;
 
+		stopProcessIfNeeded();
+		
 		List<Map<String, String>> allVariants = VariantUtils.getAllVariants(composite.getVariants());
 		// Add the default bundle variant (the non variant one)
 		allVariants.add(null);
@@ -1184,6 +1210,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 */
 	private void storeBundle(String bundleId, JoinableResourceBundleContent store) {
 
+		stopProcessIfNeeded();
+		
 		if (bundleMustBeProcessedInLive(store.getContent().toString())) {
 			liveProcessBundles.add(bundleId);
 		}

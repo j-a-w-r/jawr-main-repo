@@ -37,6 +37,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.cache.CacheManagerFactory;
 import net.jawr.web.config.ConfigPropertyResolver;
@@ -49,6 +52,7 @@ import net.jawr.web.exception.BundleDependencyException;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.DuplicateBundlePathException;
 import net.jawr.web.exception.ResourceNotFoundException;
+import net.jawr.web.exception.InterruptBundlingProcessException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.IOUtils;
@@ -74,9 +78,6 @@ import net.jawr.web.resource.watcher.ResourceWatcher;
 import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Request handling class. Any jawr enabled servlet delegates to this class to
@@ -316,7 +317,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			} catch (IOException e) {
 				throw new BundlingProcessException("Impossible to initialize Jawr Resource Watcher", e);
 			}
-		
+
 			this.watcher.start();
 		}
 
@@ -1164,6 +1165,11 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * redeployed.
 	 */
 	public void destroy() {
+		
+		if(bundlesHandler != null){
+			ThreadLocalJawrContext.setInterruptProcessingBundle(true);
+		}
+		
 		// Stop the config change listener.
 		if (null != this.configChangeListenerThread) {
 			configChangeListenerThread.stopPolling();
@@ -1186,7 +1192,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		JmxUtils.unregisterJMXBean(servletContext, resourceType,
 				jawrConfig.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX));
-		
+
 		ThreadLocalJawrContext.reset();
 	}
 
@@ -1227,18 +1233,25 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			if (bundlesHandler != null) {
 				bundlesHandler.rebuildModifiedBundles();
 			}
+
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Jawr configuration succesfully reloaded. ");
+			}
+			if (PERF_PROCESSING_LOGGER.isDebugEnabled()) {
+				PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
+			}
+
+		} catch (InterruptBundlingProcessException e) {
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Bundling processed stopped");
+			}
 		} catch (Exception e) {
 			throw new BundlingProcessException("Error while rebuilding dirty bundles : " + e.getMessage(), e);
+
 		} finally {
 
 			// Reset the Thread local for the Jawr context
 			ThreadLocalJawrContext.reset();
-		}
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Jawr configuration succesfully reloaded. ");
-		}
-		if (PERF_PROCESSING_LOGGER.isDebugEnabled()) {
-			PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
 		}
 	}
 
@@ -1272,6 +1285,15 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			props.putAll(newConfig);
 
 			initializeJawrContext(props);
+			
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Jawr configuration succesfully reloaded. ");
+			}
+
+		} catch (InterruptBundlingProcessException e) {
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info(resourceType+" bundling process Interrupted");
+			}
 		} catch (Exception e) {
 			throw new BundlingProcessException("Error reloading Jawr config: " + e.getMessage(), e);
 		} finally {
@@ -1280,9 +1302,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			ThreadLocalJawrContext.reset();
 		}
 
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Jawr configuration succesfully reloaded. ");
-		}
 	}
 
 }
