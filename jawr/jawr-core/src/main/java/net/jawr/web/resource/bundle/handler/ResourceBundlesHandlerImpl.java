@@ -634,6 +634,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 					LOGGER.debug(msg.toString());
 				}
 			} else {
+				bundleMapping.clear();
 				if (LOGGER.isDebugEnabled() && !jawrConfigHashcode.equals(storeJawrConfigHashcode)) {
 					LOGGER.debug("Jawr config has changed since last bundling process. All bundles will be processed.");
 				}
