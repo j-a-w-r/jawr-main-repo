@@ -177,7 +177,7 @@ methods have been added to the BundleProcessingStatus class.
 The sequence diagram above gives an overview of what happens when the
 postprocessor defines some postprocessor variants.
 
-The ResourceBundleHandler, which is responsible of creating the
+The ResourceBundleHandler, which is responsible for creating the
 different bundles at server startup, iterates through each bundle.
 
 -   The ResourceBundleHandler initializes the BundleProcessingStatus and
@@ -242,7 +242,7 @@ Here is the list of methods to be implemented by a VariantResolver.
 -   The method **getAvailableVariant** returns the value of the variant
     from the current value and from the available variant set.
 
-The Variant resolver is responsible of the default variant strategy.
+The Variant resolver is responsible for the default variant strategy.
 This means that the variant resolver is responsible to define what is
 the value to use if the variant doesn't exists in the VariantSet. If the
 VariantResolver doesn't find a suitable variant, it **must** returns the

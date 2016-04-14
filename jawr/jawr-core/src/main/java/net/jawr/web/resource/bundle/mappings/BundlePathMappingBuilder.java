@@ -32,7 +32,7 @@ import net.jawr.web.resource.bundle.sorting.SortFileParser;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
- * This class is responsible of handling the resource bundle path mapping
+ * This class is responsible for handling the resource bundle path mapping
  * 
  * @author Ibrahim Chaehoi
  */
