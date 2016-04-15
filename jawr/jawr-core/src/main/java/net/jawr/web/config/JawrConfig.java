@@ -369,7 +369,7 @@ public class JawrConfig implements Serializable {
 	private String clientSideHandlerGeneratorClass;
 
 	/**
-	 * The flag indicating that we should use the overriden context path even in
+	 * The flag indicating that we should use the overridden context path even in
 	 * debug mode. The default value is false.
 	 */
 	private boolean useContextPathOverrideInDebugMode = false;

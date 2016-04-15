@@ -219,7 +219,7 @@ public class JawrSpringController implements Controller, ServletContextAware,
 				&& null == configPropertiesSourceClass)
 			throw new ServletException(
 					"Neither configuration nor configLocation nor configPropertiesSourceClass init params were set."
-							+ " You must set at least the configuration or the configLocation param. Please check your web.xml file");
+							+ " You must set at least the configuration or the configLocation param or the configPropertiesSourceClass. Please check your web.xml file");
 
 		String fullMapping = "";
 		if (StringUtils.isNotEmpty(mapping))

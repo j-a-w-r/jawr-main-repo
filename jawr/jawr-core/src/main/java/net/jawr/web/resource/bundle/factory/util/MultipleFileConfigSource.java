@@ -34,7 +34,7 @@ public class MultipleFileConfigSource extends PropsFilePropertiesSource implemen
 	
 	
 	/**
-	 * Set of private configuration properties which should not be overriden. Subclasses may initialize this 
+	 * Set of private configuration properties which should not be overridden. Subclasses may initialize this 
 	 * collection to fit specific needs. The default implementation does not initialize this Set. 
 	 */
 	protected Set<String> privateConfigProperties;

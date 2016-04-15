@@ -77,7 +77,7 @@ public class CSSURLPathRewriterPostProcessor extends
 	
 	/**
 	 * Returns the full path for the CSS bundle, taking in account the css servlet path if defined, 
-	 * the caching prefix, and the url context path overriden
+	 * the caching prefix, and the url context path overridden
 	 *   
 	 * @return the full bundle path
 	 */
