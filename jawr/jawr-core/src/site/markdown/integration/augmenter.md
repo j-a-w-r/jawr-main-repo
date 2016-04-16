@@ -137,7 +137,7 @@ The augmentable properties are the following:
 
 -   Bundle definitions (jawr.\[type\].bundle.names). Note this property
     is deprecated as of version 2.7, but you can't mix configurations
-    with and without it, so be sure to make it clear wether it should be
+    with and without it, so be sure to make it clear whether it should be
     used or not when letting others augment your configuration.
 -   Bundle mappings (jawr.\[type\].bundle.\[name\].mappings).
 -   Composite bundles child
@@ -257,7 +257,7 @@ The parameters represent the following data:
             Set includedBundles = RendererRequestUtils.getAddedBundlesLog(request);
 
 
-   -   **useGzip** determines wether to use the gzip compressed version
+   -   **useGzip** determines whether to use the gzip compressed version
         of the scripts, based on Jawr configuration and on the
         request headers. Again, a utility method will take care
         of everything. You will need to reuse the ResourceBundlesHandler

@@ -402,7 +402,7 @@ The ConfigPropertiesSource interface declares two methods:
 
 The configChanged method will be called only if you set the
 jawr.config.reload.interval parameter in the properties file to any
-valid value. This would have Jawr check every n seconds wether
+valid value. This would have Jawr check every n seconds whether
 configuration has changed since the last time it was loaded. Therefore,
 if configChanged returns true, Jawr will redeploy itself.
 

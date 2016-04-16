@@ -65,7 +65,7 @@ are being set configure the controllers in the following way:
     mapping attribute should be '/spring/' (without the '\*').
 -   **configLocation** is a location of the Jawr configuration file.
     Check the descriptor syntax page for an overview of what goes here.
--   **type** tells the controller wether it is serving .js or
+-   **type** tells the controller whether it is serving .js or
     .css files. Since by default .js is assumed, you only need to set it
     at the CSS controller declaration.
 

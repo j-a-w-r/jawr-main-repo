@@ -26,7 +26,7 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.util.StringUtils;
 
 /**
- * This class rewrites is used to rewrite CSS URLs according to the new
+ * This class is used to rewrite CSS URLs according to the new
  * relative locations of the references, from the original CSS path to a new one. 
  * Since the path changes, the URLs must be rewritten accordingly. URLs in css files are
  * expected to be according to the css spec (see

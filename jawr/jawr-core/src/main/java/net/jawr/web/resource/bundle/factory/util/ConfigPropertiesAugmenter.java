@@ -52,7 +52,7 @@ public class ConfigPropertiesAugmenter {
 	 * @param configProperties
 	 *            Base configuration.
 	 * @param privateConfigProperties
-	 *            Set of names of properties which may not be overriden.
+	 *            Set of names of properties which may not be overridden.
 	 */
 	public ConfigPropertiesAugmenter(Properties configProperties,
 			Set<String> privateConfigProperties) {
@@ -92,7 +92,7 @@ public class ConfigPropertiesAugmenter {
 					&& privateConfigProperties.contains(configKey)) {
 				LOGGER.warn("The property "
 						+ configKey
-						+ " can not be overriden. It will remain with a value of "
+						+ " can not be overridden. It will remain with a value of "
 						+ configProperties.get(configKey));
 				continue;
 			}

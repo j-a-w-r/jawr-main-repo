@@ -13,7 +13,7 @@ Both tags have a **src** attribute in which you specify either the name
 of a bundle or the path to a member of a bundle. In either case, the
 taglib will do as follows:
 
--   The page request headers will be analyzed to check wether the
+-   The page request headers will be analyzed to check whether the
     current client browser will accept gzip encoding or not. Depending
     on this, the generated URLs will point to the regular or the gzipped
     versions of the bundles.

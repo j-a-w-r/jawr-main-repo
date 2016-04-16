@@ -228,7 +228,7 @@ There are three ways to map resources:
 
                     public boolean isDirectory(String path);
 
-   Determines wether a given path is a directory.
+   Determines whether a given path is a directory.
 
 ### Debug mode for generated Resource deployed in CDN
 

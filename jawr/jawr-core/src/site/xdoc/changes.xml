@@ -155,7 +155,7 @@
 	      		 	<strong>Issue #304 fixed:</strong> StringIndexOutOfBoundsException occurs when Jawr tries to handle a request without prefix
 			  	 </li>
 			  	 <li>
-	      		 	<strong>Issue #246 fixed:</strong> Issue with bas64 postprocessor with sprite image
+	      		 	<strong>Issue #246 fixed:</strong> Issue with base64 postprocessor with sprite image
 	      		 </li>
 			  </ul>
 	    	</li>
@@ -599,7 +599,7 @@
 	      		 	<strong>Issue #233 fixed:</strong> Issue with base64 postprocessor when the css files are not in the same directory level     
 	      		 </li>  
 	      		 <li>
-	      		 	<strong>Issue #245 fixed:</strong> Issue with bas64 postprocessor, which didn't work properly. Please check the <a href="./tutorials/howToUseJawrToGenerateBase64Image.html">tutorial</a> on how to set up the bas64 postprocessor.     
+	      		 	<strong>Issue #245 fixed:</strong> Issue with base64 postprocessor, which didn't work properly. Please check the <a href="./tutorials/howToUseJawrToGenerateBase64Image.html">tutorial</a> on how to set up the base64 postprocessor.     
 	      		 </li>  
 	      	</ul>
      	  </li>

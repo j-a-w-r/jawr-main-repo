@@ -34,7 +34,7 @@ css resources, plus a file postprocessor for css files. We didn't
 specify any file postprocessor for javascript because, at the time of
 writing, there is none available yet.   Note that the previous example
 configuration matches the default behavior of Jawr, so it actually makes
-no difference wether you include it in your descriptor or not. You would
+no difference whether you include it in your descriptor or not. You would
 set these parameters only to change the default behavior, like for
 example, to remove minification:
 
@@ -88,7 +88,7 @@ other data which may be useful under certain circumstances. Most of the
 time, though, you won't need to use it at all.
 
 The bundleString StringBuffer will contain different data depending on
-wether the postprocessor is used as a bundle postprocessor or a file
+whether the postprocessor is used as a bundle postprocessor or a file
 postprocessor. In the first case, it will contain the text for the whole
 bundle, while in the latter case it will contain the text for just a
 single item in the bundle.

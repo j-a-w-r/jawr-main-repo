@@ -478,7 +478,7 @@ Finally, the createResource() method is where the actual generation
         'prefix:thePath(param)', this method returns 'thePath'.
 -   getConfig(): returns the JawrConfig object used throughout
         the application. It contains data about the Jawr configuration,
-        such as wether debug mode is on or off, the current servlet
+        such as whether debug mode is on or off, the current servlet
         mapping, and so on.
 -   getCharset(): returns the current charset, which the returned
         script or CSS must conform to.

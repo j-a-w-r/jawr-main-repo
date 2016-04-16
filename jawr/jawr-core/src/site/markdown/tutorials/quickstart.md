@@ -121,7 +121,7 @@ WEB-INF/classes dir. Add this content to the file:
 
 In order to see output log messages, you need to create a log4j
 configuration file. For this setup, we will use a properties file which
-should be in the application classpath (alongside the jwr.properties
+should be in the application classpath (alongside the jawr.properties
 file). The file should be named log4j.properties and the contents be as
 follows:
 
