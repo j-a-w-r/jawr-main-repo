@@ -58,9 +58,6 @@ public abstract class AbstractResourceBundleHandler implements
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractResourceBundleHandler.class);
 
-	/** The name of the Jawr temp directory */
-	protected static final String TEMP_SUBDIR = "jawrTmp";
-
 	/** The name of the directory which contain the bundles in text format */
 	protected static final String TEMP_TEXT_SUBDIR = "text";
 
@@ -215,10 +212,6 @@ public abstract class AbstractResourceBundleHandler implements
 	private void initTempDirectory(String tempDirRoot, boolean createTempSubDir) {
 
 		tempDirPath = tempDirRoot;
-
-		if (createTempSubDir) {
-			tempDirPath = tempDirPath + File.separator + TEMP_SUBDIR;
-		}
 
 		// In windows, pathnames with spaces are returned as %20
 		if (tempDirPath.indexOf("%20") != -1)

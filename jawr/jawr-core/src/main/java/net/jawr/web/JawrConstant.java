@@ -30,6 +30,9 @@ import net.jawr.web.resource.handler.reader.BaseServletContextResourceReader;
  */
 public class JawrConstant {
 
+	/** The name of the Jawr working directory */
+	public static final String JAWR_WRK_DIR = "jawrTmp";
+
 	/** The URL separator */
 	public static final String URL_SEPARATOR = "/";
 

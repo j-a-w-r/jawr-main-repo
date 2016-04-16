@@ -105,6 +105,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		if (tempWorkingDirectory.startsWith(JawrConstant.FILE_URI_PREFIX)) {
 			tempWorkingDirectory = tempWorkingDirectory.substring(JawrConstant.FILE_URI_PREFIX.length());
 		}
+		
+		this.workingDirectory = tempWorkingDirectory + File.separator + JawrConstant.JAWR_WRK_DIR;
 
 		// add the default extension
 		allowedExtensions.addAll(JawrConstant.DEFAULT_RESOURCE_EXTENSIONS);
@@ -118,8 +120,6 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		} else {
 			allowedExtensions.add(jawrConfig.getResourceType());
 		}
-
-		this.workingDirectory = tempWorkingDirectory;
 
 		ServletContextResourceReader rd = (ServletContextResourceReader) ClassLoaderResourceUtils
 				.buildObjectInstance(jawrConfig.getServletContextResourceReaderClass());

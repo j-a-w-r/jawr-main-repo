@@ -44,7 +44,7 @@ public class ServletContextResourceBundleHandler extends
 	 * @param resourceType the resource type
 	 */
 	public ServletContextResourceBundleHandler(ServletContext context, Charset charset,GeneratorRegistry generatorRegistry, String resourceType) {
-		super((File) context.getAttribute(JawrConstant.SERVLET_CONTEXT_TEMPDIR),charset,generatorRegistry, resourceType);		
+		super(new File((File) context.getAttribute(JawrConstant.SERVLET_CONTEXT_TEMPDIR), JawrConstant.JAWR_WRK_DIR),charset,generatorRegistry, resourceType);		
 		this.context  = context;
 		this.charset = charset;
 	}
