@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -92,6 +93,7 @@ public final class PathNormalizer {
 	 * prefix contains a variant information, it adds it to the name.
 	 * 
 	 * @param path the path
+	* 
 	 * @return the path without the prefix
 	 */
 	public static String removeVariantPrefixFromPath(String path) {
@@ -124,10 +126,11 @@ public final class PathNormalizer {
 	 * prefix contains a variant information, it adds it to the name.
 	 * 
 	 * @param path the path
+	 * @param bundlePrefixes the list of bundle prefixes
 	 * @return the bundle info from the path. Here is the content of the array : [bundlePrefix, path, variantPrefix, hashcode]
 	 * 
 	 */
-	public static String[] extractBundleInfoFromPath(String path) {
+	public static String[] extractBundleInfoFromPath(String path, List<String> bundlePrefixes) {
 
 		String[] result = new String[4];
 		String bundlePrefix = null;
@@ -144,8 +147,19 @@ public final class PathNormalizer {
 				resultPath = path.substring(idxGzip
 						+ BundleRenderer.GZIP_PATH_PREFIX.length());
 			} else {
-				// Remove first slash
-				resultPath = path.substring(1);
+				
+				for (String prefix : bundlePrefixes) {
+					if(path.startsWith(prefix)){
+						bundlePrefix = PathNormalizer.asDirPath(prefix);
+						resultPath = path.substring(bundlePrefix.length());
+						break;
+					}
+				}
+				
+				if(bundlePrefix == null){
+					// Remove first slash
+					resultPath = path.substring(1);
+				}
 			}
 
 			// eval the existence of a suffix

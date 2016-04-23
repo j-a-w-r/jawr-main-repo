@@ -2,7 +2,9 @@ package test.net.jawr.web.resource.bundle.factory.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.renderer.BundleRenderer;
@@ -97,18 +99,26 @@ public class PathNormalizerTestCase {
 	@Test
 	public void testExtractBundleInfoFromPath(){
 		
-		String[] pathInfos = PathNormalizer.extractBundleInfoFromPath("/1542603560.en_US/js/bundle/msg.js");
+		List<String> bundlePrefixes = new ArrayList<>();
+		String[] pathInfos = PathNormalizer.extractBundleInfoFromPath("/1542603560.en_US/js/bundle/msg.js", bundlePrefixes);
 		assertEquals(Arrays.asList(null, "/js/bundle/msg.js","en_US", "1542603560"), Arrays.asList(pathInfos));
-		pathInfos = PathNormalizer.extractBundleInfoFromPath("/1576054120.en_US@summer/fwk/core/component.css");
+		pathInfos = PathNormalizer.extractBundleInfoFromPath("/1576054120.en_US@summer/fwk/core/component.css",bundlePrefixes);
 		assertEquals(Arrays.asList(null, "/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
-		pathInfos = PathNormalizer.extractBundleInfoFromPath("/1542603560/js/bundle/msg.js");
+		pathInfos = PathNormalizer.extractBundleInfoFromPath("/1542603560/js/bundle/msg.js",bundlePrefixes);
 		assertEquals(Arrays.asList(null, "/js/bundle/msg.js",null, "1542603560"), Arrays.asList(pathInfos));
 		
-		pathInfos = PathNormalizer.extractBundleInfoFromPath(BundleRenderer.GZIP_PATH_PREFIX+"1542603560/js/bundle/msg.js");
+		pathInfos = PathNormalizer.extractBundleInfoFromPath(BundleRenderer.GZIP_PATH_PREFIX+"1542603560/js/bundle/msg.js",bundlePrefixes);
 		assertEquals(Arrays.asList(null, "/js/bundle/msg.js",null, "1542603560"), Arrays.asList(pathInfos));
 		
-		pathInfos = PathNormalizer.extractBundleInfoFromPath(BundleRenderer.GZIP_PATH_PREFIX+"1576054120.en_US@summer/fwk/core/component.css");
+		pathInfos = PathNormalizer.extractBundleInfoFromPath(BundleRenderer.GZIP_PATH_PREFIX+"1576054120.en_US@summer/fwk/core/component.css",bundlePrefixes);
 		assertEquals(Arrays.asList(null, "/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
+		
+		bundlePrefixes.add("/jawr/");
+		pathInfos = PathNormalizer.extractBundleInfoFromPath("/jawr/1576054120.en_US@summer/fwk/core/component.css",bundlePrefixes);
+		assertEquals(Arrays.asList("/jawr/", "/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
+		
+		pathInfos = PathNormalizer.extractBundleInfoFromPath("/jawr/"+BundleRenderer.GZIP_PATH_PREFIX+"1576054120.en_US@summer/fwk/core/component.css",bundlePrefixes);
+		assertEquals(Arrays.asList("/jawr/", "/fwk/core/component.css","en_US@summer", "1576054120"), Arrays.asList(pathInfos));
 		
 	}
 	

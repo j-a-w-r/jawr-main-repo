@@ -109,6 +109,9 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	/** The map which map a child bundle to a composite parent bundle */
 	private Map<String, List<JoinableResourceBundle>> compositeResourceBundleMap = new ConcurrentHashMap<>();
 	
+	/** The list of bundle prefixes */
+	private List<String> bundlePrefixes;
+	
 	/**
 	 * The bundles that will be processed once when the server will be up and
 	 * running.
@@ -315,8 +318,27 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		contextBundles = new CopyOnWriteArrayList<JoinableResourceBundle>();
 		contextBundles.addAll(tmpContext);
 		
+		initBundlePrefixes();
+		
 		initCompositeBundleMap(globalBundles);
 		initCompositeBundleMap(contextBundles);
+	}
+
+	/**
+	 * Initialize the bundle prefixes
+	 */
+	protected void initBundlePrefixes() {
+		bundlePrefixes = new CopyOnWriteArrayList<String>();
+		for (JoinableResourceBundle bundle : globalBundles) {
+			if(StringUtils.isNotEmpty(bundle.getBundlePrefix())){
+				bundlePrefixes.add(bundle.getBundlePrefix());
+			}
+		}
+		for (JoinableResourceBundle bundle : contextBundles) {
+			if(StringUtils.isNotEmpty(bundle.getBundlePrefix())){
+				bundlePrefixes.add(bundle.getBundlePrefix());
+			}
+		}
 	}
 
 	/**
@@ -492,6 +514,14 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 				rd = resourceHandler.getResource(null, bundlePath);
 			} else {
+				
+				for (String prefix : bundlePrefixes) {
+					if(bundlePath.startsWith(prefix)){
+						bundlePath = bundlePath.substring(prefix.length());
+						break;
+					}
+				}
+				
 				// Prefixes are used only in production mode
 				String path = PathNormalizer.removeVariantPrefixFromPath(bundlePath);
 				rd = resourceBundleHandler.getResourceBundleReader(path);
@@ -1129,7 +1159,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 		BundleHashcodeType typeBundleHashcode = BundleHashcodeType.UNKNOW_BUNDLE;
 
-		String[] pathInfos = PathNormalizer.extractBundleInfoFromPath(requestedPath);
+		String[] pathInfos = PathNormalizer.extractBundleInfoFromPath(requestedPath, bundlePrefixes);
 
 		if (pathInfos != null) {
 			String bundlePrefix = pathInfos[0];
