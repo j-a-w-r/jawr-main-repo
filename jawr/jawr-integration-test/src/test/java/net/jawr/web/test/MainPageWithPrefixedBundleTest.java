@@ -11,7 +11,9 @@ import java.util.List;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.JavaScriptPage;
+import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlScript;
 
 /**
@@ -75,4 +77,24 @@ public class MainPageWithPrefixedBundleTest extends MainPageTest {
 				page);
 	}
 
+	@Test
+	public void checkGeneratedCssLinks() {
+		// Test generated Css link
+		final List<HtmlLink> styleSheets = getHtmlLinkTags();
+		assertEquals(1, styleSheets.size());
+		final HtmlLink css = styleSheets.get(0);
+		assertEquals(
+				getUrlPrefix()+"/jawrCss/2049149885/fwk/core/component.css",
+				css.getHrefAttribute());
+
+	}
+	
+	@Test
+	public void testCssBundleContent() throws Exception {
+
+		final List<HtmlLink> styleSheets = getHtmlLinkTags();
+		final HtmlLink css = styleSheets.get(0);
+		final TextPage page = getCssPage(css);
+		assertContentEquals("/net/jawr/web/standard/resources/component-with-prefixed-bundle-expected.css", page);
+	}
 }

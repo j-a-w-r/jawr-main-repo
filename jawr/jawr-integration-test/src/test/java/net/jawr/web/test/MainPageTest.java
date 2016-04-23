@@ -72,7 +72,7 @@ public class MainPageTest extends AbstractPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/jawrCss/2049149885/fwk/core/component.css",
+				getUrlPrefix()+"/497434506/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
@@ -83,7 +83,7 @@ public class MainPageTest extends AbstractPageTest {
 		final List<HtmlLink> styleSheets = getHtmlLinkTags();
 		final HtmlLink css = styleSheets.get(0);
 		final TextPage page = getCssPage(css);
-		assertContentEquals("/net/jawr/web/standard/resources/component-with-prefixed-bundle-expected.css", page);
+		assertContentEquals("/net/jawr/web/standard/resources/component-expected.css", page);
 	}
 
 	@Test
