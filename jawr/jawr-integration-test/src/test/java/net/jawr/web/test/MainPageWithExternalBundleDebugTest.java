@@ -21,7 +21,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
  * 
  * @author ibrahim Chaehoi
  */
-@JawrTestConfigFiles(webXml = "net/jawr/web/standard/config/web.xml", jawrConfig = "net/jawr/web/standard/config/jawr-with-external-bundle-debug.properties")
+@JawrTestConfigFiles(webXml = "net/jawr/web/standard/config/web.xml", jawrConfig = "net/jawr/web/debug/config/jawr-with-external-bundle.properties")
 public class MainPageWithExternalBundleDebugTest extends MainPageDebugTest {
 
 	/**
