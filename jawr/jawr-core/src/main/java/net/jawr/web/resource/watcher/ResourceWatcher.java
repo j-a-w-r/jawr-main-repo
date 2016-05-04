@@ -37,9 +37,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -83,7 +83,7 @@ public class ResourceWatcher extends Thread {
 	private JawrWatchEventProcessor jawrEvtProcessor;
 	
 	/** The watch events */
-	private Queue<JawrWatchEvent> watchEvents = new ConcurrentLinkedDeque<JawrWatchEvent>();
+	private BlockingQueue<JawrWatchEvent> watchEvents = new LinkedBlockingQueue<JawrWatchEvent>();
 	
 	/**
 	 * Constructor

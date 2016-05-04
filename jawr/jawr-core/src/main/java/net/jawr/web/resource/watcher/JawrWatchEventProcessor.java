@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -54,7 +54,7 @@ public class JawrWatchEventProcessor extends Thread {
 	private final ResourceBundlesHandler bundlesHandler;
 
 	/** The watch events queue */
-	private final Queue<JawrWatchEvent> watchEvents;
+	private final BlockingQueue<JawrWatchEvent> watchEvents;
 
 	/** The last process time */
 	private AtomicLong lastProcessTime = new AtomicLong();
@@ -67,7 +67,7 @@ public class JawrWatchEventProcessor extends Thread {
 	 * @param watchEvents
 	 *            The watch event queue
 	 */
-	public JawrWatchEventProcessor(ResourceWatcher watcher, Queue<JawrWatchEvent> watchEvents) {
+	public JawrWatchEventProcessor(ResourceWatcher watcher, BlockingQueue<JawrWatchEvent> watchEvents) {
 		super(watcher.getBundlesHandler().getResourceType()+" JawrWatchEventProcessor ");
 		this.watcher = watcher;
 		this.bundlesHandler = watcher.getBundlesHandler();
@@ -104,9 +104,13 @@ public class JawrWatchEventProcessor extends Thread {
 				}
 			}
 			
-			JawrWatchEvent evt = watchEvents.poll();
-			if (evt != null && !stopProcessing.get()) {
-				process(evt);
+			try {
+				JawrWatchEvent evt = watchEvents.take();
+				if (evt != null && !stopProcessing.get()) {
+					process(evt);
+				}
+			} catch (InterruptedException e) {
+				LOGGER.debug("Thread interrupted", e);
 			}
 		}
 	}
