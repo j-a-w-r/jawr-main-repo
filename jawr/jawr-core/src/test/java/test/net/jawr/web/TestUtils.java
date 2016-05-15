@@ -32,4 +32,17 @@ public class TestUtils {
 	public static void assertContentEquals(String msg, String expected, String actual){
 		Assert.assertEquals(msg, StringUtils.normalizeLineFeed(expected), StringUtils.normalizeLineFeed(actual));
 	}
+	
+	
+	/**
+	 * Gets the java version as a float value (1.4, 1.5, 1.6, ....)
+	 * 
+	 * @return the java version
+	 */
+	public static float getJavaVersion () {
+	    String version = System.getProperty("java.version");
+	    int pos = version.indexOf('.');
+	    pos = version.indexOf('.', pos+1);
+	    return Float.parseFloat(version.substring (0, pos));
+	}
 }

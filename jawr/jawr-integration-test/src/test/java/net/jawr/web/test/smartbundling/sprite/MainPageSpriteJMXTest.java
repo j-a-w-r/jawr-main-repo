@@ -30,10 +30,9 @@ public class MainPageSpriteJMXTest extends MainPageSpriteTest {
 	 * net.jawr.web.test.smartbundling.sprite.MainPageSpriteTest#testPageLoad()
 	 */
 	@Test
-	@Ignore("Test failing woth JDK 8")
+	@Ignore("Test failing with JDK 8")
 	@Override
 	public void testPageLoad() throws Exception {
-		// TODO Auto-generated method stub
 		super.testPageLoad();
 	}
 

@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.JavaScriptPage;
@@ -27,6 +28,7 @@ import net.jawr.web.test.AbstractPageTest;
 import net.jawr.web.test.JawrIntegrationServer;
 import net.jawr.web.test.JawrTestConfigFiles;
 import net.jawr.web.test.utils.Utils;
+import test.net.jawr.web.TestUtils;
 
 /**
  * Test case for page using a specific locale in production mode.
@@ -44,6 +46,8 @@ public class MainPageLocaleFrResourceBundleWatcherTest extends AbstractPageTest 
 	@Override
 	public void setup() throws Exception {
 
+		checkBeforeRun();
+		
 		resetResourcesContent();
 
 		super.setup();
@@ -126,14 +130,22 @@ public class MainPageLocaleFrResourceBundleWatcherTest extends AbstractPageTest 
 		Thread.sleep(3000);
 
 		page = webClient.getPage(getPageUrl());
-		assertContentEquals("/net/jawr/web/locale/resources/index-jsp-updated-result-fr-expected.txt", page);
-
+		checkUpdatedPageContent();
+		
 		checkUpdatedGeneratedJsLinks();
 		checkUpdatedJsBundleContent();
 		checkGeneratedCssLinks();
 		checkCssBundleContent();
 		checkGeneratedHtmlImageInputLinks();
 		checkGeneratedHtmlImageLinks();
+	}
+
+	protected void checkUpdatedPageContent() throws Exception {
+		assertContentEquals("/net/jawr/web/locale/resources/index-jsp-updated-result-fr-expected.txt", page);
+	}
+
+	protected void checkBeforeRun() {
+		Assume.assumeTrue(TestUtils.getJavaVersion() < 1.8f);
 	}
 
 	/**
