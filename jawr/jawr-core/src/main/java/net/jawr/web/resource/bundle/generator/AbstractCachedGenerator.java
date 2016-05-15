@@ -326,14 +326,18 @@ public abstract class AbstractCachedGenerator
 	 */
 	protected void addLinkedResources(String path, GeneratorContext context, List<FilePathMapping> fMappings) {
 		linkedResourceMap.put(getLinkedResourceCacheKey(path, context), new CopyOnWriteArrayList<>(fMappings));
-		List<FilePathMapping> bundleFMappings = context.getBundle().getLinkedFilePathMappings();
 		JoinableResourceBundle bundle = context.getBundle();
-		for (FilePathMapping fMapping : fMappings) {
-			FilePathMapping fm = new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified());
-			if(!bundleFMappings.contains(fm)){
-				bundleFMappings.add(fm);
+		if (bundle != null) {
+
+			List<FilePathMapping> bundleFMappings = bundle.getLinkedFilePathMappings();
+			for (FilePathMapping fMapping : fMappings) {
+				FilePathMapping fm = new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified());
+				if (!bundleFMappings.contains(fm)) {
+					bundleFMappings.add(fm);
+				}
 			}
 		}
+
 	}
 
 	/**

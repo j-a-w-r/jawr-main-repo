@@ -125,6 +125,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		if (locale == null) {
 			locale = control.getFallbackLocale();
 		}
+		path = path.replace("|", "_");
 		return control.toBundleName(path, locale);
 	}
 
@@ -236,7 +237,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	@Override
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
 
-		String path = context.getPath().replace("|", "_");
+		String path = getLinkedResourceCacheKey(context.getPath(), context);
 		return getTempDirectory() + cacheMode + URL_SEPARATOR + path;
 	}
 
