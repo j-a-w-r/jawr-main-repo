@@ -28,7 +28,6 @@ import net.jawr.web.test.AbstractPageTest;
 import net.jawr.web.test.JawrIntegrationServer;
 import net.jawr.web.test.JawrTestConfigFiles;
 import net.jawr.web.test.utils.Utils;
-import test.net.jawr.web.TestUtils;
 
 /**
  * Test case for page using a specific locale in production mode.
@@ -53,6 +52,18 @@ public class MainPageLocaleFrResourceBundleWatcherTest extends AbstractPageTest 
 		super.setup();
 	}
 
+	/**
+	 * Gets the java version as a float value (1.4, 1.5, 1.6, ....)
+	 * 
+	 * @return the java version
+	 */
+	public float getJavaVersion () {
+	    String version = System.getProperty("java.version");
+	    int pos = version.indexOf('.');
+	    pos = version.indexOf('.', pos+1);
+	    return Float.parseFloat(version.substring (0, pos));
+	}
+	
 	/**
 	 * reset resources content
 	 * 
@@ -145,7 +156,7 @@ public class MainPageLocaleFrResourceBundleWatcherTest extends AbstractPageTest 
 	}
 
 	protected void checkBeforeRun() {
-		Assume.assumeTrue(TestUtils.getJavaVersion() < 1.8f);
+		Assume.assumeTrue(getJavaVersion() < 1.8f);
 	}
 
 	/**

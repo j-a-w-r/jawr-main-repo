@@ -23,7 +23,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlScript;
 import static org.junit.Assert.assertEquals;
 
 import net.jawr.web.test.JawrTestConfigFiles;
-import test.net.jawr.web.TestUtils;
 
 /**
  * 
@@ -37,7 +36,7 @@ public class MainPageLocaleFrResourceBundleWatcherJDK8Test extends MainPageLocal
 	 */
 	@Override
 	protected void checkBeforeRun() {
-		Assume.assumeTrue(TestUtils.getJavaVersion() >= 1.8f);
+		Assume.assumeTrue(getJavaVersion() >= 1.8f);
 	}
 
 	protected void checkUpdatedPageContent() throws Exception {
