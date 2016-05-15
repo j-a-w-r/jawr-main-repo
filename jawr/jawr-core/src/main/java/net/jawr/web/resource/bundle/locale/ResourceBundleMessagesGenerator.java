@@ -29,8 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
@@ -47,6 +45,7 @@ import net.jawr.web.resource.bundle.locale.message.MessageBundleScriptCreator;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.util.FileUtils;
+import net.jawr.web.util.StringUtils;
 
 /**
  * A generator that creates a script from message bundles. The generated script
