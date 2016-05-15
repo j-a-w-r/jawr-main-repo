@@ -65,7 +65,7 @@ public class MainPageNestedCompositeTest extends MainPageTest {
 	}
 
 	@Test
-	public void testJsBundleContent() throws Exception {
+	public void checkJsBundleContent() throws Exception {
 
 		final List<HtmlScript> scripts = getJsScriptTags();
 		HtmlScript script = scripts.get(0);

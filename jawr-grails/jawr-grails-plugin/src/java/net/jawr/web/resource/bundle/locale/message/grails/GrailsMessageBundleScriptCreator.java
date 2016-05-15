@@ -25,6 +25,7 @@ import net.jawr.web.JawrGrailsConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.locale.GrailsLocaleUtils;
+import net.jawr.web.resource.bundle.locale.MessageBundleControl;
 import net.jawr.web.resource.bundle.locale.message.MessageBundleScriptCreator;
 import net.jawr.web.resource.handler.reader.grails.GrailsServletContextResourceReader;
 
@@ -81,8 +82,8 @@ public class GrailsMessageBundleScriptCreator extends
 	 *            the generator context
 	 */
 	@SuppressWarnings("unchecked")
-	public GrailsMessageBundleScriptCreator(GeneratorContext context) {
-		super(context);
+	public GrailsMessageBundleScriptCreator(GeneratorContext context, MessageBundleControl control) {
+		super(context, control);
 		pluginMsgPathMap = (Map<String, String>) servletContext
 				.getAttribute(JawrGrailsConstant.JAWR_GRAILS_PLUGIN_MSG_PATHS);
 		if (pluginMsgPathMap == null) {
@@ -112,7 +113,8 @@ public class GrailsMessageBundleScriptCreator extends
 		// Spring message bundle object, the same used by grails.
 		GrailsBundleMessageSource messageSource = new GrailsBundleMessageSource(
 				warDeployed);
-		messageSource.setFallbackToSystemLocale(fallbackToSystemLocale);
+		
+		messageSource.setFallbackToSystemLocale(control.isFallbackToSystemLocale());
 		messageSource.setFilters(filterList);
 
 		if (warDeployed) {

@@ -69,6 +69,12 @@ public class GeneratorContext {
 	private boolean processingBundle;
 
 	/**
+	 * This flag is updated after the generation process. The value is
+	 * <b>true</b> is the generated resource has been retrieved from cache
+	 */
+	private boolean retrievedFromCache;
+
+	/**
 	 * Constructor
 	 * 
 	 * @param bundle
@@ -206,6 +212,22 @@ public class GeneratorContext {
 	 */
 	public void setProcessingBundle(boolean processingBundle) {
 		this.processingBundle = processingBundle;
+	}
+
+	/**
+	 * Returns the flag indicating if the generated content has been retrieved from cache
+	 * @return true if the generated content has been retrieved from cache
+	 */
+	public boolean isRetrievedFromCache() {
+		return retrievedFromCache;
+	}
+
+	/**
+	 * Sets the flag indicating if the generated content has been retrieved from cache
+	 * @param retrievedFromCache the flag to set
+	 */
+	public void setRetrievedFromCache(boolean retrievedFromCache) {
+		this.retrievedFromCache = retrievedFromCache;
 	}
 
 	/**

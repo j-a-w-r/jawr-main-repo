@@ -30,13 +30,13 @@ public class PathMapping {
 	private static final String RECURSIVE_PATH_SUFFIX = "/**";
 
 	/** The path mapping */
-	private final String mapping;
+	protected final String mapping;
 	
 	/** The kind of path mapping */
-	private final PathMappingKind kind;
+	protected final PathMappingKind kind;
 	
 	/** The bundle */
-	private final JoinableResourceBundle bundle;
+	protected final JoinableResourceBundle bundle;
 	
 	/**
 	 * Constructor

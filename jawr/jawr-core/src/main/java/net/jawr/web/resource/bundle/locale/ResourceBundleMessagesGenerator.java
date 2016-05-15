@@ -13,22 +13,40 @@
  */
 package net.jawr.web.resource.bundle.locale;
 
+import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY;
+import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE;
+import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET;
+import static net.jawr.web.JawrConstant.URL_SEPARATOR;
+
+import java.io.File;
 import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.jawr.web.JawrConstant;
+import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator;
+import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
+import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.locale.message.MessageBundleScriptCreator;
+import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.variant.VariantSet;
+import net.jawr.web.util.FileUtils;
 
 /**
  * A generator that creates a script from message bundles. The generated script
@@ -38,8 +56,18 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
  * @author Ibrahim Chaehoi
  * 
  */
-public class ResourceBundleMessagesGenerator extends
-		AbstractJavascriptGenerator implements VariantResourceGenerator {
+@CachedGenerator(name = "ResourceBundle Message", cacheDirectory = "i18nMessages", mappingFileName = "resourceBundleMessageMapping.txt")
+public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
+		implements ConfigurationAwareResourceGenerator, VariantResourceGenerator {
+
+	/** The default resource bundle charset */
+	private static final String DEFAULT_RESOURCE_BUNDLE_CHARSET = "ISO-8859-1";
+
+	/** The default value for the fallback to system locale property */
+	private static final boolean DEFAULT_FALLBACK_TO_SYSTEM_LOCALE = true;
+
+	/** The default value for the property "add quote to message key" */
+	private static final boolean DEFAULT_VALUE_ADD_QUOTE_TO_MSG_KEY = false;
 
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
@@ -47,21 +75,64 @@ public class ResourceBundleMessagesGenerator extends
 	/** The cache for the list of available locale per resource */
 	private final Map<String, List<String>> cachedAvailableLocalePerResource = new ConcurrentHashMap<String, List<String>>();
 
+	/** The Jawr config */
+	private JawrConfig config;
+
+	/** The message bundle control */
+	protected MessageBundleControl control;
+
 	/**
 	 * Constructor
 	 */
 	public ResourceBundleMessagesGenerator() {
 
-		resolver = ResourceGeneratorResolverFactory
-				.createPrefixResolver(GeneratorRegistry.MESSAGE_BUNDLE_PREFIX);
+		this.resolver = ResourceGeneratorResolverFactory.createPrefixResolver(GeneratorRegistry.MESSAGE_BUNDLE_PREFIX);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher
-	 * ()
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * afterPropertiesSet()
+	 */
+	@Override
+	public void afterPropertiesSet() {
+
+		super.afterPropertiesSet();
+
+		boolean fallbackToSystemLocale = config.getBooleanProperty(
+				JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, DEFAULT_FALLBACK_TO_SYSTEM_LOCALE);
+
+		String charsetName = config.getProperty(JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
+				DEFAULT_RESOURCE_BUNDLE_CHARSET);
+
+		Charset charset = Charset.forName(charsetName);
+
+		control = new MessageBundleControl(fallbackToSystemLocale, charset);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * getLinkedResourceCacheKey(java.lang.String,
+	 * net.jawr.web.resource.bundle.generator.GeneratorContext)
+	 */
+	@Override
+	protected String getLinkedResourceCacheKey(String path, GeneratorContext context) {
+
+		Locale locale = context.getLocale();
+		if (locale == null) {
+			locale = control.getFallbackLocale();
+		}
+		return control.toBundleName(path, locale);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getPathMatcher ()
 	 */
 	public ResourceGeneratorResolver getResolver() {
 
@@ -76,9 +147,136 @@ public class ResourceBundleMessagesGenerator extends
 	 * (java.lang.String, java.nio.charset.Charset)
 	 */
 	public Reader generateResource(String path, GeneratorContext context) {
-		MessageBundleScriptCreator creator = new MessageBundleScriptCreator(
-				context);
+
+		MessageBundleScriptCreator creator = new MessageBundleScriptCreator(context, control);
+		addLinkedResources(path, context);
 		return creator.createScript(context.getCharset());
+	}
+
+	/**
+	 * Adds the linked resources
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param context
+	 *            the generator context
+	 */
+	protected void addLinkedResources(String path, GeneratorContext context) {
+		List<Locale> locales = new ArrayList<>();
+		Locale currentLocale = context.getLocale();
+		if (currentLocale != null) {
+			locales.add(currentLocale);
+			if (StringUtils.isNotEmpty(currentLocale.getVariant())) {
+				locales.add(new Locale(currentLocale.getCountry(), currentLocale.getLanguage()));
+			}
+			if (StringUtils.isNotEmpty(currentLocale.getLanguage())) {
+				locales.add(new Locale(currentLocale.getCountry()));
+			}
+		}
+
+		// Adds fallback locale
+		locales.add(control.getFallbackLocale());
+		Locale noLocale = new Locale("", "");
+		if (!locales.contains(noLocale)) {
+			locales.add(noLocale);
+		}
+
+		List<FilePathMapping> fMappings = getFileMappings(path, context, locales);
+		addLinkedResources(path, context, fMappings);
+	}
+
+	/**
+	 * Returns the list of file path mapping associate to the resource bundles
+	 * locales
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param context
+	 *            the generator context
+	 * @param locales
+	 *            the list of locales
+	 */
+	protected List<FilePathMapping> getFileMappings(String path, GeneratorContext context, List<Locale> locales) {
+
+		List<FilePathMapping> fMappings = new ArrayList<>();
+		FilePathMapping fMapping = null;
+		String fileSuffix = ".properties";
+
+		String[] names = path.split("\\|");
+
+		for (String resourcePath : names) {
+
+			resourcePath = resourcePath.replace(".", "/");
+			for (Locale locale : locales) {
+
+				String resourceBundlePath = control.toBundleName(resourcePath, locale) + fileSuffix;
+				URL rbURL = LocaleUtils.getResourceBundleURL(resourceBundlePath, context.getServletContext());
+				if (rbURL != null) {
+					File f = FileUtils.urlToFile(rbURL);
+					String fileName = f.getAbsolutePath();
+					if (StringUtils.isNotEmpty(fileName)) {
+						long lastModified = rsHandler.getLastModified(fileName);
+						fMapping = new FilePathMapping(fileName, lastModified);
+						fMappings.add(fMapping);
+					}
+				}
+			}
+		}
+
+		return fMappings;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * getTempFilePath(net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode)
+	 */
+	@Override
+	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
+
+		String path = context.getPath().replace("|", "_");
+		return getTempDirectory() + cacheMode + URL_SEPARATOR + path;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache
+	 * ()
+	 */
+	@Override
+	protected void resetCache() {
+		super.resetCache();
+		cacheProperties.put(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, Boolean.toString(config.getBooleanProperty(
+				JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)));
+
+		cacheProperties.put(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
+				config.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET, DEFAULT_RESOURCE_BUNDLE_CHARSET));
+
+		cacheProperties.put(JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, Boolean.toString(config
+				.getBooleanProperty(JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, DEFAULT_VALUE_ADD_QUOTE_TO_MSG_KEY)));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * isCacheValid()
+	 */
+	@Override
+	protected boolean isCacheValid() {
+		return StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE),
+				config.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
+						Boolean.toString(DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)))
+				&& StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET),
+						config.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
+								DEFAULT_RESOURCE_BUNDLE_CHARSET))
+				&& StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY),
+						config.getProperty(JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY,
+								Boolean.toString(DEFAULT_VALUE_ADD_QUOTE_TO_MSG_KEY)));
 	}
 
 	/*
@@ -89,8 +287,7 @@ public class ResourceBundleMessagesGenerator extends
 	 */
 	public String getDebugModeBuildTimeGenerationPath(String path) {
 
-		String debugPath = path.replaceFirst(
-				GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR);
+		String debugPath = path.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR);
 		if (debugPath.endsWith("@")) {
 			debugPath = debugPath.replaceAll("@", "");
 		} else {
@@ -103,14 +300,12 @@ public class ResourceBundleMessagesGenerator extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.handler.LocaleAwareResourceReader#getAvailableLocales
-	 * (java.lang.String)
+	 * @see net.jawr.web.resource.handler.LocaleAwareResourceReader#
+	 * getAvailableLocales (java.lang.String)
 	 */
 	public List<String> getAvailableLocales(String resource) {
 
-		List<String> availableLocales = cachedAvailableLocalePerResource
-				.get(resource);
+		List<String> availableLocales = cachedAvailableLocalePerResource.get(resource);
 		if (availableLocales != null) {
 			return availableLocales;
 		}
@@ -122,13 +317,14 @@ public class ResourceBundleMessagesGenerator extends
 
 	/**
 	 * Finds the available locales
-	 * @param resource the resource
+	 * 
+	 * @param resource
+	 *            the resource
 	 * @return the available locales for the resource
 	 */
 	protected List<String> findAvailableLocales(String resource) {
 		List<String> availableLocales;
-		availableLocales = LocaleUtils
-				.getAvailableLocaleSuffixesForBundle(resource);
+		availableLocales = LocaleUtils.getAvailableLocaleSuffixesForBundle(resource);
 		return availableLocales;
 	}
 
@@ -143,14 +339,24 @@ public class ResourceBundleMessagesGenerator extends
 
 		List<String> localeVariants = getAvailableLocales(resource);
 		if (localeVariants.isEmpty()) {
-			throw new BundlingProcessException(
-					"Enable to find the resource bundle : " + resource);
+			throw new BundlingProcessException("Enable to find the resource bundle : " + resource);
 		}
 		Map<String, VariantSet> variants = new HashMap<String, VariantSet>();
-		VariantSet variantSet = new VariantSet(
-				JawrConstant.LOCALE_VARIANT_TYPE, "", localeVariants);
+		VariantSet variantSet = new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", localeVariants);
 		variants.put(JawrConstant.LOCALE_VARIANT_TYPE, variantSet);
 		return variants;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.
+	 * JawrConfig)
+	 */
+	@Override
+	public void setConfig(JawrConfig config) {
+		this.config = config;
 	}
 
 }

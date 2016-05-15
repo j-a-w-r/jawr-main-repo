@@ -13,6 +13,8 @@
  */
 package net.jawr.web.resource.bundle.mappings;
 
+import java.io.File;
+
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 
 /**
@@ -44,6 +46,16 @@ public class FilePathMapping extends PathMapping {
 	/**
 	 * Constructor
 	 * 
+	 * @param file
+	 *            the file
+	 */
+	public FilePathMapping(File f) {
+		this(f.getAbsolutePath(), f.lastModified());
+	}
+	
+	/**
+	 * Constructor
+	 * 
 	 * @param filePath
 	 *            the file path
 	 * @param lastModified
@@ -69,36 +81,38 @@ public class FilePathMapping extends PathMapping {
 		this.lastModified = lastModified;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + (int) (lastModified ^ (lastModified >>> 32));
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof FilePathMapping)) {
 			return false;
+		}
 		FilePathMapping other = (FilePathMapping) obj;
-		if (lastModified != other.lastModified)
+		if (lastModified != other.lastModified) {
 			return false;
+		}
 		return true;
 	}
+
+	
 
 }

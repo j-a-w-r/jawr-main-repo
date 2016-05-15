@@ -110,7 +110,7 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 				throw new ResourceNotFoundException(path);
 			}
 			String content = IOUtils.toString(rd);
-			String result = compile(bundle, content, path);
+			String result = compile(bundle, content, path, context);
 			rd = new StringReader(result);
 		} catch (ResourceNotFoundException e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
@@ -129,14 +129,16 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 	 *            the resource content to compile
 	 * @param path
 	 *            the compiled resource path
+	 * @param context
+	 *            the generator context
 	 * @return the compiled CSS content
 	 */
-	public String compile(JoinableResourceBundle bundle, String content, String path) {
+	public String compile(JoinableResourceBundle bundle, String content, String path, GeneratorContext context) {
 
 		JawrLessSource source = new JawrLessSource(bundle, content, path, rsHandler);
 		try {
 			CompilationResult result = compiler.compile(source, lessConfig);
-			addLinkedResources(path, source.getLinkedResources());
+			addLinkedResources(path, context, source.getLinkedResources());
 			return result.getCss();
 		} catch (Less4jException e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);

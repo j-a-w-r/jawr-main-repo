@@ -60,7 +60,7 @@ public class PageInSubDirDebugTest extends PageInSubDirTest {
 	}
 
 	@Test
-	public void testJsBundleContent() throws Exception {
+	public void checkJsBundleContent() throws Exception {
 
 		final List<?> scripts = getJsScriptTags();
 		HtmlScript script = (HtmlScript) scripts.get(0);

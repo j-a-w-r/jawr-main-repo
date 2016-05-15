@@ -193,20 +193,7 @@ public class LocaleUtils {
 	 */
 	private static void addSuffixIfAvailable(String messageBundlePath, Set<String> availableLocaleSuffixes, Locale locale, String fileSuffix, ServletContext servletContext) {
 		String localMsgResourcePath = toBundleName(messageBundlePath, locale) + fileSuffix;
-		URL resourceUrl = null;
-		try {
-			resourceUrl = ClassLoaderResourceUtils.getResourceURL(localMsgResourcePath, LocaleUtils.class);
-		} catch (Exception e) {
-			// Nothing to do
-		}
-		
-		if(resourceUrl == null && servletContext != null && localMsgResourcePath.startsWith("grails-app/")){
-			try {
-				resourceUrl = servletContext.getResource("/WEB-INF/"+localMsgResourcePath);
-			} catch (MalformedURLException e) {
-				// Nothing to do
-			}
-		}
+		URL resourceUrl = getResourceBundleURL(localMsgResourcePath, servletContext);
 
 		if (resourceUrl != null) {
 
@@ -222,6 +209,30 @@ public class LocaleUtils {
 			}
 			availableLocaleSuffixes.add(suffix);
 		}
+	}
+
+	/**
+	 * Returns the resource bundle URL
+	 * @param resourcePath the resource path
+	 * @param servletContext the servlet context
+	 * @return the URL of the resource bundle
+	 */
+	public static URL getResourceBundleURL(String resourcePath, ServletContext servletContext) {
+		URL resourceUrl = null;
+		try {
+			resourceUrl = ClassLoaderResourceUtils.getResourceURL(resourcePath, LocaleUtils.class);
+		} catch (Exception e) {
+			// Nothing to do
+		}
+		
+		if(resourceUrl == null && servletContext != null && resourcePath.startsWith("grails-app/")){
+			try {
+				resourceUrl = servletContext.getResource("/WEB-INF/"+resourcePath);
+			} catch (MalformedURLException e) {
+				// Nothing to do
+			}
+		}
+		return resourceUrl;
 	}
 
 	/**

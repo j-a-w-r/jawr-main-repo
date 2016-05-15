@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2014 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hern�ndez Sell�s, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -127,7 +127,8 @@ public class GrailsResourceBundleMessagesGenerator extends
 	public Reader generateResource(String path, GeneratorContext context) {
 	
 		MessageBundleScriptCreator creator = new GrailsMessageBundleScriptCreator(
-				context);
+				context, control);
+		addLinkedResources(path, context);
 		return creator.createScript(context.getCharset());
 	}
 

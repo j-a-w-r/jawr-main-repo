@@ -99,7 +99,7 @@ public class ClasspathJSGenerator extends AbstractJavascriptGenerator implements
 			if(filePath != null){
 				long lastModified = rsHandler.getLastModified(filePath);
 				FilePathMapping fMapping = new FilePathMapping(filePath, lastModified);
-				addLinkedResources(path, fMapping);
+				addLinkedResources(path, context, fMapping);
 			}
 		}
 		return rd;

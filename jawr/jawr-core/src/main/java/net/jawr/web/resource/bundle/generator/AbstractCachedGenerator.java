@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
@@ -66,7 +67,7 @@ public abstract class AbstractCachedGenerator
 	/** The separator for file mappings */
 	private static final String SEMICOLON = ";";
 
-	/** The last modification separator in file mapping  */
+	/** The last modification separator in file mapping */
 	private static final String MAPPING_TIMESTAMP_SEPARATOR = "#";
 
 	/** The cache mapping prefix */
@@ -154,12 +155,12 @@ public abstract class AbstractCachedGenerator
 
 		if (useCache) {
 			loadCacheMapping();
-			
+
 			// reset cache if invalid
-			if(!isCacheValid()){
-				
-				if(LOGGER.isDebugEnabled()){
-					LOGGER.debug("Cache of "+getName()+" generator is invalid. Reset cache...");
+			if (!isCacheValid()) {
+
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Cache of " + getName() + " generator is invalid. Reset cache...");
 				}
 				resetCache();
 			}
@@ -228,7 +229,7 @@ public abstract class AbstractCachedGenerator
 
 		Reader rd = null;
 		if (useCache) {
-			List<FilePathMapping> fMappings = linkedResourceMap.get(path);
+			List<FilePathMapping> fMappings = linkedResourceMap.get(getLinkedResourceCacheKey(path, context));
 			if (fMappings != null && !checkResourcesModified(context, fMappings)) {
 				// Retrieve from cache
 				// Checks if temp resource is already created
@@ -287,15 +288,16 @@ public abstract class AbstractCachedGenerator
 	}
 
 	/**
-	 * Adds the linked resource to the linked resource map
+	 * Returns the cache key for linked resources map
 	 * 
 	 * @param path
 	 *            the resource path
-	 * @param fMapping
-	 *            the file path mapping linked to the resource
+	 * @param context
+	 *            the generator context
+	 * @return the cache key for linked resource map
 	 */
-	public void addLinkedResources(String path, FilePathMapping fMappings) {
-		addLinkedResources(path, Arrays.asList(fMappings));
+	protected String getLinkedResourceCacheKey(String path, GeneratorContext context) {
+		return path;
 	}
 
 	/**
@@ -303,11 +305,35 @@ public abstract class AbstractCachedGenerator
 	 * 
 	 * @param path
 	 *            the resource path
+	 * @param context
+	 *            the generator context
+	 * @param fMapping
+	 *            the file path mapping linked to the resource
+	 */
+	protected void addLinkedResources(String path, GeneratorContext context, FilePathMapping fMappings) {
+		addLinkedResources(path, context, Arrays.asList(fMappings));
+	}
+
+	/**
+	 * Adds the linked resource to the linked resource map
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param context
+	 *            the generator context
 	 * @param fMappings
 	 *            the list of mappings linked to the resource
 	 */
-	public void addLinkedResources(String path, List<FilePathMapping> fMappings) {
-		linkedResourceMap.put(path, new CopyOnWriteArrayList<>(fMappings));
+	protected void addLinkedResources(String path, GeneratorContext context, List<FilePathMapping> fMappings) {
+		linkedResourceMap.put(getLinkedResourceCacheKey(path, context), new CopyOnWriteArrayList<>(fMappings));
+		List<FilePathMapping> bundleFMappings = context.getBundle().getLinkedFilePathMappings();
+		JoinableResourceBundle bundle = context.getBundle();
+		for (FilePathMapping fMapping : fMappings) {
+			FilePathMapping fm = new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified());
+			if(!bundleFMappings.contains(fm)){
+				bundleFMappings.add(fm);
+			}
+		}
 	}
 
 	/**
@@ -355,11 +381,10 @@ public abstract class AbstractCachedGenerator
 	 */
 	protected boolean checkResourcesModified(GeneratorContext context, List<FilePathMapping> fMappings) {
 		boolean resourceModified = false;
-		ResourceReaderHandler readerHandler = context.getResourceReaderHandler();
 
 		for (Iterator<FilePathMapping> iter = fMappings.iterator(); iter.hasNext() && !resourceModified;) {
 			FilePathMapping fMapping = iter.next();
-			resourceModified = fMapping.getLastModified() != readerHandler.getLastModified(fMapping.getPath());
+			resourceModified = fMapping.getLastModified() != rsHandler.getLastModified(fMapping.getPath());
 		}
 		return resourceModified;
 	}
@@ -390,7 +415,7 @@ public abstract class AbstractCachedGenerator
 			}
 			FileChannel inchannel = fis.getChannel();
 			rd = Channels.newReader(inchannel, context.getConfig().getResourceCharset().newDecoder(), -1);
-
+			context.setRetrievedFromCache(true);
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(getName() + " resource '" + path + "' retrieved from cache");
 			}
@@ -551,25 +576,33 @@ public abstract class AbstractCachedGenerator
 			}
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.BundlingProcessLifeCycleListener#beforeBundlingProcess()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.handler.BundlingProcessLifeCycleListener#
+	 * beforeBundlingProcess()
 	 */
 	@Override
 	public void beforeBundlingProcess() {
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.BundlingProcessLifeCycleListener#afterBundlingProcess()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.handler.BundlingProcessLifeCycleListener#
+	 * afterBundlingProcess()
 	 */
 	@Override
 	public void afterBundlingProcess() {
-		
-		if(useCache){
+
+		if (useCache) {
 			// Update the cache
 			serializeCacheMapping();
 		}
 	}
-	
+
 }

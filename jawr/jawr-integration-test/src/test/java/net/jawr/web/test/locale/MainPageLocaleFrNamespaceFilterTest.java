@@ -59,7 +59,7 @@ public class MainPageLocaleFrNamespaceFilterTest extends MainPageTest {
 	}
 	
 	@Test
-	public void testJsBundleContent() throws Exception {
+	public void checkJsBundleContent() throws Exception {
 		
 		final List<?> scripts = getJsScriptTags();
 		final HtmlScript script = (HtmlScript) scripts.get(0);

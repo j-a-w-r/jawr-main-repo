@@ -177,7 +177,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		if(filePath != null){
 			long lastModified = rsHandler.getLastModified(filePath);
 			FilePathMapping fMapping = new FilePathMapping(filePath, lastModified);
-			addLinkedResources(path, Arrays.asList(fMapping));
+			addLinkedResources(path, context, Arrays.asList(fMapping));
 		}
 		
 		return reader;

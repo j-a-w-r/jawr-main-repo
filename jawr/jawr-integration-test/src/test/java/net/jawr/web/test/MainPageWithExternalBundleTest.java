@@ -70,7 +70,7 @@ public class MainPageWithExternalBundleTest extends MainPageTest {
 	}
 
 	@Test
-	public void testJsBundleContent() throws Exception {
+	public void checkJsBundleContent() throws Exception {
 
 		final List<HtmlScript> scripts = getJsScriptTags();
 		final HtmlScript script = scripts.get(1);

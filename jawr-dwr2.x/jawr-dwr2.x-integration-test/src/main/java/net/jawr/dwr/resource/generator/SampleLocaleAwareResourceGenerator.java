@@ -38,12 +38,13 @@ public class SampleLocaleAwareResourceGenerator extends AbstractJavascriptGenera
 	 */
 	public Reader createResource(GeneratorContext context) {
 		
-		MessageBundleScriptCreator creator = new MessageBundleScriptCreator(context);
+		XmlResourceBundleControl control = new XmlResourceBundleControl();
+		MessageBundleScriptCreator creator = new MessageBundleScriptCreator(context, control);
 		ResourceBundle bundle = null;
 		if(context.getLocale() == null){
-			bundle = ResourceBundle.getBundle(context.getPath(), new XmlResourceBundleControl());
+			bundle = ResourceBundle.getBundle(context.getPath(), control);
 		}else{
-			bundle = ResourceBundle.getBundle(context.getPath(), context.getLocale(), new XmlResourceBundleControl());
+			bundle = ResourceBundle.getBundle(context.getPath(), context.getLocale(), control);
 		}
 		return creator.createScript(context.getCharset(), bundle);
 	}

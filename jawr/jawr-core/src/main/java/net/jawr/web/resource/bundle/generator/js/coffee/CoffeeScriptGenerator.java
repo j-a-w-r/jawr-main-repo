@@ -195,7 +195,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 			// Update linked resource map
 			FilePathMapping fMapping = FilePathMappingUtils.buildFilePathMapping(path, rsHandler);
 			if (fMapping != null) {
-				addLinkedResources(path, fMapping);
+				addLinkedResources(path, context, fMapping);
 			}
 
 		} catch (ResourceNotFoundException e) {

@@ -89,7 +89,7 @@ public class MainPageNestedCompositeDebugTest extends MainPageNestedCompositeTes
 	}
 
 	@Test
-	public void testJsBundleContent() throws Exception {
+	public void checkJsBundleContent() throws Exception {
 
 		final List<?> scripts = getJsScriptTags();
 		int idx = 0;

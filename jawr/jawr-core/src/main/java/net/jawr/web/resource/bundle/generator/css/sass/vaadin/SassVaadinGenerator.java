@@ -16,7 +16,6 @@ package net.jawr.web.resource.bundle.generator.css.sass.vaadin;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,7 +116,7 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 			}
 			String content = IOUtils.toString(rd);
 
-			String result = compile(bundle, content, path, context.getCharset());
+			String result = compile(bundle, content, path, context);
 			rd = new StringReader(result);
 
 		} catch (ResourceNotFoundException e) {
@@ -159,14 +158,14 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 	 *            the compiled resource path
 	 * @return the compiled CSS content
 	 */
-	public String compile(JoinableResourceBundle bundle, String content, String path, Charset charset) {
+	protected String compile(JoinableResourceBundle bundle, String content, String path, GeneratorContext context) {
 
 		try {
 			JawrScssResolver scssResolver = new JawrScssResolver(bundle, rsHandler);
-			JawrScssStylesheet sheet = new JawrScssStylesheet(bundle, content, path, scssResolver, charset);
+			JawrScssStylesheet sheet = new JawrScssStylesheet(bundle, content, path, scssResolver, context.getCharset());
 			sheet.compile(urlMode);
 			String parsedScss = sheet.printState();
-			addLinkedResources(path, scssResolver.getLinkedResources());
+			addLinkedResources(path, context, scssResolver.getLinkedResources());
 
 			return parsedScss;
 		} catch (Exception e) {

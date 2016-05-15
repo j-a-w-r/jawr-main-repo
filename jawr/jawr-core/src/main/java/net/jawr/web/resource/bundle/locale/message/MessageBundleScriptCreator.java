@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,17 +15,11 @@ package net.jawr.web.resource.bundle.locale.message;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -33,11 +27,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
@@ -46,11 +44,7 @@ import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.factory.util.RegexUtil;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
+import net.jawr.web.resource.bundle.locale.MessageBundleControl;
 
 /**
  * Creates a script which holds the data from a message bundle(s). The script is
@@ -63,32 +57,59 @@ import org.slf4j.MarkerFactory;
 public class MessageBundleScriptCreator {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(MessageBundleScriptCreator.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(MessageBundleScriptCreator.class.getName());
 
+	/** The default namespace for messages */
 	public static final String DEFAULT_NAMESPACE = "messages";
 
+	/** The script template */
 	private static final String SCRIPT_TEMPLATE = "/net/jawr/web/resource/bundle/message/messages.js";
 
-	private static final String DEFAULT_RESOURCE_BUNDLE_CHARSET = "ISO-8859-1";
-
+	/** The template */
 	protected static StringBuffer template;
-	protected String configParam;
-	protected String namespace;
-	private String filter;
-	protected Locale locale;
-	protected List<String> filterList;
-	protected ServletContext servletContext;
-	protected boolean fallbackToSystemLocale = true;
-	protected boolean addQuoteToMessageKey = false;
-	protected Charset resourceBundleCharset;
 
-	public MessageBundleScriptCreator(GeneratorContext context) {
+	/** The configuration parameter */
+	protected String configParam;
+
+	/** The namespace */
+	protected String namespace;
+
+	/** The filter */
+	private String filter;
+
+	/** The locale */
+	protected Locale locale;
+
+	/** The list of filters */
+	protected List<String> filterList;
+
+	/** The servlet context */
+	protected ServletContext servletContext;
+
+	/**
+	 * The flag indicating if a quote character should be added to the message
+	 * key
+	 */
+	private boolean addQuoteToMessageKey = false;
+
+	/** The message resource bundle control */
+	protected MessageBundleControl control;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param context
+	 *            the generator context
+	 * @param control
+	 *            the message resource bundle control
+	 */
+	public MessageBundleScriptCreator(GeneratorContext context, MessageBundleControl control) {
 		super();
 		this.servletContext = context.getServletContext();
 		if (null == template)
 			template = loadScriptTemplate();
 
+		this.control = control;
 		this.locale = context.getLocale();
 
 		// Set the namespace
@@ -107,21 +128,9 @@ public class MessageBundleScriptCreator {
 		this.configParam = context.getPath();
 
 		Properties configProperties = context.getConfig().getConfigProperties();
-		this.fallbackToSystemLocale = PropertiesConfigHelper.getBooleanValue(
-				configProperties,
-				JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
-				true);
 
-		this.addQuoteToMessageKey = PropertiesConfigHelper.getBooleanValue(
-				configProperties,
-				JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY,
-				false);
-
-		String charsetName = context.getConfig().getProperty(
-				JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
-				DEFAULT_RESOURCE_BUNDLE_CHARSET);
-
-		resourceBundleCharset = Charset.forName(charsetName);
+		this.addQuoteToMessageKey = PropertiesConfigHelper.getBooleanValue(configProperties,
+				JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY, false);
 	}
 
 	/**
@@ -135,16 +144,13 @@ public class MessageBundleScriptCreator {
 		StringWriter sw = new StringWriter();
 		InputStream is = null;
 		try {
-			is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE,
-					this);
+			is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE, this);
 			IOUtils.copy(is, sw);
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal,
-					"a serious error occurred when initializing MessageBundleScriptCreator");
+			LOGGER.error(fatal, "a serious error occurred when initializing MessageBundleScriptCreator");
 			throw new BundlingProcessException(
-					"Classloading issues prevent loading the message template to be loaded. ",
-					e);
+					"Classloading issues prevent loading the message template to be loaded. ", e);
 		} finally {
 			IOUtils.close(is);
 		}
@@ -165,24 +171,19 @@ public class MessageBundleScriptCreator {
 
 		Locale currentLocale = getLocaleToApply();
 
-		MessageBundleControl control = new MessageBundleControl(
-				fallbackToSystemLocale, resourceBundleCharset);
 		for (int x = 0; x < names.length; x++) {
 
 			ResourceBundle bundle;
 
 			try {
-				bundle = ResourceBundle.getBundle(names[x], currentLocale,
-						control);
+				bundle = ResourceBundle.getBundle(names[x], currentLocale, control);
 			} catch (MissingResourceException ex) {
 				// Fixes problems with some servers, e.g. WLS 10
 				try {
-					bundle = ResourceBundle.getBundle(names[x], currentLocale,
-							getClass().getClassLoader(), control);
+					bundle = ResourceBundle.getBundle(names[x], currentLocale, getClass().getClassLoader(), control);
 				} catch (Exception e) {
 					bundle = ResourceBundle.getBundle(names[x], currentLocale,
-							Thread.currentThread().getContextClassLoader(),
-							control);
+							Thread.currentThread().getContextClassLoader(), control);
 				}
 			}
 
@@ -200,11 +201,9 @@ public class MessageBundleScriptCreator {
 		Locale currentLocale = locale;
 
 		if (currentLocale == null) {
-			if (fallbackToSystemLocale) {
-				currentLocale = Locale.getDefault();
-			} else {
-				currentLocale = new Locale("", "");
-			}
+			// TODO check if this is still relevant (See
+			// JawrMessageBundleControl)
+			currentLocale = control.getFallbackLocale();
 		}
 		return currentLocale;
 	}
@@ -230,8 +229,7 @@ public class MessageBundleScriptCreator {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public void updateProperties(ResourceBundle bundle, Properties props,
-			Charset charset) {
+	public void updateProperties(ResourceBundle bundle, Properties props, Charset charset) {
 
 		Enumeration<String> keys = bundle.getKeys();
 
@@ -256,10 +254,8 @@ public class MessageBundleScriptCreator {
 		BundleStringJsonifier bsj = new BundleStringJsonifier(props, addQuoteToMessageKey);
 		String script = template.toString();
 		String messages = bsj.serializeBundles().toString();
-		script = script.replaceFirst("@namespace",
-				RegexUtil.adaptReplacementToMatcher(namespace));
-		script = script.replaceFirst("@messages",
-				RegexUtil.adaptReplacementToMatcher(messages));
+		script = script.replaceFirst("@namespace", RegexUtil.adaptReplacementToMatcher(namespace));
+		script = script.replaceFirst("@messages", RegexUtil.adaptReplacementToMatcher(messages));
 
 		return new StringReader(script);
 	}
@@ -274,126 +270,11 @@ public class MessageBundleScriptCreator {
 	protected boolean matchesFilter(String key) {
 		boolean rets = (null == filterList);
 		if (!rets) {
-			for (Iterator<String> it = filterList.iterator(); it.hasNext()
-					&& !rets;)
+			for (Iterator<String> it = filterList.iterator(); it.hasNext() && !rets;)
 				rets = key.startsWith(it.next());
 		}
 		return rets;
 
 	}
 
-	public class MessageBundleControl extends ResourceBundle.Control {
-
-		private boolean fallbackToSystemLocale = true;
-		private Charset charset;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param fallbackToSystemLocale
-		 *            the flag indicating if the fallback local is the System
-		 *            locale or not
-		 * @param charset
-		 *            the ResourceBundle charset
-		 */
-		public MessageBundleControl(boolean fallbackToSystemLocale,
-				Charset charset) {
-
-			this.fallbackToSystemLocale = fallbackToSystemLocale;
-			this.charset = charset;
-		}
-
-		@Override
-		public Locale getFallbackLocale(String baseName, Locale locale) {
-			if (baseName == null) {
-				throw new NullPointerException();
-			}
-			Locale defaultLocale = Locale.getDefault();
-
-			if (fallbackToSystemLocale) {
-				defaultLocale = Locale.getDefault();
-			} else {
-				defaultLocale = new Locale("", "");
-			}
-
-			return locale.equals(defaultLocale) ? null : defaultLocale;
-		}
-
-		@Override
-		public ResourceBundle newBundle(String baseName, Locale locale,
-				String format, ClassLoader loader, boolean reload)
-				throws IllegalAccessException, InstantiationException,
-				IOException {
-
-			String bundleName = toBundleName(baseName, locale);
-			ResourceBundle bundle = null;
-			if (format.equals("java.class")) {
-				try {
-					@SuppressWarnings("unchecked")
-					Class<? extends ResourceBundle> bundleClass = (Class<? extends ResourceBundle>) loader
-							.loadClass(bundleName);
-
-					// If the class isn't a ResourceBundle subclass, throw a
-					// ClassCastException.
-					if (ResourceBundle.class.isAssignableFrom(bundleClass)) {
-						bundle = bundleClass.newInstance();
-					} else {
-						throw new ClassCastException(bundleClass.getName()
-								+ " cannot be cast to ResourceBundle");
-					}
-				} catch (ClassNotFoundException e) {
-				}
-			} else if (format.equals("java.properties")) {
-				final String resourceName = toResourceName(bundleName,
-						"properties");
-				final ClassLoader classLoader = loader;
-				final boolean reloadFlag = reload;
-				InputStream stream = null;
-				Reader rd = null;
-				try {
-					stream = AccessController
-							.doPrivileged(new PrivilegedExceptionAction<InputStream>() {
-								public InputStream run() throws IOException {
-									InputStream is = null;
-									if (reloadFlag) {
-										URL url = classLoader
-												.getResource(resourceName);
-										if (url != null) {
-											URLConnection connection = url
-													.openConnection();
-											if (connection != null) {
-												// Disable caches to get fresh
-												// data for
-												// reloading.
-												connection.setUseCaches(false);
-												is = connection
-														.getInputStream();
-											}
-										}
-									} else {
-										is = classLoader
-												.getResourceAsStream(resourceName);
-									}
-									return is;
-								}
-							});
-				} catch (PrivilegedActionException e) {
-					throw (IOException) e.getException();
-				}
-				if (stream != null) {
-					try {
-						rd = new InputStreamReader(stream, charset);
-						bundle = new PropertyResourceBundle(rd);
-					} finally {
-						IOUtils.close(rd);
-						IOUtils.close(stream);
-					}
-				}
-			} else {
-				throw new IllegalArgumentException("unknown format: " + format);
-			}
-			return bundle;
-		}
-
-	}
 }

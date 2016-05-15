@@ -22,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
@@ -561,5 +563,20 @@ public class FileUtils {
 			IOUtils.close(fis);
 		}
 		return lock != null;
+	}
+
+	/**
+	 * Returns the file from the URL given in parameter
+	 * @param url the URL
+	 * @return the File
+	 */
+	public static File urlToFile(URL url) {
+		File f = null;
+		try {
+			f = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			f = new File(url.getPath());
+		}
+		return f;
 	}
 }

@@ -1227,8 +1227,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		ThreadLocalJawrContext.setJawrConfigMgrObjectName(JmxUtils.getMBeanObjectName(servletContext, resourceType,
 				jawrConfig.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX)));
 
-		// clears resource bundle cache for the refresh
-		ResourceBundle.clearCache();
 		try {
 			if (bundlesHandler != null) {
 				bundlesHandler.rebuildModifiedBundles();
