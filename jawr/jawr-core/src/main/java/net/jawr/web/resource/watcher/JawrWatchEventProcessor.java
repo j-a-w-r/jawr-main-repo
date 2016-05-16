@@ -99,7 +99,7 @@ public class JawrWatchEventProcessor extends Thread {
 					try {
 						processingBundle.wait();
 					} catch (InterruptedException e) {
-						LOGGER.debug("Thread interrupted", e);
+						LOGGER.debug("Thread interrupted");
 					}
 				}
 			}
@@ -110,7 +110,7 @@ public class JawrWatchEventProcessor extends Thread {
 					process(evt);
 				}
 			} catch (InterruptedException e) {
-				LOGGER.debug("Thread interrupted", e);
+				LOGGER.debug("Thread interrupted");
 			}
 		}
 	}
