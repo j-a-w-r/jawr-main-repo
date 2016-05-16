@@ -483,7 +483,6 @@ public class ResourceBundleMessageGeneratorTestCase {
 	}
 	
 	@Test
-	@Ignore
 	public void testCacheReload() throws Exception {
 
 		// Force default locale
