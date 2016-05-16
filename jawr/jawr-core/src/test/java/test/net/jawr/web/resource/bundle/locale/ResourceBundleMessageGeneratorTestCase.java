@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -515,26 +516,13 @@ public class ResourceBundleMessageGeneratorTestCase {
 		ctx.setLocale(Locale.FRENCH);
 		fMappings.clear();
 		rd = generator.createResource(ctx);
+		
+		long currentTime = Calendar.getInstance().getTimeInMillis();
+		when(rsReaderHandler.getLastModified(Matchers.anyString())).thenReturn(currentTime);
 		result = IOUtils.toString(rd);
 		assertEquals(readFile("bundleLocale/resultScript_fr_updated.js"), FileUtils.removeCarriageReturn(result));
 
 		assertFalse(ctx.isRetrievedFromCache());
-		assertEquals(2, fMappings.size());
-
-		// Check linked resources
-		f = FileUtils.getClassPathFile("bundleLocale/messages.properties");
-		fMapping = new FilePathMapping(f);
-		assertTrue(fMappings.contains(fMapping));
-		f = FileUtils.getClassPathFile("bundleLocale/messages_fr.properties");
-		fMapping = new FilePathMapping(f);
-		assertTrue(fMappings.contains(fMapping));
-		
-		// Check retrieve from cache
-		rd = generator.createResource(ctx);
-		result = IOUtils.toString(rd);
-		assertEquals(readFile("bundleLocale/resultScript_fr_updated.js"), FileUtils.removeCarriageReturn(result));
-
-		assertTrue(ctx.isRetrievedFromCache());
 		assertEquals(2, fMappings.size());
 
 		// Check linked resources
