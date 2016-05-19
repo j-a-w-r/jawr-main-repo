@@ -66,6 +66,7 @@ public class JawrJavascriptReference extends AbstractJawrReference {
 		boolean async = attributes.getBoolean(JawrConstant.ASYNC_ATTR);
 		boolean defer = attributes.getBoolean(JawrConstant.DEFER_ATTR);
         String type = attributes.getString(JawrConstant.TYPE_ATTR);
-		return RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, async, defer);
+        String crossorigin = attributes.getString(JawrConstant.CROSSORIGIN_ATTR);
+		return RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, async, defer, crossorigin);
 	}
 }
