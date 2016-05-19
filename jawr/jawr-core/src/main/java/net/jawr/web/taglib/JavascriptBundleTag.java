@@ -39,6 +39,9 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	/** The defer attribute */
 	protected String defer;
 	
+	/** The crossorigin attribute */
+	protected String crossorigin;
+	
 	/**
 	 * Sets the type attribute
 	 * @param type the type to set
@@ -65,6 +68,15 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 		this.defer = defer;
 	}
 
+	/**
+	 * Set the crossorigin attribute.
+	 * 
+	 * @param crossorigin
+	 */
+	public void setCrossorigin(String crossorigin) {
+		this.crossorigin = crossorigin;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#getResourceHandlerAttributeName()
 	 */
@@ -88,7 +100,7 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 		if(StringUtils.isNotEmpty(defer)){
 			deferFlag = Boolean.valueOf(defer);
 		}
-		return  RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, asyncFlag, deferFlag);
+		return  RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, asyncFlag, deferFlag, crossorigin);
 	}
 
 	/*

@@ -64,6 +64,9 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	/** The async attribute */
 	private boolean async;
 
+	/** The crossorigin attribute */
+	private String crossorigin;
+
 	/** A flag indicating if we are rendering the global links */
 	private boolean renderGlobalLinks;
 
@@ -81,8 +84,8 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * java.lang.Boolean, java.lang.Boolean)
 	 */
 	@Override
-	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer) {
-		init(bundler, DEFAULT_TYPE, useRandomParam, async, defer);
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer, String crossorigin) {
+		init(bundler, DEFAULT_TYPE, useRandomParam, async, defer, crossorigin);
 	}
 
 	/*
@@ -95,7 +98,7 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 */
 	@Override
 	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam, Boolean async,
-			Boolean defer) {
+			Boolean defer, String crossorigin) {
 		init(bundler, useRandomParam);
 		if (async != null) {
 			this.async = async.booleanValue();
@@ -103,6 +106,7 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 		if (defer != null) {
 			this.defer = defer.booleanValue();
 		}
+		this.crossorigin = crossorigin;
 		if (StringUtils.isEmpty(type)) {
 			this.type = DEFAULT_TYPE;
 		} else {
@@ -157,6 +161,9 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 		}
 		if (defer && !renderGlobalLinks) {
 			sb.append(DEFER_ATTRIBUTE);
+		}
+		if (crossorigin != null && !renderGlobalLinks) {
+			sb.append(' ').append(JawrConstant.CROSSORIGIN_ATTR).append("=\"").append(crossorigin).append("\"");
 		}
 		sb.append(POST_TAG);
 		return sb.toString();

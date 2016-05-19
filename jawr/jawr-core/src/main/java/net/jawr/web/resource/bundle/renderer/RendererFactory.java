@@ -40,15 +40,17 @@ public class RendererFactory {
 	 *            the flag indicating the value of the async attribute
 	 * @param defer
 	 *            the flag indicating the value of the deferred attribute
+	 * @param crossorigin
+	 *            the value of the crossorigin attribute
 	 * @return the JS Bundle renderer
 	 */
 	public final static JsBundleLinkRenderer getJsBundleRenderer(
 			ResourceBundlesHandler bundler, String type, Boolean useRandomParam,
-			Boolean async, Boolean defer) {
+			Boolean async, Boolean defer, String crossorigin) {
 		JsBundleLinkRenderer renderer = (JsBundleLinkRenderer) ClassLoaderResourceUtils
 				.buildObjectInstance(bundler.getConfig()
 						.getJsBundleLinkRenderClass());
-		renderer.init(bundler, type, useRandomParam, async, defer);
+		renderer.init(bundler, type, useRandomParam, async, defer, crossorigin);
 
 		return renderer;
 	}
