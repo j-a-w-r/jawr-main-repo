@@ -42,8 +42,9 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 		String type = (String) getAttributes().get(JawrConstant.TYPE_ATTR);
 		boolean async = Boolean.valueOf((String) getAttributes().get(JawrConstant.ASYNC_ATTR)).booleanValue();
 		boolean defer = Boolean.valueOf((String) getAttributes().get(JawrConstant.DEFER_ATTR)).booleanValue();
+		String crossorigin = (String) getAttributes().get(JawrConstant.CROSSORIGIN_ATTR);
 		return RendererFactory.getJsBundleRenderer(rsHandler, type, getUseRandomParamFlag(rsHandler.getConfig()), async,
-				defer);
+				defer, crossorigin);
 	}
 
 	/*

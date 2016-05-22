@@ -229,6 +229,9 @@ public class JawrConstant {
 	/** The name of the defer attribute */
 	public static final String DEFER_ATTR = "defer";
 	
+	/** The name of the crossorigin attribute */
+	public static final String CROSSORIGIN_ATTR = "crossorigin";
+	
 	/** Max file size jawr property name */
 	public static final String BASE64_MAX_IMG_FILE_SIZE = 
 		"jawr.css.postprocessor.base64ImageEncoder.maxFileLength";

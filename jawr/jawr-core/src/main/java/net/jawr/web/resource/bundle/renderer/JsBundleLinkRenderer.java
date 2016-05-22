@@ -29,7 +29,7 @@ public interface JsBundleLinkRenderer extends BundleRenderer {
 	 * @param async the flag indicating if the link has an async attribute
 	 * @param defer the flag indicating if the link has a deferred attribute
 	 */
-	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer);
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer, String crossorigin);
 	
 	/**
 	 * Initializes the JS Bundle renderer
@@ -40,6 +40,6 @@ public interface JsBundleLinkRenderer extends BundleRenderer {
 	 * @param defer the flag indicating if the link has a deferred attribute
 	 */
 	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam,
-    		Boolean async, Boolean defer);
+    		Boolean async, Boolean defer, String crossorigin);
     
 }
