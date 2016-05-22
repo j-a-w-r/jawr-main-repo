@@ -29,21 +29,12 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, ResourceBrowser {
 
 	/**
-	 * Adds the resource reader to the end of the list of available readers
+	 * Adds the resource reader the list of available readers
 	 * 
 	 * @param rd
 	 *            the resource reader to add
 	 */
-	void addResourceReaderToEnd(ResourceReader rd);
-
-	/**
-	 * Adds the resource reader to the beginning of the list of available
-	 * readers
-	 * 
-	 * @param rd
-	 *            the resource reader to add
-	 */
-	void addResourceReaderToStart(ResourceReader rd);
+	void addResourceReader(ResourceReader rd);
 
 	/**
 	 * Returns the Jawr working directory

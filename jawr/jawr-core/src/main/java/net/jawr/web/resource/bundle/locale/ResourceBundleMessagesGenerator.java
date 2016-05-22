@@ -176,9 +176,9 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 
 		// Adds fallback locale
 		locales.add(control.getFallbackLocale());
-		Locale noLocale = new Locale("", "");
-		if (!locales.contains(noLocale)) {
-			locales.add(noLocale);
+		Locale baseLocale = new Locale("", "");
+		if (!locales.contains(baseLocale)) {
+			locales.add(baseLocale);
 		}
 
 		List<FilePathMapping> fMappings = getFileMappings(path, context, locales);

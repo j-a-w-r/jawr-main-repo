@@ -85,7 +85,7 @@ public class MainPageWebJarsBundleDebugTest extends MainPageWebJarsBundleTest {
 	public void checkGeneratedCssLinks() {
 		// Test generated Css link
 		final List<?> styleSheets = getHtmlLinkTags();
-		assertEquals(3, styleSheets.size());
+		assertEquals(4, styleSheets.size());
 		HtmlLink css = (HtmlLink) styleSheets.get(0);
 		Utils.assertGeneratedLinkEquals(
 				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=webjars%3A%2Fbootstrap%2F3.2.0%2Fcss%2Fbootstrap.css",
@@ -93,10 +93,15 @@ public class MainPageWebJarsBundleDebugTest extends MainPageWebJarsBundleTest {
 		
 		css = (HtmlLink) styleSheets.get(1);
 		Utils.assertGeneratedLinkEquals(
-				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=webjars%3A%2Fbootstrap%2F3.2.0%2Fless%2Ftheme.less",
 				css.getHrefAttribute());
 		
 		css = (HtmlLink) styleSheets.get(2);
+		Utils.assertGeneratedLinkEquals(
+				getUrlPrefix()+"/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css",
+				css.getHrefAttribute());
+		
+		css = (HtmlLink) styleSheets.get(3);
 		Utils.assertGeneratedLinkEquals(
 				getUrlPrefix()+"/css/one.css?d=11111",css.getHrefAttribute());
 		
@@ -112,10 +117,14 @@ public class MainPageWebJarsBundleDebugTest extends MainPageWebJarsBundleTest {
 		
 		css = (HtmlLink) styleSheets.get(1);
 		page = getCssPage(css);
+		assertContentEquals("/net/jawr/web/generator/webjars/debug/resources/theme.css", page);
+		
+		css = (HtmlLink) styleSheets.get(2);
+		page = getCssPage(css);
 		assertContentEquals("/net/jawr/web/generator/webjars/debug/resources/jar_temp.css", page);
 		
 		
-		css = (HtmlLink) styleSheets.get(2);
+		css = (HtmlLink) styleSheets.get(3);
 		page = getCssPage(css);
 		assertContentEquals("/net/jawr/web/generator/webjars/debug/resources/one.css", page);
 	

@@ -18,6 +18,8 @@ import static net.jawr.web.JawrConstant.SASS_GENERATOR_TYPE;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_VAADIN;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +29,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -54,6 +55,7 @@ import net.jawr.web.resource.bundle.generator.img.SpriteGenerator;
 import net.jawr.web.resource.bundle.generator.js.coffee.CoffeeScriptGenerator;
 import net.jawr.web.resource.bundle.generator.resolver.PrefixedPathResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
+import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver.ResolverType;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverWrapper;
 import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver;
 import net.jawr.web.resource.bundle.generator.validator.CommonsValidatorGenerator;
@@ -132,20 +134,17 @@ public class GeneratorRegistry implements Serializable {
 	/** The common generators */
 	private final Map<ResourceGeneratorResolver, Class<?>> commonGenerators = new ConcurrentHashMap<ResourceGeneratorResolver, Class<?>>();
 
-	/** The generator registry */
-	private final List<ResourceGenerator> resourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
-
 	/** The generator resolver registry */
-	private final List<ResourceGeneratorResolverWrapper> resolverRegistry = new CopyOnWriteArrayList<ResourceGeneratorResolverWrapper>();
+	private final List<ResourceGeneratorResolverWrapper> resolverRegistry = new ArrayList<ResourceGeneratorResolverWrapper>();
 
 	/** The CSS image resource prefix registry */
-	private final List<ResourceGenerator> cssImageResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
+	private final List<ResourceGenerator> cssImageResourceGeneratorRegistry = new ArrayList<ResourceGenerator>();
 
 	/** The binary resource prefix registry */
-	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new CopyOnWriteArrayList<ResourceGenerator>();
+	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new ArrayList<ResourceGenerator>();
 
 	/** The bundling process life cycle listeners */
-	private final List<BundlingProcessLifeCycleListener> bundlingProcesslifeCycleListeners = new CopyOnWriteArrayList<BundlingProcessLifeCycleListener>();
+	private final List<BundlingProcessLifeCycleListener> bundlingProcesslifeCycleListeners = new ArrayList<BundlingProcessLifeCycleListener>();
 
 	/** The resource type */
 	private String resourceType;
@@ -261,6 +260,7 @@ public class GeneratorRegistry implements Serializable {
 			commonGenerators.put(new PrefixedPathResolver(
 					SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
 		}
+		
 	}
 
 	/**
@@ -309,6 +309,10 @@ public class GeneratorRegistry implements Serializable {
 									+ generator.getClass().getName()
 									+ " is different from the one expected by Jawr.");
 				}
+				
+				if(resolver.getType().equals(ResolverType.PREFIXED)){
+					loadGeneratorIfNeeded(resolver.getResourcePath(resourcePath));
+				}
 			}
 		}
 
@@ -323,7 +327,7 @@ public class GeneratorRegistry implements Serializable {
 	 * Initialize the generator
 	 * 
 	 * @param generator
-	 *            the generator to intialize
+	 *            the generator to initialize
 	 */
 	private void initGenerator(ResourceGenerator generator) {
 
@@ -331,7 +335,7 @@ public class GeneratorRegistry implements Serializable {
 		updateRegistries(generator);
 		ResourceReader proxy = ResourceGeneratorReaderProxyFactory
 				.getResourceReaderProxy(generator, rsHandler, config);
-		rsHandler.addResourceReaderToStart(proxy);
+		rsHandler.addResourceReader(proxy);
 	}
 
 	/**
@@ -342,17 +346,18 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	private void updateRegistries(ResourceGenerator generator) {
 
-		resourceGeneratorRegistry.add(generator);
-		
 		resolverRegistry.add(new ResourceGeneratorResolverWrapper(generator,
 				generator.getResolver()));
-		
+		GeneratorComparator genComparator = new GeneratorComparator();
+		Collections.sort(resolverRegistry);
 		if (generator instanceof StreamResourceGenerator) {
 			binaryResourceGeneratorRegistry.add(generator);
+			Collections.sort(binaryResourceGeneratorRegistry, genComparator);
 		}
 		if (generator instanceof CssResourceGenerator) {
 			if (((CssResourceGenerator) generator).isHandlingCssImage()) {
 				cssImageResourceGeneratorRegistry.add(generator);
+				Collections.sort(cssImageResourceGeneratorRegistry, genComparator);
 			}
 		}
 		if(generator instanceof BundlingProcessLifeCycleListener){
@@ -495,7 +500,7 @@ public class GeneratorRegistry implements Serializable {
 	}
 
 	/**
-	 * Determines wether a path is to be handled by a generator.
+	 * Determines whether a path is to be handled by a generator.
 	 * 
 	 * @param path
 	 *            the resource path
@@ -570,6 +575,9 @@ public class GeneratorRegistry implements Serializable {
 			ResourceGeneratorResolverWrapper resolver = iterator.next();
 			if (resolver.matchPath(path)) {
 				resourceGenerator = resolver.getResourceGenerator();
+				if(resolver.getType().equals(ResolverType.PREFIXED)){
+					loadGeneratorIfNeeded(resolver.getResourcePath(path));
+				}
 				break;
 			}
 		}
@@ -592,11 +600,14 @@ public class GeneratorRegistry implements Serializable {
 	public ResourceGenerator getResourceGenerator(String path) {
 
 		ResourceGenerator resourceGenerator = null;
-		for (Iterator<ResourceGenerator> iterator = resourceGeneratorRegistry
+		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry
 				.iterator(); iterator.hasNext();) {
-			ResourceGenerator rsGenerator = (ResourceGenerator) iterator.next();
-			if (rsGenerator.getResolver().matchPath(path)) {
-				resourceGenerator = rsGenerator;
+			ResourceGeneratorResolverWrapper resolver = iterator.next();
+			if (resolver.matchPath(path)) {
+				resourceGenerator = resolver.getResourceGenerator();
+				if(resolver.getType().equals(ResolverType.PREFIXED)){
+					loadGeneratorIfNeeded(resolver.getResourcePath(path));
+				}
 				break;
 			}
 		}
@@ -791,7 +802,8 @@ public class GeneratorRegistry implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Returns the list of life cycle listeners
+	 * @return the list of life cycle listeners
 	 */
 	public List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
 		

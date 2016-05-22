@@ -58,7 +58,7 @@ public class JawrWatchEventProcessor extends Thread {
 
 	/** The last process time */
 	private AtomicLong lastProcessTime = new AtomicLong();
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -68,19 +68,20 @@ public class JawrWatchEventProcessor extends Thread {
 	 *            The watch event queue
 	 */
 	public JawrWatchEventProcessor(ResourceWatcher watcher, BlockingQueue<JawrWatchEvent> watchEvents) {
-		super(watcher.getBundlesHandler().getResourceType()+" JawrWatchEventProcessor ");
+		super(watcher.getBundlesHandler().getResourceType() + " JawrWatchEventProcessor ");
 		this.watcher = watcher;
 		this.bundlesHandler = watcher.getBundlesHandler();
 		this.watchEvents = watchEvents;
 	}
 
 	/**
-	 * @param stopProcessing the stopProcessing to set
+	 * @param stopProcessing
+	 *            the stopProcessing to set
 	 */
 	public void stopProcessing() {
 		this.stopProcessing.set(true);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -91,21 +92,20 @@ public class JawrWatchEventProcessor extends Thread {
 
 		while (!stopProcessing.get()) {
 
-			AtomicBoolean processingBundle = bundlesHandler.isProcessingBundle();
-			synchronized (processingBundle) {
-
-				// Wait until processing ends 
-				while (processingBundle.get() && !stopProcessing.get()) {
-					try {
-						processingBundle.wait();
-					} catch (InterruptedException e) {
-						LOGGER.debug("Thread interrupted");
-					}
-				}
-			}
-			
 			try {
 				JawrWatchEvent evt = watchEvents.take();
+				AtomicBoolean processingBundle = bundlesHandler.isProcessingBundle();
+				synchronized (processingBundle) {
+
+					// Wait until processing ends
+					while (processingBundle.get() && !stopProcessing.get()) {
+						try {
+							processingBundle.wait();
+						} catch (InterruptedException e) {
+							LOGGER.debug("Thread interrupted");
+						}
+					}
+				}
 				if (evt != null && !stopProcessing.get()) {
 					process(evt);
 				}
@@ -172,17 +172,19 @@ public class JawrWatchEventProcessor extends Thread {
 				}
 			}
 		}
-		
+
 		lastProcessTime.set(Calendar.getInstance().getTimeInMillis());
 	}
 
 	/**
 	 * Returns true if there is no more event to process
+	 * 
 	 * @return true if there is no more event to process
 	 */
 	public boolean hasNoEventToProcess() {
-		
+
 		long currentTime = Calendar.getInstance().getTimeInMillis();
-		return watchEvents.isEmpty() && (currentTime - lastProcessTime.get() > bundlesHandler.getConfig().getSmartBundlingDelayAfterLastEvent());
+		return watchEvents.isEmpty() && (currentTime - lastProcessTime.get() > bundlesHandler.getConfig()
+				.getSmartBundlingDelayAfterLastEvent());
 	}
 }

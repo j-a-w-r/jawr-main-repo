@@ -6,6 +6,7 @@
 <script type="text/javascript">/* Finished adding global members. */</script>
 <script type="text/javascript">/* Start adding members resolved by '/fwk/core/component.css'. Bundle id is: '/fwk/core/component.css' */</script>
 <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/jawr_generator.css?d=11111&generationConfigParam=webjars%3A%2Fbootstrap%2F3.2.0%2Fcss%2Fbootstrap.css" >
+<link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/jawr_generator.css?d=11111&generationConfigParam=webjars%3A%2Fbootstrap%2F3.2.0%2Fless%2Ftheme.less" >
 <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/jawr_generator.css?d=11111&generationConfigParam=jar%3Afwk%2Fcss%2Ftemp.css" >
 <link rel="stylesheet" type="text/css" media="all" href="/jawr-integration-test/css/one.css?d=11111" >
 <script type="text/javascript">/* Finished adding members resolved by /fwk/core/component.css */</script>

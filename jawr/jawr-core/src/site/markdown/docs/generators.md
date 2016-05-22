@@ -218,12 +218,11 @@ Here is the link to the webjars site for more information : [webjars site(http:/
                         </dependency>
 
  
- -   Known limitation :
+ -   Using less resources from classpath or webjars :
 
-It's not possible to use less resource from classpath.
-The below mapping will not work :
+It is possible to use less resource from classpath or webjars using the following  cnfiguration :
 
-                jawr.css.bundle.styles.mappings=jar:/css/foo.less,jar:/css/bar.less     
+                jawr.css.bundle.styles.mappings=jar:/css/foo.less,webjars:/bootstrap/3.2.0/less/theme.less     
 
 -    Note :
 

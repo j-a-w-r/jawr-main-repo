@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2013  Ibrahim Chaehoi
+ * Copyright 2012-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -28,16 +28,13 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 	/** The prefix */
 	private String prefix;
 	
-	/** The flag which indicates that in order to retrieve the resource path the prefix should be removed or not */
-	private boolean skipPrefix;
-	
 	/**
 	 * Constructor
 	 * 
 	 * @param prefix the path prefix
 	 */
 	public PrefixedPathResolver(String prefix) {
-		this(prefix, PREFIX_SEPARATOR, true);
+		this(prefix, PREFIX_SEPARATOR);
 	}
 	
 	/**
@@ -47,20 +44,16 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 	 * @param separator the prefix separator
 	 */
 	public PrefixedPathResolver(String prefix, String separator) {
-		this(prefix, separator, true);
+		this.prefix = prefix+separator;
 	}
 	
-	/**
-	 * Constructor
-	 * 
-	 * @param prefix the path prefix
-	 * @param separator the prefix separator
-	 * @param skipPrefix The flag which indicates that in order to retrieve 
-	 * the resource path the prefix should be removed or not
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver#getType()
 	 */
-	public PrefixedPathResolver(String prefix, String separator, boolean skipPrefix) {
-		this.prefix = prefix+separator;
-		this.skipPrefix = skipPrefix;
+	@Override
+	public ResolverType getType() {
+		
+		return ResolverType.PREFIXED;
 	}
 	
 	/* (non-Javadoc)
@@ -88,11 +81,7 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 	 */
 	public String getResourcePath(String requestedPath) {
 		
-		String resourcePath = requestedPath;
-		if(skipPrefix){
-			resourcePath = requestedPath.substring(prefix.length());
-		}
-		return resourcePath;
+		return requestedPath.substring(prefix.length());
 	}
 
 	
@@ -131,5 +120,7 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 		result = prime * result + ((prefix == null) ? 0 : prefix.hashCode());
 		return result;
 	}
+
+	
 	
 }

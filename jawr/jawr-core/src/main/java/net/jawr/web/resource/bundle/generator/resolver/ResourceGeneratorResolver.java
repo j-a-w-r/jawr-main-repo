@@ -1,5 +1,5 @@
 /**
- * Copyright 2012  Ibrahim Chaehoi
+ * Copyright 2012-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,6 +24,22 @@ package net.jawr.web.resource.bundle.generator.resolver;
 public interface ResourceGeneratorResolver {
 
 	/**
+	 * The resolver type (prefixed or suffixed)
+	 */
+	public enum ResolverType {
+		PREFIXED,
+		
+		SUFFIXED
+	}
+	
+	/**
+	 * Returns the type of the resource generator (Prefixed or suffixed)
+	 * 
+	 * @return the type of the resource generator
+	 */
+	ResolverType getType();
+	
+	/**
 	 * Checks if the path matches the ResourceGenerator
 	 *  
 	 * @param path the path
@@ -47,6 +63,5 @@ public interface ResourceGeneratorResolver {
 	 * @return true if the matcher is same as the one passed in parameter
 	 */
 	boolean isSameAs(ResourceGeneratorResolver matcher);
-	
 	
 }

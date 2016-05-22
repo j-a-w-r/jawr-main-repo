@@ -172,7 +172,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	protected Reader generateResource(String path, GeneratorContext context) {
 
 		Reader reader = helper.createResource(context);
-
+		
 		String filePath = helper.getFilePath(path);
 		if(filePath != null){
 			long lastModified = rsHandler.getLastModified(filePath);

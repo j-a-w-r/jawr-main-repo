@@ -102,13 +102,13 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		
 		updateBundlesDirtyState(bundles, cssSpriteResourceReader);
 		
-		ctx.getRsReaderHandler().addResourceReaderToStart(
+		ctx.getRsReaderHandler().addResourceReader(
 				cssSpriteResourceReader);
 
 		// Update image resource handler
 		ResourceReaderHandler imgStreamRsHandler = binaryRsHandler
 				.getRsReaderHandler();
-		imgStreamRsHandler.addResourceReaderToStart(cssSpriteResourceReader);
+		imgStreamRsHandler.addResourceReader(cssSpriteResourceReader);
 	}
 
 	/**

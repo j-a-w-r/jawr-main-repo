@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2013  Ibrahim Chaehoi
+ * Copyright 2012-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,8 @@ package net.jawr.web.resource.bundle.generator.resolver;
 import net.jawr.web.util.StringUtils;
 
 /**
- * This class defines the resolver for ResourceGenerator which are resolved from the suffixed path : (/mypackage/myscript<b>.jsx</b>)
+ * This class defines the resolver for ResourceGenerator which are resolved from
+ * the suffixed path : (/mypackage/myscript<b>.jsx</b>)
  * 
  * @author ibrahim Chaehoi
  */
@@ -24,81 +25,85 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 
 	/** The generator suffix separator */
 	public static final String SUFFIX_SEPARATOR = ".";
-	
+
 	/** The prefix */
 	private String suffix;
-	
-	/** The flag which indicates that in order to retrieve the resource path the suffix should be removed or not */
-	private boolean skipSuffix;
-	
+
 	/**
-	 * Constructor
-	 * The default separator is '.'
+	 * Constructor The default separator is '.'
 	 * 
-	 * @param prefix the path prefix 
+	 * @param prefix
+	 *            the path prefix
 	 */
 	public SuffixedPathResolver(String suffix) {
-		this(suffix, SUFFIX_SEPARATOR, false);
+		this(suffix, SUFFIX_SEPARATOR);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param prefix the path prefix
-	 * @param separator the suffix separator
+	 * @param prefix
+	 *            the path prefix
+	 * @param separator
+	 *            the suffix separator
 	 */
 	public SuffixedPathResolver(String suffix, String separator) {
-		this(suffix, separator, false);
+		this.suffix = separator + suffix;
 	}
-	
-	/**
-	 * Constructor
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param generator the generator 
-	 * @param prefix the path prefix
-	 * @param separator the prefix separator
-	 * @param skipSuffix The flag which indicates that in order to retrieve 
-	 * the resource path the suffix should be removed or not
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
+	 * #getType()
 	 */
-	public SuffixedPathResolver(String suffix, String separator, boolean skipSuffix) {
-		this.suffix = separator+suffix;
-		this.skipSuffix = skipSuffix;
+	@Override
+	public ResolverType getType() {
+		return ResolverType.SUFFIXED;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher#matchPath(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.matcher.
+	 * ResourceGeneratorPathMatcher#matchPath(java.lang.String)
 	 */
 	public boolean matchPath(String path) {
-		
+
 		boolean match = false;
-		if(StringUtils.isNotEmpty(path)){
+		if (StringUtils.isNotEmpty(path)) {
 			match = path.endsWith(suffix);
 		}
 		return match;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher#isSameAs(net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.matcher.
+	 * ResourceGeneratorPathMatcher#isSameAs(net.jawr.web.resource.bundle.
+	 * generator.matcher.ResourceGeneratorPathMatcher)
 	 */
 	public boolean isSameAs(ResourceGeneratorResolver matcher) {
-		
+
 		return equals(matcher);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher#getResourcePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.matcher.
+	 * ResourceGeneratorPathMatcher#getResourcePath(java.lang.String)
 	 */
 	public String getResourcePath(String requestedPath) {
-		
-		String resourcePath = requestedPath;
-		if(skipSuffix){
-			resourcePath = requestedPath.substring(0, requestedPath.length()-suffix.length());
-		}
-		return resourcePath;
+
+		return requestedPath;
 	}
 
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -123,7 +128,9 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -133,5 +140,5 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 		result = prime * result + ((suffix == null) ? 0 : suffix.hashCode());
 		return result;
 	}
-	
+
 }
