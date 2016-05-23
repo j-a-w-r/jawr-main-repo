@@ -97,6 +97,8 @@ public class ClassPathJsGeneratorTestCase {
 
 		generator.setWorkingDirectory(FileUtils.getClasspathRootDir() + "/" + WORK_DIR);
 		generator.setResourceReaderHandler(rsReaderHandler);
+		generator.setConfig(config);
+		generator.afterPropertiesSet();
 		
 		FileUtils.copyFile("generator/classpath/js/temp.js.backup", "generator/classpath/js/temp.js");
 	}

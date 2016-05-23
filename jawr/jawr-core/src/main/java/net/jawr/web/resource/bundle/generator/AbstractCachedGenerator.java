@@ -19,11 +19,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
@@ -39,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.jawr.web.JawrConstant;
+import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
@@ -55,7 +58,7 @@ import net.jawr.web.util.StopWatch;
  * @author Ibrahim Chaehoi
  */
 public abstract class AbstractCachedGenerator
-		implements TextResourceGenerator, PostInitializationAwareResourceGenerator, WorkingDirectoryLocationAware,
+		implements TextResourceGenerator, ConfigurationAwareResourceGenerator, PostInitializationAwareResourceGenerator, WorkingDirectoryLocationAware,
 		ResourceReaderHandlerAwareResourceGenerator, BundlingProcessLifeCycleListener {
 
 	/** The Perf Logger */
@@ -97,6 +100,9 @@ public abstract class AbstractCachedGenerator
 	/** The cache properties */
 	protected Properties cacheProperties = new Properties();
 
+	/** The jawr configuration */
+	protected JawrConfig config;
+	
 	/**
 	 * Constructor
 	 */
@@ -133,6 +139,14 @@ public abstract class AbstractCachedGenerator
 		if (!this.workingDir.endsWith(URL_SEPARATOR)) {
 			this.workingDir = this.workingDir + URL_SEPARATOR;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.JawrConfig)
+	 */
+	@Override
+	public void setConfig(JawrConfig config) {
+		this.config = config;
 	}
 
 	/**
@@ -440,21 +454,26 @@ public abstract class AbstractCachedGenerator
 	 */
 	protected Reader createTempResource(GeneratorContext context, CacheMode cacheMode, Reader rd) {
 		String filePath = getTempFilePath(context, cacheMode);
-		FileWriter fwr = null;
+		Writer wr = null;
+		FileOutputStream fos = null;
 		try {
 			File f = new File(filePath);
 			if (!f.getParentFile().exists()) {
 				f.getParentFile().mkdirs();
 			}
 			String content = IOUtils.toString(rd);
-			fwr = new FileWriter(filePath);
-			fwr.append(content);
+			fos = new FileOutputStream(f);
+			FileChannel channel = fos.getChannel();
+			wr = Channels.newWriter(channel, config.getResourceCharset().newEncoder(), -1);
+			wr.write(content);
+			
 			rd = new StringReader(content);
 		} catch (IOException e) {
 			throw new BundlingProcessException("Unable to create temporary resource for '" + context.getPath() + "'",
 					e);
 		} finally {
-			IOUtils.close(fwr);
+			IOUtils.close(wr);
+			IOUtils.close(fos);
 		}
 
 		return rd;

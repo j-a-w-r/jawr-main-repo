@@ -125,6 +125,7 @@ public class SassVaadinCssGeneratorTestCase {
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 		generator.setResourceReaderHandler(rsReaderHandler);
 		generator.setConfig(config);
+		generator.afterPropertiesSet();
 		Mockito.doAnswer(new Answer<Reader>() {
 
 			@Override

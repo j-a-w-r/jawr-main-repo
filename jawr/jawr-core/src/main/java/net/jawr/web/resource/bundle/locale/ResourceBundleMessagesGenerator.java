@@ -30,12 +30,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.jawr.web.JawrConstant;
-import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
-import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
@@ -57,7 +55,8 @@ import net.jawr.web.util.StringUtils;
  */
 @CachedGenerator(name = "ResourceBundle Message", cacheDirectory = "i18nMessages", mappingFileName = "resourceBundleMessageMapping.txt")
 public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
-		implements ConfigurationAwareResourceGenerator, VariantResourceGenerator {
+
+		implements VariantResourceGenerator {
 
 	/** The default resource bundle charset */
 	private static final String DEFAULT_RESOURCE_BUNDLE_CHARSET = "ISO-8859-1";
@@ -73,9 +72,6 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 
 	/** The cache for the list of available locale per resource */
 	private final Map<String, List<String>> cachedAvailableLocalePerResource = new ConcurrentHashMap<String, List<String>>();
-
-	/** The Jawr config */
-	private JawrConfig config;
 
 	/** The message bundle control */
 	protected MessageBundleControl control;
@@ -250,8 +246,9 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	@Override
 	protected void resetCache() {
 		super.resetCache();
-		cacheProperties.put(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, Boolean.toString(config.getBooleanProperty(
-				JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)));
+		cacheProperties.put(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
+				Boolean.toString(config.getBooleanProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
+						DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)));
 
 		cacheProperties.put(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
 				config.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET, DEFAULT_RESOURCE_BUNDLE_CHARSET));
@@ -345,18 +342,6 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		VariantSet variantSet = new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", localeVariants);
 		variants.put(JawrConstant.LOCALE_VARIANT_TYPE, variantSet);
 		return variants;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.
-	 * ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.
-	 * JawrConfig)
-	 */
-	@Override
-	public void setConfig(JawrConfig config) {
-		this.config = config;
 	}
 
 }

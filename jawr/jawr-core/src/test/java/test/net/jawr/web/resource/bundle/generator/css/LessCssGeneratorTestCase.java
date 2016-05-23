@@ -92,8 +92,6 @@ public class LessCssGeneratorTestCase {
 
 		config.setGeneratorRegistry(generatorRegistry);
 
-		// GeneratorRegistry generatorRegistry =
-		// addGeneratorRegistryToConfig(config, JawrConstant.CSS_TYPE);
 		generator = new LessCssGenerator();
 		FileUtils.clearDirectory(FileUtils.getClasspathRootDir() + File.separator + WORK_DIR);
 		FileUtils.createDir(WORK_DIR);
@@ -111,6 +109,7 @@ public class LessCssGeneratorTestCase {
 				binaryRsReaderHandler, null);
 		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 		generator.setResourceReaderHandler(rsReaderHandler);
+		generator.setConfig(config);
 		generator.afterPropertiesSet();
 
 		filePathMappings = new ArrayList<>();

@@ -13,7 +13,9 @@
  */
 package net.jawr.web.resource.bundle.generator.css.sass.ruby;
 
-import static net.jawr.web.JawrConstant.*;
+import static net.jawr.web.JawrConstant.SASS_GENERATOR_ABSOLUTE_URL_MODE;
+import static net.jawr.web.JawrConstant.SASS_GENERATOR_RELATIVE_URL_MODE;
+import static net.jawr.web.JawrConstant.SASS_GENERATOR_URL_MODE;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,7 +40,6 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
-import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.css.sass.ISassResourceGenerator;
@@ -53,7 +54,7 @@ import net.jawr.web.util.StringUtils;
  */
 @CachedGenerator(name = "sass", cacheDirectory = "sassRubyCss", mappingFileName = "sassGeneratorCache.txt")
 public class SassRubyGenerator extends AbstractCSSGenerator
-		implements ISassResourceGenerator, ConfigurationAwareResourceGenerator {
+		implements ISassResourceGenerator {
 
 	/** The Jawr Importer for the Sass Ruby engine */
 	private static final String JAWR_IMPORTER_RB = "/net/jawr/web/resource/bundle/generator/css/sass/jawr-sass.rb";
@@ -70,9 +71,6 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 	/** The ruby engine */
 	private ScriptEngine rubyEngine;
 
-	/** The Jawr config */
-	private JawrConfig config;
-	
 	/** The flag indicating if we must use absolute URL when referencing binary resources */
 	private boolean useAbsoluteURL = false;
 
@@ -97,16 +95,13 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 		return resolver;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.
-	 * ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.
-	 * JawrConfig)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	@Override
 	public void setConfig(JawrConfig config) {
-		this.config = config;
+	
+		super.setConfig(config);
 		String value = this.config.getProperty(SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE);
 		if(!value.equalsIgnoreCase(SASS_GENERATOR_ABSOLUTE_URL_MODE) && !value.equalsIgnoreCase(SASS_GENERATOR_RELATIVE_URL_MODE)){
 			throw new BundlingProcessException("The value '"+value+"' is not allowed for '"+SASS_GENERATOR_URL_MODE+"' in the Saas Ruby generator");

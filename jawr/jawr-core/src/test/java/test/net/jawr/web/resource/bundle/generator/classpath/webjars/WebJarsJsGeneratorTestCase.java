@@ -80,6 +80,7 @@ public class WebJarsJsGeneratorTestCase {
 		}).when(rsReaderHandler).getLastModified(Matchers.anyString());
 
 		generator.setWorkingDirectory(FileUtils.getClasspathRootDir() + "/" + WORK_DIR);
+		generator.setConfig(config);
 		generator.afterPropertiesSet();
 	}
 

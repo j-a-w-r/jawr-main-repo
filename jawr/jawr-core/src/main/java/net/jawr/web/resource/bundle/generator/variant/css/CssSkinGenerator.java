@@ -34,7 +34,6 @@ import net.jawr.web.resource.bundle.css.CssImageUrlRewriter;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
-import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.ResourceReaderHandlerAwareResourceGenerator;
@@ -56,7 +55,7 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  */
 public class CssSkinGenerator extends AbstractCSSGenerator implements VariantResourceGenerator, ResourceBrowser,
-		StreamResourceGenerator, ConfigurationAwareResourceGenerator, ResourceReaderHandlerAwareResourceGenerator,
+		StreamResourceGenerator, ResourceReaderHandlerAwareResourceGenerator,
 		PostInitializationAwareResourceGenerator {
 
 	/** The resource browser */
@@ -67,9 +66,6 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 
 	/** The CSS skin resolver */
 	private AbstractCssSkinVariantResolver cssSkinResolver;
-
-	/** The jawr config */
-	private JawrConfig config;
 
 	/** The CSS URL rewriter */
 	private CssImageUrlRewriter urlRewriter;
@@ -161,18 +157,6 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	public void setResourceReaderHandler(ResourceReaderHandler rsHandler) {
 
 		rsBrowser = rsHandler;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.
-	 * ConfigurationAwareResourceGenerator
-	 * #setConfig(net.jawr.web.config.JawrConfig)
-	 */
-	public void setConfig(JawrConfig config) {
-
-		this.config = config;
 	}
 
 	/*

@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.jawr.web.JawrConstant;
-import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
@@ -37,7 +36,6 @@ import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
-import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
@@ -54,7 +52,7 @@ import net.jawr.web.util.js.JavascriptEngine;
  */
 @CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt", mode = CacheMode.ALL)
 public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
-		implements ConfigurationAwareResourceGenerator, ICoffeeScriptGenerator {
+		implements ICoffeeScriptGenerator {
 
 	/** The Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
@@ -80,9 +78,6 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 
-	/** The jawr config */
-	private JawrConfig config;
-
 	/** The coffeeScript object */
 	private Object coffeeScript;
 
@@ -97,18 +92,6 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	public CoffeeScriptGenerator() {
 		resolver = ResourceGeneratorResolverFactory.createSuffixResolver(COFFEE_SCRIPT_SUFFIX);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.
-	 * ConfigurationAwareResourceGenerator
-	 * #setConfig(net.jawr.web.config.JawrConfig)
-	 */
-	@Override
-	public void setConfig(JawrConfig config) {
-		this.config = config;
 	}
 
 	/*

@@ -30,7 +30,6 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
-import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.css.sass.ISassResourceGenerator;
@@ -44,8 +43,7 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  */
 @CachedGenerator(name = "sass", cacheDirectory = "sassVaadinCss", mappingFileName = "sassGeneratorCache.txt")
-public class SassVaadinGenerator extends AbstractCSSGenerator
-		implements ISassResourceGenerator, ConfigurationAwareResourceGenerator {
+public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassResourceGenerator {
 
 	/** The Sass generator URL mode default value */
 	public static final String SASS_GENERATOR_DEFAULT_URL_MODE = "MIXED";
@@ -53,12 +51,11 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 
-	/** The URL mode handling for binary resource URL present in the Scss file */
+	/**
+	 * The URL mode handling for binary resource URL present in the Scss file
+	 */
 	private ScssContext.UrlMode urlMode;
 
-	/** The Jawr config */
-	private JawrConfig config;
-	
 	/**
 	 * Constructor
 	 */
@@ -78,17 +75,12 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 		return resolver;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.
-	 * ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.
-	 * JawrConfig)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	@Override
 	public void setConfig(JawrConfig config) {
-
-		this.config = config;
+		super.setConfig(config);
 		String value = this.config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE);
 		urlMode = UrlMode.valueOf(value.toUpperCase());
 	}
@@ -128,8 +120,12 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 		return rd;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache
+	 * ()
 	 */
 	@Override
 	protected void resetCache() {
@@ -137,14 +133,18 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 		cacheProperties.put(JawrConstant.SASS_GENERATOR_URL_MODE, urlMode.toString());
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#isCacheValid()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * isCacheValid()
 	 */
 	@Override
 	protected boolean isCacheValid() {
-		
+
 		String cachedUrlMode = cacheProperties.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE);
-		return StringUtils.equals(cachedUrlMode, config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
+		return StringUtils.equals(cachedUrlMode,
+				config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
 	}
 
 	/**
@@ -162,7 +162,8 @@ public class SassVaadinGenerator extends AbstractCSSGenerator
 
 		try {
 			JawrScssResolver scssResolver = new JawrScssResolver(bundle, rsHandler);
-			JawrScssStylesheet sheet = new JawrScssStylesheet(bundle, content, path, scssResolver, context.getCharset());
+			JawrScssStylesheet sheet = new JawrScssStylesheet(bundle, content, path, scssResolver,
+					context.getCharset());
 			sheet.compile(urlMode);
 			String parsedScss = sheet.printState();
 			addLinkedResources(path, context, scssResolver.getLinkedResources());

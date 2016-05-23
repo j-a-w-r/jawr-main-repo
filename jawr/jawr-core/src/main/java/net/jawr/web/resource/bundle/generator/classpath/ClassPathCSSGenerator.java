@@ -23,7 +23,6 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
-import net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.ResourceGenerator;
@@ -43,7 +42,7 @@ import net.jawr.web.util.StringUtils;
  */
 @CachedGenerator(name = "Classpath CSS", cacheDirectory = "cssClasspath", mappingFileName = "cssClasspathMapping.txt")
 public class ClassPathCSSGenerator extends AbstractCSSGenerator
-		implements ResourceBrowser, ConfigurationAwareResourceGenerator {
+		implements ResourceBrowser {
 
 	/** the class path generator helper */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
@@ -54,9 +53,6 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	/** The classpath generator helper */
 	private ClassPathGeneratorHelper helper;
 
-	/** The JAWR config */
-	protected JawrConfig config;
-	
 	/**
 	 * The flag indicating if the generator is handling the Css Image ressources
 	 */
@@ -128,15 +124,12 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		cacheProperties.put(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, Boolean.toString(isHandlingCssImage));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jawr.web.resource.bundle.generator.
-	 * ConfigurationAwareResourceGenerator
-	 * #setConfig(net.jawr.web.config.JawrConfig)
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#afterPropertiesSet()
 	 */
-	public void setConfig(JawrConfig config) {
-		this.config = config;
+	@Override
+	public void afterPropertiesSet() {
+		super.afterPropertiesSet();
 		this.isHandlingCssImage = config.isCssClasspathImageHandledByClasspathCss();
 	}
 
