@@ -216,7 +216,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	@Override
 	protected boolean isCacheValid() {
-		return StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION),
+		return super.isCacheValid() && StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION),
 				config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION))
 				&& StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS),
 						config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFFEE_SCRIPT_DEFAULT_OPTIONS))

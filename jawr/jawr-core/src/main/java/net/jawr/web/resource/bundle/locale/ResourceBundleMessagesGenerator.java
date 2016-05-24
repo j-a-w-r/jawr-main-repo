@@ -265,7 +265,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 */
 	@Override
 	protected boolean isCacheValid() {
-		return StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE),
+		return super.isCacheValid() && StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE),
 				config.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
 						Boolean.toString(DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)))
 				&& StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET),

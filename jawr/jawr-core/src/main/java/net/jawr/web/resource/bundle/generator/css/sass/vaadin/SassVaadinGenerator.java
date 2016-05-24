@@ -143,7 +143,7 @@ public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassRe
 	protected boolean isCacheValid() {
 
 		String cachedUrlMode = cacheProperties.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE);
-		return StringUtils.equals(cachedUrlMode,
+		return super.isCacheValid() && StringUtils.equals(cachedUrlMode,
 				config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
 	}
 

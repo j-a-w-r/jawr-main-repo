@@ -51,6 +51,7 @@ import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
 import net.jawr.web.util.StopWatch;
+import net.jawr.web.util.StringUtils;
 
 /**
  * This class defines JS generator which handles cache for generated resource
@@ -485,6 +486,8 @@ public abstract class AbstractCachedGenerator
 	protected void resetCache() {
 		cacheProperties.clear();
 		linkedResourceMap.clear();
+		cacheProperties.put(JawrConfig.JAWR_CHARSET_NAME,
+				config.getResourceCharset().name());
 	}
 
 	/**
@@ -493,7 +496,10 @@ public abstract class AbstractCachedGenerator
 	 * @return true if the cache is valid
 	 */
 	protected boolean isCacheValid() {
-		return true;
+		
+		return StringUtils.equals(cacheProperties.getProperty(JawrConfig.JAWR_CHARSET_NAME),
+				config.getResourceCharset().name());
+		
 	}
 
 	/**

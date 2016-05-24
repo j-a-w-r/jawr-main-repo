@@ -104,9 +104,9 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		boolean isValid = false;
 		String servletMapping = config.getServletMapping();
 		boolean isHandlingCssCPImage = config.isCssClasspathImageHandledByClasspathCss();
-		if(StringUtils.equals(servletMapping, cacheProperties.getProperty("jawr.servlet.mapping"))
-				&& StringUtils.equals(cacheProperties.getProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE), Boolean.toString(isHandlingCssCPImage))){
-			isValid = false;
+		if(super.isCacheValid() && StringUtils.equals(servletMapping, cacheProperties.getProperty("jawr.servlet.mapping"))
+					&& StringUtils.equals(cacheProperties.getProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE), Boolean.toString(isHandlingCssCPImage))){
+				isValid = true;
 		}
 		
 		return isValid;

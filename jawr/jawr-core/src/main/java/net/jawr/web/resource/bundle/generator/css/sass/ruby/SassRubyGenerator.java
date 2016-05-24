@@ -125,7 +125,7 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 	protected boolean isCacheValid() {
 		
 		String cachedUrlMode = cacheProperties.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE);
-		return StringUtils.equals(cachedUrlMode, config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
+		return super.isCacheValid() && StringUtils.equals(cachedUrlMode, config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
 	}
 	
 	/*
