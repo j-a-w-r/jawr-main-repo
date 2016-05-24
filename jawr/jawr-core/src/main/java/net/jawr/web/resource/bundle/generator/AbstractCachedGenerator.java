@@ -576,9 +576,11 @@ public abstract class AbstractCachedGenerator
 
 						String value = cacheProperties.getProperty(name);
 
-						String resourceMapping = value.substring(JAWR_MAPPING_PREFIX.length());
+						String resourceMapping = name.substring(JAWR_MAPPING_PREFIX.length());
 						String[] mappings = value.split(SEMICOLON);
 						List<FilePathMapping> fMappings = new CopyOnWriteArrayList<>();
+						
+						// TODO check the use of mappingModified
 						boolean mappingModified = true;
 						for (String fmapping : mappings) {
 							String[] mapping = fmapping.split(MAPPING_TIMESTAMP_SEPARATOR);

@@ -190,7 +190,6 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 		if (obj instanceof ResourceBrowser) {
 			resourceInfoProviders.add(0, (ResourceBrowser) obj);
-			System.out.println("*********** Add reader"+obj);
 		}
 	}
 

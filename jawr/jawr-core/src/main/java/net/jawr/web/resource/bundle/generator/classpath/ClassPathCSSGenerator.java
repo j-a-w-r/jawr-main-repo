@@ -125,11 +125,11 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	}
 
 	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#afterPropertiesSet()
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(net.jawr.web.config.JawrConfig)
 	 */
 	@Override
-	public void afterPropertiesSet() {
-		super.afterPropertiesSet();
+	public void setConfig(JawrConfig config) {
+		super.setConfig(config);
 		this.isHandlingCssImage = config.isCssClasspathImageHandledByClasspathCss();
 	}
 
