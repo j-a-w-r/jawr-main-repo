@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,6 +48,7 @@ import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
+import net.jawr.web.resource.bundle.locale.LocaleUtils;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
@@ -203,8 +205,8 @@ public abstract class AbstractCachedGenerator
 	 * @return the file path of the temporary resource
 	 */
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
-		return getTempDirectory() + cacheMode + URL_SEPARATOR
-				+ context.getPath().replace(GeneratorRegistry.PREFIX_SEPARATOR, URL_SEPARATOR);
+
+		return  getTempDirectory() + cacheMode + URL_SEPARATOR + getResourceCacheKey(context.getPath(), context);
 	}
 
 	/**
@@ -244,7 +246,7 @@ public abstract class AbstractCachedGenerator
 
 		Reader rd = null;
 		if (useCache) {
-			List<FilePathMapping> fMappings = linkedResourceMap.get(getLinkedResourceCacheKey(path, context));
+			List<FilePathMapping> fMappings = linkedResourceMap.get(getResourceCacheKey(path, context));
 			if (fMappings != null && !checkResourcesModified(context, fMappings)) {
 				// Retrieve from cache
 				// Checks if temp resource is already created
@@ -311,8 +313,27 @@ public abstract class AbstractCachedGenerator
 	 *            the generator context
 	 * @return the cache key for linked resource map
 	 */
-	protected String getLinkedResourceCacheKey(String path, GeneratorContext context) {
-		return path;
+	protected String getResourceCacheKey(String path, GeneratorContext context) {
+		
+		StringBuilder strbCacheKey = new StringBuilder(path);
+		if(StringUtils.isNotEmpty(context.getBracketsParam())) {
+			strbCacheKey.append("_"+context.getBracketsParam());
+		}
+		if(StringUtils.isNotEmpty(context.getParenthesesParam())) {
+			strbCacheKey.append("_"+context.getParenthesesParam());
+		}
+		
+		String cacheKey = strbCacheKey.toString();
+		
+		Locale locale = context.getLocale();
+		if(locale != null){
+			cacheKey = LocaleUtils.toBundleName(strbCacheKey.toString(), locale);
+				
+		}
+		
+		cacheKey = cacheKey.replaceAll("[^\\w\\.\\-]", "_");
+		
+		return cacheKey;
 	}
 
 	/**
@@ -340,7 +361,7 @@ public abstract class AbstractCachedGenerator
 	 *            the list of mappings linked to the resource
 	 */
 	protected void addLinkedResources(String path, GeneratorContext context, List<FilePathMapping> fMappings) {
-		linkedResourceMap.put(getLinkedResourceCacheKey(path, context), new CopyOnWriteArrayList<>(fMappings));
+		linkedResourceMap.put(getResourceCacheKey(path, context), new CopyOnWriteArrayList<>(fMappings));
 		JoinableResourceBundle bundle = context.getBundle();
 		if (bundle != null) {
 

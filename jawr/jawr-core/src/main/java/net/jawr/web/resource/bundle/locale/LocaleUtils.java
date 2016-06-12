@@ -280,7 +280,7 @@ public class LocaleUtils {
 			return baseName;
 		}
 
-		StringBuffer sb = new StringBuffer(baseName);
+		StringBuilder sb = new StringBuilder(baseName);
 		sb.append('_');
 		if (StringUtils.isNotEmpty(variant)) {
 			sb.append(language).append('_').append(country).append('_').append(variant);

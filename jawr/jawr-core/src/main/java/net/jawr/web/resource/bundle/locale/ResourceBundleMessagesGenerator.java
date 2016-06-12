@@ -109,24 +109,6 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
-	 * getLinkedResourceCacheKey(java.lang.String,
-	 * net.jawr.web.resource.bundle.generator.GeneratorContext)
-	 */
-	@Override
-	protected String getLinkedResourceCacheKey(String path, GeneratorContext context) {
-
-		Locale locale = context.getLocale();
-		if (locale == null) {
-			locale = control.getFallbackLocale();
-		}
-		path = path.replace("|", "_");
-		return control.toBundleName(path, locale);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
 	 * getPathMatcher ()
 	 */
@@ -232,8 +214,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	@Override
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
 
-		String path = getLinkedResourceCacheKey(context.getPath(), context);
-		return getTempDirectory() + cacheMode + URL_SEPARATOR + path;
+		return  getTempDirectory() + cacheMode + URL_SEPARATOR + getResourceCacheKey(context.getPath(), context);
 	}
 
 	/*
