@@ -207,19 +207,6 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
-	 * getTempFilePath(net.jawr.web.resource.bundle.generator.GeneratorContext,
-	 * net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode)
-	 */
-	@Override
-	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
-
-		return  getTempDirectory() + cacheMode + URL_SEPARATOR + getResourceCacheKey(context.getPath(), context);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache
 	 * ()
