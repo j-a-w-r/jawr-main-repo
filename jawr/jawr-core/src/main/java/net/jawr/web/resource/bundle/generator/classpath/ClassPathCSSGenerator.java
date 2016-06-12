@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Set;
+import net.jawr.web.JawrConstant;
 
 import net.jawr.web.config.JawrConfig;
+import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.JoinableResourceBundleImpl;
 import net.jawr.web.resource.bundle.generator.AbstractCSSGenerator;
@@ -44,14 +46,20 @@ import net.jawr.web.util.StringUtils;
 public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		implements ResourceBrowser {
 
-	/** the class path generator helper */
+        /** The binary servlet mapping property name */
+	private static final String JAWR_BINARY_SERVLET_MAPPING = "jawr.binary.servlet.mapping";
+        
+        /** The servlet mapping property name */
+	private static final String JAWR_SERVLET_MAPPING = "jawr.servlet.mapping";
+
+        /** the class path generator helper */
 	private static final String CLASSPATH_GENERATOR_HELPER_PREFIX = "";
 
 	/** The resolver */
 	protected ResourceGeneratorResolver resolver;
 
 	/** The classpath generator helper */
-	private ClassPathGeneratorHelper helper;
+	private final ClassPathGeneratorHelper helper;
 
 	/**
 	 * The flag indicating if the generator is handling the Css Image ressources
@@ -103,14 +111,31 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 		
 		boolean isValid = false;
 		String servletMapping = config.getServletMapping();
+                
+                String binaryServletMapping = getBinaryServletMapping();
 		boolean isHandlingCssCPImage = config.isCssClasspathImageHandledByClasspathCss();
-		if(super.isCacheValid() && StringUtils.equals(servletMapping, cacheProperties.getProperty("jawr.servlet.mapping"))
+		if(super.isCacheValid() && StringUtils.equals(servletMapping, cacheProperties.getProperty(JAWR_SERVLET_MAPPING))
+                                        && StringUtils.equals(binaryServletMapping, cacheProperties.getProperty(JAWR_BINARY_SERVLET_MAPPING))
 					&& StringUtils.equals(cacheProperties.getProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE), Boolean.toString(isHandlingCssCPImage))){
 				isValid = true;
 		}
 		
 		return isValid;
 	}
+
+        /**
+         * Retrieves the binary servlet mapping
+         * @return the binary servlet mapping or null if it doesn't exists
+         */
+         private String getBinaryServletMapping() {
+            String binaryServletMapping = null;
+            // Retrieve binary servlet mapping from the binary resource handler
+            BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) config.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+            if(binaryRsHandler !=  null){
+                binaryServletMapping = binaryRsHandler.getConfig().getServletMapping();
+            }
+            return binaryServletMapping;
+        }
 	
 	
 
@@ -120,10 +145,16 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	@Override
 	protected void resetCache() {
 		super.resetCache();
-		cacheProperties.put("jawr.servlet.mapping", config.getServletMapping());
+		cacheProperties.put(JAWR_SERVLET_MAPPING, config.getServletMapping());
+                String binaryServletMapping = getBinaryServletMapping();
+                if(binaryServletMapping != null){
+                    cacheProperties.put(JAWR_BINARY_SERVLET_MAPPING, binaryServletMapping);
+		}else{
+                    cacheProperties.remove(JAWR_BINARY_SERVLET_MAPPING);
+                }
 		cacheProperties.put(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, Boolean.toString(isHandlingCssImage));
 	}
-
+    
 	/* (non-Javadoc)
 	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(net.jawr.web.config.JawrConfig)
 	 */
@@ -139,6 +170,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
 	 * getPathMatcher ()
 	 */
+        @Override
 	public ResourceGeneratorResolver getResolver() {
 
 		return resolver;
@@ -150,6 +182,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator
 	 * @see net.jawr.web.resource.bundle.generator.CssResourceGenerator#
 	 * isHandlingCssImage()
 	 */
+        @Override
 	public boolean isHandlingCssImage() {
 		return isHandlingCssImage;
 	}
