@@ -120,7 +120,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		result = IOUtils.toString(rd);
 		assertEquals(readFile("bundleLocale/resultScript_fr.js"), FileUtils.removeCarriageReturn(result));
 
-		assertTrue(ctx.isRetrievedFromCache());
+		assertFalse(ctx.isRetrievedFromCache());
 		
 		ctx.setLocale(new Locale("es"));
 		ctx.setRetrievedFromCache(false);
