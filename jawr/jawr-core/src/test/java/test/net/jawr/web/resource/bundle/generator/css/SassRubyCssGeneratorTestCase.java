@@ -79,7 +79,9 @@ public class SassRubyCssGeneratorTestCase {
 	@Mock
 	private JoinableResourceBundle bundle;
 
-	private List<FilePathMapping> filePathMappings;
+	private List<FilePathMapping> filePathMappings  = new ArrayList<>();
+
+	private List<FilePathMapping> linkedResourcesPathMappings  = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -94,16 +96,16 @@ public class SassRubyCssGeneratorTestCase {
 		when(config.getServletMapping()).thenReturn("/css");
 		when(config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_ABSOLUTE_URL_MODE))
 				.thenReturn(SASS_GENERATOR_DEFAULT_URL_MODE);
-
+		when(config.getBinaryHashAlgorithm()).thenReturn("MD5");
+		
 		when(generatorRegistry.isGeneratedBinaryResource(Matchers.startsWith("jar:"))).thenReturn(true);
 		when(generatorRegistry.isHandlingCssImage(Matchers.startsWith("jar:"))).thenReturn(true);
 
 		when(config.getGeneratorRegistry()).thenReturn(generatorRegistry);
 
-		filePathMappings = new ArrayList<>();
 		when(bundle.getFilePathMappings()).thenReturn(filePathMappings);
+		when(bundle.getLinkedFilePathMappings()).thenReturn(linkedResourcesPathMappings);
 
-		// GeneratorRegistry generatorRegistry =
 		generator = new SassRubyGenerator();
 		FileUtils.clearDirectory(FileUtils.getClasspathRootDir() + File.separator + WORK_DIR);
 		FileUtils.createDir(WORK_DIR);
@@ -203,25 +205,23 @@ public class SassRubyCssGeneratorTestCase {
 	public void testSassCssBundleWithImports() throws Exception {
 
 		when(ctx.getPath()).thenReturn("/imports.scss");
-		// initRsReaderHandler("/imports.scss");
-		// initRsReaderHandler("/_partial-for-import.scss");
-
+		
 		when(rsReaderHandler.getResourceAsStream(anyString()))
 				.thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
 
-		ctx.setProcessingBundle(true);
+		when(ctx.isProcessingBundle()).thenReturn(true);
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(rd, writer);
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/imports_expected.css"),
 				writer.getBuffer().toString());
 
-		assertEquals(2, filePathMappings.size());
+		assertEquals(2, linkedResourcesPathMappings.size());
 
 		assertEquals(FileUtils.getClassPathFileAbsolutePath("generator/css/sass/imports.scss"),
-				filePathMappings.get(0).getPath());
+				linkedResourcesPathMappings.get(0).getPath());
 		assertEquals(FileUtils.getClassPathFileAbsolutePath("generator/css/sass/_partial-for-import.scss"),
-				filePathMappings.get(1).getPath());
+				linkedResourcesPathMappings.get(1).getPath());
 
 		// Checks retrieve from cache
 		rd = generator.createResource(ctx);
@@ -229,7 +229,7 @@ public class SassRubyCssGeneratorTestCase {
 		IOUtils.copy(rd, writer);
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/imports_expected.css"),
 				writer.getBuffer().toString());
-
+		Mockito.verify(ctx).setRetrievedFromCache(true);
 	}
 
 	@Test
@@ -253,7 +253,7 @@ public class SassRubyCssGeneratorTestCase {
 		when(rsReaderHandler.getLastModified(f.getAbsolutePath()))
 				.thenReturn(Calendar.getInstance().getTimeInMillis() + 3);
 
-		filePathMappings.clear();
+		linkedResourcesPathMappings.clear();
 
 		Reader rd = generator.createResource(ctx);
 		StringWriter writer = new StringWriter();
@@ -261,13 +261,13 @@ public class SassRubyCssGeneratorTestCase {
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/sass/expected/ruby/imports_updated_expected.css"),
 				writer.getBuffer().toString());
 
-		assertEquals(3, filePathMappings.size());
+		assertEquals(3, linkedResourcesPathMappings.size());
 		assertEquals(FileUtils.getClassPathFileAbsolutePath("generator/css/sass/imports.scss"),
-				filePathMappings.get(0).getPath());
+				linkedResourcesPathMappings.get(0).getPath());
 		assertEquals(FileUtils.getClassPathFileAbsolutePath("generator/css/sass/_partial-for-import.scss"),
-				filePathMappings.get(1).getPath());
+				linkedResourcesPathMappings.get(1).getPath());
 		assertEquals(FileUtils.getClassPathFileAbsolutePath("generator/css/sass/folder-test2/variables.scss"),
-				filePathMappings.get(2).getPath());
+				linkedResourcesPathMappings.get(2).getPath());
 
 	}
 

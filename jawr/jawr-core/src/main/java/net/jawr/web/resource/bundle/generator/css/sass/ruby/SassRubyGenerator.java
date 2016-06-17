@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +52,7 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  */
 @CachedGenerator(name = "sass", cacheDirectory = "sassRubyCss", mappingFileName = "sassGeneratorCache.txt")
-public class SassRubyGenerator extends AbstractCSSGenerator
-		implements ISassResourceGenerator {
+public class SassRubyGenerator extends AbstractCSSGenerator implements ISassResourceGenerator {
 
 	/** The Jawr Importer for the Sass Ruby engine */
 	private static final String JAWR_IMPORTER_RB = "/net/jawr/web/resource/bundle/generator/css/sass/jawr-sass.rb";
@@ -64,14 +62,17 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 
 	/** The default Sass Ruby Url mode */
 	public static final String SASS_GENERATOR_DEFAULT_URL_MODE = SASS_GENERATOR_ABSOLUTE_URL_MODE;
-	
+
 	/** The resolver */
 	private ResourceGeneratorResolver resolver;
 
 	/** The ruby engine */
 	private ScriptEngine rubyEngine;
 
-	/** The flag indicating if we must use absolute URL when referencing binary resources */
+	/**
+	 * The flag indicating if we must use absolute URL when referencing binary
+	 * resources
+	 */
 	private boolean useAbsoluteURL = false;
 
 	/**
@@ -95,39 +96,54 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 		return resolver;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(net.jawr.web.config.JawrConfig)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(
+	 * net.jawr.web.config.JawrConfig)
 	 */
 	@Override
 	public void setConfig(JawrConfig config) {
-	
+
 		super.setConfig(config);
 		String value = this.config.getProperty(SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE);
-		if(!value.equalsIgnoreCase(SASS_GENERATOR_ABSOLUTE_URL_MODE) && !value.equalsIgnoreCase(SASS_GENERATOR_RELATIVE_URL_MODE)){
-			throw new BundlingProcessException("The value '"+value+"' is not allowed for '"+SASS_GENERATOR_URL_MODE+"' in the Saas Ruby generator");
+		if (!value.equalsIgnoreCase(SASS_GENERATOR_ABSOLUTE_URL_MODE)
+				&& !value.equalsIgnoreCase(SASS_GENERATOR_RELATIVE_URL_MODE)) {
+			throw new BundlingProcessException("The value '" + value + "' is not allowed for '"
+					+ SASS_GENERATOR_URL_MODE + "' in the Saas Ruby generator");
 		}
 		useAbsoluteURL = value.equalsIgnoreCase(SASS_GENERATOR_ABSOLUTE_URL_MODE);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#resetCache
+	 * ()
 	 */
 	@Override
 	protected void resetCache() {
 		super.resetCache();
-		cacheProperties.put(JawrConstant.SASS_GENERATOR_URL_MODE, useAbsoluteURL ? SASS_GENERATOR_ABSOLUTE_URL_MODE : SASS_GENERATOR_RELATIVE_URL_MODE);
+		cacheProperties.put(JawrConstant.SASS_GENERATOR_URL_MODE,
+				useAbsoluteURL ? SASS_GENERATOR_ABSOLUTE_URL_MODE : SASS_GENERATOR_RELATIVE_URL_MODE);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#isCacheValid()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * isCacheValid()
 	 */
 	@Override
 	protected boolean isCacheValid() {
-		
+
 		String cachedUrlMode = cacheProperties.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE);
-		return super.isCacheValid() && StringUtils.equals(cachedUrlMode, config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
+		return super.isCacheValid() && StringUtils.equals(cachedUrlMode,
+				config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_DEFAULT_URL_MODE));
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -150,7 +166,7 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 			}
 			String content = IOUtils.toString(rd);
 
-			String result = compile(bundle, content, path, context.getCharset());
+			String result = compile(bundle, content, path, context);
 			rd = new StringReader(result);
 
 		} catch (ResourceNotFoundException | ScriptException | IOException e) {
@@ -169,42 +185,49 @@ public class SassRubyGenerator extends AbstractCSSGenerator
 	 *            the content to compile
 	 * @param path
 	 *            the path
-	 * @param charset
-	 *            the current charset
+	 * @param ctx
+	 *            the generator context
 	 * @return the compiled Sass content
 	 * @throws ScriptException
 	 *             if a ScriptException occurs
 	 * @throws IOException
 	 *             if an IOExceptions occurs
 	 */
-	private String compile(JoinableResourceBundle bundle, String content, String path, Charset charset)
+	private String compile(JoinableResourceBundle bundle, String content, String path, GeneratorContext ctx)
 			throws ScriptException, IOException {
 
-		// rubyEngine.put("jawrResolver", new JawrSassResolver(rsHandler));
 		InputStream is = getResourceInputStream(JAWR_IMPORTER_RB);
 		String script = IOUtils.toString(is);
 		rubyEngine.eval(script);
 		SimpleBindings bindings = new SimpleBindings();
-		bindings.put(JAWR_RESOLVER_VAR, new JawrSassResolver(bundle, path, rsHandler, useAbsoluteURL));
-		
-		return rubyEngine.eval(buildUpdateScript(path, content), bindings).toString();
+		JawrSassResolver scssResolver = new JawrSassResolver(bundle, path, rsHandler, useAbsoluteURL);
+		bindings.put(JAWR_RESOLVER_VAR, scssResolver);
+		String compiledScss = rubyEngine.eval(buildScript(path, content), bindings).toString();
+		addLinkedResources(path, ctx, scssResolver.getLinkedResources());
+		return compiledScss;
 	}
 
-	private String buildUpdateScript(String path, String content) {
+	/**
+	 * Builds the ruby script to execute
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @param content
+	 *            the resource content
+	 * @return the ruby script to execute
+	 */
+	private String buildScript(String path, String content) {
 
 		StringBuilder script = new StringBuilder();
-		
-		script.append("require 'rubygems'\n"
-				+ "require 'sass/plugin'\n"
-				+ "require 'sass/engine'\n");
-		
+
+		script.append("require 'rubygems'\n" + "require 'sass/plugin'\n" + "require 'sass/engine'\n");
+
 		content = SassRubyUtils.normalizeMultiByteString(content);
-		
+
 		script.append(String.format(
 				"customImporter = Sass::Importers::JawrImporter.new(@jawrResolver) \n" + "name = \"%s\"\n"
 						+ "result = Sass::Engine.new(\"%s\", {:importer => customImporter, :filename => name, :syntax => :scss, :cache => false}).render",
-						path,
-						content.replace("\"", "\\\"").replace("#", "\\#")));
+				path, content.replace("\"", "\\\"").replace("#", "\\#")));
 		return script.toString();
 	}
 
