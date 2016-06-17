@@ -16,7 +16,6 @@ package net.jawr.web.resource.bundle.locale;
 import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY;
 import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE;
 import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET;
-import static net.jawr.web.JawrConstant.URL_SEPARATOR;
 
 import java.io.File;
 import java.io.Reader;
@@ -33,7 +32,6 @@ import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
-import net.jawr.web.resource.bundle.generator.CachedGenerator.CacheMode;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
@@ -58,6 +56,9 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 
 		implements VariantResourceGenerator {
 
+	/** The properties file suffix */
+	private static final String PROPERTIES_FILE_SUFFIX = ".properties";
+
 	/** The default resource bundle charset */
 	private static final String DEFAULT_RESOURCE_BUNDLE_CHARSET = "ISO-8859-1";
 
@@ -68,10 +69,10 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	private static final boolean DEFAULT_VALUE_ADD_QUOTE_TO_MSG_KEY = false;
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/** The cache for the list of available locale per resource */
-	private final Map<String, List<String>> cachedAvailableLocalePerResource = new ConcurrentHashMap<String, List<String>>();
+	private final Map<String, List<String>> cachedAvailableLocalePerResource = new ConcurrentHashMap<>();
 
 	/** The message bundle control */
 	protected MessageBundleControl control;
@@ -112,6 +113,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
 	 * getPathMatcher ()
 	 */
+	@Override
 	public ResourceGeneratorResolver getResolver() {
 
 		return resolver;
@@ -124,6 +126,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 * net.jawr.web.resource.bundle.generator.ResourceGenerator#createResource
 	 * (java.lang.String, java.nio.charset.Charset)
 	 */
+	@Override
 	public Reader generateResource(String path, GeneratorContext context) {
 
 		MessageBundleScriptCreator creator = new MessageBundleScriptCreator(context, control);
@@ -161,6 +164,16 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 
 		List<FilePathMapping> fMappings = getFileMappings(path, context, locales);
 		addLinkedResources(path, context, fMappings);
+		/**
+		 * JoinableResourceBundle bundle = context.getBundle(); if (bundle !=
+		 * null) {
+		 * 
+		 * List<FilePathMapping> bundleFMappings = bundle.getFilePathMappings();
+		 * for (FilePathMapping fMapping : fMappings) { FilePathMapping fm = new
+		 * FilePathMapping(bundle, fMapping.getPath(),
+		 * fMapping.getLastModified()); if (!bundleFMappings.contains(fm)) {
+		 * bundleFMappings.add(fm); } } }
+		 **/
 	}
 
 	/**
@@ -173,12 +186,14 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 *            the generator context
 	 * @param locales
 	 *            the list of locales
+	 * @return the list of file path mapping associate to the resource bundles
+	 *         locales
 	 */
 	protected List<FilePathMapping> getFileMappings(String path, GeneratorContext context, List<Locale> locales) {
 
 		List<FilePathMapping> fMappings = new ArrayList<>();
 		FilePathMapping fMapping = null;
-		String fileSuffix = ".properties";
+		String fileSuffix = PROPERTIES_FILE_SUFFIX;
 
 		String[] names = path.split("\\|");
 
@@ -233,9 +248,10 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 */
 	@Override
 	protected boolean isCacheValid() {
-		return super.isCacheValid() && StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE),
-				config.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
-						Boolean.toString(DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)))
+		return super.isCacheValid()
+				&& StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE),
+						config.getProperty(JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE,
+								Boolean.toString(DEFAULT_FALLBACK_TO_SYSTEM_LOCALE)))
 				&& StringUtils.equals(cacheProperties.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET),
 						config.getProperty(JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET,
 								DEFAULT_RESOURCE_BUNDLE_CHARSET))

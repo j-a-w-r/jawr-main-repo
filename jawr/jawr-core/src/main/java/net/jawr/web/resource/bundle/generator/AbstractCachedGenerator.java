@@ -61,8 +61,8 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  */
 public abstract class AbstractCachedGenerator
-		implements TextResourceGenerator, ConfigurationAwareResourceGenerator, PostInitializationAwareResourceGenerator, WorkingDirectoryLocationAware,
-		ResourceReaderHandlerAwareResourceGenerator, BundlingProcessLifeCycleListener {
+		implements TextResourceGenerator, ConfigurationAwareResourceGenerator, PostInitializationAwareResourceGenerator,
+		WorkingDirectoryLocationAware, ResourceReaderHandlerAwareResourceGenerator, BundlingProcessLifeCycleListener {
 
 	/** The Perf Logger */
 	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
@@ -105,7 +105,7 @@ public abstract class AbstractCachedGenerator
 
 	/** The jawr configuration */
 	protected JawrConfig config;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -144,8 +144,12 @@ public abstract class AbstractCachedGenerator
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.JawrConfig)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.
+	 * JawrConfig)
 	 */
 	@Override
 	public void setConfig(JawrConfig config) {
@@ -206,7 +210,7 @@ public abstract class AbstractCachedGenerator
 	 */
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
 
-		return  getTempDirectory() + cacheMode + URL_SEPARATOR + getResourceCacheKey(context.getPath(), context);
+		return getTempDirectory() + cacheMode + URL_SEPARATOR + getResourceCacheKey(context.getPath(), context);
 	}
 
 	/**
@@ -314,25 +318,25 @@ public abstract class AbstractCachedGenerator
 	 * @return the cache key for linked resource map
 	 */
 	protected String getResourceCacheKey(String path, GeneratorContext context) {
-		
+
 		StringBuilder strbCacheKey = new StringBuilder(path);
-		if(StringUtils.isNotEmpty(context.getBracketsParam())) {
-			strbCacheKey.append("_"+context.getBracketsParam());
+		if (StringUtils.isNotEmpty(context.getBracketsParam())) {
+			strbCacheKey.append("_" + context.getBracketsParam());
 		}
-		if(StringUtils.isNotEmpty(context.getParenthesesParam())) {
-			strbCacheKey.append("_"+context.getParenthesesParam());
+		if (StringUtils.isNotEmpty(context.getParenthesesParam())) {
+			strbCacheKey.append("_" + context.getParenthesesParam());
 		}
-		
+
 		String cacheKey = strbCacheKey.toString();
-		
+
 		Locale locale = context.getLocale();
-		if(locale != null){
+		if (locale != null) {
 			cacheKey = LocaleUtils.toBundleName(strbCacheKey.toString(), locale);
-				
+
 		}
-		
+
 		cacheKey = cacheKey.replaceAll("[^\\w\\.\\-]", "_");
-		
+
 		return cacheKey;
 	}
 
@@ -346,8 +350,8 @@ public abstract class AbstractCachedGenerator
 	 * @param fMapping
 	 *            the file path mapping linked to the resource
 	 */
-	protected void addLinkedResources(String path, GeneratorContext context, FilePathMapping fMappings) {
-		addLinkedResources(path, context, Arrays.asList(fMappings));
+	protected void addLinkedResources(String path, GeneratorContext context, FilePathMapping fMapping) {
+		addLinkedResources(path, context, Arrays.asList(fMapping));
 	}
 
 	/**
@@ -488,7 +492,7 @@ public abstract class AbstractCachedGenerator
 			FileChannel channel = fos.getChannel();
 			wr = Channels.newWriter(channel, config.getResourceCharset().newEncoder(), -1);
 			wr.write(content);
-			
+
 			rd = new StringReader(content);
 		} catch (IOException e) {
 			throw new BundlingProcessException("Unable to create temporary resource for '" + context.getPath() + "'",
@@ -507,8 +511,7 @@ public abstract class AbstractCachedGenerator
 	protected void resetCache() {
 		cacheProperties.clear();
 		linkedResourceMap.clear();
-		cacheProperties.put(JawrConfig.JAWR_CHARSET_NAME,
-				config.getResourceCharset().name());
+		cacheProperties.put(JawrConfig.JAWR_CHARSET_NAME, config.getResourceCharset().name());
 	}
 
 	/**
@@ -517,10 +520,10 @@ public abstract class AbstractCachedGenerator
 	 * @return true if the cache is valid
 	 */
 	protected boolean isCacheValid() {
-		
+
 		return StringUtils.equals(cacheProperties.getProperty(JawrConfig.JAWR_CHARSET_NAME),
 				config.getResourceCharset().name());
-		
+
 	}
 
 	/**
@@ -600,7 +603,7 @@ public abstract class AbstractCachedGenerator
 						String resourceMapping = name.substring(JAWR_MAPPING_PREFIX.length());
 						String[] mappings = value.split(SEMICOLON);
 						List<FilePathMapping> fMappings = new CopyOnWriteArrayList<>();
-						
+
 						// TODO check the use of mappingModified
 						boolean mappingModified = true;
 						for (String fmapping : mappings) {

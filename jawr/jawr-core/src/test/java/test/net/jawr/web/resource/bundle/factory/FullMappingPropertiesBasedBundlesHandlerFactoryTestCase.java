@@ -1,10 +1,15 @@
 package test.net.jawr.web.resource.bundle.factory;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -15,14 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Mockito.when;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
@@ -63,6 +62,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Mock
 	private AbstractChainedResourceBundlePostProcessor fileProcessor;
 
+	@Mock
+	private GeneratorRegistry generatorRegistry;
+
 	String filePathScript1 = "/FS/bundle/content/script1.js";
 	String filePathScript2 = "/FS/bundle/content/script2.js";
 	String filePathScript3 = "/FS/bundle/content/script3.js";
@@ -84,7 +86,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		when(rsHandler.getLastModified(filePathScript)).thenReturn(scriptLastModified);
 
 		when(rsHandler.getResourceNames(Matchers.anyString()))
-				.thenReturn(new HashSet<String>(Arrays.asList("script1.js", "script2.js")));
+				.thenReturn(new HashSet<>(Arrays.asList("script1.js", "script2.js")));
 		when(chainFactory.buildPostProcessorChain("myBundlePostProcessor1,myBundlePostProcessor2"))
 				.thenReturn(bundleProcessor);
 		when(bundleProcessor.getId()).thenReturn("myBundlePostProcessor1,myBundlePostProcessor2");
@@ -96,7 +98,6 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetGlobalResourceBundles() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
 				"js", rsHandler, generatorRegistry, chainFactory);
 
@@ -112,9 +113,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("/bundle/myGlobalBundle.js", bundle.getId());
 		assertFalse(bundle.isComposite());
 
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
+		Set<BundlePath> expectedMappings = new HashSet<>(
 				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
-		assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+		assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 		// Check bundle file mapping
 		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
@@ -123,7 +124,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 		assertEquals(expectedFilePathMappings, filePathMappings);
-		
+
 		// Checks if the bundle is considered as modified
 		assertFalse(bundle.isDirty());
 
@@ -137,6 +138,11 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	 * Checks the file mapping
 	 * 
 	 * @param fMapping
+	 *            the file path mapping
+	 * @param filePath
+	 *            the file path
+	 * @param lastModified
+	 *            the last modified timestamp
 	 */
 	protected void checkFileMapping(FilePathMapping fMapping, String filePath, long lastModified) {
 		assertEquals(filePath, fMapping.getPath());
@@ -153,7 +159,10 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 	protected void testGetStdResourceBundle(DebugInclusion debugInclusion) {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
+		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
+		Map<String, VariantSet> variants = new HashMap<>();
+		variants.put("locale", new VariantSet("locale", "", expectedLocales));
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(variants);
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
 				"js", rsHandler, generatorRegistry, chainFactory);
 
@@ -171,12 +180,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertFalse(bundle.isComposite());
 
 		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
+		Set<BundlePath> expectedMappings = new HashSet<>(
 				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
 		if (debugInclusion.equals(DebugInclusion.ONLY)) {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
 		} else {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 		}
 
 		// Check bundle file mapping
@@ -186,7 +195,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 		assertEquals(expectedFilePathMappings, filePathMappings);
-		
+
 		// Checks if the bundle is considered as modified
 		assertFalse(bundle.isDirty());
 
@@ -199,8 +208,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-		Set<String> expectedLocales = new HashSet<String>(Arrays.asList("", "fr", "en_US"));
-		assertEquals(expectedLocales, new HashSet<String>(bundle.getVariantKeys()));
+		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
 		assertEquals("N123456", bundle.getBundleDataHashCode(null));
 		assertEquals("N123456", bundle.getBundleDataHashCode(""));
@@ -211,14 +219,14 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetUpdatedLastModifiedStdResourceBundle() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
 		JoinableResourceBundle stdBundle = getStdBundle("myBundle", debugInclusion);
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(stdBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(stdBundle, "js", props);
 
 		// Simulate modified resources
@@ -235,12 +243,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertFalse(bundle.isComposite());
 
 		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
+		Set<BundlePath> expectedMappings = new HashSet<>(
 				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
 		if (debugInclusion.equals(DebugInclusion.ONLY)) {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
 		} else {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 		}
 
 		// Check bundle file mapping
@@ -250,7 +258,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, updatedLastModified));
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, updatedLastModified));
 		assertEquals(expectedFilePathMappings, filePathMappings);
-		
+
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -263,8 +271,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-		Set<String> expectedLocales = new HashSet<String>(Arrays.asList("", "fr", "en_US"));
-		assertEquals(expectedLocales, new HashSet<String>(bundle.getVariantKeys()));
+		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
+		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
 		assertEquals("N123456", bundle.getBundleDataHashCode(null));
 		assertEquals("N123456", bundle.getBundleDataHashCode(""));
@@ -275,21 +283,21 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetAddedFilePathStdResourceBundle() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
 		JoinableResourceBundle stdBundle = getStdBundle("myBundle", debugInclusion);
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(stdBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(stdBundle, "js", props);
 
 		// Simulate modified path mapping
 		when(rsHandler.getFilePath("/bundle/content/script3.js")).thenReturn(filePathScript3);
 		when(rsHandler.getLastModified(filePathScript3)).thenReturn(script3LastModified);
 		when(rsHandler.getResourceNames(Matchers.anyString()))
-				.thenReturn(new HashSet<String>(Arrays.asList("script1.js", "script2.js", "script3.js")));
+				.thenReturn(new HashSet<>(Arrays.asList("script1.js", "script2.js", "script3.js")));
 
 		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
 		assertEquals(1, resourcesBundles.size());
@@ -300,12 +308,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertFalse(bundle.isComposite());
 
 		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
-				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/content/script3.js", "/bundle/myScript.js"));
+		Set<BundlePath> expectedMappings = new HashSet<>(asBundlePathList("/bundle/content/script1.js",
+				"/bundle/content/script2.js", "/bundle/content/script3.js", "/bundle/myScript.js"));
 		if (debugInclusion.equals(DebugInclusion.ONLY)) {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
 		} else {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 		}
 
 		// Check bundle file mapping
@@ -316,7 +324,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript3, script3LastModified));
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 		assertEquals(expectedFilePathMappings, filePathMappings);
-		
+
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -329,8 +337,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-		Set<String> expectedLocales = new HashSet<String>(Arrays.asList("", "fr", "en_US"));
-		assertEquals(expectedLocales, new HashSet<String>(bundle.getVariantKeys()));
+		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
+		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
 		assertEquals("N123456", bundle.getBundleDataHashCode(null));
 		assertEquals("N123456", bundle.getBundleDataHashCode(""));
@@ -341,19 +349,18 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetRemovedFilePathStdResourceBundle() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
 		JoinableResourceBundle stdBundle = getStdBundle("myBundle", debugInclusion);
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(stdBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(stdBundle, "js", props);
 
 		// Simulate modified path mapping
-		when(rsHandler.getResourceNames(Matchers.anyString()))
-				.thenReturn(new HashSet<String>(Arrays.asList("script1.js")));
+		when(rsHandler.getResourceNames(Matchers.anyString())).thenReturn(new HashSet<>(Arrays.asList("script1.js")));
 
 		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
 		assertEquals(1, resourcesBundles.size());
@@ -364,12 +371,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertFalse(bundle.isComposite());
 
 		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
+		Set<BundlePath> expectedMappings = new HashSet<>(
 				asBundlePathList("/bundle/content/script1.js", "/bundle/myScript.js"));
 		if (debugInclusion.equals(DebugInclusion.ONLY)) {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
 		} else {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 		}
 
 		// Check bundle file mapping
@@ -378,7 +385,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 		assertEquals(expectedFilePathMappings, filePathMappings);
-		
+
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -391,8 +398,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-		Set<String> expectedLocales = new HashSet<String>(Arrays.asList("", "fr", "en_US"));
-		assertEquals(expectedLocales, new HashSet<String>(bundle.getVariantKeys()));
+		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
+		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
 		assertEquals("N123456", bundle.getBundleDataHashCode(null));
 		assertEquals("N123456", bundle.getBundleDataHashCode(""));
@@ -403,22 +410,22 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetUpdatedFilePathStdResourceBundle() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
 		JoinableResourceBundle stdBundle = getStdBundle("myBundle", debugInclusion);
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(stdBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(stdBundle, "js", props);
 
 		// Simulate modified path mapping
 		when(rsHandler.getResourceNames(Matchers.anyString()))
-			.thenReturn(new HashSet<String>(Arrays.asList("script1.js", "script3.js")));
+				.thenReturn(new HashSet<>(Arrays.asList("script1.js", "script3.js")));
 		when(rsHandler.getFilePath("/bundle/content/script3.js")).thenReturn(filePathScript3);
 		when(rsHandler.getLastModified(filePathScript3)).thenReturn(script3LastModified);
-		
+
 		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
 		assertEquals(1, resourcesBundles.size());
 
@@ -428,12 +435,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertFalse(bundle.isComposite());
 
 		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
+		Set<BundlePath> expectedMappings = new HashSet<>(
 				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script3.js", "/bundle/myScript.js"));
 		if (debugInclusion.equals(DebugInclusion.ONLY)) {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
 		} else {
-			assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 		}
 
 		// Check bundle file mapping
@@ -443,7 +450,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript3, script3LastModified));
 		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 		assertEquals(expectedFilePathMappings, filePathMappings);
-		
+
 		// Checks if the bundle is considered as modified
 		assertTrue(bundle.isDirty());
 
@@ -456,26 +463,95 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-		Set<String> expectedLocales = new HashSet<String>(Arrays.asList("", "fr", "en_US"));
-		assertEquals(expectedLocales, new HashSet<String>(bundle.getVariantKeys()));
+		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
+		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
 		assertEquals("N123456", bundle.getBundleDataHashCode(null));
 		assertEquals("N123456", bundle.getBundleDataHashCode(""));
 		assertEquals("123456", bundle.getBundleDataHashCode("fr"));
 		assertEquals("789", bundle.getBundleDataHashCode("en_US"));
 	}
-	
+
+	@Test
+	public void testGetUpdatedVariantStdResourceBundle() {
+
+		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
+				"js", rsHandler, generatorRegistry, chainFactory);
+
+		Properties props = new Properties();
+
+		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
+		JoinableResourceBundle stdBundle = getStdBundle("myBundle", debugInclusion);
+		Map<String, VariantSet> variants = new HashMap<>();
+		variants.put(JawrConstant.LOCALE_VARIANT_TYPE,
+				new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", Arrays.asList("", "fr", "en_US", "es_ES")));
+
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(variants);
+		JoinableResourceBundlePropertySerializer.serializeInProperties(stdBundle, "js", props);
+
+		// Simulate modified path mapping
+		when(rsHandler.getResourceNames(Matchers.anyString()))
+				.thenReturn(new HashSet<>(Arrays.asList("script1.js", "script3.js")));
+		when(rsHandler.getFilePath("/bundle/content/script3.js")).thenReturn(filePathScript3);
+		when(rsHandler.getLastModified(filePathScript3)).thenReturn(script3LastModified);
+
+		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
+		assertEquals(1, resourcesBundles.size());
+
+		JoinableResourceBundle bundle = (JoinableResourceBundle) resourcesBundles.get(0);
+
+		assertEquals("/bundle/myBundle.js", bundle.getId());
+		assertFalse(bundle.isComposite());
+
+		assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
+		Set<BundlePath> expectedMappings = new HashSet<>(
+				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script3.js", "/bundle/myScript.js"));
+		if (debugInclusion.equals(DebugInclusion.ONLY)) {
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
+		} else {
+			assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
+		}
+
+		// Check bundle file mapping
+		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
+		Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript3, script3LastModified));
+		expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
+		assertEquals(expectedFilePathMappings, filePathMappings);
+
+		// Checks if the bundle is considered as modified
+		assertTrue(bundle.isDirty());
+
+		assertEquals(true, bundle.getInclusionPattern().isGlobal());
+		assertEquals(3, bundle.getInclusionPattern().getInclusionOrder());
+		assertEquals("http://hostname/scripts/myBundle.js", bundle.getAlternateProductionURL());
+		assertEquals("if lt IE 6", bundle.getExplorerConditionalExpression());
+		assertEquals("myBundlePostProcessor1,myBundlePostProcessor2",
+				((AbstractChainedResourceBundlePostProcessor) bundle.getBundlePostProcessor()).getId());
+		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
+				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
+
+		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US", "es_ES"));
+		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
+
+		assertNull("N123456", bundle.getBundleDataHashCode(null));
+		assertNull("N123456", bundle.getBundleDataHashCode(""));
+		assertNull("123456", bundle.getBundleDataHashCode("fr"));
+		assertNull("789", bundle.getBundleDataHashCode("en_US"));
+	}
+
 	@Test
 	public void testGetCompositeResourceBundle() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
 		JoinableResourceBundle compositeBundle = getCompositeBundle("myBundle");
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(compositeBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(compositeBundle, "js", props);
 
 		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
@@ -483,13 +559,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		for (JoinableResourceBundle bundle : resourcesBundles) {
 
-			if(bundle.getName().equals("myBundle")){
+			if (bundle.getName().equals("myBundle")) {
 				assertEquals("/bundle/myBundle.js", bundle.getId());
 				assertTrue(bundle.isComposite());
 				assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-				Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js",
+				Set<BundlePath> expectedMappings = new HashSet<>(asBundlePathList("/bundle/content/script1.js",
 						"/bundle/content/script2.js", "/bundle/myScript.js"));
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
 				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
@@ -498,7 +574,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 				assertEquals(expectedFilePathMappings, filePathMappings);
-				
+
 				// Checks if the bundle is considered as modified
 				assertFalse(bundle.isDirty());
 
@@ -510,14 +586,14 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 						((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
 				assertEquals("123456", bundle.getBundleDataHashCode(null));
-			}else if(bundle.getName().equals("child1")){
+			} else if (bundle.getName().equals("child1")) {
 
 				assertEquals("/bundle/child1.js", bundle.getId());
 				assertFalse(bundle.isComposite());
 				assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-				Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js",
-						"/bundle/content/script2.js"));
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				Set<BundlePath> expectedMappings = new HashSet<>(
+						asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js"));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
 				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
@@ -525,7 +601,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, script1LastModified));
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
 				assertEquals(expectedFilePathMappings, filePathMappings);
-				
+
 				// Checks if the bundle is not considered as modified
 				assertFalse(bundle.isDirty());
 
@@ -534,21 +610,21 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertNull(bundle.getBundlePostProcessor());
 				assertNull(bundle.getUnitaryPostProcessor());
 				assertNull(bundle.getBundleDataHashCode(null));
-			
-			}else if(bundle.getName().equals("child2")){
+
+			} else if (bundle.getName().equals("child2")) {
 
 				assertEquals("/bundle/child2.js", bundle.getId());
 				assertFalse(bundle.isComposite());
 				assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-				Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/myScript.js"));
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				Set<BundlePath> expectedMappings = new HashSet<>(asBundlePathList("/bundle/myScript.js"));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
 				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
 				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 				assertEquals(expectedFilePathMappings, filePathMappings);
-				
+
 				// Checks if the bundle is not considered as modified
 				assertFalse(bundle.isDirty());
 
@@ -564,14 +640,14 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetModifiedCompositeResourceBundle() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		DebugInclusion debugInclusion = DebugInclusion.ALWAYS;
 		JoinableResourceBundle compositeBundle = getCompositeBundle("myBundle");
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(compositeBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(compositeBundle, "js", props);
 
 		// Simulate modified resources
@@ -584,13 +660,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		for (JoinableResourceBundle bundle : resourcesBundles) {
 
-			if(bundle.getName().equals("myBundle")){
+			if (bundle.getName().equals("myBundle")) {
 				assertEquals("/bundle/myBundle.js", bundle.getId());
 				assertTrue(bundle.isComposite());
 				assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-				Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js",
+				Set<BundlePath> expectedMappings = new HashSet<>(asBundlePathList("/bundle/content/script1.js",
 						"/bundle/content/script2.js", "/bundle/myScript.js"));
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
 				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
@@ -599,7 +675,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, updatedLastModified));
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, updatedLastModified));
 				assertEquals(expectedFilePathMappings, filePathMappings);
-				
+
 				// Checks if the bundle is considered as modified
 				assertTrue(bundle.isDirty());
 
@@ -611,14 +687,14 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 						((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
 				assertEquals("123456", bundle.getBundleDataHashCode(null));
-			}else if(bundle.getName().equals("child1")){
+			} else if (bundle.getName().equals("child1")) {
 
 				assertEquals("/bundle/child1.js", bundle.getId());
 				assertFalse(bundle.isComposite());
 				assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-				Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js",
-						"/bundle/content/script2.js"));
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				Set<BundlePath> expectedMappings = new HashSet<>(
+						asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js"));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
 				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
@@ -626,7 +702,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript1, updatedLastModified));
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, updatedLastModified));
 				assertEquals(expectedFilePathMappings, filePathMappings);
-				
+
 				// Checks if the bundle is not considered as modified
 				assertTrue(bundle.isDirty());
 
@@ -635,21 +711,21 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertNull(bundle.getBundlePostProcessor());
 				assertNull(bundle.getUnitaryPostProcessor());
 				assertNull(bundle.getBundleDataHashCode(null));
-			
-			}else if(bundle.getName().equals("child2")){
+
+			} else if (bundle.getName().equals("child2")) {
 
 				assertEquals("/bundle/child2.js", bundle.getId());
 				assertFalse(bundle.isComposite());
 				assertEquals(debugInclusion, bundle.getInclusionPattern().getDebugInclusion());
-				Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/myScript.js"));
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				Set<BundlePath> expectedMappings = new HashSet<>(asBundlePathList("/bundle/myScript.js"));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 				// Check bundle file mapping
 				Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
 				Set<FilePathMapping> expectedFilePathMappings = new HashSet<>();
 				expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, updatedLastModified));
 				assertEquals(expectedFilePathMappings, filePathMappings);
-				
+
 				// Checks if the bundle is not considered as modified
 				assertTrue(bundle.isDirty());
 
@@ -672,32 +748,29 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 	protected void testGetResourceBundlesWithDependencies(DebugInclusion inclusion) {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		List<JoinableResourceBundle> bundleWithDependencies = getBundleWithDependencies(inclusion);
-		for (Iterator<JoinableResourceBundle> iterator = bundleWithDependencies.iterator(); iterator.hasNext();) {
-			JoinableResourceBundle aBundle = iterator.next();
+		for (JoinableResourceBundle aBundle : bundleWithDependencies) {
 			JoinableResourceBundlePropertySerializer.serializeInProperties(aBundle, "js", props);
+			when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(aBundle.getVariants());
 		}
 
 		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
 		assertEquals(3, resourcesBundles.size());
 
-		for (Iterator<JoinableResourceBundle> iterator = resourcesBundles.iterator(); iterator.hasNext();) {
-			JoinableResourceBundle bundle = iterator.next();
-
+		for (JoinableResourceBundle bundle : resourcesBundles) {
 			assertEquals(inclusion, bundle.getInclusionPattern().getDebugInclusion());
 
-			Set<BundlePath> expectedMappings = new HashSet<BundlePath>(asBundlePathList("/bundle/content/script1.js",
+			Set<BundlePath> expectedMappings = new HashSet<>(asBundlePathList("/bundle/content/script1.js",
 					"/bundle/content/script2.js", "/bundle/myScript.js"));
 			if (inclusion.equals(DebugInclusion.ONLY)) {
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemDebugPathList()));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemDebugPathList()));
 			} else {
-				assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+				assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 			}
 
 			// Check bundle file mapping
@@ -707,7 +780,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 			expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript2, script2LastModified));
 			expectedFilePathMappings.add(new FilePathMapping(bundle, filePathScript, scriptLastModified));
 			assertEquals(expectedFilePathMappings, filePathMappings);
-			
+
 			// Checks if the bundle is considered as modified
 			assertFalse(bundle.isDirty());
 
@@ -727,8 +800,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertNull(bundle.getDependencies());
 			}
 
-			Set<String> expectedLocales = new HashSet<String>(Arrays.asList("", "fr", "en_US"));
-			assertEquals(expectedLocales, new HashSet<String>(bundle.getVariantKeys()));
+			Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
+			assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
 			assertEquals("N123456", bundle.getBundleDataHashCode(null));
 			assertEquals("123456", bundle.getBundleDataHashCode("fr"));
@@ -739,13 +812,13 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	@Test
 	public void testGetVariantResourceBundles() {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
 		JoinableResourceBundle stdBundle = getBundleWithVariants(DebugInclusion.ALWAYS);
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(stdBundle.getVariants());
 		JoinableResourceBundlePropertySerializer.serializeInProperties(stdBundle, "js", props);
 
 		List<JoinableResourceBundle> resourcesBundles = factory.getResourceBundles(props);
@@ -755,9 +828,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		assertEquals("/bundle/myBundle.js", bundle.getId());
 
-		Set<BundlePath> expectedMappings = new HashSet<BundlePath>(
+		Set<BundlePath> expectedMappings = new HashSet<>(
 				asBundlePathList("/bundle/content/script1.js", "/bundle/content/script2.js", "/bundle/myScript.js"));
-		assertEquals(expectedMappings, new HashSet<BundlePath>(bundle.getItemPathList()));
+		assertEquals(expectedMappings, new HashSet<>(bundle.getItemPathList()));
 
 		// Check bundle file mapping
 		Set<FilePathMapping> filePathMappings = new HashSet<>(bundle.getFilePathMappings());
@@ -780,9 +853,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 				((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-		Set<String> expectedVariants = new HashSet<String>(
+		Set<String> expectedVariants = new HashSet<>(
 				Arrays.asList("@summer", "@winter", "fr@summer", "fr@winter", "en_US@summer", "en_US@winter"));
-		assertEquals(expectedVariants, new HashSet<String>(bundle.getVariantKeys()));
+		assertEquals(expectedVariants, new HashSet<>(bundle.getVariantKeys()));
 
 		assertEquals("N123456", bundle.getBundleDataHashCode(null));
 		assertEquals("178456", bundle.getBundleDataHashCode("@summer"));
@@ -812,16 +885,17 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 3, inclusion);
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
+		GeneratorRegistry generatorRegistry = Mockito.mock(GeneratorRegistry.class);
 		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/" + bundleName + ".js", bundleName,
 				null, "js", inclusionPattern, rsHandler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/" + bundleName + ".js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
 
-		Map<String, VariantSet> variants = new HashMap<String, VariantSet>();
+		Map<String, VariantSet> variants = new HashMap<>();
 		variants.put(JawrConstant.LOCALE_VARIANT_TYPE,
 				new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", Arrays.asList("", "fr", "en_US")));
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(variants);
 		bundle.setVariants(variants);
 		bundle.setBundleDataHashCode(null, "N123456");
 		bundle.setBundleDataHashCode("", "N123456");
@@ -836,7 +910,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 	private JoinableResourceBundle getCompositeBundle(String bundleName) {
 
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
+		GeneratorRegistry generatorRegistry = Mockito.mock(GeneratorRegistry.class);
 		InclusionPattern inclusionPattern = new InclusionPattern(false, 3, DebugInclusion.ALWAYS);
 
 		List<JoinableResourceBundle> nestedBundles = new ArrayList<>();
@@ -866,7 +940,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		FullMappingPropertiesBasedBundlesHandlerFactory factory = new FullMappingPropertiesBasedBundlesHandlerFactory(
-				"js", rsHandler , generatorRegistry,  chainFactory);
+				"js", rsHandler, generatorRegistry, chainFactory);
 
 		Properties props = new Properties();
 
@@ -904,7 +978,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 	}
 
 	private List<BundlePath> asBundlePathList(String... paths) {
-		List<BundlePath> result = new ArrayList<BundlePath>();
+		List<BundlePath> result = new ArrayList<>();
 		for (String path : paths) {
 			result.add(new BundlePath(null, path));
 		}
@@ -914,7 +988,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 	private List<JoinableResourceBundle> getBundleWithDependencies(DebugInclusion inclusion) {
 
-		List<JoinableResourceBundle> bundles = new ArrayList<JoinableResourceBundle>();
+		List<JoinableResourceBundle> bundles = new ArrayList<>();
 		JoinableResourceBundleImpl bundle = getStdBundle("myBundle", inclusion);
 		JoinableResourceBundleImpl bundle1 = getStdBundle("myBundle1", inclusion);
 		JoinableResourceBundleImpl bundle2 = getStdBundle("myBundle2", inclusion);
@@ -928,22 +1002,24 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 
 	private JoinableResourceBundleImpl getBundleWithVariants(DebugInclusion inclusion) {
 
+		GeneratorRegistry generatorRegistry = Mockito.mock(GeneratorRegistry.class);
 		String bundleName = "myBundle";
 		List<String> mappings = Arrays.asList("/bundle/content/**", "/bundle/myScript.js");
 
 		InclusionPattern inclusionPattern = new InclusionPattern(true, 3, inclusion);
-		GeneratorRegistry generatorRegistry = new GeneratorRegistry();
 		JoinableResourceBundleImpl bundle = new JoinableResourceBundleImpl("/bundle/myBundle.js", bundleName, null,
 				"js", inclusionPattern, rsHandler, generatorRegistry);
 		bundle.setMappings(mappings);
 		bundle.setAlternateProductionURL("http://hostname/scripts/myBundle.js");
 		bundle.setExplorerConditionalExpression("if lt IE 6");
 
-		Map<String, VariantSet> variants = new HashMap<String, VariantSet>();
+		Map<String, VariantSet> variants = new HashMap<>();
 		variants.put(JawrConstant.SKIN_VARIANT_TYPE,
 				new VariantSet(JawrConstant.SKIN_VARIANT_TYPE, "summer", Arrays.asList("summer", "winter")));
 		variants.put(JawrConstant.LOCALE_VARIANT_TYPE,
 				new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", Arrays.asList("", "fr", "en_US")));
+
+		when(generatorRegistry.getAvailableVariants(Matchers.anyString())).thenReturn(variants);
 		bundle.setVariants(variants);
 		bundle.setBundleDataHashCode(null, "N123456");
 		bundle.setBundleDataHashCode("@summer", "178456");

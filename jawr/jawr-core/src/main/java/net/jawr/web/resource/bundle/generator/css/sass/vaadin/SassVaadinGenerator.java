@@ -49,7 +49,7 @@ public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassRe
 	public static final String SASS_GENERATOR_DEFAULT_URL_MODE = "MIXED";
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/**
 	 * The URL mode handling for binary resource URL present in the Scss file
@@ -75,8 +75,12 @@ public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassRe
 		return resolver;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(net.jawr.web.config.JawrConfig)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#setConfig(
+	 * net.jawr.web.config.JawrConfig)
 	 */
 	@Override
 	public void setConfig(JawrConfig config) {
@@ -98,7 +102,7 @@ public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassRe
 		Reader rd = null;
 
 		try {
-			List<Class<?>> excluded = new ArrayList<Class<?>>();
+			List<Class<?>> excluded = new ArrayList<>();
 			excluded.add(ISassResourceGenerator.class);
 			JoinableResourceBundle bundle = context.getBundle();
 			rd = context.getResourceReaderHandler().getResource(bundle, path, false, excluded);
@@ -111,9 +115,7 @@ public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassRe
 			String result = compile(bundle, content, path, context);
 			rd = new StringReader(result);
 
-		} catch (ResourceNotFoundException e) {
-			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
-		} catch (IOException e) {
+		} catch (ResourceNotFoundException | IOException e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
 		}
 

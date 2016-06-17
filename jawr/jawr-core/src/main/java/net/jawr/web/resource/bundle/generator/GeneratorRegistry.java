@@ -86,8 +86,7 @@ import net.jawr.web.util.StringUtils;
 public class GeneratorRegistry implements Serializable {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(GeneratorRegistry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GeneratorRegistry.class);
 
 	/** The serial version UID */
 	private static final long serialVersionUID = -7988265144352433701L;
@@ -101,7 +100,7 @@ public class GeneratorRegistry implements Serializable {
 	/** The webjars generator prefix */
 	public static final String WEBJARS_GENERATOR_PREFIX = "webjars";
 
-	/** The webjars asset locator classname*/
+	/** The webjars asset locator classname */
 	public static final String WEBJARS_LOCATOR_CLASSNAME = "org.webjars.WebJarAssetLocator";
 
 	/** The commons validator bundle prefix */
@@ -132,19 +131,19 @@ public class GeneratorRegistry implements Serializable {
 	public static final String PREFIX_SEPARATOR = ":";
 
 	/** The common generators */
-	private final Map<ResourceGeneratorResolver, Class<?>> commonGenerators = new ConcurrentHashMap<ResourceGeneratorResolver, Class<?>>();
+	private final Map<ResourceGeneratorResolver, Class<?>> commonGenerators = new ConcurrentHashMap<>();
 
 	/** The generator resolver registry */
-	private final List<ResourceGeneratorResolverWrapper> resolverRegistry = new ArrayList<ResourceGeneratorResolverWrapper>();
+	private final List<ResourceGeneratorResolverWrapper> resolverRegistry = new ArrayList<>();
 
 	/** The CSS image resource prefix registry */
-	private final List<ResourceGenerator> cssImageResourceGeneratorRegistry = new ArrayList<ResourceGenerator>();
+	private final List<ResourceGenerator> cssImageResourceGeneratorRegistry = new ArrayList<>();
 
 	/** The binary resource prefix registry */
-	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new ArrayList<ResourceGenerator>();
+	private final List<ResourceGenerator> binaryResourceGeneratorRegistry = new ArrayList<>();
 
 	/** The bundling process life cycle listeners */
-	private final List<BundlingProcessLifeCycleListener> bundlingProcesslifeCycleListeners = new ArrayList<BundlingProcessLifeCycleListener>();
+	private final List<BundlingProcessLifeCycleListener> bundlingProcesslifeCycleListeners = new ArrayList<>();
 
 	/** The resource type */
 	private String resourceType;
@@ -179,88 +178,67 @@ public class GeneratorRegistry implements Serializable {
 	 * Initialize the common generators
 	 */
 	protected void initCommonGenerators() {
-		commonGenerators.put(new PrefixedPathResolver(MESSAGE_BUNDLE_PREFIX),
-				ResourceBundleMessagesGenerator.class);
+		commonGenerators.put(new PrefixedPathResolver(MESSAGE_BUNDLE_PREFIX), ResourceBundleMessagesGenerator.class);
 		Class<?> classPathGeneratorClass = null;
 		Class<?> webJarsGeneratorClass = null;
 
-		boolean isWebJarsLocatorPresent = ClassLoaderResourceUtils
-				.isClassPresent(WEBJARS_LOCATOR_CLASSNAME);
+		boolean isWebJarsLocatorPresent = ClassLoaderResourceUtils.isClassPresent(WEBJARS_LOCATOR_CLASSNAME);
 
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
 			classPathGeneratorClass = ClasspathJSGenerator.class;
 			if (isWebJarsLocatorPresent) {
 				webJarsGeneratorClass = WebJarsLocatorJSGenerator.class;
-			}
-			else {
+			} else {
 				webJarsGeneratorClass = WebJarsJSGenerator.class;
 			}
 		} else if (resourceType.equals(JawrConstant.CSS_TYPE)) {
 			classPathGeneratorClass = ClassPathCSSGenerator.class;
 			if (isWebJarsLocatorPresent) {
 				webJarsGeneratorClass = WebJarsLocatorCssGenerator.class;
-			}
-			else {
+			} else {
 				webJarsGeneratorClass = WebJarsCssGenerator.class;
 			}
 		} else {
 			classPathGeneratorClass = ClassPathBinaryResourceGenerator.class;
 			if (isWebJarsLocatorPresent) {
 				webJarsGeneratorClass = WebJarsLocatorBinaryResourceGenerator.class;
-			}
-			else {
+			} else {
 				webJarsGeneratorClass = WebJarsBinaryResourceGenerator.class;
 			}
 		}
 
-		commonGenerators.put(new PrefixedPathResolver(
-				CLASSPATH_RESOURCE_BUNDLE_PREFIX), classPathGeneratorClass);
-		commonGenerators.put(
-				new PrefixedPathResolver(WEBJARS_GENERATOR_PREFIX),
-				webJarsGeneratorClass);
+		commonGenerators.put(new PrefixedPathResolver(CLASSPATH_RESOURCE_BUNDLE_PREFIX), classPathGeneratorClass);
+		commonGenerators.put(new PrefixedPathResolver(WEBJARS_GENERATOR_PREFIX), webJarsGeneratorClass);
 
 		if (resourceType.equals(JawrConstant.JS_TYPE)) {
-			commonGenerators.put(new PrefixedPathResolver(
-					COMMONS_VALIDATOR_PREFIX), CommonsValidatorGenerator.class);
-			commonGenerators.put(new PrefixedPathResolver(
-					SKIN_SWTICHER_GENERATOR_PREFIX),
+			commonGenerators.put(new PrefixedPathResolver(COMMONS_VALIDATOR_PREFIX), CommonsValidatorGenerator.class);
+			commonGenerators.put(new PrefixedPathResolver(SKIN_SWTICHER_GENERATOR_PREFIX),
 					SkinSwitcherJsGenerator.class);
-			commonGenerators.put(new SuffixedPathResolver(
-					COFEESCRIPT_GENERATOR_SUFFIX), CoffeeScriptGenerator.class);
+			commonGenerators.put(new SuffixedPathResolver(COFEESCRIPT_GENERATOR_SUFFIX), CoffeeScriptGenerator.class);
 		}
 
 		if (resourceType.equals(JawrConstant.CSS_TYPE)) {
-			commonGenerators.put(new PrefixedPathResolver(
-					IE_CSS_GENERATOR_PREFIX), IECssBundleGenerator.class);
-			commonGenerators.put(
-					new PrefixedPathResolver(SKIN_GENERATOR_PREFIX),
-					CssSkinGenerator.class);
-			commonGenerators.put(
-					new SuffixedPathResolver(LESS_GENERATOR_SUFFIX),
-					LessCssGenerator.class);
-			
+			commonGenerators.put(new PrefixedPathResolver(IE_CSS_GENERATOR_PREFIX), IECssBundleGenerator.class);
+			commonGenerators.put(new PrefixedPathResolver(SKIN_GENERATOR_PREFIX), CssSkinGenerator.class);
+			commonGenerators.put(new SuffixedPathResolver(LESS_GENERATOR_SUFFIX), LessCssGenerator.class);
+
 			String sassGenerator = config.getProperty(SASS_GENERATOR_TYPE, SASS_GENERATOR_VAADIN);
-			if(!sassGenerator.equals(SASS_GENERATOR_VAADIN) && !sassGenerator.equals(SASS_GENERATOR_RUBY)){
-				throw new BundlingProcessException("The value '"+sassGenerator+"' is not allowed for property '"+SASS_GENERATOR_TYPE+"'. Please check your configuration.");
+			if (!sassGenerator.equals(SASS_GENERATOR_VAADIN) && !sassGenerator.equals(SASS_GENERATOR_RUBY)) {
+				throw new BundlingProcessException("The value '" + sassGenerator + "' is not allowed for property '"
+						+ SASS_GENERATOR_TYPE + "'. Please check your configuration.");
 			}
-			if(sassGenerator.equals(SASS_GENERATOR_VAADIN)){
-				commonGenerators.put(
-						new SuffixedPathResolver(SASS_GENERATOR_SUFFIX),
-						SassVaadinGenerator.class);
-			}else{
-				commonGenerators.put(
-						new SuffixedPathResolver(SASS_GENERATOR_SUFFIX),
-						SassRubyGenerator.class);	
+			if (sassGenerator.equals(SASS_GENERATOR_VAADIN)) {
+				commonGenerators.put(new SuffixedPathResolver(SASS_GENERATOR_SUFFIX), SassVaadinGenerator.class);
+			} else {
+				commonGenerators.put(new SuffixedPathResolver(SASS_GENERATOR_SUFFIX), SassRubyGenerator.class);
 			}
-			
+
 		}
 
-		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType
-				.equals(JawrConstant.BINARY_TYPE))) {
-			commonGenerators.put(new PrefixedPathResolver(
-					SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
+		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE))) {
+			commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
 		}
-		
+
 	}
 
 	/**
@@ -293,24 +271,21 @@ public class GeneratorRegistry implements Serializable {
 	 * @return the resource generator
 	 */
 	private ResourceGenerator loadCommonGenerator(String resourcePath) {
-	
+
 		ResourceGenerator generator = null;
 
-		for (Iterator<Entry<ResourceGeneratorResolver, Class<?>>> iterator = commonGenerators
-				.entrySet().iterator(); iterator.hasNext();) {
+		for (Iterator<Entry<ResourceGeneratorResolver, Class<?>>> iterator = commonGenerators.entrySet()
+				.iterator(); iterator.hasNext();) {
 			Entry<ResourceGeneratorResolver, Class<?>> entry = iterator.next();
 			ResourceGeneratorResolver resolver = entry.getKey();
 			if (resolver.matchPath(resourcePath)) {
-				generator = (ResourceGenerator) ClassLoaderResourceUtils
-						.buildObjectInstance(entry.getValue());
+				generator = (ResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(entry.getValue());
 				if (!generator.getResolver().isSameAs(resolver)) {
-					throw new BundlingProcessException(
-							"The resolver defined for "
-									+ generator.getClass().getName()
-									+ " is different from the one expected by Jawr.");
+					throw new BundlingProcessException("The resolver defined for " + generator.getClass().getName()
+							+ " is different from the one expected by Jawr.");
 				}
-				
-				if(resolver.getType().equals(ResolverType.PREFIXED)){
+
+				if (resolver.getType().equals(ResolverType.PREFIXED)) {
 					loadGeneratorIfNeeded(resolver.getResourcePath(resourcePath));
 				}
 			}
@@ -333,8 +308,7 @@ public class GeneratorRegistry implements Serializable {
 
 		initializeGeneratorProperties(generator);
 		updateRegistries(generator);
-		ResourceReader proxy = ResourceGeneratorReaderProxyFactory
-				.getResourceReaderProxy(generator, rsHandler, config);
+		ResourceReader proxy = ResourceGeneratorReaderProxyFactory.getResourceReaderProxy(generator, rsHandler, config);
 		rsHandler.addResourceReader(proxy);
 	}
 
@@ -346,8 +320,7 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	private void updateRegistries(ResourceGenerator generator) {
 
-		resolverRegistry.add(new ResourceGeneratorResolverWrapper(generator,
-				generator.getResolver()));
+		resolverRegistry.add(new ResourceGeneratorResolverWrapper(generator, generator.getResolver()));
 		GeneratorComparator genComparator = new GeneratorComparator();
 		Collections.sort(resolverRegistry);
 		if (generator instanceof StreamResourceGenerator) {
@@ -360,8 +333,8 @@ public class GeneratorRegistry implements Serializable {
 				Collections.sort(cssImageResourceGeneratorRegistry, genComparator);
 			}
 		}
-		if(generator instanceof BundlingProcessLifeCycleListener){
-			bundlingProcesslifeCycleListeners.add((BundlingProcessLifeCycleListener)generator);
+		if (generator instanceof BundlingProcessLifeCycleListener) {
+			bundlingProcesslifeCycleListeners.add((BundlingProcessLifeCycleListener) generator);
 		}
 	}
 
@@ -373,8 +346,7 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public void registerVariantResolver(String clazz) {
 
-		VariantResolver resolver = (VariantResolver) ClassLoaderResourceUtils
-				.buildObjectInstance(clazz);
+		VariantResolver resolver = (VariantResolver) ClassLoaderResourceUtils.buildObjectInstance(clazz);
 		registerVariantResolver(resolver);
 	}
 
@@ -386,22 +358,16 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public void registerVariantResolver(VariantResolver resolver) {
 
-		for (Iterator<VariantResolver> itResolver = variantResolvers.values()
-				.iterator(); itResolver.hasNext();) {
+		for (Iterator<VariantResolver> itResolver = variantResolvers.values().iterator(); itResolver.hasNext();) {
 			VariantResolver variantResolver = itResolver.next();
 			if (StringUtils.isEmpty(resolver.getVariantType())) {
 				throw new IllegalStateException(
-						"The getVariantType() method must return something at "
-								+ resolver.getClass());
+						"The getVariantType() method must return something at " + resolver.getClass());
 			}
 
-			if (resolver.getVariantType().equals(
-					variantResolver.getVariantType())) {
-				throw new IllegalStateException(
-						"There are 2 resolvers defined for the variant type '"
-								+ resolver.getVariantType() + "' : "
-								+ variantResolver.getClass() + ";"
-								+ resolver.getClass());
+			if (resolver.getVariantType().equals(variantResolver.getVariantType())) {
+				throw new IllegalStateException("There are 2 resolvers defined for the variant type '"
+						+ resolver.getVariantType() + "' : " + variantResolver.getClass() + ";" + resolver.getClass());
 			}
 		}
 		variantResolvers.put(resolver.getVariantType(), resolver);
@@ -427,13 +393,10 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public void registerGenerator(String clazz) {
 
-		ResourceGenerator generator = (ResourceGenerator) ClassLoaderResourceUtils
-				.buildObjectInstance(clazz);
+		ResourceGenerator generator = (ResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(clazz);
 
 		if (null == generator.getResolver()) {
-			throw new IllegalStateException(
-					"The getResolver() method must return something at "
-							+ clazz);
+			throw new IllegalStateException("The getResolver() method must return something at " + clazz);
 		}
 
 		ResourceGeneratorResolver resolver = generator.getResolver();
@@ -443,10 +406,8 @@ public class GeneratorRegistry implements Serializable {
 			if (resourceGeneratorResolver.isSameAs(resolver)) {
 				String generatorName = generator.getClass().getName();
 				if (!clazz.equals(generatorName)) {
-					String errorMsg = "Cannot register the generator of class "
-							+ generator.getClass().getName()
-							+ " since the same resolver is being used by "
-							+ generatorName
+					String errorMsg = "Cannot register the generator of class " + generator.getClass().getName()
+							+ " since the same resolver is being used by " + generatorName
 							+ ". Please specify a different resolver in the getResolver() method.";
 					throw new IllegalStateException(errorMsg);
 				}
@@ -454,13 +415,11 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		// Warns the user about if the generator override a built-in generator
-		Set<ResourceGeneratorResolver> commonResolvers = commonGenerators
-				.keySet();
+		Set<ResourceGeneratorResolver> commonResolvers = commonGenerators.keySet();
 		for (ResourceGeneratorResolver commonGeneratorResolver : commonResolvers) {
 			if (commonGeneratorResolver.isSameAs(resolver)) {
 				String generatorName = generator.getClass().getName();
-				LOGGER.warn("The custom generator '" + generatorName
-						+ "' override a built-in generator");
+				LOGGER.warn("The custom generator '" + generatorName + "' override a built-in generator");
 			}
 		}
 
@@ -477,24 +436,19 @@ public class GeneratorRegistry implements Serializable {
 		// Initialize the generator
 		if (generator instanceof InitializingResourceGenerator) {
 			if (generator instanceof ConfigurationAwareResourceGenerator) {
-				((ConfigurationAwareResourceGenerator) generator)
-						.setConfig(config);
+				((ConfigurationAwareResourceGenerator) generator).setConfig(config);
 			}
 			if (generator instanceof TypeAwareResourceGenerator) {
-				((TypeAwareResourceGenerator) generator)
-						.setResourceType(resourceType);
+				((TypeAwareResourceGenerator) generator).setResourceType(resourceType);
 			}
 			if (generator instanceof ResourceReaderHandlerAwareResourceGenerator) {
-				((ResourceReaderHandlerAwareResourceGenerator) generator)
-						.setResourceReaderHandler(rsHandler);
+				((ResourceReaderHandlerAwareResourceGenerator) generator).setResourceReaderHandler(rsHandler);
 			}
 			if (generator instanceof WorkingDirectoryLocationAware) {
-				((WorkingDirectoryLocationAware) generator)
-						.setWorkingDirectory(rsHandler.getWorkingDirectory());
+				((WorkingDirectoryLocationAware) generator).setWorkingDirectory(rsHandler.getWorkingDirectory());
 			}
 			if (generator instanceof PostInitializationAwareResourceGenerator) {
-				((PostInitializationAwareResourceGenerator) generator)
-						.afterPropertiesSet();
+				((PostInitializationAwareResourceGenerator) generator).afterPropertiesSet();
 			}
 		}
 	}
@@ -538,23 +492,20 @@ public class GeneratorRegistry implements Serializable {
 		String debugModeGeneratorPath = path.substring(0, idx);
 		debugModeGeneratorPath = debugModeGeneratorPath.replaceAll("\\.", "/");
 
-		int jawrGenerationParamIdx = path
-				.indexOf(JawrRequestHandler.GENERATION_PARAM);
-		String parameter = path.substring(jawrGenerationParamIdx
-				+ JawrRequestHandler.GENERATION_PARAM.length() + 1); // Add 1
-																		// for
-																		// the
-																		// '='
-																		// character
+		int jawrGenerationParamIdx = path.indexOf(JawrRequestHandler.GENERATION_PARAM);
+		String parameter = path.substring(jawrGenerationParamIdx + JawrRequestHandler.GENERATION_PARAM.length() + 1); // Add
+																														// 1
+																														// for
+																														// the
+																														// '='
+																														// character
 		ResourceGenerator resourceGenerator = resolveResourceGenerator(parameter);
 		String suffixPath = null;
 		if (resourceGenerator instanceof SpecificCDNDebugPathResourceGenerator) {
 			suffixPath = ((SpecificCDNDebugPathResourceGenerator) resourceGenerator)
 					.getDebugModeBuildTimeGenerationPath(parameter);
 		} else {
-			suffixPath = parameter.replaceFirst(
-					GeneratorRegistry.PREFIX_SEPARATOR,
-					JawrConstant.URL_SEPARATOR);
+			suffixPath = parameter.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR);
 		}
 		return debugModeGeneratorPath + "/" + suffixPath;
 	}
@@ -570,12 +521,11 @@ public class GeneratorRegistry implements Serializable {
 	private ResourceGenerator resolveResourceGenerator(String path) {
 
 		ResourceGenerator resourceGenerator = null;
-		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry
-				.iterator(); iterator.hasNext();) {
+		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry.iterator(); iterator.hasNext();) {
 			ResourceGeneratorResolverWrapper resolver = iterator.next();
 			if (resolver.matchPath(path)) {
 				resourceGenerator = resolver.getResourceGenerator();
-				if(resolver.getType().equals(ResolverType.PREFIXED)){
+				if (resolver.getType().equals(ResolverType.PREFIXED)) {
 					loadGeneratorIfNeeded(resolver.getResourcePath(path));
 				}
 				break;
@@ -600,20 +550,18 @@ public class GeneratorRegistry implements Serializable {
 	public ResourceGenerator getResourceGenerator(String path) {
 
 		ResourceGenerator resourceGenerator = null;
-		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry
-				.iterator(); iterator.hasNext();) {
+		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry.iterator(); iterator.hasNext();) {
 			ResourceGeneratorResolverWrapper resolver = iterator.next();
 			if (resolver.matchPath(path)) {
 				resourceGenerator = resolver.getResourceGenerator();
-				if(resolver.getType().equals(ResolverType.PREFIXED)){
+				if (resolver.getType().equals(ResolverType.PREFIXED)) {
 					loadGeneratorIfNeeded(resolver.getResourcePath(path));
 				}
 				break;
 			}
 		}
 		if (resourceGenerator == null) {
-			throw new BundlingProcessException(
-					"No ResourceGenerator found for the path :" + path);
+			throw new BundlingProcessException("No ResourceGenerator found for the path :" + path);
 		}
 		return resourceGenerator;
 	}
@@ -630,35 +578,30 @@ public class GeneratorRegistry implements Serializable {
 	}
 
 	/**
-	 * Returns the available variant for a bundle
+	 * Returns the available variant for a path
 	 * 
-	 * @param bundle
-	 *            the bundle
-	 * @return the available variant for a bundle
+	 * @param path
+	 *            the path
+	 * @return the available variant for a path
 	 */
-	public Map<String, VariantSet> getAvailableVariants(String bundle) {
+	public Map<String, VariantSet> getAvailableVariants(String path) {
 
-		Map<String, VariantSet> availableVariants = new TreeMap<String, VariantSet>();
-		ResourceGenerator generator = resolveResourceGenerator(bundle);
+		Map<String, VariantSet> availableVariants = new TreeMap<>();
+		ResourceGenerator generator = resolveResourceGenerator(path);
 		if (generator != null) {
 			if (generator instanceof VariantResourceGenerator) {
 
 				Map<String, VariantSet> tempResult = ((VariantResourceGenerator) generator)
-						.getAvailableVariants(generator.getResolver()
-								.getResourcePath(bundle));
+						.getAvailableVariants(generator.getResolver().getResourcePath(path));
 				if (tempResult != null) {
 					availableVariants = tempResult;
 				}
 			} else if (generator instanceof LocaleAwareResourceGenerator) {
 				List<String> availableLocales = ((LocaleAwareResourceGenerator) generator)
-						.getAvailableLocales(generator.getResolver()
-								.getResourcePath(bundle));
+						.getAvailableLocales(generator.getResolver().getResourcePath(path));
 				if (availableLocales != null) {
-					VariantSet variantSet = new VariantSet(
-							JawrConstant.LOCALE_VARIANT_TYPE, "",
-							availableLocales);
-					availableVariants.put(JawrConstant.LOCALE_VARIANT_TYPE,
-							variantSet);
+					VariantSet variantSet = new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", availableLocales);
+					availableVariants.put(JawrConstant.LOCALE_VARIANT_TYPE, variantSet);
 				}
 			}
 		}
@@ -681,9 +624,7 @@ public class GeneratorRegistry implements Serializable {
 			if (generator instanceof VariantResourceGenerator) {
 
 				Set<String> tempResult = ((VariantResourceGenerator) generator)
-						.getAvailableVariants(
-								generator.getResolver().getResourcePath(path))
-						.keySet();
+						.getAvailableVariants(generator.getResolver().getResourcePath(path)).keySet();
 				if (tempResult != null) {
 					variantTypes = tempResult;
 				}
@@ -710,8 +651,7 @@ public class GeneratorRegistry implements Serializable {
 		boolean isHandlingCssImage = false;
 
 		ResourceGenerator generator = resolveResourceGenerator(cssResourcePath);
-		if (generator != null
-				&& cssImageResourceGeneratorRegistry.contains(generator)) {
+		if (generator != null && cssImageResourceGeneratorRegistry.contains(generator)) {
 			isHandlingCssImage = true;
 		}
 
@@ -732,8 +672,7 @@ public class GeneratorRegistry implements Serializable {
 		boolean isGeneratedImage = false;
 
 		ResourceGenerator generator = resolveResourceGenerator(resourcePath);
-		if (generator != null
-				&& binaryResourceGeneratorRegistry.contains(generator)) {
+		if (generator != null && binaryResourceGeneratorRegistry.contains(generator)) {
 			isGeneratedImage = true;
 		}
 
@@ -750,8 +689,8 @@ public class GeneratorRegistry implements Serializable {
 	public Map<String, String> resolveVariants(HttpServletRequest request) {
 
 		Map<String, String> variants = new TreeMap<String, String>();
-		for (Iterator<VariantResolver> itVariantResolver = variantResolvers
-				.values().iterator(); itVariantResolver.hasNext();) {
+		for (Iterator<VariantResolver> itVariantResolver = variantResolvers.values().iterator(); itVariantResolver
+				.hasNext();) {
 			VariantResolver resolver = itVariantResolver.next();
 			String value = resolver.resolveVariant(request);
 			if (value != null) {
@@ -771,12 +710,11 @@ public class GeneratorRegistry implements Serializable {
 	 *            the current variant
 	 * @return the available variants
 	 */
-	public Map<String, String> getAvailableVariantMap(
-			Map<String, VariantSet> variants, Map<String, String> curVariants) {
-		
+	public Map<String, String> getAvailableVariantMap(Map<String, VariantSet> variants,
+			Map<String, String> curVariants) {
+
 		Map<String, String> availableVariantMap = new HashMap<String, String>();
-		for (Iterator<Entry<String, VariantSet>> iterator = variants.entrySet()
-				.iterator(); iterator.hasNext();) {
+		for (Iterator<Entry<String, VariantSet>> iterator = variants.entrySet().iterator(); iterator.hasNext();) {
 			Entry<String, VariantSet> entry = iterator.next();
 			String variantType = entry.getKey();
 			VariantSet variantSet = entry.getValue();
@@ -785,15 +723,13 @@ public class GeneratorRegistry implements Serializable {
 				String curVariant = curVariants.get(variantType);
 				VariantResolver resolver = variantResolvers.get(variantType);
 				if (resolver != null) {
-					variant = resolver.getAvailableVariant(curVariant,
-							variants.get(variantType));
+					variant = resolver.getAvailableVariant(curVariant, variants.get(variantType));
 					if (variant == null) {
 						variant = variants.get(variantType).getDefaultVariant();
 					}
 				} else {
 					throw new BundlingProcessException(
-							"Unable to find variant resolver for variant type '"
-									+ variantType + "'");
+							"Unable to find variant resolver for variant type '" + variantType + "'");
 				}
 			}
 			availableVariantMap.put(variantType, variant);
@@ -803,10 +739,11 @@ public class GeneratorRegistry implements Serializable {
 
 	/**
 	 * Returns the list of life cycle listeners
+	 * 
 	 * @return the list of life cycle listeners
 	 */
 	public List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
-		
+
 		return bundlingProcesslifeCycleListeners;
 	}
 }

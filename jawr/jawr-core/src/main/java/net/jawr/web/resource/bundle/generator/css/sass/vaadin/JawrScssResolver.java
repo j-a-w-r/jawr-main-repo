@@ -108,7 +108,7 @@ public class JawrScssResolver extends AbstractResolver {
 			fileName += ".scss";
 		}
 
-		List<Class<?>> excluded = new ArrayList<Class<?>>();
+		List<Class<?>> excluded = new ArrayList<>();
 		excluded.add(ISassResourceGenerator.class);
 		Reader rd = null;
 		try {
@@ -117,7 +117,7 @@ public class JawrScssResolver extends AbstractResolver {
 			if (linkedResource != null) {
 				addLinkedResource(linkedResource);
 				if (bundle != null) {
-					bundle.getFilePathMappings().add(
+					bundle.getLinkedFilePathMappings().add(
 							new FilePathMapping(bundle, linkedResource.getPath(), linkedResource.getLastModified()));
 				}
 			}

@@ -158,7 +158,7 @@ public class JawrSassResolver {
 	 */
 	protected String resolveAndNormalize(String path) throws ResourceNotFoundException, IOException {
 
-		List<Class<?>> excluded = new ArrayList<Class<?>>();
+		List<Class<?>> excluded = new ArrayList<>();
 		excluded.add(ISassResourceGenerator.class);
 		Reader rd = null;
 		try {
@@ -191,7 +191,7 @@ public class JawrSassResolver {
 		if (linkedResource != null) {
 			addLinkedResource(linkedResource);
 			if (bundle != null) {
-				bundle.getFilePathMappings()
+				bundle.getLinkedFilePathMappings()
 						.add(new FilePathMapping(bundle, linkedResource.getPath(), linkedResource.getLastModified()));
 			}
 		}

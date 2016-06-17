@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import net.jawr.web.resource.bundle.CompositeResourceBundle;
 import net.jawr.web.resource.bundle.DebugInclusion;
@@ -38,6 +39,7 @@ import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.variant.VariantSet;
+import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.StringUtils;
 
@@ -52,16 +54,16 @@ import net.jawr.web.util.StringUtils;
 public class FullMappingPropertiesBasedBundlesHandlerFactory {
 
 	/** The post processor chain factory */
-	private PostProcessorChainFactory chainFactory;
+	private final PostProcessorChainFactory chainFactory;
 
 	/** The resource type */
-	private String resourceType;
+	private final String resourceType;
 
 	/** The resource handler */
-	private ResourceReaderHandler rsReaderHandler;
+	private final ResourceReaderHandler rsReaderHandler;
 
 	/** The generator registry */
-	private GeneratorRegistry generatorRegistry;
+	private final GeneratorRegistry generatorRegistry;
 
 	/**
 	 * Create a PropertiesBasedBundlesHandlerFactory using the specified
@@ -88,6 +90,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 	/**
 	 * Returns the list of joinable resource bundle
 	 * 
+	 * @param properties
+	 *            the properties
 	 * @return the list of joinable resource bundle
 	 */
 	public List<JoinableResourceBundle> getResourceBundles(Properties properties) {
@@ -96,7 +100,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 		String fileExtension = "." + resourceType;
 
 		// Initialize custom bundles
-		List<JoinableResourceBundle> customBundles = new ArrayList<JoinableResourceBundle>();
+		List<JoinableResourceBundle> customBundles = new ArrayList<>();
 		// Check if we should use the bundle names property or
 		// find the bundle name using the bundle id declaration :
 		// jawr.<type>.bundle.<name>.id
@@ -144,7 +148,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 	private JoinableResourceBundle getBundleFromName(String bundleName, List<JoinableResourceBundle> bundles) {
 
 		JoinableResourceBundle bundle = null;
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		names.add(bundleName);
 		List<JoinableResourceBundle> result = getBundlesFromName(names, bundles);
 		if (!result.isEmpty()) {
@@ -164,11 +168,9 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 	 */
 	private List<JoinableResourceBundle> getBundlesFromName(List<String> names, List<JoinableResourceBundle> bundles) {
 
-		List<JoinableResourceBundle> resultBundles = new ArrayList<JoinableResourceBundle>();
-		for (Iterator<String> iterator = names.iterator(); iterator.hasNext();) {
-			String name = iterator.next();
-			for (Iterator<JoinableResourceBundle> itBundle = bundles.iterator(); itBundle.hasNext();) {
-				JoinableResourceBundle bundle = itBundle.next();
+		List<JoinableResourceBundle> resultBundles = new ArrayList<>();
+		for (String name : names) {
+			for (JoinableResourceBundle bundle : bundles) {
 				if (bundle.getName().equals(name)) {
 					resultBundles.add(bundle);
 				}
@@ -286,23 +288,24 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 			// Add the mappings
 			bundle.setMappings(mappings);
 
-			// Checks if the bundle files have been modified
-			verifyIfBundleIsModified(bundleName, bundle, props);
-
 			Map<String, VariantSet> variants = props.getCustomBundleVariantSets(bundleName);
 			bundle.setVariants(variants);
-			for (Iterator<String> iterator = bundle.getVariantKeys().iterator(); iterator.hasNext();) {
-				String variantKey = iterator.next();
-				if (StringUtils.isNotEmpty(variantKey)) {
-					String hashcode = props.getCustomBundleProperty(bundleName,
-							PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE_VARIANT + variantKey);
-					bundle.setBundleDataHashCode(variantKey, hashcode);
-				}
-			}
 
-			String hashcode = props.getCustomBundleProperty(bundleName,
-					PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE);
-			bundle.setBundleDataHashCode(null, hashcode);
+			// Checks if the bundle files have been modified
+			verifyIfBundleIsModified(bundle, mappings, props);
+			if (!bundle.isDirty()) {
+				for (String variantKey : bundle.getVariantKeys()) {
+					if (StringUtils.isNotEmpty(variantKey)) {
+						String hashcode = props.getCustomBundleProperty(bundleName,
+								PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE_VARIANT + variantKey);
+						bundle.setBundleDataHashCode(variantKey, hashcode);
+					}
+				}
+
+				String hashcode = props.getCustomBundleProperty(bundleName,
+						PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_HASHCODE);
+				bundle.setBundleDataHashCode(null, hashcode);
+			}
 		}
 
 		return bundle;
@@ -311,55 +314,72 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 	/**
 	 * Verify f the bundle has been modified
 	 * 
-	 * @param bundleName
-	 *            the bundle name
 	 * @param bundle
 	 *            the bundle
+	 * @param mappings
+	 *            the bundle mappings
 	 * @param props
 	 *            the properties config helper
 	 */
-	private void verifyIfBundleIsModified(String bundleName, JoinableResourceBundleImpl bundle,
+	private void verifyIfBundleIsModified(JoinableResourceBundleImpl bundle, List<String> mappings,
 			PropertiesConfigHelper props) {
-		List<String> fileMappings = props.getCustomBundlePropertyAsList(bundleName,
-				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS);
-		if (fileMappings != null) {
-			List<FilePathMapping> bundleFileMappings = bundle.getFilePathMappings();
-			if (bundleFileMappings.size() != fileMappings.size()) {
-				bundle.setDirty(true);
-			} else {
 
-				Set<FilePathMapping> storedFilePathMapping = new HashSet<>();
-				for (String filePathWithTimeStamp : fileMappings) {
-					String[] tmp = filePathWithTimeStamp.split(LAST_MODIFIED_SEPARATOR);
-					String filePath = tmp[0];
-					long storedLastModified = Long.parseLong(tmp[1]);
-					storedFilePathMapping.add(new FilePathMapping(bundle, filePath, storedLastModified));
-				}
+		// Retrieves current available variant
+		Map<String, VariantSet> variants = new TreeMap<>();
+		for (String mapping : mappings) {
+			variants = VariantUtils.concatVariants(variants, generatorRegistry.getAvailableVariants(mapping));
+		}
 
-				Set<FilePathMapping> bundleFilePathMappingSet = new HashSet<>(bundleFileMappings);
-				if (!bundleFilePathMappingSet.equals(storedFilePathMapping)) {
+		// Checks if the current variant are the same as the stored one
+		if (!variants.equals(bundle.getVariants())) {
+			bundle.setVariants(variants);
+			bundle.setDirty(true);
+		} else {
+
+			String bundleName = bundle.getName();
+
+			List<String> fileMappings = props.getCustomBundlePropertyAsList(bundleName,
+					PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_FILEPATH_MAPPINGS);
+			if (fileMappings != null) {
+				List<FilePathMapping> bundleFileMappings = bundle.getFilePathMappings();
+				if (bundleFileMappings.size() != fileMappings.size()) {
 					bundle.setDirty(true);
+				} else {
+
+					Set<FilePathMapping> storedFilePathMapping = new HashSet<>();
+					for (String filePathWithTimeStamp : fileMappings) {
+						String[] tmp = filePathWithTimeStamp.split(LAST_MODIFIED_SEPARATOR);
+						String filePath = tmp[0];
+						long storedLastModified = Long.parseLong(tmp[1]);
+						storedFilePathMapping.add(new FilePathMapping(bundle, filePath, storedLastModified));
+					}
+
+					Set<FilePathMapping> bundleFilePathMappingSet = new HashSet<>(bundleFileMappings);
+					if (!bundleFilePathMappingSet.equals(storedFilePathMapping)) {
+						bundle.setDirty(true);
+					}
+				}
+			}
+
+			// Checks if the linked resource has been modified
+			fileMappings = props.getCustomBundlePropertyAsList(bundleName,
+					PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_LINKED_FILEPATH_MAPPINGS);
+			for (String filePathWithTimeStamp : fileMappings) {
+				int idx = filePathWithTimeStamp.lastIndexOf(LAST_MODIFIED_SEPARATOR);
+
+				if (idx != -1) {
+					String filePath = filePathWithTimeStamp.substring(0, idx);
+					long storedLastModified = Long.parseLong(filePathWithTimeStamp.substring(idx + 1));
+					long currentLastModified = rsReaderHandler.getLastModified(filePath);
+					FilePathMapping fPathMapping = new FilePathMapping(bundle, filePath, currentLastModified);
+					bundle.getLinkedFilePathMappings().add(fPathMapping);
+					if (storedLastModified != currentLastModified) {
+						bundle.setDirty(true);
+					}
 				}
 			}
 		}
 
-		// Checks if the linked resource has been modified
-		fileMappings = props.getCustomBundlePropertyAsList(bundleName,
-				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_LINKED_FILEPATH_MAPPINGS);
-		for (String filePathWithTimeStamp : fileMappings) {
-			int idx = filePathWithTimeStamp.lastIndexOf(LAST_MODIFIED_SEPARATOR);
-
-			if (idx != -1) {
-				String filePath = filePathWithTimeStamp.substring(0, idx);
-				long storedLastModified = Long.parseLong(filePathWithTimeStamp.substring(idx + 1));
-				long currentLastModified = rsReaderHandler.getLastModified(filePath);
-				FilePathMapping fPathMapping = new FilePathMapping(bundle, filePath, currentLastModified);
-				bundle.getLinkedFilePathMappings().add(fPathMapping);
-				if (storedLastModified != currentLastModified) {
-					bundle.setDirty(true);
-				}
-			}
-		}
 	}
 
 	/**
@@ -373,8 +393,8 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 	 */
 	private InclusionPattern getInclusionPattern(PropertiesConfigHelper props, String bundleName) {
 		// Wether it's global or not
-		boolean isGlobal = Boolean.valueOf(props.getCustomBundleProperty(bundleName,
-				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, "false")).booleanValue();
+		boolean isGlobal = Boolean.parseBoolean(props.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, "false"));
 
 		// Set order if its a global bundle
 		int order = 0;
@@ -384,12 +404,12 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 		}
 
 		// Use only with debug mode on
-		boolean isDebugOnly = Boolean.valueOf(props.getCustomBundleProperty(bundleName,
-				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGONLY, "false")).booleanValue();
+		boolean isDebugOnly = Boolean.parseBoolean(props.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGONLY, "false"));
 
 		// Use only with debug mode off
-		boolean isDebugNever = Boolean.valueOf(props.getCustomBundleProperty(bundleName,
-				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGNEVER, "false")).booleanValue();
+		boolean isDebugNever = Boolean.parseBoolean(props.getCustomBundleProperty(bundleName,
+				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_DEBUGNEVER, "false"));
 
 		return new InclusionPattern(isGlobal, order, DebugInclusion.get(isDebugOnly, isDebugNever));
 	}

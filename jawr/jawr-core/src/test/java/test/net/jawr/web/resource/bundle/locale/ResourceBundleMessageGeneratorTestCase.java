@@ -49,7 +49,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 	@Mock
 	private JoinableResourceBundle bundle;
 
-	private List<FilePathMapping> fMappings = new ArrayList<>();
+	private final List<FilePathMapping> fMappings = new ArrayList<>();
 
 	@Mock
 	private ResourceReaderHandler rsReaderHandler;
@@ -60,7 +60,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		FileUtils.clearDirectory(FileUtils.getClasspathRootDir() + "/" + WORK_DIR);
 		FileUtils.createDir(WORK_DIR);
 		FileUtils.copyFile("bundleLocale/messages_fr.properties.backup", "bundleLocale/messages_fr.properties");
-		
+
 		defaultLocale = Locale.getDefault();
 		generator = new ResourceBundleMessagesGenerator();
 
@@ -83,7 +83,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 	public void tearDown() throws Exception {
 		FileUtils.deleteDirectory(FileUtils.getClasspathRootDir() + "/" + WORK_DIR);
 		FileUtils.copyFile("bundleLocale/messages_fr.properties.backup", "bundleLocale/messages_fr.properties");
-		
+
 		Locale.setDefault(defaultLocale);
 	}
 
@@ -121,7 +121,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		assertEquals(readFile("bundleLocale/resultScript_fr.js"), FileUtils.removeCarriageReturn(result));
 
 		assertFalse(ctx.isRetrievedFromCache());
-		
+
 		ctx.setLocale(new Locale("es"));
 		ctx.setRetrievedFromCache(false);
 		fMappings.clear();
@@ -130,7 +130,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		assertEquals(readFile("bundleLocale/resultScript_es.js"), FileUtils.removeCarriageReturn(result));
 
 		assertFalse(ctx.isRetrievedFromCache());
-		
+
 		// Check linked resources
 		f = FileUtils.getClassPathFile("bundleLocale/messages.properties");
 		fMapping = new FilePathMapping(f);
@@ -172,7 +172,6 @@ public class ResourceBundleMessageGeneratorTestCase {
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
 
-		
 		ctx.setLocale(Locale.FRENCH);
 		rd = generator.createResource(ctx);
 		result = IOUtils.toString(rd);
@@ -184,7 +183,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 
 		ctx.setLocale(new Locale("es"));
 		fMappings.clear();
-		
+
 		rd = generator.createResource(ctx);
 		result = IOUtils.toString(rd);
 		assertEquals(readFile("bundleLocale/resultScriptResourceBundleUTF8_es.js"),
@@ -201,7 +200,6 @@ public class ResourceBundleMessageGeneratorTestCase {
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
 
-		
 	}
 
 	private String readFile(String path) throws Exception {
@@ -240,7 +238,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		File f = FileUtils.getClassPathFile("bundleLocale/messages.properties");
 		FilePathMapping fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
+
 		// Change fallback to system locale property to true
 		prop.put(JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE, "true");
 		generator.setConfig(config);
@@ -281,7 +279,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		Reader rd = generator.createResource(ctx);
 		String result = IOUtils.toString(rd);
 		assertEquals(readFile("bundleLocale/resultScriptWithQuoteForKeys.js"), FileUtils.removeCarriageReturn(result));
-	
+
 		assertFalse(ctx.isRetrievedFromCache());
 		assertEquals(1, fMappings.size());
 
@@ -289,7 +287,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		File f = FileUtils.getClassPathFile("bundleLocale/messages.properties");
 		FilePathMapping fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
+
 	}
 
 	@Test
@@ -328,7 +326,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		f = FileUtils.getClassPathFile("bundleLocale/errors.properties");
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
+
 		ctx.setLocale(Locale.FRENCH);
 		fMappings.clear();
 		rd = generator.createResource(ctx);
@@ -355,7 +353,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		f = FileUtils.getClassPathFile("bundleLocale/errors_fr.properties");
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
+
 		ctx.setLocale(new Locale("es"));
 		fMappings.clear();
 		rd = generator.createResource(ctx);
@@ -365,7 +363,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		expectedMsg.put("messages.ui.msg.hello.world", "Â¡Hola $ Mundo!");
 		expectedMsg.put("messages.ui.msg.salut", "Mr.");
 		checkGeneratedMsgContent(result, expectedMsg);
-		
+
 		assertFalse(ctx.isRetrievedFromCache());
 		assertEquals(fMappings.size(), 4);
 
@@ -405,7 +403,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		// Checks result content instead of file to overcome the difference
 		// between JDK < 8 and JDK >= 8
 		// where the order of the message definition changed
-		Map<String, String> expectedMsg = new HashMap<String, String>();
+		Map<String, String> expectedMsg = new HashMap<>();
 		expectedMsg.put("myMessages.error.login", "Login failed");
 		expectedMsg.put("myMessages.ui.msg.hello.world", "Hello $ world!");
 		expectedMsg.put("myMessages.ui.msg.salut", "Mr.");
@@ -422,7 +420,6 @@ public class ResourceBundleMessageGeneratorTestCase {
 		f = FileUtils.getClassPathFile("bundleLocale/errors.properties");
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
 
 		ctx.setLocale(Locale.FRENCH);
 		rd = generator.createResource(ctx);
@@ -451,8 +448,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		f = FileUtils.getClassPathFile("bundleLocale/errors_fr.properties");
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
-		
+
 		ctx.setLocale(new Locale("es"));
 		fMappings.clear();
 		rd = generator.createResource(ctx);
@@ -463,7 +459,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		expectedMsg.put("myMessages.ui.msg.salut", "Mr.");
 		expectedMsg.put("myMessages.warning.password.expired", "Password expired");
 		checkGeneratedMsgContent(result, expectedMsg);
-		
+
 		assertFalse(ctx.isRetrievedFromCache());
 		assertEquals(fMappings.size(), 4);
 
@@ -481,9 +477,8 @@ public class ResourceBundleMessageGeneratorTestCase {
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
 	}
-	
+
 	@Test
-	@Ignore
 	public void testCacheReload() throws Exception {
 
 		// Force default locale
@@ -529,7 +524,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		f = FileUtils.getClassPathFile("bundleLocale/messages_fr.properties");
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
+
 		// Check retrieve from cache
 		rd = generator.createResource(ctx);
 		result = IOUtils.toString(rd);
@@ -545,7 +540,7 @@ public class ResourceBundleMessageGeneratorTestCase {
 		f = FileUtils.getClassPathFile("bundleLocale/messages_fr.properties");
 		fMapping = new FilePathMapping(f);
 		assertTrue(fMappings.contains(fMapping));
-		
+
 	}
 
 	/**

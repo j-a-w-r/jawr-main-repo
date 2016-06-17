@@ -24,241 +24,286 @@ import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 
 /**
- * Represents a group of related resources which will be referred to by 
- * a single name.  
+ * Represents a group of related resources which will be referred to by a single
+ * name.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public interface JoinableResourceBundle {
-	
+
 	/** The licencing file name */
 	public static final String LICENSES_FILENAME = ".license";
-	
+
 	/** The sorting file name */
 	public static final String SORT_FILE_NAME = ".sorting";
-		
+
 	/**
-	 * Returns the bundle name 
+	 * Returns the bundle name
+	 * 
 	 * @return the bundle name
 	 */
 	public String getName();
-	
+
 	/**
 	 * Returns the ID for this bundle. The URL, which will identify the bundle.
-	 * It will normally end with .js or .css, 
-	 * since it will be used to refer to the bundle in URLs. 
+	 * It will normally end with .js or .css, since it will be used to refer to
+	 * the bundle in URLs.
+	 * 
 	 * @return the ID for this bundle
 	 */
 	public String getId();
-	
+
 	/**
 	 * Returns true if the bundle if composite
+	 * 
 	 * @return true if the bundle if composite
 	 */
 	public boolean isComposite();
-	
+
 	/**
 	 * Get the InclusionPattern to determine when/if this bundle should be
-	 * included with current configuration. 
+	 * included with current configuration.
+	 * 
 	 * @return the InclusionPattern
 	 */
 	public InclusionPattern getInclusionPattern();
-	
+
 	/**
 	 * Reset the bundle mapping
 	 */
 	public void resetBundleMapping();
-		
+
 	/**
 	 * Sets the mappings, which should be used for the bundle
-	 * @param mappings the mapping of the resources of the bundle
+	 * 
+	 * @param mappings
+	 *            the mapping of the resources of the bundle
 	 */
 	public void setMappings(List<String> mappings);
-	
+
 	/**
 	 * Returns the mappings, used for the bundle
+	 * 
 	 * @return mappings the mapping of the resources of the bundle
 	 */
 	public List<PathMapping> getMappings();
-	
+
 	/**
 	 * Returns the file path mappings, used by the bundle
+	 * 
 	 * @return mappings the file path mapping of the resources of the bundle
-     */
-    public List<FilePathMapping> getFilePathMappings();
-    
-    
-    /**
+	 */
+	public List<FilePathMapping> getFilePathMappings();
+
+	/**
 	 * Returns the file path mappings for linked resources, used by the bundle
-	 * @return mappings the file path mapping of the linked resources of the bundle
-     */
+	 * 
+	 * @return mappings the file path mapping of the linked resources of the
+	 *         bundle
+	 */
 	public List<FilePathMapping> getLinkedFilePathMappings();
-	
+
 	/**
 	 * Sets the file path mappings for linked resources
-	 * @param mappings the mapping to set
+	 * 
+	 * @param mappings
+	 *            the mapping to set
 	 */
 	public void setLinkedFilePathMappings(List<FilePathMapping> mappings);
-	
+
 	/**
-	 * Returns an ordered list with all the items pertaining to this bundle. 
-	 * @return an ordered list with all the items pertaining to this bundle. 
+	 * Returns an ordered list with all the items pertaining to this bundle.
+	 * 
+	 * @return an ordered list with all the items pertaining to this bundle.
 	 */
 	public List<BundlePath> getItemPathList();
-	
+
 	/**
-	 * Returns an ordered list with all the items pertaining to this bundle. 
-	 * @return an ordered list with all the items pertaining to this bundle. 
+	 * Returns an ordered list with all the items pertaining to this bundle.
+	 * 
+	 * @return an ordered list with all the items pertaining to this bundle.
 	 */
 	public List<BundlePath> getItemDebugPathList();
-	
+
 	/**
-	 * Returns a set with the license files to include with this bundle. 
-	 * @return a set with the license files to include with this bundle. 
+	 * Returns a set with the license files to include with this bundle.
+	 * 
+	 * @return a set with the license files to include with this bundle.
 	 */
 	public Set<String> getLicensesPathList();
-	
+
 	/**
-	 * Determines if an item path belongs to the bundle. 
-	 * @param itemPath the item path
-	 * @return true if an item path belongs to the bundle. 
+	 * Determines if an item path belongs to the bundle.
+	 * 
+	 * @param itemPath
+	 *            the item path
+	 * @return true if an item path belongs to the bundle.
 	 */
 	public boolean belongsToBundle(String itemPath);
-        
+
 	/**
 	 * Returns the bundle prefix
 	 * 
 	 * @return the bundle prefix
 	 */
 	public String getBundlePrefix();
-	
-    /**
-     * Get the URL prefix for this Bundle. It is used to force redownloading
-     * when needed. 
-     * @return the URL prefix for this Bundle.
-     */
-    public String getURLPrefix(Map<String, String> variants);
-    
-    /**
-     * Get the postprocessor to use in resources before adding them to the bundle
-     * @return the postprocessor to use in resources before adding them to the bundle
-     */
-    public ResourceBundlePostProcessor getUnitaryPostProcessor();
-    
-    
-    /**
-     * Get the postprocesor to use once all files are joined. 
-     * @return the postprocesor to use once all files are joined. 
-     */
-    public ResourceBundlePostProcessor getBundlePostProcessor();
-    
-    /**
-     * Returns the bundle data hashcode
-     * @param variantKey the variant key
-     * @return the bundle data hashcode
-     */
-    public String getBundleDataHashCode(String variantKey);
-    
-    /**
-     * Set the hashcode of the string representing the bundled files. 
-     * Used to generate an automatic version url prefix. 
-     * 
-     * @param the variant key
-     * @param hashCode the string representation of the hash code where the minus is replace by a "N" character.
-     */
-    public void setBundleDataHashCode(String variantKey, String bundleDataHashCode);
-	
-    
-    /**
-     * For bundles to be included for IE only within a conditional 
-     * comment, this method returns the expression to use.  
-     * @return The expression for the conditional comment, or null 
-     * if the bundle should be included for all browsers. 
-     */
-    public String getExplorerConditionalExpression();
-    
-       
-    /**
-     * Returns the map of variants by type for this bundle. 
-     * @return the map of variants by type for this bundle. 
-     */
-    public Map<String, VariantSet> getVariants();
-    
-    /**
-     * Sets the map of variants by type for this bundle. 
-     * @param the map of variants by type for this bundle. 
-     */
-    public void setVariants(Map<String, VariantSet> variants);
-    
-    /**
-     * Returns the list of variant keys. 
-     * @return the list of variant keys. 
-     */
-    public List<String> getVariantKeys();
-    
-    /**
-     * Returns an ordered list with all the items pertaining to this bundle, with the variations 
-     * corresponding to the specified variant key. 
-     * @param variants the variant map
-     * @return an ordered list with all the items pertaining to this bundle
-     */
-    public List<BundlePath> getItemPathList(Map<String, String> variants);
-    
-    /**
-     * Returns for the debug mode an ordered list with all the items pertaining to this bundle, with the variations 
-     * corresponding to the specified variant key. 
-     * @param variants the variant map
-     * @return an ordered list with all the items pertaining to this bundle
-     */
-    public List<BundlePath> getItemDebugPathList(Map<String, String> variants);
-    
-    /**
+
+	/**
+	 * Get the URL prefix for this Bundle. It is used to force redownloading
+	 * when needed.
+	 * 
+	 * @return the URL prefix for this Bundle.
+	 */
+	public String getURLPrefix(Map<String, String> variants);
+
+	/**
+	 * Get the postprocessor to use in resources before adding them to the
+	 * bundle
+	 * 
+	 * @return the postprocessor to use in resources before adding them to the
+	 *         bundle
+	 */
+	public ResourceBundlePostProcessor getUnitaryPostProcessor();
+
+	/**
+	 * Get the postprocesor to use once all files are joined.
+	 * 
+	 * @return the postprocesor to use once all files are joined.
+	 */
+	public ResourceBundlePostProcessor getBundlePostProcessor();
+
+	/**
+	 * Returns the bundle data hashcode
+	 * 
+	 * @param variantKey
+	 *            the variant key
+	 * @return the bundle data hashcode
+	 */
+	public String getBundleDataHashCode(String variantKey);
+
+	/**
+	 * Set the hashcode of the string representing the bundled files. Used to
+	 * generate an automatic version url prefix.
+	 * 
+	 * @param the
+	 *            variant key
+	 * @param hashCode
+	 *            the string representation of the hash code where the minus is
+	 *            replace by a "N" character.
+	 */
+	public void setBundleDataHashCode(String variantKey, String bundleDataHashCode);
+
+	/**
+	 * For bundles to be included for IE only within a conditional comment, this
+	 * method returns the expression to use.
+	 * 
+	 * @return The expression for the conditional comment, or null if the bundle
+	 *         should be included for all browsers.
+	 */
+	public String getExplorerConditionalExpression();
+
+	/**
+	 * Returns the map of variants by type for this bundle.
+	 * 
+	 * @return the map of variants by type for this bundle.
+	 */
+	public Map<String, VariantSet> getVariants();
+
+	/**
+	 * Sets the map of variants by type for this bundle.
+	 * 
+	 * @param the
+	 *            map of variants by type for this bundle.
+	 */
+	public void setVariants(Map<String, VariantSet> variants);
+
+	/**
+	 * Returns the list of variant keys.
+	 * 
+	 * @return the list of variant keys.
+	 */
+	public List<String> getVariantKeys();
+
+	/**
+	 * Returns an ordered list with all the items pertaining to this bundle,
+	 * with the variations corresponding to the specified variant key.
+	 * 
+	 * @param variants
+	 *            the variant map
+	 * @return an ordered list with all the items pertaining to this bundle
+	 */
+	public List<BundlePath> getItemPathList(Map<String, String> variants);
+
+	/**
+	 * Returns for the debug mode an ordered list with all the items pertaining
+	 * to this bundle, with the variations corresponding to the specified
+	 * variant key.
+	 * 
+	 * @param variants
+	 *            the variant map
+	 * @return an ordered list with all the items pertaining to this bundle
+	 */
+	public List<BundlePath> getItemDebugPathList(Map<String, String> variants);
+
+	/**
 	 * Returns the bundle dependencies
+	 * 
 	 * @return the bundle dependencies
 	 */
 	public List<JoinableResourceBundle> getDependencies();
 
 	/**
 	 * Sets the bundle dependencies
-	 * @param the bundle dependencies to set
+	 * 
+	 * @param bundleDependencies
+	 *            the bundle dependencies to set
 	 */
 	public void setDependencies(List<JoinableResourceBundle> bundleDependencies);
 
 	/**
-     * If set, it will force the tag libraries to render a static URL in production mode. 
-     * @return the production URL
-     */
-    public String getAlternateProductionURL();
-    
-    /**
-     * If set, it will force the tag libraries to render a static URL in debug mode. 
-     * @return the production URL
-     */
-    public String getDebugURL();
-    
-    /**
-	 * Sets the bundle postprocessor
-	 * @param bundlePostProcessor the bundle postprocessor to set
+	 * If set, it will force the tag libraries to render a static URL in
+	 * production mode.
+	 * 
+	 * @return the production URL
 	 */
-	public void setBundlePostProcessor(
-			ResourceBundlePostProcessor bundlePostProcessor);
+	public String getAlternateProductionURL();
+
+	/**
+	 * If set, it will force the tag libraries to render a static URL in debug
+	 * mode.
+	 * 
+	 * @return the production URL
+	 */
+	public String getDebugURL();
+
+	/**
+	 * Sets the bundle postprocessor
+	 * 
+	 * @param bundlePostProcessor
+	 *            the bundle postprocessor to set
+	 */
+	public void setBundlePostProcessor(ResourceBundlePostProcessor bundlePostProcessor);
 
 	/**
 	 * Sets the unitary postprocessor
-	 * @param unitaryPostProcessor the unitary postprocessor to set
+	 * 
+	 * @param unitaryPostProcessor
+	 *            the unitary postprocessor to set
 	 */
-	public void setUnitaryPostProcessor(
-			ResourceBundlePostProcessor unitaryPostProcessor);
+	public void setUnitaryPostProcessor(ResourceBundlePostProcessor unitaryPostProcessor);
 
 	/**
 	 * Sets the flag indicating if the resource bundle is dirty or not
-	 * @param dirty the flag to set
+	 * 
+	 * @param dirty
+	 *            the flag to set
 	 */
 	public void setDirty(boolean dirty);
-	
+
 	/**
 	 * Returns the flag indicating if the resource bundle is dirty or not
+	 * 
 	 * @return true if resource bundle is dirty or not
 	 */
 	public boolean isDirty();

@@ -122,7 +122,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 		factory.setBaseDir(props.getProperty(RESOURCES_BASEDIR, "/"));
 
 		// Use cache by default
-		factory.setUseCacheManager(Boolean.valueOf(props.getProperty(RESOURCES_USE_CACHE, "true")).booleanValue());
+		factory.setUseCacheManager(Boolean.parseBoolean(props.getProperty(RESOURCES_USE_CACHE, "true")));
 
 		// Postprocessor definitions
 		factory.setGlobalPostProcessorKeys(props.getProperty(BUNDLE_FACTORY_POSTPROCESSOR));
@@ -134,16 +134,14 @@ public class PropertiesBasedBundlesHandlerFactory {
 
 		// Single or multiple bundle for orphans settings.
 		factory.setUseSingleResourceFactory(
-				Boolean.valueOf(props.getProperty(FACTORY_USE_SINGLE_BUNDLE, "false")).booleanValue());
+				Boolean.parseBoolean(props.getProperty(FACTORY_USE_SINGLE_BUNDLE, "false")));
 		factory.setSingleFileBundleName(props.getProperty(FACTORY_SINGLE_FILE_NAME));
 
 		// Use orphans resolution at all, on by default. FACTORY_PROCESS_ORPHANS
-		factory.setScanForOrphans(
-				Boolean.valueOf(props.getCommonProperty(FACTORY_PROCESS_ORPHANS, "true")).booleanValue());
+		factory.setScanForOrphans(Boolean.parseBoolean(props.getCommonProperty(FACTORY_PROCESS_ORPHANS, "true")));
 
 		// Use the automatic directory-as-bundle mapper.
-		factory.setUseDirMapperFactory(
-				Boolean.valueOf(props.getProperty(FACTORY_USE_DIR_MAPPER, "false")).booleanValue());
+		factory.setUseDirMapperFactory(Boolean.parseBoolean(props.getProperty(FACTORY_USE_DIR_MAPPER, "false")));
 		factory.setExludedDirMapperDirs(props.getPropertyAsSet(FACTORY_DIR_MAPPER_EXCLUSION));
 
 		// Initialize custom generators
@@ -162,7 +160,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 		}
 
 		// Initialize custom bundles
-		Set<ResourceBundleDefinition> customBundles = new HashSet<ResourceBundleDefinition>();
+		Set<ResourceBundleDefinition> customBundles = new HashSet<>();
 		// Check if we should use the bundle names property or
 		// find the bundle name using the bundle id declaration :
 		// jawr.<type>.bundle.<name>.id
@@ -194,8 +192,6 @@ public class PropertiesBasedBundlesHandlerFactory {
 	/**
 	 * Build a resources handler based on the configuration.
 	 * 
-	 * @param jawrConfig
-	 *            the jawr config
 	 * @return a resources handler based on the configuration.
 	 * @throws DuplicateBundlePathException
 	 * @throws BundleDependencyException
@@ -226,8 +222,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 
 		// Wether it's a composite or not
 		boolean isComposite = Boolean
-				.valueOf(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_COMPOSITE_FLAG, "false"))
-				.booleanValue();
+				.parseBoolean(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_COMPOSITE_FLAG, "false"));
 
 		// Create definition and set its id
 		ResourceBundleDefinition bundle = new ResourceBundleDefinition();
@@ -236,15 +231,14 @@ public class PropertiesBasedBundlesHandlerFactory {
 		bundle.setBundlePrefix(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX));
 
 		// Wether it's global or not
-		Boolean isGlobal = Boolean
-				.valueOf(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, "false"));
-		bundle.setGlobal(isGlobal.booleanValue());
+		boolean isGlobal = Boolean
+				.parseBoolean(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, "false"));
+		bundle.setGlobal(isGlobal);
 
 		// Set order if its a global bundle
-		if (isGlobal.booleanValue()) {
-			Integer order = Integer
-					.valueOf(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_ORDER, "0"));
-			bundle.setInclusionOrder(order.intValue());
+		if (isGlobal) {
+			int order = Integer.parseInt(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_ORDER, "0"));
+			bundle.setInclusionOrder(order);
 		}
 
 		// Override bundle postprocessor
@@ -258,14 +252,14 @@ public class PropertiesBasedBundlesHandlerFactory {
 					props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_FILE_POSTPROCESSOR));
 
 		// Use only with debug mode on
-		Boolean isDebugOnly = Boolean
-				.valueOf(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_DEBUGONLY, "false"));
-		bundle.setDebugOnly(isDebugOnly.booleanValue());
+		boolean isDebugOnly = Boolean
+				.parseBoolean(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_DEBUGONLY, "false"));
+		bundle.setDebugOnly(isDebugOnly);
 
 		// Use only with debug mode off
-		Boolean isDebugNever = Boolean
-				.valueOf(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_DEBUGNEVER, "false"));
-		bundle.setDebugNever(isDebugNever.booleanValue());
+		boolean isDebugNever = Boolean
+				.parseBoolean(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_DEBUGNEVER, "false"));
+		bundle.setDebugNever(isDebugNever);
 
 		// Set conditional comment for IE, in case one is specified
 		if (null != props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_IE_CONDITIONAL_EXPRESSION))
@@ -310,7 +304,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 			bundle.setComposite(true);
 
 			// add children
-			List<ResourceBundleDefinition> children = new ArrayList<ResourceBundleDefinition>();
+			List<ResourceBundleDefinition> children = new ArrayList<>();
 			StringTokenizer tk = new StringTokenizer(childBundlesProperty, JawrConstant.COMMA_SEPARATOR);
 			while (tk.hasMoreTokens()) {
 				ResourceBundleDefinition childDef = buildCustomBundleDefinition(tk.nextToken().trim(), true,
@@ -334,8 +328,8 @@ public class PropertiesBasedBundlesHandlerFactory {
 							+ ". Please specify at least one in configuration. ");
 				} else {
 					// Add the mappings
-					List<String> mappings = new ArrayList<String>();
-					Map<String, VariantSet> variants = new TreeMap<String, VariantSet>();
+					List<String> mappings = new ArrayList<>();
+					Map<String, VariantSet> variants = new TreeMap<>();
 					StringTokenizer tk = new StringTokenizer(mappingsProperty, JawrConstant.COMMA_SEPARATOR);
 					while (tk.hasMoreTokens()) {
 						String mapping = tk.nextToken().trim();
