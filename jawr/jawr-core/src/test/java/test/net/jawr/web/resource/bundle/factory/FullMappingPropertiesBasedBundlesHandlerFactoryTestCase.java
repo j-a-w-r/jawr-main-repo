@@ -274,10 +274,10 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
 		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
-		assertEquals("N123456", bundle.getBundleDataHashCode(null));
-		assertEquals("N123456", bundle.getBundleDataHashCode(""));
-		assertEquals("123456", bundle.getBundleDataHashCode("fr"));
-		assertEquals("789", bundle.getBundleDataHashCode("en_US"));
+		assertNull(bundle.getBundleDataHashCode(null));
+		assertNull(bundle.getBundleDataHashCode(""));
+		assertNull(bundle.getBundleDataHashCode("fr"));
+		assertNull(bundle.getBundleDataHashCode("en_US"));
 	}
 
 	@Test
@@ -340,10 +340,10 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
 		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
-		assertEquals("N123456", bundle.getBundleDataHashCode(null));
-		assertEquals("N123456", bundle.getBundleDataHashCode(""));
-		assertEquals("123456", bundle.getBundleDataHashCode("fr"));
-		assertEquals("789", bundle.getBundleDataHashCode("en_US"));
+		assertNull(bundle.getBundleDataHashCode(null));
+		assertNull(bundle.getBundleDataHashCode(""));
+		assertNull(bundle.getBundleDataHashCode("fr"));
+		assertNull(bundle.getBundleDataHashCode("en_US"));
 	}
 
 	@Test
@@ -401,10 +401,11 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
 		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
-		assertEquals("N123456", bundle.getBundleDataHashCode(null));
-		assertEquals("N123456", bundle.getBundleDataHashCode(""));
-		assertEquals("123456", bundle.getBundleDataHashCode("fr"));
-		assertEquals("789", bundle.getBundleDataHashCode("en_US"));
+		// bundle hashcodes are not initialized
+		assertNull(bundle.getBundleDataHashCode(null));
+		assertNull(bundle.getBundleDataHashCode(""));
+		assertNull(bundle.getBundleDataHashCode("fr"));
+		assertNull(bundle.getBundleDataHashCode("en_US"));
 	}
 
 	@Test
@@ -466,10 +467,10 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 		Set<String> expectedLocales = new HashSet<>(Arrays.asList("", "fr", "en_US"));
 		assertEquals(expectedLocales, new HashSet<>(bundle.getVariantKeys()));
 
-		assertEquals("N123456", bundle.getBundleDataHashCode(null));
-		assertEquals("N123456", bundle.getBundleDataHashCode(""));
-		assertEquals("123456", bundle.getBundleDataHashCode("fr"));
-		assertEquals("789", bundle.getBundleDataHashCode("en_US"));
+		assertNull(bundle.getBundleDataHashCode(null));
+		assertNull(bundle.getBundleDataHashCode(""));
+		assertNull(bundle.getBundleDataHashCode("fr"));
+		assertNull(bundle.getBundleDataHashCode("en_US"));
 	}
 
 	@Test
@@ -686,7 +687,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactoryTestCase {
 				assertEquals("myFilePostProcessor1,myFilePostProcessor2",
 						((AbstractChainedResourceBundlePostProcessor) bundle.getUnitaryPostProcessor()).getId());
 
-				assertEquals("123456", bundle.getBundleDataHashCode(null));
+				assertNull(bundle.getBundleDataHashCode(null));
 			} else if (bundle.getName().equals("child1")) {
 
 				assertEquals("/bundle/child1.js", bundle.getId());
