@@ -177,10 +177,17 @@ public class JawrConfig implements Serializable {
 	public static final String JAWR_USE_BUNDLE_MAPPING = "jawr.use.bundle.mapping";
 
 	/**
-	 * The property name for the flag indicating if we should use "smart bundling".
+	 * The property name for the flag indicating if we should use "smart
+	 * bundling".
 	 */
 	public static final String JAWR_USE_SMART_BUNDLING = "jawr.use.smart.bundling";
-	
+
+	/**
+	 * The property name for the flag indicating if we should use "generator
+	 * cache".
+	 */
+	public static final String JAWR_USE_GENERATOR_CACHE = "jawr.use.generator.cache";
+
 	/**
 	 * The property name for the debug mode system flag
 	 */
@@ -323,14 +330,23 @@ public class JawrConfig implements Serializable {
 	private boolean useBundleMapping = false;
 
 	/**
-	 * Flag which defines if we should use the smart bundling feature.
-	 * defaults to true.
+	 * Flag which defines if we should use the smart bundling feature. defaults
+	 * to true.
 	 */
 	private boolean useSmartBundling = true;
-
-	/** The delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
-	private int delayAfterLastEvent = JawrConstant.DEFAULT_DELAY_AFTER_LAST_EVENT;
 	
+	/**
+	 * Flag which defines if we should use the generator cache feature. defaults
+	 * to true.
+	 */
+	private boolean useGeneratorCache = true;
+	
+	/**
+	 * The delay after last event, this is used to to ensure that a batch
+	 * modification is ended before starting the build
+	 */
+	private int delayAfterLastEvent = JawrConstant.DEFAULT_DELAY_AFTER_LAST_EVENT;
+
 	/**
 	 * The jawr working directory path
 	 */
@@ -369,8 +385,8 @@ public class JawrConfig implements Serializable {
 	private String clientSideHandlerGeneratorClass;
 
 	/**
-	 * The flag indicating that we should use the overridden context path even in
-	 * debug mode. The default value is false.
+	 * The flag indicating that we should use the overridden context path even
+	 * in debug mode. The default value is false.
 	 */
 	private boolean useContextPathOverrideInDebugMode = false;
 
@@ -511,12 +527,14 @@ public class JawrConfig implements Serializable {
 		this.useBundleMapping = getBooleanProperty(JAWR_USE_BUNDLE_MAPPING, false);
 
 		this.useSmartBundling = getBooleanProperty(JAWR_USE_SMART_BUNDLING, true);
+
+		this.useGeneratorCache = getBooleanProperty(JAWR_USE_GENERATOR_CACHE, true);
 		
 		String value = getProperty(JawrConstant.JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT);
-		if(StringUtils.isNotEmpty(value)){
-			delayAfterLastEvent = Integer.parseInt(value)*1000;
+		if (StringUtils.isNotEmpty(value)) {
+			delayAfterLastEvent = Integer.parseInt(value) * 1000;
 		}
-		
+
 		this.jawrWorkingDirectory = getProperty(JAWR_WORKING_DIRECTORY);
 
 		this.gzipResourcesModeOn = getBooleanProperty(JAWR_GZIP_ON, true);
@@ -746,6 +764,27 @@ public class JawrConfig implements Serializable {
 	public void setJawrWorkingDirectory(final String dirPath) {
 		this.jawrWorkingDirectory = dirPath;
 	}
+	
+	/**
+	 * Returns the flag indicating if we should use "generator cache".
+	 * 
+	 * @return the flag indicating if we should use "generator cache".
+	 */
+	public boolean isUseGeneratorCache() {
+		return useGeneratorCache;
+	}
+	
+	/**
+	 * Sets the flag indicating if we should use "generator cache".
+	 * 
+	 * @param useGeneratorCache
+	 *            the flag to set
+	 */
+	public void setUseGeneratorCache(boolean useGeneratorCache) {
+		this.useGeneratorCache = useGeneratorCache;
+	}
+	
+	
 
 	/**
 	 * Returns the flag indicating if we should use "smart bundling".
@@ -765,15 +804,16 @@ public class JawrConfig implements Serializable {
 	public void setUseSmartBundling(boolean useSmartBundling) {
 		this.useSmartBundling = useSmartBundling;
 	}
-	
+
 	/**
 	 * Returns the delay after the last event before performing a build
+	 * 
 	 * @return the delay after the last event before performing a build
 	 */
 	public int getSmartBundlingDelayAfterLastEvent() {
 		return delayAfterLastEvent;
 	}
-	
+
 	/**
 	 * Returns the flag indicating if we should use the bundle mapping
 	 * properties file.

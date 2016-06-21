@@ -113,6 +113,7 @@ taglib. Full docs [here](../integration/validator.html).
 
 -   **Prefix**: jar
 
+
 It allows you to include resources present within jar files or simply
 located anywhere in the application classpath. You will need to use
 different prefixes if you are generating js or css files. To add
@@ -407,7 +408,7 @@ You can find an example of it's use in the basic webapplication sample.
 For more information about CSS skin, you can take a look to the
 following [documentation](../tutorials/howToUseJawrCssSkin.html).
 
-### [Implementing a generator]()
+# [Implementing a generator]()
 
 You will find below the class diagram for generators.
 
@@ -504,7 +505,7 @@ An image generator is an implementation of the
         context);
 
 
-### Mapping a generator
+# Mapping a generator
 
 Once you have your Generator implemented, you need to register into Jawr
 in order to use it. This is simply a matter of mapping its classname in
@@ -515,7 +516,7 @@ them separated by commas:
 
             jawr.custom.generators=com.mycompany.myapp.MyCustomGeneratorImplementation,com.mycompany.myapp.AnotherGenerator
 
-### A simple example: an alert message generator
+# A simple example: an alert message generator
 
 Here is a sample class which you can use to get started. It simply
 creates a script that displays an alert message with whichever text is
@@ -566,7 +567,7 @@ should get an alert box with the text 'Mapping contained:Hello World!'
 followed by a second alert box with the text 'Mapping contained:And
 Hello Again!'.
 
-### Security issues with generator
+# Security issues with generator
 
 If you develop your own generator, which reads content from resources on
 your server, you must take care of prevent users to access unauthorized
@@ -585,3 +586,29 @@ In this example, **myGen** is the prefix of the generator. So you must
 replace it by the prefix of your generator. If you are able to see the
 content of the web.xml file, this means that you need to change your
 generator to fix this issue.
+
+
+# Generators cache
+
+Since version 3.9, Jawr introduce a cache mechanism for the generated content.
+Like for "smart bundling" feature, Jawr is able for some generators to determine if the content change and only in that case, regenerate the resource content.
+
+It is possible to disable resource cache, using the property **jawr.use.generator.cache**
+
+	jawr.use.generator.cache=true
+	
+Here is the list of cache property for the built in generators :
+
+| **Generator name** | **use cache ** |
+|--------------------|----------------|
+| i18n messages script generator | true |
+| DWR scripts generator | false |
+| Commons Validator generator | false |
+| Classpath resource generator | true |
+| Webjars generator generator | true |
+| Less CSS generator | true |
+| SASS Ruby generator | true |
+| SASS Vaadin generator | true |
+| CoffeeScript generator | true |
+| Skin generator | false |
+| Skin switcher generator | false |

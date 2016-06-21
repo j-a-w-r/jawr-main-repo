@@ -111,17 +111,6 @@ public abstract class AbstractCachedGenerator
 	 */
 	public AbstractCachedGenerator() {
 
-		CachedGenerator annotation = getClass().getAnnotation(CachedGenerator.class);
-		if (annotation != null) {
-			useCache = true;
-			name = annotation.name();
-			cacheMappingFileName = annotation.mappingFileName();
-			cacheDirectory = annotation.cacheDirectory();
-			if (!cacheDirectory.endsWith(URL_SEPARATOR)) {
-				cacheDirectory = cacheDirectory + URL_SEPARATOR;
-			}
-			cacheMode = annotation.mode();
-		}
 	}
 
 	/**
@@ -174,16 +163,29 @@ public abstract class AbstractCachedGenerator
 	@Override
 	public void afterPropertiesSet() {
 
-		if (useCache) {
-			loadCacheMapping();
-
-			// reset cache if invalid
-			if (!isCacheValid()) {
-
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Cache of " + getName() + " generator is invalid. Reset cache...");
+		if(this.config.isUseGeneratorCache()){
+			
+			CachedGenerator annotation = getClass().getAnnotation(CachedGenerator.class);
+			if (annotation != null) {
+				useCache = true;
+				name = annotation.name();
+				cacheMappingFileName = annotation.mappingFileName();
+				cacheDirectory = annotation.cacheDirectory();
+				if (!cacheDirectory.endsWith(URL_SEPARATOR)) {
+					cacheDirectory = cacheDirectory + URL_SEPARATOR;
 				}
-				resetCache();
+				cacheMode = annotation.mode();
+			
+				loadCacheMapping();
+
+				// reset cache if invalid
+				if (!isCacheValid()) {
+
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("Cache of " + getName() + " generator is invalid. Reset cache...");
+					}
+					resetCache();
+				}
 			}
 		}
 	}
