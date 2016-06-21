@@ -94,6 +94,7 @@ public class SassRubyCssGeneratorTestCase {
 		when(config.getContext()).thenReturn(servletContext);
 		when(config.getResourceCharset()).thenReturn(Charset.forName("UTF-8"));
 		when(config.getServletMapping()).thenReturn("/css");
+		when(config.isUseGeneratorCache()).thenReturn(true);
 		when(config.getProperty(JawrConstant.SASS_GENERATOR_URL_MODE, SASS_GENERATOR_ABSOLUTE_URL_MODE))
 				.thenReturn(SASS_GENERATOR_DEFAULT_URL_MODE);
 		when(config.getBinaryHashAlgorithm()).thenReturn("MD5");
