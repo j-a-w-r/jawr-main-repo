@@ -45,7 +45,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
 import net.jawr.web.resource.bundle.mappings.PathMapping;
@@ -81,10 +83,10 @@ public class ResourceWatcher extends Thread {
 
 	/** The Jawr watch event processor */
 	private JawrWatchEventProcessor jawrEvtProcessor;
-	
+
 	/** The watch events */
 	private BlockingQueue<JawrWatchEvent> watchEvents = new LinkedBlockingQueue<JawrWatchEvent>();
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -101,14 +103,13 @@ public class ResourceWatcher extends Thread {
 
 		try {
 			this.watchService = FileSystems.getDefault().newWatchService();
-			//initPathToResourceBundleMap();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new BundlingProcessException(e);
 		}
 
 		jawrEvtProcessor = new JawrWatchEventProcessor(this, watchEvents);
 		jawrEvtProcessor.start();
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -118,19 +119,23 @@ public class ResourceWatcher extends Thread {
 	}
 
 	/**
-	 * @return the bundlesHandler
+	 * Returns the ResourceBundlesHandler
+	 * 
+	 * @return the ResourceBundlesHandler
 	 */
 	public ResourceBundlesHandler getBundlesHandler() {
 		return bundlesHandler;
 	}
 
 	/**
-	 * @return the pathToResourceBundle
+	 * Returns the map which links java.nio.file.Path to a list of PathMapping
+	 * 
+	 * @return the map which links java.nio.file.Path to a list of PathMapping
 	 */
 	public Map<Path, List<PathMapping>> getPathToResourceBundle() {
 		return pathToResourceBundle;
 	}
-	
+
 	/**
 	 * Sets the flag indicating if we must stop the resource watching
 	 */
@@ -180,9 +185,26 @@ public class ResourceWatcher extends Thread {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void register(PathMapping pathMapping) throws IOException {
-		String filePath = rsReader.getFilePath(pathMapping.getPath());
-		registerPathMapping(pathMapping, filePath);
+	private void register(PathMapping pathMapping) throws IOException {
+
+		GeneratorRegistry generatorRegistry = bundlesHandler.getConfig().getGeneratorRegistry();
+		List<PathMapping> mappings = new ArrayList<>();
+		if (generatorRegistry.isPathGenerated(pathMapping.getPath())) {
+			List<PathMapping> genPathMappings = generatorRegistry.getGeneratedPathMappings(pathMapping.getBundle(),
+					pathMapping.getPath(), rsReader);
+			if (genPathMappings != null) {
+				mappings.addAll(genPathMappings);
+			}else{
+				mappings.add(pathMapping);
+			}
+		}else{
+			mappings.add(pathMapping);
+		}
+		
+		for (PathMapping pMapping : mappings) {
+			String filePath = rsReader.getFilePath(pMapping.getPath());
+			registerPathMapping(pMapping, filePath);
+		}
 	}
 
 	/**
@@ -193,7 +215,7 @@ public class ResourceWatcher extends Thread {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void register(FilePathMapping pathMapping) throws IOException {
+	private void register(FilePathMapping pathMapping) throws IOException {
 		registerPathMapping(pathMapping, pathMapping.getPath());
 	}
 
@@ -207,7 +229,7 @@ public class ResourceWatcher extends Thread {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void registerPathMapping(PathMapping pathMapping, String filePath) throws IOException {
+	private void registerPathMapping(PathMapping pathMapping, String filePath) throws IOException {
 		if (filePath != null) {
 
 			Path p = Paths.get(filePath);
@@ -354,9 +376,10 @@ public class ResourceWatcher extends Thread {
 
 	/**
 	 * Returns true if there is no more event to process
+	 * 
 	 * @return true if there is no more event to process
 	 */
-	public boolean hasNoEventToProcess(){
+	public boolean hasNoEventToProcess() {
 		return jawrEvtProcessor.hasNoEventToProcess();
 	}
 }

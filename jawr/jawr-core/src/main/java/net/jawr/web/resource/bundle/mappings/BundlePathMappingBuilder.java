@@ -17,7 +17,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,8 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.sorting.SortFileParser;
+import net.jawr.web.resource.bundle.variant.VariantSet;
+import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 
 /**
@@ -115,6 +119,8 @@ public class BundlePathMappingBuilder {
 		BundlePathMapping bundlePathMapping = new BundlePathMapping(this.bundle);
 		bundlePathMapping.setPathMappings(strPathMappings);
 		List<PathMapping> pathMappings = bundlePathMapping.getPathMappings();
+		Map<String, VariantSet> variants = new TreeMap<>();
+		
 		if (pathMappings != null) {
 			for (Iterator<PathMapping> it = pathMappings.iterator(); it.hasNext();) {
 				PathMapping pathMapping = it.next();
@@ -134,16 +140,25 @@ public class BundlePathMappingBuilder {
 					addPathMapping(bundlePathMapping, pathMapping.getPath());
 				} else if (pathMapping.getPath().endsWith(LICENSES_FILENAME)) {
 					bundlePathMapping.getLicensesPathList().add(asPath(pathMapping.getPath(), isGeneratedPath));
-				} else
+				} else{
 					throw new BundlingProcessException("Wrong mapping [" + pathMapping + "] for bundle ["
 							+ this.bundle.getName() + "]. Please check configuration. ");
+				}
+				
+				if(isGeneratedPath){
+					// Add variants
+					variants = VariantUtils.concatVariants(variants,
+							generatorRegistry.getAvailableVariants(pathMapping.getPath()));
+				}
 			}
 		}
 
+		bundle.setVariants(variants);
+		
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Finished creating bundle path List for " + this.bundle.getId());
 		}
-
+		
 		return bundlePathMapping;
 	}
 

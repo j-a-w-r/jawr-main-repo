@@ -18,6 +18,7 @@ import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM
 import static net.jawr.web.JawrConstant.JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -27,19 +28,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.FileNameUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.AbstractJavascriptGenerator;
 import net.jawr.web.resource.bundle.generator.CachedGenerator;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
+import net.jawr.web.resource.bundle.generator.GeneratorMappingHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.generator.PathMappingProvider;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver;
 import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolverFactory;
 import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.locale.message.MessageBundleScriptCreator;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.bundle.variant.VariantSet;
+import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.FileUtils;
 import net.jawr.web.util.StringUtils;
 
@@ -53,8 +63,13 @@ import net.jawr.web.util.StringUtils;
  */
 @CachedGenerator(name = "ResourceBundle Message", cacheDirectory = "i18nMessages", mappingFileName = "resourceBundleMessageMapping.txt")
 public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
+		implements VariantResourceGenerator, PathMappingProvider {
 
-		implements VariantResourceGenerator {
+	/** The resource bundle separator in path mapping */
+	private static final String RESOURCE_BUNDLE_SEPARATOR = "\\|";
+
+	/** The package separator */
+	private static final char PACKAGE_SEPARATOR = '.';
 
 	/** The properties file suffix */
 	private static final String PROPERTIES_FILE_SUFFIX = ".properties";
@@ -85,6 +100,15 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		this.resolver = ResourceGeneratorResolverFactory.createPrefixResolver(GeneratorRegistry.MESSAGE_BUNDLE_PREFIX);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#beforeBundlingProcess()
+	 */
+	@Override
+	public void beforeBundlingProcess() {
+		super.beforeBundlingProcess();
+		cachedAvailableLocalePerResource.clear();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -164,16 +188,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 
 		List<FilePathMapping> fMappings = getFileMappings(path, context, locales);
 		addLinkedResources(path, context, fMappings);
-		/**
-		 * JoinableResourceBundle bundle = context.getBundle(); if (bundle !=
-		 * null) {
-		 * 
-		 * List<FilePathMapping> bundleFMappings = bundle.getFilePathMappings();
-		 * for (FilePathMapping fMapping : fMappings) { FilePathMapping fm = new
-		 * FilePathMapping(bundle, fMapping.getPath(),
-		 * fMapping.getLastModified()); if (!bundleFMappings.contains(fm)) {
-		 * bundleFMappings.add(fm); } } }
-		 **/
+
 	}
 
 	/**
@@ -195,11 +210,11 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		FilePathMapping fMapping = null;
 		String fileSuffix = PROPERTIES_FILE_SUFFIX;
 
-		String[] names = path.split("\\|");
+		String[] names = path.split(RESOURCE_BUNDLE_SEPARATOR);
 
 		for (String resourcePath : names) {
 
-			resourcePath = resourcePath.replace(".", "/");
+			resourcePath = resourcePath.replace('.', JawrConstant.URL_SEPARATOR_CHAR);
 			for (Locale locale : locales) {
 
 				String resourceBundlePath = control.toBundleName(resourcePath, locale) + fileSuffix;
@@ -273,7 +288,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 			debugPath = debugPath.replaceAll("@", "");
 		} else {
 			debugPath = debugPath.replaceAll("@", "_");
-			debugPath = debugPath.replaceAll("\\|", "_");
+			debugPath = debugPath.replaceAll(RESOURCE_BUNDLE_SEPARATOR, "_");
 		}
 		return debugPath + "." + JawrConstant.JS_TYPE;
 	}
@@ -286,13 +301,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 */
 	public List<String> getAvailableLocales(String resource) {
 
-		List<String> availableLocales = cachedAvailableLocalePerResource.get(resource);
-		if (availableLocales != null) {
-			return availableLocales;
-		}
-		availableLocales = findAvailableLocales(resource);
-		cachedAvailableLocalePerResource.put(resource, availableLocales);
-		return availableLocales;
+		return findAvailableLocales(resource);
 
 	}
 
@@ -304,8 +313,12 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 * @return the available locales for the resource
 	 */
 	protected List<String> findAvailableLocales(String resource) {
-		List<String> availableLocales;
-		availableLocales = LocaleUtils.getAvailableLocaleSuffixesForBundle(resource);
+		List<String> availableLocales = cachedAvailableLocalePerResource.get(resource);
+		if(availableLocales == null){
+			availableLocales = LocaleUtils.getAvailableLocaleSuffixesForBundle(resource);
+			cachedAvailableLocalePerResource.put(resource, availableLocales);
+		}
+		
 		return availableLocales;
 	}
 
@@ -328,4 +341,78 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		return variants;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.PathMappingProvider#getPathMapping
+	 * (net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler)
+	 */
+	@Override
+	public List<PathMapping> getPathMappings(JoinableResourceBundle bundle, String resourcePath,
+			ResourceReaderHandler rsReader) {
+
+		List<PathMapping> pathMappings = new ArrayList<>();
+		PathMapping pathMapping = null;
+		GeneratorMappingHelper helper = new GeneratorMappingHelper(resourcePath);
+		String path = resolver.getResourcePath(helper.getPath());
+		String[] names = path.split(RESOURCE_BUNDLE_SEPARATOR);
+
+		for (String resourceName : names) {
+
+			path = resourceName.replace(PACKAGE_SEPARATOR, JawrConstant.URL_SEPARATOR_CHAR);
+			path = control.toBundleName(path, new Locale("", "")) + PROPERTIES_FILE_SUFFIX;
+			URL rbURL = LocaleUtils.getResourceBundleURL(path, config.getContext());
+			if (rbURL != null) {
+				String strURL = rbURL.toString();
+				// returns the path mapping only if the MessageBundle are on a
+				// filesystem
+				if (strURL.startsWith(JawrConstant.FILE_URL_PREFIX)) {
+					String parentPath = "/WEB-INF/classes/" + PathNormalizer.getParentPath(path);
+					String resourceBundleName = FileNameUtils.getBaseName(path);
+					MessageBundleFileFilter filter = new MessageBundleFileFilter(resourceBundleName);
+					pathMapping = new PathMapping(bundle, parentPath, filter);
+					pathMappings.add(pathMapping);
+				}
+			}
+		}
+		return pathMappings;
+	}
+
+	/**
+	 * This class defines the file filter for message bundle
+	 * 
+	 * @author Ibrahim Chaehoi
+	 */
+	private class MessageBundleFileFilter implements FileFilter {
+
+		/** The pattern to match the resource */
+		private final Pattern pattern;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param prefix
+		 *            the file prefix
+		 */
+		public MessageBundleFileFilter(String prefix) {
+			String regex = "(.*)"+Pattern.quote(File.separator+prefix)
+					+ "(_[a-zA-Z]+){0,3}\\." + PROPERTIES_FILE_SUFFIX.substring(1);
+			this.pattern = Pattern.compile(regex);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.io.FileFilter#accept(java.io.File)
+		 */
+		@Override
+		public boolean accept(File f) {
+
+			Matcher matcher = pattern.matcher(f.getAbsolutePath());
+			return matcher.matches();
+		}
+
+	}
 }

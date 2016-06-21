@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
@@ -63,6 +64,7 @@ import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.generator.variant.css.CssSkinGenerator;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.bundle.variant.VariantResolver;
 import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.resource.handler.reader.ResourceReader;
@@ -745,5 +747,28 @@ public class GeneratorRegistry implements Serializable {
 	public List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
 
 		return bundlingProcesslifeCycleListeners;
+	}
+
+	/**
+	 * Returns the PathMapping for the generated resource
+	 * 
+	 * @param bundle
+	 *            the bundle
+	 * @param path
+	 *            the generated path
+	 * @param rsReader
+	 *            the resource reader handler
+	 * @return the PathMapping for the generated resource
+	 */
+	public List<PathMapping> getGeneratedPathMappings(JoinableResourceBundle bundle, String path,
+			ResourceReaderHandler rsReader) {
+
+		List<PathMapping> pathMappings = null;
+		ResourceGenerator resourceGenerator = getResourceGenerator(path);
+		if (resourceGenerator instanceof PathMappingProvider) {
+			pathMappings = ((PathMappingProvider) resourceGenerator).getPathMappings(bundle, path, rsReader);
+		}
+
+		return pathMappings;
 	}
 }

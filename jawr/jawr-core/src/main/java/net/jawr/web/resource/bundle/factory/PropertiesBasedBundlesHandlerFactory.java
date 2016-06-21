@@ -51,11 +51,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
@@ -65,8 +63,6 @@ import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.factory.util.ResourceBundleDefinition;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
-import net.jawr.web.resource.bundle.variant.VariantSet;
-import net.jawr.web.resource.bundle.variant.VariantUtils;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.StringUtils;
@@ -168,12 +164,12 @@ public class PropertiesBasedBundlesHandlerFactory {
 			StringTokenizer tk = new StringTokenizer(props.getProperty(BUNDLE_FACTORY_CUSTOM_NAMES),
 					JawrConstant.COMMA_SEPARATOR);
 			while (tk.hasMoreTokens()) {
-				customBundles.add(buildCustomBundleDefinition(tk.nextToken().trim(), false, generatorRegistry));
+				customBundles.add(buildCustomBundleDefinition(tk.nextToken().trim(), false));
 			}
 		} else {
 			Iterator<String> bundleNames = props.getPropertyBundleNameSet().iterator();
 			while (bundleNames.hasNext()) {
-				customBundles.add(buildCustomBundleDefinition((String) bundleNames.next(), false, generatorRegistry));
+				customBundles.add(buildCustomBundleDefinition((String) bundleNames.next(), false));
 			}
 		}
 
@@ -207,12 +203,9 @@ public class PropertiesBasedBundlesHandlerFactory {
 	 * 
 	 * @param bundleName
 	 *            the bundle name
-	 * @param generatorRegistry
-	 *            the generator registry
 	 * @return the bundleDefinition
 	 */
-	private ResourceBundleDefinition buildCustomBundleDefinition(String bundleName, boolean isChildBundle,
-			GeneratorRegistry generatorRegistry) {
+	private ResourceBundleDefinition buildCustomBundleDefinition(String bundleName, boolean isChildBundle) {
 
 		// Id for the bundle
 		String bundleId = props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_ID);
@@ -307,8 +300,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 			List<ResourceBundleDefinition> children = new ArrayList<>();
 			StringTokenizer tk = new StringTokenizer(childBundlesProperty, JawrConstant.COMMA_SEPARATOR);
 			while (tk.hasMoreTokens()) {
-				ResourceBundleDefinition childDef = buildCustomBundleDefinition(tk.nextToken().trim(), true,
-						generatorRegistry);
+				ResourceBundleDefinition childDef = buildCustomBundleDefinition(tk.nextToken().trim(), true);
 				childDef.setBundleId(bundleId);
 				if (StringUtils.isEmpty(childDef.getDebugURL())) {
 					children.add(childDef);
@@ -329,17 +321,13 @@ public class PropertiesBasedBundlesHandlerFactory {
 				} else {
 					// Add the mappings
 					List<String> mappings = new ArrayList<>();
-					Map<String, VariantSet> variants = new TreeMap<>();
+					
 					StringTokenizer tk = new StringTokenizer(mappingsProperty, JawrConstant.COMMA_SEPARATOR);
 					while (tk.hasMoreTokens()) {
 						String mapping = tk.nextToken().trim();
 						mappings.add(mapping);
-						// Add local variants
-						variants = VariantUtils.concatVariants(variants,
-								generatorRegistry.getAvailableVariants(mapping));
 					}
 					bundle.setMappings(mappings);
-					bundle.setVariants(variants);
 				}
 			}
 		}

@@ -832,9 +832,6 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 			stopProcessIfNeeded();
 
-			// Clears the linked resource mappings as they will be initialized
-			// by the processing
-			bundle.getLinkedFilePathMappings().clear();
 			if (stopWatch != null) {
 				stopWatch.start("Processing bundle '" + bundle.getName() + "'");
 			}

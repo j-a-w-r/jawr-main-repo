@@ -350,4 +350,13 @@ public class JawrConstant {
 	/** The property name which defines the delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
 	public static final String JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT = "jawr.smart.bundling.delay.after.last.event";
 
+	/** URL prefix for jar file */
+	public static final String JAR_URL_PREFIX = "jar:";
+
+	/** URL prefix for loading from the file system: "file:" */
+	public static final String FILE_URL_PREFIX = "file:";
+
+	/** Separator between JAR URL and file path within the JAR: "!/" */
+	public static final String JAR_URL_SEPARATOR = "!/";
+
 }

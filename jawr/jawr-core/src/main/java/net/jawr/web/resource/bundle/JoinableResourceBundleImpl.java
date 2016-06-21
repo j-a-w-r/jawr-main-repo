@@ -684,6 +684,8 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#resetBundleMapping()
 	 */
 	public void resetBundleMapping(){
-		bundlePathMapping = bundlePathMappingBuilder.build();
+		this.variants = null;
+		this.variantKeys = null;
+		this.bundlePathMapping = bundlePathMappingBuilder.build();
 	}
 }

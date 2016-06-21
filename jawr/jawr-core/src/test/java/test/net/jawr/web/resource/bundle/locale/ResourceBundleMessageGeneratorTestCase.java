@@ -1,6 +1,10 @@
 package test.net.jawr.web.resource.bundle.locale;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -22,10 +26,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.IOUtils;
@@ -33,6 +33,7 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorContext;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
 import net.jawr.web.resource.bundle.mappings.FilePathMapping;
+import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.util.js.JavascriptEngine;
 import test.net.jawr.web.FileUtils;
@@ -566,6 +567,125 @@ public class ResourceBundleMessageGeneratorTestCase {
 		for (Map.Entry<String, String> entries : expectedMsg.entrySet()) {
 			String msg = (String) engine.evaluate(entries.getKey() + "()");
 			assertEquals(entries.getValue(), msg);
+		}
+	}
+	
+	@Test
+	public void testGetPathMapping() throws Exception{
+		
+		Properties prop = new Properties();
+		JawrConfig config = new JawrConfig("js", prop);
+		generator.setConfig(config);
+		generator.afterPropertiesSet();
+		
+		List<PathMapping> pathMappings = generator.getPathMappings(bundle, "messages:bundleLocale.messages", rsReaderHandler);
+		assertEquals(1, pathMappings.size());
+		PathMapping pathMapping = pathMappings.get(0);
+		assertTrue(pathMapping.isDirectory());
+		assertEquals(bundle, pathMapping.getBundle());
+		assertTrue(pathMapping.hasFileFilter());
+		
+		String[] validPaths = {"messages_fr.properties","messages_en_US.properties"};
+		for (String path : validPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertTrue("Path '"+f.getAbsolutePath()+"' is invalid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		String[] invalidPaths = {"errors_fr.properties", "messages_fr.properties.backup","resultScript_es.js"};
+		for (String path : invalidPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertFalse("Path '"+f.getAbsolutePath()+"' is valid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+	}
+	
+	@Test
+	public void testGetPathMappingMultipleResourceBundle() throws Exception{
+		
+		Properties prop = new Properties();
+		JawrConfig config = new JawrConfig("js", prop);
+		generator.setConfig(config);
+		generator.afterPropertiesSet();
+		
+		List<PathMapping> pathMappings = generator.getPathMappings(bundle, "messages:bundleLocale.messages|bundleLocale.errors", rsReaderHandler);
+		assertEquals(2, pathMappings.size());
+		PathMapping pathMapping = pathMappings.get(0);
+		assertTrue(pathMapping.isDirectory());
+		assertEquals(bundle, pathMapping.getBundle());
+		assertTrue(pathMapping.hasFileFilter());
+		
+		String[] validPaths = {"messages_fr.properties","messages_en_US.properties"};
+		for (String path : validPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertTrue("Path '"+f.getAbsolutePath()+"' is invalid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		String[] invalidPaths = {"errors_fr.properties","messages_fr.properties.backup","resultScript_es.js"};
+		for (String path : invalidPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertFalse("Path '"+f.getAbsolutePath()+"' is valid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		pathMapping = pathMappings.get(1);
+		assertTrue(pathMapping.isDirectory());
+		assertEquals(bundle, pathMapping.getBundle());
+		assertTrue(pathMapping.hasFileFilter());
+		
+		validPaths = new String[]{"errors.properties","errors_fr.properties"};
+		for (String path : validPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertTrue("Path '"+f.getAbsolutePath()+"' is invalid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		invalidPaths = new String[]{"messages_fr.properties","messages_fr.properties.backup","resultScript_es.js"};
+		for (String path : invalidPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertFalse("Path '"+f.getAbsolutePath()+"' is valid",pathMapping.accept(f.getAbsolutePath()));
+		}
+	}
+	
+	@Test
+	public void testGetPathMappingMultipleResourceBundleWithNameSpaceAndFilter() throws Exception{
+		
+		Properties prop = new Properties();
+		JawrConfig config = new JawrConfig("js", prop);
+		generator.setConfig(config);
+		generator.afterPropertiesSet();
+		
+		List<PathMapping> pathMappings = generator.getPathMappings(bundle, "messages:bundleLocale.messages|bundleLocale.errors(myNamespace)[javascript.messages]", rsReaderHandler);
+		assertEquals(2, pathMappings.size());
+		PathMapping pathMapping = pathMappings.get(0);
+		assertTrue(pathMapping.isDirectory());
+		assertEquals(bundle, pathMapping.getBundle());
+		assertTrue(pathMapping.hasFileFilter());
+		
+		String[] validPaths = {"messages_fr.properties","messages_en_US.properties"};
+		for (String path : validPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertTrue("Path '"+f.getAbsolutePath()+"' is invalid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		String[] invalidPaths = {"errors_fr.properties","messages_fr.properties.backup","resultScript_es.js"};
+		for (String path : invalidPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertFalse("Path '"+f.getAbsolutePath()+"' is valid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		pathMapping = pathMappings.get(1);
+		assertTrue(pathMapping.isDirectory());
+		assertEquals(bundle, pathMapping.getBundle());
+		assertTrue(pathMapping.hasFileFilter());
+		
+		validPaths = new String[]{"errors.properties","errors_fr.properties"};
+		for (String path : validPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertTrue("Path '"+f.getAbsolutePath()+"' is invalid",pathMapping.accept(f.getAbsolutePath()));
+		}
+		
+		invalidPaths = new String[]{"messages_fr.properties","messages_fr.properties.backup","resultScript_es.js"};
+		for (String path : invalidPaths) {
+			File f = FileUtils.getClassPathFile("bundleLocale/"+path);
+			assertFalse("Path '"+f.getAbsolutePath()+"' is valid",pathMapping.accept(f.getAbsolutePath()));
 		}
 	}
 }

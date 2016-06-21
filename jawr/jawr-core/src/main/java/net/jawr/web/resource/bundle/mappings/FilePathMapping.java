@@ -39,7 +39,7 @@ public class FilePathMapping extends PathMapping {
 	 */
 	public FilePathMapping(JoinableResourceBundle bundle, String filePath, long lastModified) {
 		super(bundle, filePath);
-
+		
 		this.lastModified = lastModified;
 	}
 

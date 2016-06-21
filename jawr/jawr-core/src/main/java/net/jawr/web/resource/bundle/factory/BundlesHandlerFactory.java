@@ -532,8 +532,8 @@ public class BundlesHandlerFactory {
 		if (null != definition.getAlternateProductionURL())
 			composite.setAlternateProductionURL(definition.getAlternateProductionURL());
 
-		if (null != definition.getVariants())
-			composite.setVariants(definition.getVariants());
+//		if (null != definition.getVariants())
+//			composite.setVariants(definition.getVariants());
 
 		if (null != definition.getDependencies() && !definition.getDependencies().isEmpty())
 			bundleDefinitionsWithDependencies.add(definition);
@@ -581,8 +581,8 @@ public class BundlesHandlerFactory {
 		if (null != definition.getIeConditionalExpression())
 			newBundle.setExplorerConditionalExpression(definition.getIeConditionalExpression());
 
-		if (null != definition.getVariants())
-			newBundle.setVariants(definition.getVariants());
+//		if (null != definition.getVariants())
+//			newBundle.setVariants(definition.getVariants());
 
 		if (null != definition.getAlternateProductionURL())
 			newBundle.setAlternateProductionURL(definition.getAlternateProductionURL());

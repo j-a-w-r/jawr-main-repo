@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.After;
@@ -41,7 +42,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import net.jawr.web.JawrConstant;
+import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.mappings.PathMapping;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -84,9 +87,15 @@ public class ResourceWatcherTestCase {
 		String travisFlag = System.getenv("TRAVIS");
 		Assume.assumeTrue(StringUtils.isEmpty(travisFlag));
 		
+		JawrConfig config = new JawrConfig(JawrConstant.JS_TYPE, new Properties());
+		GeneratorRegistry registry = new GeneratorRegistry(JawrConstant.JS_TYPE);
+		registry.setConfig(config);
+		config.setGeneratorRegistry(registry);
+		
 		when(b.getId()).thenReturn("/js/bundle1.js");
 		when(b.getName()).thenReturn("bundle1");
 
+		when(bundlesHandler.getConfig()).thenReturn(config);
 		when(bundlesHandler.getGlobalBundles()).thenReturn(new ArrayList<JoinableResourceBundle>());
 		when(bundlesHandler.getContextBundles()).thenReturn(Arrays.asList(b));
 		when(bundlesHandler.getResourceType()).thenReturn(JawrConstant.JS_TYPE);

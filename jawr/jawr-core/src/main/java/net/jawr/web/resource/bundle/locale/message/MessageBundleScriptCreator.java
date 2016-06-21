@@ -201,8 +201,6 @@ public class MessageBundleScriptCreator {
 		Locale currentLocale = locale;
 
 		if (currentLocale == null) {
-			// TODO check if this is still relevant (See
-			// JawrMessageBundleControl)
 			currentLocale = control.getFallbackLocale();
 		}
 		return currentLocale;

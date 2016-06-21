@@ -132,17 +132,19 @@ public class JawrWatchEventProcessor extends Thread {
 			List<PathMapping> recursivePathMappings = new ArrayList<>();
 			for (PathMapping mapping : mappings) {
 
+				String filePath = resolvedPath.toFile().getAbsolutePath();
 				if (mapping.isAsset()) {
-					String fileName = FileNameUtils.getName(resolvedPath.toFile().getAbsolutePath());
-					if (fileName.equals(FileNameUtils.getName(mapping.getPath()))) {
+					String fileName = FileNameUtils.getName(filePath);
+					if (fileName.equals(FileNameUtils.getName(mapping.getPath()))){
 						bundles.add(mapping.getBundle());
 					}
 				} else {
 					if (isDir) {
-						if (mapping.isRecursive()) {
+						if (mapping.isRecursive() && 
+								(!mapping.hasFileFilter() || mapping.accept(filePath))) {
 							bundles.add(mapping.getBundle());
 						}
-					} else {
+					} else if(!mapping.hasFileFilter() || mapping.accept(filePath)){
 						bundles.add(mapping.getBundle());
 					}
 					if (mapping.isRecursive()) {

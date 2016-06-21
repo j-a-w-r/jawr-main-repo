@@ -106,7 +106,6 @@ public class SmartSpritesResourceHandler implements ResourceHandler {
 			throws IOException {
 
 		try {
-			// TODO Bundle should be updated during this process
 			return rsHandler.getResource(null, resourceName, true);
 		} catch (ResourceNotFoundException e) {
 			throw new IOException("The resource '"+resourceName+"' was not found.");

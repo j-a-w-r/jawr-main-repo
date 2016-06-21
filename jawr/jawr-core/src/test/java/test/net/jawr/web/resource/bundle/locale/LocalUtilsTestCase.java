@@ -20,8 +20,9 @@ public class LocalUtilsTestCase extends TestCase {
 	public void testGetLocaleAvailablePrefixes(){
 		
 		List<String> result = LocaleUtils.getAvailableLocaleSuffixesForBundle("bundleLocale.messages");
-		Assert.assertEquals(3, result.size());
+		Assert.assertEquals(4, result.size());
 		Assert.assertTrue(result.contains(""));
+		Assert.assertTrue(result.contains("en_US"));
 		Assert.assertTrue(result.contains("es"));
 		Assert.assertTrue(result.contains("fr"));
 	}
@@ -29,8 +30,9 @@ public class LocalUtilsTestCase extends TestCase {
 	public void testGetLocaleAvailablePrefixesWithNamespace(){
 		
 		List<String> result = LocaleUtils.getAvailableLocaleSuffixesForBundle("bundleLocale.messages(mynamespace)");
-		Assert.assertEquals(3, result.size());
+		Assert.assertEquals(4, result.size());
 		Assert.assertTrue(result.contains(""));
+		Assert.assertTrue(result.contains("en_US"));
 		Assert.assertTrue(result.contains("es"));
 		Assert.assertTrue(result.contains("fr"));
 	}
@@ -38,8 +40,9 @@ public class LocalUtilsTestCase extends TestCase {
 	public void testGetLocaleAvailablePrefixesWithFilter(){
 		
 		List<String> result = LocaleUtils.getAvailableLocaleSuffixesForBundle("bundleLocale.messages[ui.msg]");
-		Assert.assertEquals(3, result.size());
+		Assert.assertEquals(4, result.size());
 		Assert.assertTrue(result.contains(""));
+		Assert.assertTrue(result.contains("en_US"));
 		Assert.assertTrue(result.contains("es"));
 		Assert.assertTrue(result.contains("fr"));
 	}
@@ -47,8 +50,9 @@ public class LocalUtilsTestCase extends TestCase {
 	public void testGetLocaleAvailablePrefixesWithFilterAndNamespace(){
 		
 		List<String> result = LocaleUtils.getAvailableLocaleSuffixesForBundle("bundleLocale.messages(mynamespace)[ui.msg]");
-		Assert.assertEquals(3, result.size());
+		Assert.assertEquals(4, result.size());
 		Assert.assertTrue(result.contains(""));
+		Assert.assertTrue(result.contains("en_US"));
 		Assert.assertTrue(result.contains("es"));
 		Assert.assertTrue(result.contains("fr"));
 	}
@@ -56,8 +60,9 @@ public class LocalUtilsTestCase extends TestCase {
 	public void testGetLocaleAvailablePrefixesWithMultipleBundle(){
 		
 		List<String> result = LocaleUtils.getAvailableLocaleSuffixesForBundle("bundleLocale.messages|bundleLocale.errorsMsg");
-		Assert.assertEquals(4, result.size());
+		Assert.assertEquals(5, result.size());
 		Assert.assertTrue(result.contains(""));
+		Assert.assertTrue(result.contains("en_US"));
 		Assert.assertTrue(result.contains("es"));
 		Assert.assertTrue(result.contains("fr"));
 		Assert.assertTrue(result.contains("it"));

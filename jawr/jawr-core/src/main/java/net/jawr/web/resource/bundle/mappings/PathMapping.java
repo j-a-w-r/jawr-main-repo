@@ -13,6 +13,9 @@
  */
 package net.jawr.web.resource.bundle.mappings;
 
+import java.io.File;
+import java.io.FileFilter;
+
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 
 /**
@@ -22,7 +25,6 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
  */
 public class PathMapping {
 
-	
 	/** The directory path mapping suffix */
 	private static final String DIR_PATH_SUFFIX = "/";
 
@@ -31,33 +33,57 @@ public class PathMapping {
 
 	/** The path mapping */
 	protected final String mapping;
-	
+
 	/** The kind of path mapping */
 	protected final PathMappingKind kind;
-	
+
 	/** The bundle */
 	protected final JoinableResourceBundle bundle;
-	
+
+	/** the file filter */
+	protected final FileFilter fileFilter;
+
 	/**
 	 * Constructor
-	 * @param mapping the mapping
+	 * 
+	 * @param bundle
+	 *            the bundle
+	 * @param mapping
+	 *            the mapping
 	 */
 	public PathMapping(JoinableResourceBundle bundle, String mapping) {
+		this(bundle, mapping, null);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param bundle
+	 *            the bundle
+	 * @param mapping
+	 *            the mapping
+	 * @param filter
+	 *            the file filter
+	 */
+	public PathMapping(JoinableResourceBundle bundle, String mapping, FileFilter filter) {
 		this.bundle = bundle;
-		if(mapping.endsWith(DIR_PATH_SUFFIX)){
+		this.fileFilter = filter;
+		if (mapping.endsWith(DIR_PATH_SUFFIX)) {
 			this.mapping = mapping;
 			this.kind = PathMappingKind.DIRECTORY;
-		}else if(mapping.endsWith(RECURSIVE_PATH_SUFFIX)){
-			this.mapping = mapping.substring(0, mapping.length()-RECURSIVE_PATH_SUFFIX.length()+1);
+		} else if (mapping.endsWith(RECURSIVE_PATH_SUFFIX)) {
+			this.mapping = mapping.substring(0, mapping.length() - RECURSIVE_PATH_SUFFIX.length() + 1);
 			kind = PathMappingKind.RECURSIVE_DIRECTORY;
-		}else{
+
+		} else { // ASSET
 			this.mapping = mapping;
 			kind = PathMappingKind.ASSET;
 		}
 	}
-	
+
 	/**
 	 * Returns the bundle
+	 * 
 	 * @return the bundle
 	 */
 	public JoinableResourceBundle getBundle() {
@@ -66,46 +92,78 @@ public class PathMapping {
 
 	/**
 	 * Returns the path
+	 * 
 	 * @return the path
 	 */
 	public String getPath() {
 		return mapping;
 	}
+
+	/**
+	 * Returns true if the mapping has a FileFilter
+	 * 
+	 * @return true if the mapping has a FileFilter
+	 */
+	public boolean hasFileFilter(){
+		return fileFilter != null;
+	}
 	
 	/**
+	 * Returns true if the file path passed in parameter is accepted by this mapping.
+	 * This method throws an {@link UnsupportedOperationException} if the mapping has no filter.
+	 * 
+	 * @return the file filter
+	 */
+	public boolean accept(String path) {
+
+		if(fileFilter == null){
+			throw new UnsupportedOperationException("This method can't be called on a PahMapping which doesn't have a fileFilter");
+		}
+		
+		File f = new File(path);
+		return fileFilter.accept(f);
+	}
+
+	/**
 	 * Returns true if the mapping is a directory mapping
+	 * 
 	 * @return true if the mapping is a directory mapping
 	 */
-	public boolean isAsset(){
+	public boolean isAsset() {
 		return kind == PathMappingKind.ASSET;
 	}
-	
+
 	/**
 	 * Returns true if the mapping is a directory mapping
+	 * 
 	 * @return true if the mapping is a directory mapping
 	 */
-	public boolean isDirectory(){
+	public boolean isDirectory() {
 		return kind == PathMappingKind.DIRECTORY;
 	}
-	
+
 	/**
 	 * Returns true if the mapping is a recursive directory mapping
+	 * 
 	 * @return true if the mapping is a recursive directory mapping
 	 */
-	public boolean isRecursive(){
+	public boolean isRecursive() {
 		return kind == PathMappingKind.RECURSIVE_DIRECTORY;
 	}
 
 	/**
 	 * The enumeration of the different kind of path mapping
+	 * 
 	 * @author Ibrahim Chaehoi
 	 */
-	private enum PathMappingKind{
-		
+	protected enum PathMappingKind {
+
 		ASSET, DIRECTORY, RECURSIVE_DIRECTORY
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -117,7 +175,9 @@ public class PathMapping {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

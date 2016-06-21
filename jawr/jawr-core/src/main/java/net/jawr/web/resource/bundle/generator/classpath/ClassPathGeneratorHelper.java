@@ -14,6 +14,9 @@
 package net.jawr.web.resource.bundle.generator.classpath;
 
 import static net.jawr.web.JawrConstant.URL_SEPARATOR;
+import static net.jawr.web.JawrConstant.JAR_URL_PREFIX;
+import static net.jawr.web.JawrConstant.JAR_URL_SEPARATOR;
+import static net.jawr.web.JawrConstant.FILE_URL_PREFIX;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,6 +40,7 @@ import java.util.jar.JarFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.jawr.web.JawrConstant;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
@@ -54,20 +58,9 @@ import net.jawr.web.util.FileUtils;
  */
 public class ClassPathGeneratorHelper implements ResourceBrowser {
 
-	/**
-	 * 
-	 */
-	private static final String JAR_URL_PREFIX = "jar:";
-
 	/** The logger */
 	private static Logger LOGGER = LoggerFactory.getLogger(ClassPathGeneratorHelper.class); 
 	
-	/** URL prefix for loading from the file system: "file:" */
-	public static final String FILE_URL_PREFIX = "file:";
-
-	/** Separator between JAR URL and file path within the JAR: "!/" */
-	public static final String JAR_URL_SEPARATOR = "!/";
-
 	/** The prefix to preppend before searching resource in classpath */
 	private final String classpathPrefix;
 
@@ -178,7 +171,7 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 		URLConnection con = null;
 
 		try {
-			if(resourceURL.toString().startsWith(JAR_URL_PREFIX)){
+			if(resourceURL.toString().startsWith(JawrConstant.JAR_URL_PREFIX)){
 				con = resourceURL.openConnection();
 			}
 		} catch (IOException e) {
@@ -313,10 +306,10 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 		try {
 			url = ClassLoaderResourceUtils.getResourceURL(path, this);
 			String strURL = url.toString();
-			if(strURL.startsWith(FILE_URL_PREFIX)){
+			if(strURL.startsWith(JawrConstant.FILE_URL_PREFIX)){
 				filePath = new File(url.getFile()).getAbsolutePath();
-			}else if(strURL.startsWith(JAR_URL_PREFIX+FILE_URL_PREFIX)){
-				String tmp = strURL.substring((JAR_URL_PREFIX+FILE_URL_PREFIX).length());
+			}else if(strURL.startsWith(JawrConstant.JAR_URL_PREFIX+JawrConstant.FILE_URL_PREFIX)){
+				String tmp = strURL.substring((JawrConstant.JAR_URL_PREFIX+JawrConstant.FILE_URL_PREFIX).length());
 				int idxJarContentSeparator = tmp.indexOf("!");
 				if(idxJarContentSeparator != -1){
 					tmp = tmp.substring(0, idxJarContentSeparator);
@@ -334,13 +327,13 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 	 * Resolve the given jar file URL into a JarFile object.
 	 */
 	protected JarFile getJarFile(String jarFileUrl) throws IOException {
-		if (jarFileUrl.startsWith(FILE_URL_PREFIX)) {
+		if (jarFileUrl.startsWith(JawrConstant.FILE_URL_PREFIX)) {
 			try {
 				return new JarFile(toURI(jarFileUrl).getSchemeSpecificPart());
 			} catch (URISyntaxException ex) {
 				// Fallback for URLs that are not valid URIs (should hardly ever
 				// happen).
-				return new JarFile(jarFileUrl.substring(FILE_URL_PREFIX.length()));
+				return new JarFile(jarFileUrl.substring(JawrConstant.FILE_URL_PREFIX.length()));
 			}
 		} else {
 			return new JarFile(jarFileUrl);
