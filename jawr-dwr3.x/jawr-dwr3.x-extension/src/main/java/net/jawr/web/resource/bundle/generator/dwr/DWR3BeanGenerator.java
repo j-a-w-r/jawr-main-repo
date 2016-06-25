@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,9 @@ package net.jawr.web.resource.bundle.generator.dwr;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -233,7 +235,7 @@ public class DWR3BeanGenerator extends AbstractJavascriptGenerator implements
 				DefaultCreatorManager creatorManager = (DefaultCreatorManager) ctManager;
 				boolean currentDebugValue = creatorManager.isDebug();
 				creatorManager.setDebug(true); // DWR will throw a
-												// ScurityException if not in
+												// SecurityException if not in
 												// debug mode ...
 				creators = ctManager.getCreatorNames(false);
 				creatorManager.setDebug(currentDebugValue);
@@ -241,7 +243,9 @@ public class DWR3BeanGenerator extends AbstractJavascriptGenerator implements
 				log.warn("Getting creator names from an unknown CreatorManager. This may fail ...");
 				creators = ctManager.getCreatorNames(false);
 			}
-			for (String name : creators) {
+			List<String> creatorList = new ArrayList<>(creators);
+			Collections.sort(creatorList);
+			for (String name : creatorList) {
 				if (log.isDebugEnabled())
 					log.debug("_** mapping: generating found interface named: "
 							+ name);
