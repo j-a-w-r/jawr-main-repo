@@ -53,6 +53,7 @@ public class LessCssGeneratorTestCase {
 	private static String WORK_DIR = "workDirLess";
 
 	private JawrConfig config;
+	private JawrConfig binaryServletJawrConfig;
 	private GeneratorContext ctx;
 	private LessCssGenerator generator;
 
@@ -101,7 +102,7 @@ public class LessCssGeneratorTestCase {
 		ctx.setResourceReaderHandler(rsReaderHandler);
 
 		// Set up the Image servlet Jawr config
-		JawrConfig binaryServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
+		binaryServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
 		binaryServletJawrConfig.setGeneratorRegistry(generatorRegistry);
 		when(binaryRsReaderHandler.getResourceAsStream(anyString()))
 				.thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
@@ -179,6 +180,39 @@ public class LessCssGeneratorTestCase {
 		writer = new StringWriter();
 		IOUtils.copy(rd, writer);
 		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_debug.css"),
+				writer.getBuffer().toString());
+
+	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testLessCssBundleGeneratorInDebugModeWithBinaryMapping() throws Exception {
+
+		binaryServletJawrConfig.setServletMapping("/jawr/binary/");
+		String tempLessContent = FileUtils.readClassPathFile("generator/css/less/temp.less");
+		when(rsReaderHandler.getResource(Matchers.any(JoinableResourceBundle.class), Matchers.eq("/temp.less"),
+				Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		when(rsReaderHandler.getResourceAsStream(anyString()))
+				.thenReturn(new ByteArrayInputStream("fakeData".getBytes()));
+
+		ctx.setProcessingBundle(false);
+		Reader rd = generator.createResource(ctx);
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(rd, writer);
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_debug_with_binary_mapping.css"),
+				writer.getBuffer().toString());
+
+		assertEquals(0, filePathMappings.size());
+
+		// Checks retrieve from cache
+		when(rsReaderHandler.getResource(Matchers.any(JoinableResourceBundle.class), Matchers.eq("/temp.less"),
+				Matchers.anyBoolean(), (List<Class<?>>) Matchers.any())).thenReturn(new StringReader(tempLessContent));
+		
+		ctx.setProcessingBundle(false);
+		rd = generator.createResource(ctx);
+		writer = new StringWriter();
+		IOUtils.copy(rd, writer);
+		Assert.assertEquals(FileUtils.readClassPathFile("generator/css/less/expected_debug_with_binary_mapping.css"),
 				writer.getBuffer().toString());
 
 	}

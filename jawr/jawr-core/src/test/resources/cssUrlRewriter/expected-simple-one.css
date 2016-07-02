@@ -1,0 +1,31 @@
+.intro{
+	
+	padding-top : 20px;
+	padding-bottom : 20px;
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 25px;
+	background-image: url("../../img/calendarIcons/calendar.png");
+}
+
+.base64Clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("/net/jawr/img/clock.png"); 
+	 
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("http://mysite/jawr/img/clock.png");
+}
+
+.ui-dialog .ui-dialog-buttonpane { 
+    text-align: center;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { 
+    float: none;
+}

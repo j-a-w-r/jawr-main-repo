@@ -26,6 +26,7 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.CheckSumUtils;
+import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.css.CssImageUrlRewriter;
 import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -42,11 +43,13 @@ import net.jawr.web.util.StringUtils;
 public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 
 	/** Logger */
-	private static Logger LOGGER = LoggerFactory
-			.getLogger(PostProcessorCssImageUrlRewriter.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PostProcessorCssImageUrlRewriter.class);
 
-	/** The bundle processing status */
-	protected BundleProcessingStatus status;
+	/** The binary mapping */
+	private Map<String, String> binaryMapping;
+
+	/** The resource bundle */
+	private JoinableResourceBundle bundle;
 
 	/**
 	 * Constructor
@@ -54,30 +57,64 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 	 * @param status
 	 *            the bundle processing status
 	 */
+	@SuppressWarnings("unchecked")
 	public PostProcessorCssImageUrlRewriter(BundleProcessingStatus status) {
-		super(status.getJawrConfig());
-		this.status = status;
+		this(status.getJawrConfig(), status.getCurrentBundle(),
+				(Map<String, String>) status.getData(JawrConstant.POST_PROCESSING_CTX_JAWR_BINARY_MAPPING));
+
+		if (status.getData(JawrConstant.POST_PROCESSING_CTX_JAWR_BINARY_MAPPING) == null) {
+			status.putData(JawrConstant.POST_PROCESSING_CTX_JAWR_BINARY_MAPPING, binaryMapping);
+		}
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param config
+	 *            the Jawr config
+	 * @param bundle
+	 *            the resource bundle
+	 */
+	public PostProcessorCssImageUrlRewriter(JawrConfig config, JoinableResourceBundle bundle) {
+		this(config, bundle, new HashMap<String, String>());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param config
+	 *            the Jawr config
+	 * @param bundle
+	 *            the resource bundle
+	 * @param binaryMappping
+	 *            the binary mapping
+	 */
+	public PostProcessorCssImageUrlRewriter(JawrConfig config, JoinableResourceBundle bundle,
+			Map<String, String> binaryMappping) {
+		super(config);
+		this.bundle = bundle;
+		this.binaryMapping = binaryMappping;
+		// Set the result in a cache, so we will not search for it the next time
+		if (binaryMapping == null) {
+			binaryMapping = new HashMap<String, String>();
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.css.CssImageUrlRewriter#getRewrittenImagePath
-	 * (java.lang.String, java.lang.String, java.lang.String)
+	 * @see net.jawr.web.resource.bundle.css.CssImageUrlRewriter#
+	 * getRewrittenImagePath (java.lang.String, java.lang.String,
+	 * java.lang.String)
 	 */
-	protected String getRewrittenImagePath(String originalCssPath,
-			String newCssPath, String url) throws IOException {
+	protected String getRewrittenImagePath(String originalCssPath, String newCssPath, String url) throws IOException {
 
-		JawrConfig jawrConfig = status.getJawrConfig();
-
-		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig
-				.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) config.getContext()
+				.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 		String binaryServletPath = "";
 
 		if (binaryRsHandler != null) {
-			binaryServletPath = PathNormalizer.asPath(binaryRsHandler.getConfig()
-					.getServletMapping());
+			binaryServletPath = PathNormalizer.asPath(binaryRsHandler.getConfig().getServletMapping());
 		}
 
 		String imgUrl = null;
@@ -86,13 +123,11 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 		String currentCss = originalCssPath;
 		boolean generatedImg = false;
 		if (binaryRsHandler != null) {
-			GeneratorRegistry imgRsGeneratorRegistry = binaryRsHandler.getConfig()
-					.getGeneratorRegistry();
+			GeneratorRegistry imgRsGeneratorRegistry = binaryRsHandler.getConfig().getGeneratorRegistry();
 			generatedImg = imgRsGeneratorRegistry.isGeneratedBinaryResource(url);
 		}
 
-		boolean cssGeneratorIsHandleCssImage = isCssGeneratorHandlingCssImage(
-				currentCss, status);
+		boolean cssGeneratorIsHandleCssImage = isCssGeneratorHandlingCssImage(currentCss);
 
 		String rootPath = currentCss;
 
@@ -109,28 +144,22 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 			}
 
 			// generate image cache URL
-			imgUrl = rewriteURL(status, tempUrl, binaryServletPath, newCssPath,
-					binaryRsHandler);
+			imgUrl = rewriteURL(tempUrl, binaryServletPath, newCssPath, binaryRsHandler);
 		} else {
 
-			if (jawrConfig.getGeneratorRegistry().isPathGenerated(rootPath)) {
-				rootPath = rootPath.substring(rootPath
-						.indexOf(GeneratorRegistry.PREFIX_SEPARATOR) + 1);
+			if (config.getGeneratorRegistry().isPathGenerated(rootPath)) {
+				rootPath = rootPath.substring(rootPath.indexOf(GeneratorRegistry.PREFIX_SEPARATOR) + 1);
 			}
 
 			// Generate the image URL from the current CSS path
 			imgUrl = PathNormalizer.concatWebPath(rootPath, url);
-			imgUrl = rewriteURL(status, imgUrl, binaryServletPath, newCssPath,
-					binaryRsHandler);
+			imgUrl = rewriteURL(imgUrl, binaryServletPath, newCssPath, binaryRsHandler);
 		}
 
 		// This following condition should never be true.
 		// If it does, it means that the image path is wrongly defined.
 		if (imgUrl == null) {
-			LOGGER.error("The CSS image path for '"
-					+ url
-					+ "' defined in '"
-					+ currentCss
+			LOGGER.error("The CSS image path for '" + url + "' defined in '" + currentCss
 					+ "' is out of the application context. Please check your CSS file.");
 		}
 
@@ -143,22 +172,16 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 	 * 
 	 * @param currentCss
 	 *            the CSS resource path
-	 * @param status
-	 *            the status
 	 * @return true if the Css generator associated to the Css resource path
 	 *         handle also the Css image resources.
 	 */
-	private boolean isCssGeneratorHandlingCssImage(String currentCss,
-			BundleProcessingStatus status) {
-		return status.getJawrConfig().getGeneratorRegistry()
-				.isHandlingCssImage(currentCss);
+	private boolean isCssGeneratorHandlingCssImage(String currentCss) {
+		return config.getGeneratorRegistry().isHandlingCssImage(currentCss);
 	}
 
 	/**
 	 * Rewrites the image URL
 	 * 
-	 * @param status
-	 *            the bundle processing status
 	 * @param url
 	 *            the image URL
 	 * @param binaryServletPath
@@ -171,13 +194,12 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected String rewriteURL(BundleProcessingStatus status, String url,
-			String binaryServletPath, String newCssPath,
+	protected String rewriteURL(String url, String binaryServletPath, String newCssPath,
 			BinaryResourcesHandler binaryRsHandler) throws IOException {
 
 		String imgUrl = url;
 		if (isBinaryResource(imgUrl)) {
-			imgUrl = addCacheBuster(status, url, binaryRsHandler);
+			imgUrl = addCacheBuster(url, binaryRsHandler);
 			// Add image servlet path in the URL, if it's defined
 			if (StringUtils.isNotEmpty(binaryServletPath)) {
 				imgUrl = binaryServletPath + JawrConstant.URL_SEPARATOR + imgUrl;
@@ -185,8 +207,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 		}
 
 		imgUrl = PathNormalizer.asPath(imgUrl);
-		return PathNormalizer.getRelativeWebPath(
-				PathNormalizer.getParentPath(newCssPath), imgUrl);
+		return PathNormalizer.getRelativeWebPath(PathNormalizer.getParentPath(newCssPath), imgUrl);
 	}
 
 	/**
@@ -201,15 +222,12 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 		if (extension != null) {
 			extension = extension.toLowerCase();
 		}
-		return MIMETypesSupport.getSupportedProperties(this).containsKey(
-				extension);
+		return MIMETypesSupport.getSupportedProperties(this).containsKey(extension);
 	}
 
 	/**
 	 * Adds the cache buster to the CSS image
 	 * 
-	 * @param status
-	 *            the bundle processing status
 	 * @param url
 	 *            the URL of the image
 	 * @param binaryRsHandler
@@ -218,25 +236,21 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	@SuppressWarnings("unchecked")
-	private String addCacheBuster(BundleProcessingStatus status, String url,
-			BinaryResourcesHandler binaryRsHandler) throws IOException {
+	private String addCacheBuster(String url, BinaryResourcesHandler binaryRsHandler) throws IOException {
 
-		if(binaryRsHandler != null){
-			FilePathMappingUtils.buildFilePathMapping(status.getCurrentBundle(), url, binaryRsHandler.getRsReaderHandler());
+		if (binaryRsHandler != null) {
+			FilePathMappingUtils.buildFilePathMapping(bundle, url, binaryRsHandler.getRsReaderHandler());
 		}
-		
+
 		// Try to retrieve the cache busted URL from the bundle processing cache
-		Map<String, String> imageMapping = (Map<String, String>) status
-				.getData(JawrConstant.POST_PROCESSING_CTX_JAWR_BINARY_MAPPING);
 		String newUrl = null;
-		if (imageMapping != null) {
-			newUrl = imageMapping.get(url);
+		if (binaryMapping != null) {
+			newUrl = binaryMapping.get(url);
 			if (newUrl != null) {
 				return newUrl;
 			}
 		}
-		
+
 		// Try to retrieve the from the image resource handler cache
 		if (binaryRsHandler != null) {
 			newUrl = binaryRsHandler.getCacheUrl(url);
@@ -245,16 +259,13 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 			}
 			// Retrieve the new URL with the cache prefix
 			try {
-				newUrl = CheckSumUtils.getCacheBustedUrl(url,
-						binaryRsHandler.getRsReaderHandler(),
+				newUrl = CheckSumUtils.getCacheBustedUrl(url, binaryRsHandler.getRsReaderHandler(),
 						binaryRsHandler.getConfig());
 			} catch (ResourceNotFoundException e) {
-				LOGGER.info("Impossible to define the checksum for the resource '"
-						+ url + "'. ");
+				LOGGER.info("Impossible to define the checksum for the resource '" + url + "'. ");
 				return url;
 			} catch (IOException e) {
-				LOGGER.info("Impossible to define the checksum for the resource '"
-						+ url + "'.");
+				LOGGER.info("Impossible to define the checksum for the resource '" + url + "'.");
 				return url;
 			}
 
@@ -264,13 +275,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 			newUrl = url;
 		}
 
-		// Set the result in a cache, so we will not search for it the next time
-		if (imageMapping == null) {
-			imageMapping = new HashMap<String, String>();
-			status.putData(JawrConstant.POST_PROCESSING_CTX_JAWR_BINARY_MAPPING,
-					imageMapping);
-		}
-		imageMapping.put(url, newUrl);
+		binaryMapping.put(url, newUrl);
 
 		return newUrl;
 	}

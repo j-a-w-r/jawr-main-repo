@@ -1,0 +1,35 @@
+/** sprite: myCpsprite; sprite-image: url('../sprite_cbDebug/img/myCpSprite.png'); sprite-layout: vertical */ 
+
+.intro{
+	
+	padding-top : 20px;
+	padding-bottom : 20px;
+}
+
+.calendar {
+	background-repeat: no-repeat;
+	padding-left : 25px;
+	background-image: url("../img/calendarIcons/calendar.png"); /** jawr:base64-skip */
+	
+}
+
+.base64Clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../jar_cbDebug/net/jawr/img/clock.png"); 
+	 
+}
+
+.clock {
+	background-repeat: no-repeat;
+	padding-left : 20px;
+	background-image: url("../jar_cbDebug/net/jawr/img/clock.png"); /** sprite-ref: myCpsprite; */ 
+	 
+}
+
+.ui-dialog .ui-dialog-buttonpane { 
+    text-align: center;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { 
+    float: none;
+}

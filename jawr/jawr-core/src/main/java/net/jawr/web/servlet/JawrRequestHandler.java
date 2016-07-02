@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -51,11 +48,12 @@ import net.jawr.web.context.ThreadLocalJawrContext;
 import net.jawr.web.exception.BundleDependencyException;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.DuplicateBundlePathException;
-import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.exception.InterruptBundlingProcessException;
+import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.FileNameUtils;
 import net.jawr.web.resource.bundle.IOUtils;
+import net.jawr.web.resource.bundle.css.CssDebugUrlRewriter;
 import net.jawr.web.resource.bundle.factory.PropertiesBasedBundlesHandlerFactory;
 import net.jawr.web.resource.bundle.factory.PropsConfigPropertiesSource;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
@@ -142,10 +140,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 	/** The client side request handler */
 	public static final String CLIENTSIDE_HANDLER_REQ_PATH = "/jawr_loader.js";
-
-	/** The generated image pattern */
-	private static final Pattern GENERATED_BINARY_RESOURCE_PATTERN = Pattern
-			.compile("(url\\(([\"' ]*))(?!(http|https|data|mhtml))(([a-zA-Z]+):(/)?)([^\\)\"']*)([\"']?\\))");
 
 	/** The resource bundles handler */
 	protected ResourceBundlesHandler bundlesHandler;
@@ -1046,44 +1040,22 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 */
 	private void handleGeneratedCssInDebugMode(String requestedPath, HttpServletRequest request,
 			HttpServletResponse response, BinaryResourcesHandler binaryRsHandler)
-					throws ResourceNotFoundException, IOException {
+			throws ResourceNotFoundException, IOException {
 
-		// Write the content of the CSS in the Stringwriter
-		Writer writer = new StringWriter();
+		// Retrieves the content of the CSS
 		Reader rd = rsReaderHandler.getResource(null, requestedPath);
 		if (rd == null) {
 			throw new ResourceNotFoundException(requestedPath);
 		}
 
-		IOUtils.copy(rd, writer);
-		String content = writer.toString();
-
-		String imageServletMapping = binaryRsHandler.getConfig().getServletMapping();
-
-		if (imageServletMapping == null) {
-			imageServletMapping = "";
-		}
-
+		String content = IOUtils.toString(rd);
 		String requestPath = getRequestPath(request);
 
-		// Define the replacement pattern for the generated binary resource
-		// (like
-		// jar:img/myImg.png)
-		String relativeRootUrlPath = PathNormalizer.getRootRelativePath(requestPath);
-		String replacementPattern = PathNormalizer
-				.normalizePath("$1" + relativeRootUrlPath + imageServletMapping + "/$5_cbDebug/$7$8");
-
-		Matcher matcher = GENERATED_BINARY_RESOURCE_PATTERN.matcher(content);
-
-		// Rewrite the images define in the classpath, to point to the image
-		// servlet
-		StringBuffer result = new StringBuffer();
-		while (matcher.find()) {
-			matcher.appendReplacement(result, replacementPattern);
-		}
-		matcher.appendTail(result);
+		// Rewrite the generated binary resources
+		String result = CssDebugUrlRewriter.rewriteGeneratedBinaryResourceDebugUrl(requestPath, content,
+				binaryRsHandler.getConfig().getServletMapping());
 		Writer out = response.getWriter();
-		out.write(result.toString());
+		out.write(result);
 	}
 
 	/**
@@ -1165,11 +1137,11 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * redeployed.
 	 */
 	public void destroy() {
-		
-		if(bundlesHandler != null){
+
+		if (bundlesHandler != null) {
 			ThreadLocalJawrContext.setInterruptProcessingBundle(true);
 		}
-		
+
 		// Stop the config change listener.
 		if (null != this.configChangeListenerThread) {
 			configChangeListenerThread.stopPolling();
@@ -1283,14 +1255,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			props.putAll(newConfig);
 
 			initializeJawrContext(props);
-			
+
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Jawr configuration succesfully reloaded. ");
 			}
 
 		} catch (InterruptBundlingProcessException e) {
 			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info(resourceType+" bundling process Interrupted");
+				LOGGER.info(resourceType + " bundling process Interrupted");
 			}
 		} catch (Exception e) {
 			throw new BundlingProcessException("Error reloading Jawr config: " + e.getMessage(), e);

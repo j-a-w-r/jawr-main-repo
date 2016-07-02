@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2012 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,10 +26,10 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.util.StringUtils;
 
 /**
- * This class is used to rewrite CSS URLs according to the new
- * relative locations of the references, from the original CSS path to a new one. 
- * Since the path changes, the URLs must be rewritten accordingly. URLs in css files are
- * expected to be according to the css spec (see
+ * This class is used to rewrite CSS URLs according to the new relative
+ * locations of the references, from the original CSS path to a new one. Since
+ * the path changes, the URLs must be rewritten accordingly. URLs in css files
+ * are expected to be according to the css spec (see
  * http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-uri). Thus, single
  * double, or no quotes enclosing the url are allowed (and remain as they are
  * after rewriting). Escaped parens and quotes are allowed within the url.
@@ -43,80 +43,108 @@ public class CssImageUrlRewriter {
 
 	/** The URL regexp pattern */
 	public static String URL_REGEXP = "url\\(\\s*" // 'url('
-		// and any number of whitespaces
-		+ "(?!(\"|')?(data|mhtml|cid):)(((\\\\\\))|[^)])*)" // any sequence of
-		// characters not
-		// starting with
-		// 'data:',
-		// 'mhtml:', or
-		// 'cid:', except an
-		// unescaped ')'
-		+ "\\s*\\)"; // Any number of whitespaces, then ')'
+			// and any number of whitespaces
+			+ "(?!(\"|')?(data|mhtml|cid):)(((\\\\\\))|[^)])*)" // any sequence
+																// of
+			// characters not
+			// starting with
+			// 'data:',
+			// 'mhtml:', or
+			// 'cid:', except an
+			// unescaped ')'
+			+ "\\s*\\)"; // Any number of whitespaces, then ')'
 
 	/** The url pattern */
-	public static final Pattern URL_PATTERN = Pattern.compile(URL_REGEXP, // Any number of whitespaces, then ')'
+	public static final Pattern URL_PATTERN = Pattern.compile(URL_REGEXP, // Any
+																			// number
+																			// of
+																			// whitespaces,
+																			// then
+																			// ')'
 			Pattern.CASE_INSENSITIVE); // works with 'URL('
 
 	/** The binary resource handler */
 	protected BinaryResourcesHandler binaryRsHandler;
-	
+
 	/** The context path */
 	protected String contextPath;
+
+	/** The binary servlet path */
+	protected String binaryServletPath = "";
 	
+	/** The Jawr config */
+	protected JawrConfig config;
+
 	/**
 	 * Constructor
 	 */
 	public CssImageUrlRewriter() {
-		
+
 	}
-	
+
 	/**
 	 * Constructor
-	 * @param config the jawr config
+	 * 
+	 * @param config
+	 *            the jawr config
 	 */
 	public CssImageUrlRewriter(JawrConfig config) {
-		setContextPath(config.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
+
+		this.config = config;
+		setContextPath(this.config.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
 		// Retrieve the binary resource handler
-		binaryRsHandler = (BinaryResourcesHandler) config.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
-		
+		binaryRsHandler = (BinaryResourcesHandler) config.getContext()
+				.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+
+		binaryServletPath = "";
+
+		if (binaryRsHandler != null) {
+			binaryServletPath = PathNormalizer.asPath(binaryRsHandler.getConfig().getServletMapping());
+		}
 	}
 
 	/**
 	 * Sets the context path
-	 * @param contextPath the contextPath to set
+	 * 
+	 * @param contextPath
+	 *            the contextPath to set
 	 */
 	public void setContextPath(String contextPath) {
-		if(StringUtils.isNotEmpty(contextPath)){
-			if(contextPath.charAt(0) != '/'){
-				contextPath = '/'+contextPath;
+		if (StringUtils.isNotEmpty(contextPath)) {
+			if (contextPath.charAt(0) != '/') {
+				contextPath = '/' + contextPath;
 			}
-			if(contextPath.charAt(contextPath.length()-1) != '/'){
-				contextPath = contextPath+'/';
+			if (contextPath.charAt(contextPath.length() - 1) != '/') {
+				contextPath = contextPath + '/';
 			}
 			this.contextPath = contextPath;
-		}else{
+		} else {
 			this.contextPath = null;
 		}
 	}
 
 	/**
 	 * Rewrites the image URL
-	 * @param originalCssPath the original CSS path
-	 * @param newCssPath the new CSS path
-	 * @param originalCssContent the original CSS content
+	 * 
+	 * @param originalCssPath
+	 *            the original CSS path
+	 * @param newCssPath
+	 *            the new CSS path
+	 * @param originalCssContent
+	 *            the original CSS content
 	 * @return the new CSS content with image path rewritten
 	 * @throws IOException
 	 */
-	public StringBuffer rewriteUrl(String originalCssPath, String newCssPath, String originalCssContent) throws IOException {
-		
+	public StringBuffer rewriteUrl(String originalCssPath, String newCssPath, String originalCssContent)
+			throws IOException {
+
 		// Rewrite each css image url path
 		Matcher matcher = URL_PATTERN.matcher(originalCssContent);
 		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
 
 			String url = getUrlPath(matcher.group(), originalCssPath, newCssPath);
-			matcher.appendReplacement(sb, RegexUtil
-					.adaptReplacementToMatcher(url));
+			matcher.appendReplacement(sb, RegexUtil.adaptReplacementToMatcher(url));
 		}
 		matcher.appendTail(sb);
 		return sb;
@@ -138,8 +166,7 @@ public class CssImageUrlRewriter {
 	 */
 	protected String getUrlPath(String match, String originalPath, String newCssPath) throws IOException {
 
-		String url = match.substring(match.indexOf('(') + 1,
-				match.lastIndexOf(')')).trim();
+		String url = match.substring(match.indexOf('(') + 1, match.lastIndexOf(')')).trim();
 
 		// To keep quotes as they are, first they are checked and removed.
 		String quoteStr = "";
@@ -148,31 +175,32 @@ public class CssImageUrlRewriter {
 			url = url.substring(1, url.length() - 1);
 		}
 
-		// Handle URL suffix like '/fonts/glyphicons-halflings-regular.eot?#iefix' or '../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular'
+		// Handle URL suffix like
+		// '/fonts/glyphicons-halflings-regular.eot?#iefix' or
+		// '../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular'
 		String urlSuffix = "";
 		int idxUrlSuffix = -1;
 		int idx1 = url.indexOf("?");
 		int idx2 = url.indexOf("#");
-		if(idx1 != -1 && idx2 == -1 || idx1 == -1 && idx2 != -1){
+		if (idx1 != -1 && idx2 == -1 || idx1 == -1 && idx2 != -1) {
 			idxUrlSuffix = Math.max(idx1, idx2);
-		}else if(idx1 != -1 && idx2 != -1) {
+		} else if (idx1 != -1 && idx2 != -1) {
 			idxUrlSuffix = Math.min(idx1, idx2);
 		}
-		
-		if(idxUrlSuffix != -1){
+
+		if (idxUrlSuffix != -1) {
 			urlSuffix = url.substring(idxUrlSuffix);
 			url = url.substring(0, idxUrlSuffix);
 		}
 		// Check if the URL is absolute, but in the application itself
-		if(StringUtils.isNotEmpty(contextPath) && url.startsWith(contextPath)){
+		if (StringUtils.isNotEmpty(contextPath) && url.startsWith(contextPath)) {
 			String rootRelativePath = PathNormalizer.getRootRelativePath(originalPath);
 			url = rootRelativePath + url.substring(contextPath.length());
 		}
-		
+
 		// Check if the URL is absolute, if it is return it as is.
 		int firstSlash = url.indexOf('/');
-		if (0 == firstSlash
-				|| (firstSlash != -1 && url.charAt(++firstSlash) == '/')) {
+		if (0 == firstSlash || (firstSlash != -1 && url.charAt(++firstSlash) == '/')) {
 			StringBuffer sb = new StringBuffer("url(");
 			sb.append(quoteStr).append(url).append(urlSuffix).append(quoteStr).append(")");
 			return sb.toString();
@@ -186,9 +214,9 @@ public class CssImageUrlRewriter {
 		String imgUrl = getRewrittenImagePath(originalPath, newCssPath, url);
 
 		// Start rendering the result, starting by the initial quote, if any.
-		String finalUrl = "url("+quoteStr+imgUrl+urlSuffix+quoteStr+")";
+		String finalUrl = "url(" + quoteStr + imgUrl + urlSuffix + quoteStr + ")";
 		Matcher urlMatcher = URL_PATTERN.matcher(finalUrl);
-		if(urlMatcher.find()){ // Normalize only if a real URL
+		if (urlMatcher.find()) { // Normalize only if a real URL
 			finalUrl = PathNormalizer.normalizePath(finalUrl);
 		}
 		return finalUrl;
@@ -196,33 +224,41 @@ public class CssImageUrlRewriter {
 
 	/**
 	 * Returns the rewritten image path
-	 * @param originalCssPath the original Css path
-	 * @param newCssPath the new Css path
-	 * @param url the image URL
+	 * 
+	 * @param originalCssPath
+	 *            the original Css path
+	 * @param newCssPath
+	 *            the new Css path
+	 * @param url
+	 *            the image URL
 	 * @return the rewritten image path
-	 * @throws IOException if an IOException occurs
+	 * @throws IOException
+	 *             if an IOException occurs
 	 */
-	protected String getRewrittenImagePath(String originalCssPath, String newCssPath, String url)
-			throws IOException {
+	protected String getRewrittenImagePath(String originalCssPath, String newCssPath, String url) throws IOException {
 
 		String imgUrl = null;
-		
+
 		// Retrieve the current CSS file from which the CSS image is referenced
 		boolean generatedImg = false;
-		if(binaryRsHandler != null){
+		if (binaryRsHandler != null) {
 			GeneratorRegistry imgRsGeneratorRegistry = binaryRsHandler.getConfig().getGeneratorRegistry();
 			generatedImg = imgRsGeneratorRegistry.isGeneratedBinaryResource(url);
 		}
-		
+
 		String fullImgPath = PathNormalizer.concatWebPath(originalCssPath, url);
-		if(!generatedImg){
-			imgUrl = PathNormalizer.getRelativeWebPath(PathNormalizer
-					.getParentPath(newCssPath), fullImgPath);
-				
-		}else{
+		if (!generatedImg) {
+
+			// Add image servlet path in the URL, if it's defined
+			if (StringUtils.isNotEmpty(binaryServletPath)) {
+				fullImgPath = binaryServletPath + JawrConstant.URL_SEPARATOR +fullImgPath;
+			}
+			imgUrl = PathNormalizer.getRelativeWebPath(PathNormalizer.getParentPath(newCssPath), fullImgPath);
+
+		} else {
 			imgUrl = url;
 		}
-		
+
 		return imgUrl;
 	}
 }
