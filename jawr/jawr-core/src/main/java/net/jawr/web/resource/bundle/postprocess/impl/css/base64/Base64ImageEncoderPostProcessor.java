@@ -38,12 +38,11 @@ import net.jawr.web.util.StringUtils;
  * @author Gerben Jorna
  * @author Ibrahim Chaehoi
  */
-public class Base64ImageEncoderPostProcessor extends
-		CSSURLPathRewriterPostProcessor implements ResourceBundlePostProcessor {
+public class Base64ImageEncoderPostProcessor extends CSSURLPathRewriterPostProcessor
+		implements ResourceBundlePostProcessor {
 
 	/** The logger */
-	protected static final Logger LOGGER = LoggerFactory
-			.getLogger(Base64ImageEncoderPostProcessor.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(Base64ImageEncoderPostProcessor.class);
 
 	/** Tab */
 	protected static final String TAB = "\t";
@@ -74,13 +73,13 @@ public class Base64ImageEncoderPostProcessor extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor
+	 * @see net.jawr.web.resource.bundle.postprocess.impl.
+	 * CSSURLPathRewriterPostProcessor
 	 * #createImageUrlRewriter(net.jawr.web.resource.bundle.postprocess.
 	 * BundleProcessingStatus)
 	 */
-	protected PostProcessorCssImageUrlRewriter createImageUrlRewriter(
-			BundleProcessingStatus status) {
+	@Override
+	protected PostProcessorCssImageUrlRewriter createImageUrlRewriter(BundleProcessingStatus status) {
 
 		return new Base64PostProcessorCssImageUrlRewriter(status);
 	}
@@ -88,60 +87,49 @@ public class Base64ImageEncoderPostProcessor extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor
+	 * @see net.jawr.web.resource.bundle.postprocess.impl.
+	 * CSSURLPathRewriterPostProcessor
 	 * #doPostProcessBundle(net.jawr.web.resource.bundle.postprocess.
 	 * BundleProcessingStatus, java.lang.StringBuffer)
 	 */
 	@SuppressWarnings("unchecked")
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("Base64 encoding resources - '"
-					+ status.getLastPathAdded() + "'");
+			LOGGER.info("Base64 encoding resources - '" + status.getLastPathAdded() + "'");
 		}
 
 		Map<String, Base64EncodedResource> encodedResources = (Map<String, Base64EncodedResource>) status
 				.getData(JawrConstant.BASE64_ENCODED_RESOURCES);
 		if (encodedResources == null) {
-			encodedResources = new HashMap<String, Base64EncodedResource>();
-			status.putData(JawrConstant.BASE64_ENCODED_RESOURCES,
-					encodedResources);
+			encodedResources = new HashMap<>();
+			status.putData(JawrConstant.BASE64_ENCODED_RESOURCES, encodedResources);
 		}
 
 		StringBuffer sb = bundleData;
-		if (status.getProcessingType().equals(
-				BundleProcessingStatus.FILE_PROCESSING_TYPE)) {
+		if (status.getProcessingType().equals(BundleProcessingStatus.FILE_PROCESSING_TYPE)) {
 			sb = super.doPostProcessBundle(status, bundleData);
 		}
 
-		if (!encodedResources.isEmpty()
-				&& status.isSearchingPostProcessorVariants()) {
-			VariantSet variantSet = new VariantSet(
-					JawrConstant.BROWSER_VARIANT_TYPE, "",
-					new String[] { "", JawrConstant.BROWSER_IE6,
-							JawrConstant.BROWSER_IE7 });
-			status.addPostProcessVariant(JawrConstant.BROWSER_VARIANT_TYPE,
-					variantSet);
-			variantSet = new VariantSet(
-					JawrConstant.CONNECTION_TYPE_VARIANT_TYPE, "",
+		if (!encodedResources.isEmpty() && status.isSearchingPostProcessorVariants()) {
+			VariantSet variantSet = new VariantSet(JawrConstant.BROWSER_VARIANT_TYPE, "",
+					new String[] { "", JawrConstant.BROWSER_IE6, JawrConstant.BROWSER_IE7 });
+			status.addPostProcessVariant(JawrConstant.BROWSER_VARIANT_TYPE, variantSet);
+			variantSet = new VariantSet(JawrConstant.CONNECTION_TYPE_VARIANT_TYPE, "",
 					new String[] { "", JawrConstant.SSL });
-			status.addPostProcessVariant(
-					JawrConstant.CONNECTION_TYPE_VARIANT_TYPE, variantSet);
+			status.addPostProcessVariant(JawrConstant.CONNECTION_TYPE_VARIANT_TYPE, variantSet);
 		}
 
 		if (!status.isSearchingPostProcessorVariants()
-				&& status.getProcessingType().equals(
-						BundleProcessingStatus.BUNDLE_PROCESSING_TYPE)) {
+				&& status.getProcessingType().equals(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE)) {
 
 			Map<String, String> bundleVariants = status.getBundleVariants();
 			if (bundleVariants != null) {
-				String browser = bundleVariants
-						.get(JawrConstant.BROWSER_VARIANT_TYPE);
+				String browser = bundleVariants.get(JawrConstant.BROWSER_VARIANT_TYPE);
 				if (StringUtils.isNotEmpty(browser)
-						&& (JawrConstant.BROWSER_IE6.equals(browser) || JawrConstant.BROWSER_IE7
-								.equals(browser))) {
+						&& (JawrConstant.BROWSER_IE6.equals(browser) || JawrConstant.BROWSER_IE7.equals(browser))) {
 					prependBase64EncodedResources(sb, encodedResources);
 				}
 			}
@@ -161,35 +149,26 @@ public class Base64ImageEncoderPostProcessor extends
 	 * @param encodedImages
 	 *            a map of encoded images
 	 */
-	protected void prependBase64EncodedResources(StringBuffer sb,
-			Map<String, Base64EncodedResource> encodedImages) {
-		Iterator<Entry<String, Base64EncodedResource>> it = encodedImages
-				.entrySet().iterator();
-		StringBuffer mhtml = new StringBuffer();
+	protected void prependBase64EncodedResources(StringBuffer sb, Map<String, Base64EncodedResource> encodedImages) {
+		Iterator<Entry<String, Base64EncodedResource>> it = encodedImages.entrySet().iterator();
+		StringBuilder mhtml = new StringBuilder();
 		String lineSeparator = StringUtils.STR_LINE_FEED;
-		mhtml.append("/*!" + lineSeparator);
-		mhtml.append("Content-Type: multipart/related; boundary=\""
-				+ BOUNDARY_SEPARATOR + "\"" + lineSeparator + lineSeparator);
+		mhtml.append("/*!").append(lineSeparator);
+		mhtml.append("Content-Type: multipart/related; boundary=\"" + BOUNDARY_SEPARATOR + "\"").append(lineSeparator)
+				.append(lineSeparator);
 
 		while (it.hasNext()) {
 			Entry<String, Base64EncodedResource> pair = it.next();
-			Base64EncodedResource encodedResource = (Base64EncodedResource) pair
-					.getValue();
-			mhtml.append(BOUNDARY_SEPARATOR_PREFIX + BOUNDARY_SEPARATOR
-					+ lineSeparator);
-			mhtml.append("Content-Type:" + encodedResource.getType()
-					+ lineSeparator);
-			mhtml.append("Content-Location:" + encodedResource.getId()
-					+ lineSeparator);
-			mhtml.append("Content-Transfer-Encoding:base64" + lineSeparator
-					+ lineSeparator);
-			mhtml.append(encodedResource.getBase64Encoding() + lineSeparator
-					+ lineSeparator);
+			Base64EncodedResource encodedResource = (Base64EncodedResource) pair.getValue();
+			mhtml.append(BOUNDARY_SEPARATOR_PREFIX + BOUNDARY_SEPARATOR).append(lineSeparator);
+			mhtml.append("Content-Type:").append(encodedResource.getType()).append(lineSeparator);
+			mhtml.append("Content-Location:").append(encodedResource.getId()).append(lineSeparator);
+			mhtml.append("Content-Transfer-Encoding:base64").append(lineSeparator).append(lineSeparator);
+			mhtml.append(encodedResource.getBase64Encoding()).append(lineSeparator).append(lineSeparator);
 		}
 
-		mhtml.append(BOUNDARY_SEPARATOR_PREFIX + BOUNDARY_SEPARATOR
-				+ BOUNDARY_SEPARATOR_PREFIX + lineSeparator);
-		mhtml.append("*/" + lineSeparator + lineSeparator);
+		mhtml.append(BOUNDARY_SEPARATOR_PREFIX + BOUNDARY_SEPARATOR + BOUNDARY_SEPARATOR_PREFIX).append(lineSeparator);
+		mhtml.append("*/").append(lineSeparator).append(lineSeparator);
 		sb.insert(0, mhtml.toString());
 	}
 }

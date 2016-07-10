@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 @author Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2009-2016 Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,28 +27,31 @@ import net.jawr.web.util.StopWatch;
  *
  */
 public class JawrContext {
-	
+
 	/** The object name for the MBean of the Jawr config manager */
 	private ObjectName jawrConfigMgrObjectName;
-	
+
 	/** The flag indicating if we should override the debug setting */
 	private boolean debugOverriden;
-	
-	/** The flag indicating that we are using making a bundle processing at build time */
+
+	/**
+	 * The flag indicating that we are using making a bundle processing at build
+	 * time
+	 */
 	private boolean bundleProcessingAtBuildTime;
-	
-	/** The current request URL*/
+
+	/** The current request URL */
 	private String requestURL;
-	
+
 	/** The stop watch */
 	private StopWatch stopWatch;
-	
-	/** The flag indicating if we shoudl stop the processing */
-	private AtomicBoolean interruptProcessingBundle = new AtomicBoolean(false);
 
-	
+	/** The flag indicating if we shoudl stop the processing */
+	private final AtomicBoolean interruptProcessingBundle = new AtomicBoolean(false);
+
 	/**
 	 * Returns true if the processing bundle should be interrupted
+	 * 
 	 * @return true if the processing bundle should be interrupted
 	 */
 	public boolean isInterruptingProcessingBundle() {
@@ -56,31 +59,35 @@ public class JawrContext {
 	}
 
 	/**
-	 * Sets the flag which indicate that the processing bundle should be interrupted
-	 * @param interruptProcessingBundle the flag to set
+	 * Sets the flag which indicate that the processing bundle should be
+	 * interrupted
+	 * 
+	 * @param interruptProcessingBundle
+	 *            the flag to set
 	 */
 	public void setInterruptProcessingBundle(boolean interruptProcessingBundle) {
 		this.interruptProcessingBundle.set(interruptProcessingBundle);
 	}
 
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 */
 	public JawrContext() {
-		
+
 	}
 
 	/**
 	 * Returns the object name for the MBean of the Jawr config manager
+	 * 
 	 * @return the object name for the MBean of the Jawr config manager.
 	 */
 	public ObjectName getJawrConfigMgrObjectName() {
 		return jawrConfigMgrObjectName;
 	}
 
-
 	/**
 	 * Sets the flag indicating if we should override the debug setting
+	 * 
 	 * @return the debugOverride flag
 	 */
 	public boolean isDebugOverriden() {
@@ -89,31 +96,41 @@ public class JawrContext {
 
 	/**
 	 * Sets the object name for the MBean of the Jawr config manager.
-	 * @param mbeanObjectName the mbeanObjectName to set
+	 * 
+	 * @param mbeanObjectName
+	 *            the mbeanObjectName to set
 	 */
 	public void setJawrConfigMgrObjectName(ObjectName mbeanObjectName) {
 		this.jawrConfigMgrObjectName = mbeanObjectName;
 	}
-	
+
 	/**
 	 * Sets the flag indicating if we should override the debug setting
-	 * @param debugOverriden the debugOverride flag to set
+	 * 
+	 * @param debugOverriden
+	 *            the debugOverride flag to set
 	 */
 	public void setDebugOverriden(boolean debugOverriden) {
 		this.debugOverriden = debugOverriden;
 	}
-	
+
 	/**
-	 * Returns the flag indicating that we are using making a bundle processing at build time
-	 * @return the flag indicating that we are using making a bundle processing at build time
+	 * Returns the flag indicating that we are using making a bundle processing
+	 * at build time
+	 * 
+	 * @return the flag indicating that we are using making a bundle processing
+	 *         at build time
 	 */
 	public boolean isBundleProcessingAtBuildTime() {
 		return bundleProcessingAtBuildTime;
 	}
 
 	/**
-	 * Sets the flag indicating that we are using making a bundle processing at build time
-	 * @param bundleProcessingAtBuildTime the flqg to set
+	 * Sets the flag indicating that we are using making a bundle processing at
+	 * build time
+	 * 
+	 * @param bundleProcessingAtBuildTime
+	 *            the flqg to set
 	 */
 	public void setBundleProcessingAtBuildTime(boolean bundleProcessingAtBuildTime) {
 		this.bundleProcessingAtBuildTime = bundleProcessingAtBuildTime;
@@ -121,6 +138,7 @@ public class JawrContext {
 
 	/**
 	 * Returns the current request URL
+	 * 
 	 * @return the current request URL
 	 */
 	public String getRequestURL() {
@@ -129,7 +147,9 @@ public class JawrContext {
 
 	/**
 	 * Sets the current request URL
-	 * @param request the request URL to set
+	 * 
+	 * @param requestURL
+	 *            the request URL to set
 	 */
 	public void setRequestURL(String requestURL) {
 		this.requestURL = requestURL;
@@ -137,6 +157,7 @@ public class JawrContext {
 
 	/**
 	 * Returns the stop watch used to monitor the processing
+	 * 
 	 * @return the stop watch
 	 */
 	public StopWatch getStopWatch() {
@@ -145,18 +166,19 @@ public class JawrContext {
 
 	/**
 	 * Sets the StopWatch used to monitor the processing
-	 * @param stopWatch the stopWatch to set
+	 * 
+	 * @param stopWatch
+	 *            the stopWatch to set
 	 */
 	public void setStopWatch(StopWatch stopWatch) {
 		this.stopWatch = stopWatch;
 	}
 
-	
 	/**
-	 * Reset the context. 
+	 * Reset the context.
 	 */
-	public void reset(){
-		
+	public void reset() {
+
 		this.jawrConfigMgrObjectName = null;
 		this.debugOverriden = false;
 		this.bundleProcessingAtBuildTime = false;

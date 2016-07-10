@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -30,11 +30,10 @@ import org.slf4j.LoggerFactory;
 public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PropsFilePropertiesSource.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropsFilePropertiesSource.class.getName());
 
 	/** The configuration properties */
-	private Properties configProps;
+	private final Properties configProps;
 
 	/** The properties hashcode */
 	protected int propsHashCode;
@@ -55,6 +54,7 @@ public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
 	 * configChanged()
 	 */
+	@Override
 	public boolean configChanged() {
 		int currentConfigHash = this.configProps.hashCode();
 		boolean configChanged = this.propsHashCode != currentConfigHash;
@@ -73,6 +73,7 @@ public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
 	 * getConfigProperties()
 	 */
+	@Override
 	public Properties getConfigProperties() {
 		return configProps;
 	}

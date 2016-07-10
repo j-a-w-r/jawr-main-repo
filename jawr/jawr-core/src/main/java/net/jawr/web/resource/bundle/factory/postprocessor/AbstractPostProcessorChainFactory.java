@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ package net.jawr.web.resource.bundle.factory.postprocessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,16 +41,16 @@ import net.jawr.web.resource.bundle.postprocess.impl.LicensesIncluderPostProcess
 public abstract class AbstractPostProcessorChainFactory implements PostProcessorChainFactory {
 
 	/** The map of custom postprocessor */
-	private Map<String, ChainedResourceBundlePostProcessor> customPostProcessors;
+	private final Map<String, ChainedResourceBundlePostProcessor> customPostProcessors;
 
 	/** The bundling process life cycle listeners */
-	private List<BundlingProcessLifeCycleListener> listeners = new ArrayList<>();
-	
+	private final List<BundlingProcessLifeCycleListener> listeners = new ArrayList<>();
+
 	/**
 	 * Constructor
 	 */
 	public AbstractPostProcessorChainFactory() {
-		this.customPostProcessors = new HashMap<String, ChainedResourceBundlePostProcessor>();
+		this.customPostProcessors = new HashMap<>();
 	}
 
 	/*
@@ -60,6 +59,7 @@ public abstract class AbstractPostProcessorChainFactory implements PostProcessor
 	 * @see net.jawr.web.resource.bundle.factory.postprocessor.
 	 * PostProcessorChainFactory#buildDefaultCompositeProcessorChain()
 	 */
+	@Override
 	public ResourceBundlePostProcessor buildDefaultCompositeProcessorChain() {
 		return new EmptyResourceBundlePostProcessor();
 	}
@@ -70,6 +70,7 @@ public abstract class AbstractPostProcessorChainFactory implements PostProcessor
 	 * @see net.jawr.web.resource.bundle.factory.postprocessor.
 	 * PostProcessorChainFactory#buildDefaultUnitCompositeProcessorChain()
 	 */
+	@Override
 	public ResourceBundlePostProcessor buildDefaultUnitCompositeProcessorChain() {
 		return new EmptyResourceBundlePostProcessor();
 	}
@@ -81,6 +82,7 @@ public abstract class AbstractPostProcessorChainFactory implements PostProcessor
 	 * net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#
 	 * buildPostProcessorChain(java.lang.String)
 	 */
+	@Override
 	public ResourceBundlePostProcessor buildPostProcessorChain(String processorKeys) {
 		if (null == processorKeys)
 			return null;
@@ -114,9 +116,8 @@ public abstract class AbstractPostProcessorChainFactory implements PostProcessor
 
 		if (customPostProcessors.get(key) == null) {
 			toAdd = buildProcessorByKey(key);
-			if(toAdd instanceof BundlingProcessLifeCycleListener 
-					&& !listeners.contains(toAdd)){
-				listeners.add((BundlingProcessLifeCycleListener)toAdd);
+			if (toAdd instanceof BundlingProcessLifeCycleListener && !listeners.contains(toAdd)) {
+				listeners.add((BundlingProcessLifeCycleListener) toAdd);
 			}
 		} else {
 			toAdd = (AbstractChainedResourceBundlePostProcessor) customPostProcessors.get(key);
@@ -160,21 +161,19 @@ public abstract class AbstractPostProcessorChainFactory implements PostProcessor
 	 * net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#
 	 * setCustomPostprocessors(java.util.Map)
 	 */
+	@Override
 	public void setCustomPostprocessors(Map<String, String> keysClassNames) {
-		for (Iterator<Entry<String, String>> it = keysClassNames.entrySet().iterator(); it.hasNext();) {
-
-			Entry<String, String> entry = it.next();
+		for (Entry<String, String> entry : keysClassNames.entrySet()) {
 			ResourceBundlePostProcessor customProcessor = (ResourceBundlePostProcessor) ClassLoaderResourceUtils
 					.buildObjectInstance((String) entry.getValue());
 			boolean isVariantPostProcessor = customProcessor.getClass()
 					.getAnnotation(VariantPostProcessor.class) != null;
-			
-			if(customProcessor instanceof BundlingProcessLifeCycleListener){
-				listeners.add((BundlingProcessLifeCycleListener)customProcessor);
+
+			if (customProcessor instanceof BundlingProcessLifeCycleListener) {
+				listeners.add((BundlingProcessLifeCycleListener) customProcessor);
 			}
 			String key = (String) entry.getKey();
 			customPostProcessors.put(key, getCustomProcessorWrapper(customProcessor, key, isVariantPostProcessor));
-
 		}
 	}
 
@@ -194,12 +193,16 @@ public abstract class AbstractPostProcessorChainFactory implements PostProcessor
 		return new CustomPostProcessorChainWrapper(key, customProcessor, isVariantPostProcessor);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleProvider#getBundlingProcessLifeCycleListeners()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleProvider#
+	 * getBundlingProcessLifeCycleListeners()
 	 */
 	@Override
 	public List<BundlingProcessLifeCycleListener> getBundlingProcessLifeCycleListeners() {
 		return listeners;
 	}
-	
+
 }

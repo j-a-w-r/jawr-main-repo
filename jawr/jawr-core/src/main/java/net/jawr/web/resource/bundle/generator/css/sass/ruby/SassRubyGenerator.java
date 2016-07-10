@@ -64,10 +64,10 @@ public class SassRubyGenerator extends AbstractCSSGenerator implements ISassReso
 	public static final String SASS_GENERATOR_DEFAULT_URL_MODE = SASS_GENERATOR_ABSOLUTE_URL_MODE;
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/** The ruby engine */
-	private ScriptEngine rubyEngine;
+	private final ScriptEngine rubyEngine;
 
 	/**
 	 * The flag indicating if we must use absolute URL when referencing binary
@@ -156,7 +156,7 @@ public class SassRubyGenerator extends AbstractCSSGenerator implements ISassReso
 
 		Reader rd = null;
 		try {
-			List<Class<?>> excluded = new ArrayList<Class<?>>();
+			List<Class<?>> excluded = new ArrayList<>();
 			excluded.add(ISassResourceGenerator.class);
 			JoinableResourceBundle bundle = context.getBundle();
 			rd = context.getResourceReaderHandler().getResource(bundle, path, false, excluded);

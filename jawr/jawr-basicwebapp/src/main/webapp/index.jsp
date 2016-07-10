@@ -4,6 +4,7 @@
 <head>
 <jwr:style src="/css/common.css" displayAlternate="true" media="all" />
 <jwr:style src="/css/specific.css" media="all" />
+<jwr:style src="/css/myStyle/style.less" media="all" />
 
 <jwr:script src="/js/common.js" />
 <jwr:script src="/js/bundle/msg.js" />

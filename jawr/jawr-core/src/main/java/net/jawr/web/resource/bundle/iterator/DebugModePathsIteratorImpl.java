@@ -22,9 +22,9 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.util.StringUtils;
 
 /**
- * Debug mode implementation of ResourceBundlePathsIterator. Uses a ConditionalCommentCallbackHandler
- * to signal the use of conditional comments. The paths returned are those of the individual 
- * members of the bundle. 
+ * Debug mode implementation of ResourceBundlePathsIterator. Uses a
+ * ConditionalCommentCallbackHandler to signal the use of conditional comments.
+ * The paths returned are those of the individual members of the bundle.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
@@ -32,72 +32,81 @@ import net.jawr.web.util.StringUtils;
 public class DebugModePathsIteratorImpl extends AbstractPathsIterator implements ResourceBundlePathsIterator {
 
 	/** The bundle iterator */
-	private Iterator<JoinableResourceBundle> bundlesIterator;
-	
+	private final Iterator<JoinableResourceBundle> bundlesIterator;
+
 	/** The path iterator */
 	private Iterator<BundlePath> pathsIterator;
-	
+
 	/** The current bundle */
 	private JoinableResourceBundle currentBundle;
-	
+
 	/**
 	 * Constructor
-	 * @param bundles the list of bundle
-	 * @param callbackHandler the comment callback handler
-	 * @param variants the variants
+	 * 
+	 * @param bundles
+	 *            the list of bundle
+	 * @param callbackHandler
+	 *            the comment callback handler
+	 * @param variants
+	 *            the variants
 	 */
-	public DebugModePathsIteratorImpl(List<JoinableResourceBundle> bundles,ConditionalCommentCallbackHandler callbackHandler,
-			Map<String, String> variants) {
-		super(callbackHandler,variants);
+	public DebugModePathsIteratorImpl(List<JoinableResourceBundle> bundles,
+			ConditionalCommentCallbackHandler callbackHandler, Map<String, String> variants) {
+		super(callbackHandler, variants);
 		this.bundlesIterator = bundles.iterator();
 	}
-	
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#
+	 * nextPath()
 	 */
+	@Override
 	public BundlePath nextPath() {
-		
+
 		BundlePath path = null;
-		if(null == pathsIterator || !pathsIterator.hasNext()) {
+		if (null == pathsIterator || !pathsIterator.hasNext()) {
 			currentBundle = (JoinableResourceBundle) bundlesIterator.next();
-			
-			if(null != currentBundle.getExplorerConditionalExpression()){
+
+			if (null != currentBundle.getExplorerConditionalExpression()) {
 				commentCallbackHandler.openConditionalComment(currentBundle.getExplorerConditionalExpression());
 			}
-			
-			if(StringUtils.isNotEmpty(currentBundle.getDebugURL())){
-				pathsIterator = Arrays.asList(new BundlePath(currentBundle.getBundlePrefix(), currentBundle.getDebugURL(), true)).iterator();
-			}else{
+
+			if (StringUtils.isNotEmpty(currentBundle.getDebugURL())) {
+				pathsIterator = Arrays
+						.asList(new BundlePath(currentBundle.getBundlePrefix(), currentBundle.getDebugURL(), true))
+						.iterator();
+			} else {
 				pathsIterator = currentBundle.getItemDebugPathList(variants).iterator();
 			}
 		}
-		
-		
-		if(pathsIterator != null && pathsIterator.hasNext()){
+
+		if (pathsIterator != null && pathsIterator.hasNext()) {
 			path = pathsIterator.next();
 		}
-		
+
 		return path;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext() {
-		if(null != pathsIterator && !pathsIterator.hasNext()) {
-			if(null != currentBundle && null != currentBundle.getExplorerConditionalExpression())
+		if (null != pathsIterator && !pathsIterator.hasNext()) {
+			if (null != currentBundle && null != currentBundle.getExplorerConditionalExpression())
 				commentCallbackHandler.closeConditionalComment();
 		}
 		boolean rets = false;
-		if(null != pathsIterator) {
+		if (null != pathsIterator) {
 			rets = pathsIterator.hasNext() || bundlesIterator.hasNext();
-		}
-		else{
+		} else {
 			rets = bundlesIterator.hasNext();
 		}
-			
+
 		return rets;
 	}
 

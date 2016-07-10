@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -157,7 +156,7 @@ public class GeneratorRegistry implements Serializable {
 	private ResourceReaderHandler rsHandler;
 
 	/** The map of variant resolvers */
-	private final Map<String, VariantResolver> variantResolvers = new ConcurrentHashMap<String, VariantResolver>();
+	private final Map<String, VariantResolver> variantResolvers = new ConcurrentHashMap<>();
 
 	/** the webjar class path generator helper */
 	public static final String WEBJARS_GENERATOR_HELPER_PREFIX = "/META-INF/resources/webjars/";
@@ -171,6 +170,9 @@ public class GeneratorRegistry implements Serializable {
 
 	/**
 	 * Constructor
+	 * 
+	 * @param resourceType
+	 *            the resource type
 	 */
 	public GeneratorRegistry(String resourceType) {
 		this.resourceType = resourceType;
@@ -276,9 +278,7 @@ public class GeneratorRegistry implements Serializable {
 
 		ResourceGenerator generator = null;
 
-		for (Iterator<Entry<ResourceGeneratorResolver, Class<?>>> iterator = commonGenerators.entrySet()
-				.iterator(); iterator.hasNext();) {
-			Entry<ResourceGeneratorResolver, Class<?>> entry = iterator.next();
+		for (Entry<ResourceGeneratorResolver, Class<?>> entry : commonGenerators.entrySet()) {
 			ResourceGeneratorResolver resolver = entry.getKey();
 			if (resolver.matchPath(resourcePath)) {
 				generator = (ResourceGenerator) ClassLoaderResourceUtils.buildObjectInstance(entry.getValue());
@@ -360,8 +360,7 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public void registerVariantResolver(VariantResolver resolver) {
 
-		for (Iterator<VariantResolver> itResolver = variantResolvers.values().iterator(); itResolver.hasNext();) {
-			VariantResolver variantResolver = itResolver.next();
+		for (VariantResolver variantResolver : variantResolvers.values()) {
 			if (StringUtils.isEmpty(resolver.getVariantType())) {
 				throw new IllegalStateException(
 						"The getVariantType() method must return something at " + resolver.getClass());
@@ -523,8 +522,7 @@ public class GeneratorRegistry implements Serializable {
 	private ResourceGenerator resolveResourceGenerator(String path) {
 
 		ResourceGenerator resourceGenerator = null;
-		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry.iterator(); iterator.hasNext();) {
-			ResourceGeneratorResolverWrapper resolver = iterator.next();
+		for (ResourceGeneratorResolverWrapper resolver : resolverRegistry) {
 			if (resolver.matchPath(path)) {
 				resourceGenerator = resolver.getResourceGenerator();
 				if (resolver.getType().equals(ResolverType.PREFIXED)) {
@@ -552,8 +550,7 @@ public class GeneratorRegistry implements Serializable {
 	public ResourceGenerator getResourceGenerator(String path) {
 
 		ResourceGenerator resourceGenerator = null;
-		for (Iterator<ResourceGeneratorResolverWrapper> iterator = resolverRegistry.iterator(); iterator.hasNext();) {
-			ResourceGeneratorResolverWrapper resolver = iterator.next();
+		for (ResourceGeneratorResolverWrapper resolver : resolverRegistry) {
 			if (resolver.matchPath(path)) {
 				resourceGenerator = resolver.getResourceGenerator();
 				if (resolver.getType().equals(ResolverType.PREFIXED)) {
@@ -620,7 +617,7 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public Set<String> getGeneratedResourceVariantTypes(String path) {
 
-		Set<String> variantTypes = new HashSet<String>();
+		Set<String> variantTypes = new HashSet<>();
 		ResourceGenerator generator = resolveResourceGenerator(path);
 		if (generator != null) {
 			if (generator instanceof VariantResourceGenerator) {
@@ -631,7 +628,7 @@ public class GeneratorRegistry implements Serializable {
 					variantTypes = tempResult;
 				}
 			} else if (generator instanceof LocaleAwareResourceGenerator) {
-				variantTypes = new HashSet<String>();
+				variantTypes = new HashSet<>();
 				variantTypes.add(JawrConstant.LOCALE_VARIANT_TYPE);
 			}
 		}
@@ -690,10 +687,8 @@ public class GeneratorRegistry implements Serializable {
 	 */
 	public Map<String, String> resolveVariants(HttpServletRequest request) {
 
-		Map<String, String> variants = new TreeMap<String, String>();
-		for (Iterator<VariantResolver> itVariantResolver = variantResolvers.values().iterator(); itVariantResolver
-				.hasNext();) {
-			VariantResolver resolver = itVariantResolver.next();
+		Map<String, String> variants = new TreeMap<>();
+		for (VariantResolver resolver : variantResolvers.values()) {
 			String value = resolver.resolveVariant(request);
 			if (value != null) {
 				variants.put(resolver.getVariantType(), value);
@@ -715,9 +710,8 @@ public class GeneratorRegistry implements Serializable {
 	public Map<String, String> getAvailableVariantMap(Map<String, VariantSet> variants,
 			Map<String, String> curVariants) {
 
-		Map<String, String> availableVariantMap = new HashMap<String, String>();
-		for (Iterator<Entry<String, VariantSet>> iterator = variants.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, VariantSet> entry = iterator.next();
+		Map<String, String> availableVariantMap = new HashMap<>();
+		for (Entry<String, VariantSet> entry : variants.entrySet()) {
 			String variantType = entry.getKey();
 			VariantSet variantSet = entry.getValue();
 			String variant = variantSet.getDefaultVariant();

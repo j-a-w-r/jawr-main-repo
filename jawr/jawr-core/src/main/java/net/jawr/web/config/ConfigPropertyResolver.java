@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Ibrahim Chaehoi
+ * Copyright 2011-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,10 +21,13 @@ package net.jawr.web.config;
 public interface ConfigPropertyResolver {
 
 	/**
-	 * Resolve the property. If the property has not been resolved <b>null</b> should be return
-	 * @param property the property to resolve
+	 * Resolve the property. If the property has not been resolved <b>null</b>
+	 * should be return
+	 * 
+	 * @param property
+	 *            the property to resolve
 	 * @return the property value or null if not resolved
 	 */
 	public String resolve(String property);
-	
+
 }

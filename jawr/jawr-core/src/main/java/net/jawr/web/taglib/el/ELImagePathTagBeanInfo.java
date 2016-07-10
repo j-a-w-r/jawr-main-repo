@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -38,18 +38,17 @@ public class ELImagePathTagBeanInfo extends SimpleBeanInfo {
 	 * 
 	 * @see java.beans.SimpleBeanInfo#getPropertyDescriptors()
 	 */
+	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
-		List<PropertyDescriptor> proplist = new ArrayList<PropertyDescriptor>();
+		List<PropertyDescriptor> proplist = new ArrayList<>();
 
 		try {
-			proplist.add(new PropertyDescriptor("base64",
-					ELImageInputTag.class, null, "setBase64Expr"));
+			proplist.add(new PropertyDescriptor("base64", ELImageInputTag.class, null, "setBase64Expr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("src", ELImageInputTag.class,
-					null, "setSrcExpr"));
+			proplist.add(new PropertyDescriptor("src", ELImageInputTag.class, null, "setSrcExpr"));
 		} catch (IntrospectionException ex) {
 		}
 

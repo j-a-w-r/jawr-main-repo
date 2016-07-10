@@ -15,6 +15,7 @@ package net.jawr.web.exception;
 
 /**
  * The exception thrown when the bundling process is stopped during its process
+ * 
  * @author Ibrahim Chaehoi
  */
 public class InterruptBundlingProcessException extends BundlingProcessException {
@@ -24,7 +25,6 @@ public class InterruptBundlingProcessException extends BundlingProcessException 
 
 	/**
 	 * Constructor
-	 * @param message the message
 	 */
 	public InterruptBundlingProcessException() {
 		super("Bundling process stopped");

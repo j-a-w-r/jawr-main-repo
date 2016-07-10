@@ -53,8 +53,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServletContextResourceReaderHandler.class);
 
 	/** The Jawr configuration */
-	private JawrConfig config;
-	
+	private final JawrConfig config;
+
 	/** The servlet context */
 	private ServletContext servletContext;
 
@@ -65,16 +65,16 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	private GeneratorRegistry generatorRegistry;
 
 	/** The list of resource readers */
-	private List<TextResourceReader> resourceReaders = new ArrayList<TextResourceReader>();
+	private final List<TextResourceReader> resourceReaders = new ArrayList<>();
 
 	/** The list of stream resource readers */
-	private List<StreamResourceReader> streamResourceReaders = new ArrayList<StreamResourceReader>();
+	private final List<StreamResourceReader> streamResourceReaders = new ArrayList<>();
 
 	/** The list of resource info providers */
-	private List<ResourceBrowser> resourceInfoProviders = new ArrayList<ResourceBrowser>();
+	private final List<ResourceBrowser> resourceInfoProviders = new ArrayList<>();
 
 	/** The allowed file extension */
-	private List<String> allowedExtensions = new ArrayList<String>();
+	private final List<String> allowedExtensions = new ArrayList<>();
 
 	/**
 	 * Constructor
@@ -93,7 +93,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 		String tempWorkingDirectory = ((File) servletContext.getAttribute(JawrConstant.SERVLET_CONTEXT_TEMPDIR))
 				.getCanonicalPath();
-		
+
 		this.config = jawrConfig;
 		if (config.getUseBundleMapping() && StringUtils.isNotEmpty(config.getJawrWorkingDirectory())) {
 			tempWorkingDirectory = config.getJawrWorkingDirectory();
@@ -142,11 +142,11 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 			addResourceReader(fileRd);
 			boolean baseContextDirHighPriority = Boolean
 					.valueOf(config.getProperty(JawrConstant.JAWR_BASECONTEXT_DIRECTORY_HIGH_PRIORITY));
-			if (LOGGER.isDebugEnabled()){
-				if(baseContextDirHighPriority) {
+			if (LOGGER.isDebugEnabled()) {
+				if (baseContextDirHighPriority) {
 					LOGGER.debug(
 							"Jawr will search in priority in the base directory context before searching in the war content.");
-				}else {
+				} else {
 					LOGGER.debug(
 							"Jawr will search in priority in the war content before searching in the base directory context.");
 				}
@@ -160,6 +160,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * @see
 	 * net.jawr.web.resource.handler.ResourceReaderHandler#getWorkingDirectory()
 	 */
+	@Override
 	public String getWorkingDirectory() {
 		return this.workingDirectory;
 	}
@@ -170,6 +171,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * @see net.jawr.web.resource.handler.WorkingDirectoryLocationAware#
 	 * setWorkingDirectory(java.lang.String)
 	 */
+	@Override
 	public void setWorkingDirectory(String workingDir) {
 		this.workingDirectory = workingDir;
 	}
@@ -197,8 +199,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * (non-Javadoc)
 	 * 
 	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
-	 * addResourceReader(net.jawr.web.resource.handler.reader.
-	 * ResourceReader)
+	 * addResourceReader(net.jawr.web.resource.handler.reader. ResourceReader)
 	 */
 	@Override
 	public void addResourceReader(ResourceReader rd) {
@@ -215,7 +216,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 		initReader(rd);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -279,9 +280,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		if (generatedPath || allowedExtensions.contains(resourceExtension.toLowerCase())) {
 			List<TextResourceReader> list = new ArrayList<>();
 			list.addAll(resourceReaders);
-			for (Iterator<TextResourceReader> iterator = list.iterator(); iterator.hasNext();) {
-				TextResourceReader rsReader = iterator.next();
-
+			for (TextResourceReader rsReader : list) {
 				if (!isInstanceOf(rsReader, excludedReader)) {
 					if (!(rsReader instanceof ResourceGenerator)
 							|| ((ResourceGenerator) rsReader).getResolver().matchPath(resourceName)) {
@@ -301,7 +300,6 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 						}
 					}
 				}
-
 			}
 		} else {
 			LOGGER.warn("The resource '" + resourceName + "' will not be read as its extension is not an allowed one.");
@@ -375,9 +373,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		if (generatedPath || allowedExtensions.contains(resourceExtension.toLowerCase())) {
 			List<StreamResourceReader> list = new ArrayList<>();
 			list.addAll(streamResourceReaders);
-			for (Iterator<StreamResourceReader> iterator = list.iterator(); iterator.hasNext();) {
-
-				StreamResourceReader rsReader = iterator.next();
+			for (StreamResourceReader rsReader : list) {
 				if (!(rsReader instanceof ResourceGenerator)
 						|| ((ResourceGenerator) rsReader).getResolver().matchPath(resourceName)) {
 					try {
@@ -413,13 +409,13 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames
 	 * (java.lang.String)
 	 */
+	@Override
 	public Set<String> getResourceNames(String dirName) {
-		Set<String> resourceNames = new TreeSet<String>();
-		
+		Set<String> resourceNames = new TreeSet<>();
+
 		List<ResourceBrowser> list = new ArrayList<>();
 		list.addAll(resourceInfoProviders);
-		for (Iterator<ResourceBrowser> iterator = list.iterator(); iterator.hasNext();) {
-			ResourceBrowser rsBrowser = iterator.next();
+		for (ResourceBrowser rsBrowser : list) {
 			if (generatorRegistry.isPathGenerated(dirName)) {
 				if (rsBrowser instanceof ResourceGenerator) {
 					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
@@ -446,6 +442,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java
 	 * .lang.String)
 	 */
+	@Override
 	public boolean isDirectory(String resourceName) {
 		boolean result = false;
 		List<ResourceBrowser> list = new ArrayList<>();
@@ -481,8 +478,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		String filePath = null;
 		List<ResourceBrowser> list = new ArrayList<>();
 		list.addAll(resourceInfoProviders);
-		for (Iterator<ResourceBrowser> iterator = list.iterator(); iterator.hasNext()
-				&& filePath == null;) {
+		for (Iterator<ResourceBrowser> iterator = list.iterator(); iterator.hasNext() && filePath == null;) {
 			ResourceBrowser rsBrowser = iterator.next();
 			if (generatorRegistry.isPathGenerated(resourcePath)) {
 				if (rsBrowser instanceof ResourceGenerator) {

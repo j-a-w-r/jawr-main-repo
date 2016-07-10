@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,9 +26,13 @@ import javax.faces.context.ResponseWriter;
  */
 public class ImageInputTag extends AbstractHtmlImageTag {
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.jsf.AbstractImageTag#render(javax.faces.context.FacesContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.taglib.jsf.AbstractImageTag#render(javax.faces.context.
+	 * FacesContext)
 	 */
+	@Override
 	protected void render(FacesContext context) throws IOException {
 
 		// Generate the name definition or image element
@@ -52,18 +56,20 @@ public class ImageInputTag extends AbstractHtmlImageTag {
 	}
 
 	/**
-     * Prepares the keyboard event handlers, appending them to the the given
-     * StringBuffer.
-     *
-     * @param handlers The StringBuffer that output will be appended to.
-     */
-    protected void prepareKeyEvents(StringBuffer handlers) {
-        
-    	super.prepareKeyEvents(handlers);
-        prepareAttribute(handlers, "onchange", getAttribute("onchange"));
-        prepareAttribute(handlers, "onfocus",  getAttribute("onfocus"));
-        prepareAttribute(handlers, "onblur", getAttribute("onblur"));
-    }
+	 * Prepares the keyboard event handlers, appending them to the the given
+	 * StringBuffer.
+	 *
+	 * @param handlers
+	 *            The StringBuffer that output will be appended to.
+	 */
+	@Override
+	protected void prepareKeyEvents(StringBuffer handlers) {
+
+		super.prepareKeyEvents(handlers);
+		prepareAttribute(handlers, "onchange", getAttribute("onchange"));
+		prepareAttribute(handlers, "onfocus", getAttribute("onfocus"));
+		prepareAttribute(handlers, "onblur", getAttribute("onblur"));
+	}
 
 	/**
 	 * Render the opening element.

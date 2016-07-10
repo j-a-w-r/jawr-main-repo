@@ -32,7 +32,7 @@ public class ResourceReaderComparator implements Comparator<ResourceReader> {
 	 * The flag indicating if the base directory has high priority in resource
 	 * reader list
 	 */
-	private boolean baseDirHighPriority;
+	private final boolean baseDirHighPriority;
 
 	/**
 	 * Constructor
@@ -59,40 +59,39 @@ public class ResourceReaderComparator implements Comparator<ResourceReader> {
 	/**
 	 * Returns the priority of the resource reader
 	 * 
-	 * if the FileSystemResourceReader is configured with high priority the list of priorities is as followed :
+	 * if the FileSystemResourceReader is configured with high priority the list
+	 * of priorities is as followed :
 	 * 
-	 * 5 - ServletContextResourceReader
-	 * 4 - FileSystemResourceReader
-	 * 3 - Generator with prefixed path
-	 * 2 - Generator with suffixed path 
-	 * 1 - CssSmartSpriteResourceReader
+	 * 5 - ServletContextResourceReader 4 - FileSystemResourceReader 3 -
+	 * Generator with prefixed path 2 - Generator with suffixed path 1 -
+	 * CssSmartSpriteResourceReader
 	 * 
-	 * if the FileSystemResourceReader is configured with high priority the list of priorities is as followed :
-	 *	
-	 * 5 - FileSystemResourceReader
-	 * 4 - ServletContextResourceReader
-	 * 3 - Generator with prefixed path
-	 * 2 - Generator with suffixed path 
-	 * 1 - CssSmartSpriteResourceReader
+	 * if the FileSystemResourceReader is configured with high priority the list
+	 * of priorities is as followed :
 	 * 
-	 * @param o1 the resource reader
+	 * 5 - FileSystemResourceReader 4 - ServletContextResourceReader 3 -
+	 * Generator with prefixed path 2 - Generator with suffixed path 1 -
+	 * CssSmartSpriteResourceReader
+	 * 
+	 * @param o1
+	 *            the resource reader
 	 * 
 	 * @return the priority of the resource reader
 	 */
-	private int getPriority(ResourceReader o1){
-		
+	private int getPriority(ResourceReader o1) {
+
 		int priority = 0;
-		if (o1 instanceof ServletContextResourceReader){
+		if (o1 instanceof ServletContextResourceReader) {
 			priority = baseDirHighPriority ? 5 : 4;
-		}else if (o1 instanceof FileSystemResourceReader){
+		} else if (o1 instanceof FileSystemResourceReader) {
 			priority = baseDirHighPriority ? 4 : 5;
-		}else if (o1 instanceof CssSmartSpritesResourceReader) {
+		} else if (o1 instanceof CssSmartSpritesResourceReader) {
 			priority = 1;
-		}else if(o1 instanceof ResourceGenerator){
-			if(((ResourceGenerator)o1).getResolver().getType().equals(ResolverType.PREFIXED)){
-				priority = 3; 
-			}else{
-				priority = 2; 
+		} else if (o1 instanceof ResourceGenerator) {
+			if (((ResourceGenerator) o1).getResolver().getType().equals(ResolverType.PREFIXED)) {
+				priority = 3;
+			} else {
+				priority = 2;
 			}
 		}
 		return priority;

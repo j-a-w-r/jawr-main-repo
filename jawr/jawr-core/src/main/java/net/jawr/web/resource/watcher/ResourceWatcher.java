@@ -82,10 +82,10 @@ public class ResourceWatcher extends Thread {
 	private final Map<Path, List<PathMapping>> pathToResourceBundle = new ConcurrentHashMap<>();
 
 	/** The Jawr watch event processor */
-	private JawrWatchEventProcessor jawrEvtProcessor;
+	private final JawrWatchEventProcessor jawrEvtProcessor;
 
 	/** The watch events */
-	private BlockingQueue<JawrWatchEvent> watchEvents = new LinkedBlockingQueue<JawrWatchEvent>();
+	private BlockingQueue<JawrWatchEvent> watchEvents = new LinkedBlockingQueue<>();
 
 	/**
 	 * Constructor
@@ -99,7 +99,7 @@ public class ResourceWatcher extends Thread {
 		super(bundlesHandler.getResourceType() + " JawrResourceWatcher");
 		this.bundlesHandler = bundlesHandler;
 		this.rsReader = rsReader;
-		this.keys = new HashMap<WatchKey, Path>();
+		this.keys = new HashMap<>();
 
 		try {
 			this.watchService = FileSystems.getDefault().newWatchService();
@@ -194,13 +194,13 @@ public class ResourceWatcher extends Thread {
 					pathMapping.getPath(), rsReader);
 			if (genPathMappings != null) {
 				mappings.addAll(genPathMappings);
-			}else{
+			} else {
 				mappings.add(pathMapping);
 			}
-		}else{
+		} else {
 			mappings.add(pathMapping);
 		}
-		
+
 		for (PathMapping pMapping : mappings) {
 			String filePath = rsReader.getFilePath(pMapping.getPath());
 			registerPathMapping(pMapping, filePath);

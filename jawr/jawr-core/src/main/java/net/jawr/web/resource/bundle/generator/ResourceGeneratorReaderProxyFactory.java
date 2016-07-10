@@ -67,12 +67,8 @@ public class ResourceGeneratorReaderProxyFactory {
 
 		Class<?>[] generatorInterfaces = getGeneratorInterfaces(generator);
 		Class<?>[] implementedInterfaces = new Class[generatorInterfaces.length + nbExtraInterface];
-		for (int i = 0; i < generatorInterfaces.length; i++) {
-			implementedInterfaces[i] = generatorInterfaces[i];
-		}
-		for (int i = 0; i < nbExtraInterface; i++) {
-			implementedInterfaces[generatorInterfaces.length + i] = extraInterfaces[i];
-		}
+		System.arraycopy(generatorInterfaces, 0, implementedInterfaces, 0, generatorInterfaces.length);
+		System.arraycopy(extraInterfaces, 0, implementedInterfaces, generatorInterfaces.length, nbExtraInterface);
 
 		// Creates the proxy
 		InvocationHandler handler = new ResourceGeneratorReaderWrapperInvocationHandler(generator, rsReaderHandler,
@@ -84,17 +80,15 @@ public class ResourceGeneratorReaderProxyFactory {
 	}
 
 	/**
-	 * Returns the array of interfaces implemented by the
-	 * ResourceGenerator
+	 * Returns the array of interfaces implemented by the ResourceGenerator
 	 * 
 	 * @param generator
 	 *            the generator
-	 * @return the array of interfaces implemented by the
-	 *         ResourceGenerator
+	 * @return the array of interfaces implemented by the ResourceGenerator
 	 */
 	private static Class<?>[] getGeneratorInterfaces(ResourceGenerator generator) {
 
-		Set<Class<?>> interfaces = new HashSet<Class<?>>();
+		Set<Class<?>> interfaces = new HashSet<>();
 		addInterfaces(generator, interfaces);
 		return (Class[]) interfaces.toArray(new Class[] {});
 	}
@@ -119,9 +113,9 @@ public class ResourceGeneratorReaderProxyFactory {
 			generatorInterfaces = obj.getClass().getInterfaces();
 			superClass = obj.getClass().getSuperclass();
 		}
-		for (int i = 0; i < generatorInterfaces.length; i++) {
-			interfaces.add(generatorInterfaces[i]);
-			addInterfaces(generatorInterfaces[i], interfaces);
+		for (Class<?> generatorInterface : generatorInterfaces) {
+			interfaces.add(generatorInterface);
+			addInterfaces(generatorInterface, interfaces);
 		}
 
 		if (superClass != null && superClass != Object.class) {
@@ -138,7 +132,7 @@ public class ResourceGeneratorReaderProxyFactory {
 	private static class ResourceGeneratorReaderWrapperInvocationHandler implements InvocationHandler {
 
 		/** The resource generator wrapped */
-		private ResourceGenerator generator;
+		private final ResourceGenerator generator;
 
 		/** The resource reader wrapper */
 		private ResourceGeneratorReaderWrapper rsReaderWrapper;
@@ -147,10 +141,10 @@ public class ResourceGeneratorReaderProxyFactory {
 		private StreamResourceGeneratorReaderWrapper streamRsReaderWrapper;
 
 		/** The resource reader methods */
-		private static Method[] resourceReaderMethods = TextResourceReader.class.getMethods();
+		private static final Method[] resourceReaderMethods = TextResourceReader.class.getMethods();
 
 		/** The stream resource reader methods */
-		private static Method[] streamResourceReaderMethods = StreamResourceReader.class.getMethods();
+		private static final Method[] streamResourceReaderMethods = StreamResourceReader.class.getMethods();
 
 		/**
 		 * Constructor
@@ -181,6 +175,7 @@ public class ResourceGeneratorReaderProxyFactory {
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
+		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			Object result = null;

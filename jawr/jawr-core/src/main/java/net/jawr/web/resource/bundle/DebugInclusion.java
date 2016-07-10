@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim CHAEHOI
+ * Copyright 2012-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,30 +19,27 @@ package net.jawr.web.resource.bundle;
  * @author Ibrahim Chaehoi
  */
 public enum DebugInclusion {
-	
-	ONLY,
-	NEVER,
-	ALWAYS;
-	
+
+	ONLY, NEVER, ALWAYS;
+
 	/**
 	 * Factory method for inclusion
+	 * 
 	 * @param isDebugOnly
 	 * @param isDebugNever
 	 * @return
 	 */
-	public static DebugInclusion get( boolean isDebugOnly, boolean isDebugNever){
-		
-		DebugInclusion inclusion = DebugInclusion.ALWAYS; 
-		if(isDebugOnly){
+	public static DebugInclusion get(boolean isDebugOnly, boolean isDebugNever) {
+
+		DebugInclusion inclusion = DebugInclusion.ALWAYS;
+		if (isDebugOnly) {
 			inclusion = DebugInclusion.ONLY;
 		}
-		if(isDebugNever){
+		if (isDebugNever) {
 			inclusion = DebugInclusion.NEVER;
 		}
-		
+
 		return inclusion;
 	}
 
-	
-	
 }

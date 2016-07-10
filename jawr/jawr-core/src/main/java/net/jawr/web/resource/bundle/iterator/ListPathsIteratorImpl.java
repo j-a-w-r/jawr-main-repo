@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,59 +26,76 @@ import java.util.List;
 public class ListPathsIteratorImpl implements ResourceBundlePathsIterator {
 
 	/**
-	 * The path iterator 
+	 * The path iterator
 	 */
 	private Iterator<BundlePath> pathIterator;
-	
+
 	/**
 	 * Constructor
-	 * @param paths the list of path
+	 * 
+	 * @param paths
+	 *            the list of path
 	 */
 	public ListPathsIteratorImpl(List<BundlePath> paths) {
 		pathIterator = paths.iterator();
 	}
-	
+
 	/**
 	 * Constructor
-	 * @param paths the array of path
+	 * 
+	 * @param paths
+	 *            the array of path
 	 */
 	public ListPathsIteratorImpl(BundlePath[] paths) {
 		pathIterator = Arrays.asList(paths).iterator();
 	}
-	
+
 	/**
 	 * Constructor
-	 * @param path the path
+	 * 
+	 * @param path
+	 *            the path
 	 */
 	public ListPathsIteratorImpl(BundlePath path) {
-		this(new BundlePath[]{path});
+		this(new BundlePath[] { path });
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#
+	 * nextPath()
 	 */
+	@Override
 	public BundlePath nextPath() {
 		return pathIterator.next();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext() {
 		return pathIterator.hasNext();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Iterator#next()
 	 */
+	@Override
 	public BundlePath next() {
 		return pathIterator.next();
 	}
 
 	/**
-	 * Unsupported method from the Iterator interface, will throw UnsupportedOperationException
-	 * if called. 
+	 * Unsupported method from the Iterator interface, will throw
+	 * UnsupportedOperationException if called.
 	 */
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

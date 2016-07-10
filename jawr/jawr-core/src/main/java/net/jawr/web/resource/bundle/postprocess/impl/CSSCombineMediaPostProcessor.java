@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2013 Gerben Jorna, Ibrahim Chaehoi
+ * Copyright 2010-2016 Gerben Jorna, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -34,12 +34,10 @@ import org.slf4j.LoggerFactory;
  * @author Gerben Jorna
  * @author Ibrahim Chaehoi
  */
-public class CSSCombineMediaPostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
+public class CSSCombineMediaPostProcessor extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(CSSCombineMediaPostProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CSSCombineMediaPostProcessor.class);
 
 	/** The media rule */
 	protected static final String CSS_MEDIA_RULE = "@media";
@@ -52,9 +50,6 @@ public class CSSCombineMediaPostProcessor extends
 
 	/**
 	 * Constructor
-	 * 
-	 * @param id
-	 *            the Id of the post processor
 	 */
 	public CSSCombineMediaPostProcessor() {
 		super(PostProcessFactoryConstant.CSS_COMBINE_MEDIA);
@@ -68,15 +63,14 @@ public class CSSCombineMediaPostProcessor extends
 	 * #doPostProcessBundle(net.jawr.web.resource.bundle.postprocess
 	 * .BundleProcessingStatus, java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 		LOGGER.info("Post processing file '" + status.getLastPathAdded() + "'");
 
-		String bundleMediaTypePropertyName = "jawr.css.bundle."
-				+ status.getCurrentBundle().getName() + ".media";
+		String bundleMediaTypePropertyName = "jawr.css.bundle." + status.getCurrentBundle().getName() + ".media";
 		JawrConfig config = status.getJawrConfig();
-		String bundleMediaType = (String) config.getProperty(
-				bundleMediaTypePropertyName);
+		String bundleMediaType = (String) config.getProperty(bundleMediaTypePropertyName);
 		if (bundleMediaType == null) {
 			LOGGER.warn("no bundle media type provided; use 'screen'");
 			bundleMediaType = "screen";
@@ -84,15 +78,12 @@ public class CSSCombineMediaPostProcessor extends
 
 		LOGGER.info("bundle media type: " + bundleMediaType);
 
-		StringBuffer sb = new StringBuffer(CSS_MEDIA_RULE + " "
-				+ bundleMediaType + " " + CSS_MEDIA_RULE_OPEN
-				+ StringUtils.STR_LINE_FEED);
+		StringBuffer sb = new StringBuffer(
+				CSS_MEDIA_RULE + " " + bundleMediaType + " " + CSS_MEDIA_RULE_OPEN + StringUtils.STR_LINE_FEED);
 		sb.append(bundleData);
-		sb.append(CSS_MEDIA_RULE_CLOSE + StringUtils.STR_LINE_FEED
-				+ StringUtils.STR_LINE_FEED);
+		sb.append(CSS_MEDIA_RULE_CLOSE + StringUtils.STR_LINE_FEED + StringUtils.STR_LINE_FEED);
 
 		LOGGER.info("Postprocessing finished");
 		return sb;
 	}
 }
-

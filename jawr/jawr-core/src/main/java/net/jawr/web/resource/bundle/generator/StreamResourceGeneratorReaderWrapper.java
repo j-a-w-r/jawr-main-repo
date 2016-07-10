@@ -28,19 +28,23 @@ import net.jawr.web.resource.handler.reader.StreamResourceReader;
 public class StreamResourceGeneratorReaderWrapper implements StreamResourceReader {
 
 	/** The resource generator wrapped */
-	private StreamResourceGenerator generator;
+	private final StreamResourceGenerator generator;
 
 	/** The resource handler */
-	private ResourceReaderHandler rsHandler;
+	private final ResourceReaderHandler rsHandler;
 
 	/** The Jawr config */
-	private JawrConfig config;
+	private final JawrConfig config;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param generator
 	 *            the generator
+	 * @param rsHandler
+	 *            the resource handler
+	 * @param config
+	 *            the Jawr config
 	 */
 	public StreamResourceGeneratorReaderWrapper(StreamResourceGenerator generator, ResourceReaderHandler rsHandler,
 			JawrConfig config) {
@@ -49,21 +53,28 @@ public class StreamResourceGeneratorReaderWrapper implements StreamResourceReade
 		this.rsHandler = rsHandler;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String)
 	 */
 	@Override
 	public InputStream getResourceAsStream(String resourceName) {
-		
+
 		return getResourceAsStream(resourceName, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String, boolean)
 	 */
 	@Override
-	public InputStream getResourceAsStream(String resourceName, 
-			boolean processingBundle) {
+	public InputStream getResourceAsStream(String resourceName, boolean processingBundle) {
 
 		GeneratorContext context = new GeneratorContext(null, config,
 				generator.getResolver().getResourcePath(resourceName));

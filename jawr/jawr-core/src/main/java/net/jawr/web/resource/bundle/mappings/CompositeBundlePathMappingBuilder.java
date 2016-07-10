@@ -13,7 +13,6 @@
  */
 package net.jawr.web.resource.bundle.mappings;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -56,11 +55,9 @@ public class CompositeBundlePathMappingBuilder extends BundlePathMappingBuilder 
 	 */
 	@Override
 	public BundlePathMapping build(List<String> strPathMappings) {
-		
+
 		BundlePathMapping bundlePathMapping = new BundlePathMapping(bundle);
-		for (Iterator<JoinableResourceBundle> it = ((CompositeResourceBundle) bundle).getChildBundles().iterator(); it
-				.hasNext();) {
-			JoinableResourceBundle child = it.next();
+		for (JoinableResourceBundle child : ((CompositeResourceBundle) bundle).getChildBundles()) {
 			if (!child.getInclusionPattern().isIncludeOnlyOnDebug()) {
 				bundlePathMapping.getItemPathList().addAll(child.getItemPathList());
 				addFilePathMapping(bundlePathMapping, child.getItemPathList());

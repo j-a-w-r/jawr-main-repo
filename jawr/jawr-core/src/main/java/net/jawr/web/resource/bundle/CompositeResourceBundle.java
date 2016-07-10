@@ -13,7 +13,6 @@
  */
 package net.jawr.web.resource.bundle;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
@@ -34,7 +33,7 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 
 	/** The child bundles */
-	private List<JoinableResourceBundle> childBundles;
+	private final List<JoinableResourceBundle> childBundles;
 
 	/**
 	 * Constructor
@@ -63,12 +62,11 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 		super(id, name, bundlePrefix, fileExtension, inclusionPattern, resourceHandler, generatorRegistry);
 
 		this.childBundles = childBundles;
-		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceHandler, generatorRegistry);
+		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceHandler,
+				generatorRegistry);
 		this.bundlePathMapping = this.bundlePathMappingBuilder.build(null);
-		
-		for (Iterator<JoinableResourceBundle> it = this.childBundles.iterator(); it.hasNext();) {
-			JoinableResourceBundle child = it.next();
-			
+
+		for (JoinableResourceBundle child : this.childBundles) {
 			// If the child has no postprocessors, apply the composite's if any
 			if (null == child.getBundlePostProcessor()) {
 				child.setBundlePostProcessor(this.getBundlePostProcessor());
@@ -79,11 +77,17 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundleImpl#createBundlePathMappingBuilder(java.lang.String, net.jawr.web.resource.handler.reader.ResourceReaderHandler, net.jawr.web.resource.bundle.generator.GeneratorRegistry)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundleImpl#
+	 * createBundlePathMappingBuilder(java.lang.String,
+	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler,
+	 * net.jawr.web.resource.bundle.generator.GeneratorRegistry)
 	 */
 	@Override
-	protected BundlePathMappingBuilder createBundlePathMappingBuilder(String fileExtension, ResourceReaderHandler resourceReaderHandler, GeneratorRegistry generatorRegistry){
+	protected BundlePathMappingBuilder createBundlePathMappingBuilder(String fileExtension,
+			ResourceReaderHandler resourceReaderHandler, GeneratorRegistry generatorRegistry) {
 		return new CompositeBundlePathMappingBuilder(this, fileExtension, generatorRegistry, resourceReaderHandler);
 	}
 
@@ -92,13 +96,15 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#isComposite()
 	 */
+	@Override
 	public boolean isComposite() {
 		return true;
 	}
 
 	/**
-	 * @return List<JoinableResourceBundle> The bundles which are members of
-	 *         this composite.
+	 * Returns the child bundles
+	 * 
+	 * @return the bundles which are members of this composite.
 	 */
 	public List<JoinableResourceBundle> getChildBundles() {
 		return childBundles;
@@ -109,6 +115,7 @@ public class CompositeResourceBundle extends JoinableResourceBundleImpl {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return "CompositeResourceBundleImpl [id=" + getId() + ", name=" + getName() + "]";
 	}

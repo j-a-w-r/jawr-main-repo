@@ -153,6 +153,8 @@ public interface JoinableResourceBundle {
 	 * Get the URL prefix for this Bundle. It is used to force redownloading
 	 * when needed.
 	 * 
+	 * @param variants
+	 *            the variant map
 	 * @return the URL prefix for this Bundle.
 	 */
 	public String getURLPrefix(Map<String, String> variants);
@@ -186,9 +188,9 @@ public interface JoinableResourceBundle {
 	 * Set the hashcode of the string representing the bundled files. Used to
 	 * generate an automatic version url prefix.
 	 * 
-	 * @param the
-	 *            variant key
-	 * @param hashCode
+	 * @param variantKey
+	 *            the variant key
+	 * @param bundleDataHashCode
 	 *            the string representation of the hash code where the minus is
 	 *            replace by a "N" character.
 	 */
@@ -213,8 +215,8 @@ public interface JoinableResourceBundle {
 	/**
 	 * Sets the map of variants by type for this bundle.
 	 * 
-	 * @param the
-	 *            map of variants by type for this bundle.
+	 * @param variants
+	 *            the map of variants by type for this bundle.
 	 */
 	public void setVariants(Map<String, VariantSet> variants);
 

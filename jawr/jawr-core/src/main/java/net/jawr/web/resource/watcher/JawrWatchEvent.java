@@ -17,23 +17,28 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 /**
- * This class defines a Jawr Watch event, an event which occurs on a watched resource
+ * This class defines a Jawr Watch event, an event which occurs on a watched
+ * resource
  * 
  * @author Ibrahim Chaehoi
  */
 public class JawrWatchEvent {
 
 	private final WatchEvent.Kind<?> kind;
-	
+
 	private final Path resolvedPath;
-	
+
 	private final Path dirPath;
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param resolvedPath the path on which the event happens
-	 * @param dirPath the directory path
+	 * @param kind
+	 *            the type of watch event
+	 * @param resolvedPath
+	 *            the path on which the event happens
+	 * @param dirPath
+	 *            the directory path
 	 */
 	public JawrWatchEvent(WatchEvent.Kind<?> kind, Path resolvedPath, Path dirPath) {
 		this.kind = kind;

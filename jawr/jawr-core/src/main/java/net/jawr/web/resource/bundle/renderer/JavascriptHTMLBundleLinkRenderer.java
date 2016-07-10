@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -84,7 +84,8 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * java.lang.Boolean, java.lang.Boolean)
 	 */
 	@Override
-	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer, String crossorigin) {
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer,
+			String crossorigin) {
 		init(bundler, DEFAULT_TYPE, useRandomParam, async, defer, crossorigin);
 	}
 
@@ -97,14 +98,14 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
 	 */
 	@Override
-	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam, Boolean async,
-			Boolean defer, String crossorigin) {
+	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam, Boolean async, Boolean defer,
+			String crossorigin) {
 		init(bundler, useRandomParam);
 		if (async != null) {
-			this.async = async.booleanValue();
+			this.async = async;
 		}
 		if (defer != null) {
-			this.defer = defer.booleanValue();
+			this.defer = defer;
 		}
 		this.crossorigin = crossorigin;
 		if (StringUtils.isEmpty(type)) {
@@ -120,6 +121,7 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @see
 	 * net.jawr.web.resource.bundle.renderer.BundleRenderer#getResourceType()
 	 */
+	@Override
 	public String getResourceType() {
 		return JawrConstant.JS_TYPE;
 	}
@@ -136,6 +138,7 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
+	@Override
 	protected void performGlobalBundleLinksRendering(BundleRendererContext ctx, Writer out, boolean debugOn)
 			throws IOException {
 
@@ -150,6 +153,7 @@ public class JavascriptHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @see net.jawr.web.resource.bundle.renderer.AbstractBundleLinkRenderer#
 	 * createBundleLink(java.lang.String, java.lang.String)
 	 */
+	@Override
 	protected String renderLink(String fullPath) {
 
 		// if(bundler.get)

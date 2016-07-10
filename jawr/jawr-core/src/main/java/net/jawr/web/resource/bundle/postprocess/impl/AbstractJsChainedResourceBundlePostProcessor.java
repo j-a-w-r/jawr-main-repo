@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2013 Ibrahim Chaehoi
+ * Copyright 2012-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,12 +27,10 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
  * 
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractJsChainedResourceBundlePostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
+public abstract class AbstractJsChainedResourceBundlePostProcessor extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(AbstractChainedResourceBundlePostProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractChainedResourceBundlePostProcessor.class);
 
 	/**
 	 * Constructor
@@ -51,25 +49,21 @@ public abstract class AbstractJsChainedResourceBundlePostProcessor extends
 	 * net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor#
 	 * postProcessBundle(java.lang.StringBuffer)
 	 */
-	public StringBuffer postProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) {
+	@Override
+	public StringBuffer postProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) {
 		StringBuffer processedBundle = null;
 		try {
 			if (LOGGER.isDebugEnabled())
-				LOGGER.debug("postprocessing bundle:"
-						+ status.getCurrentBundle().getId());
+				LOGGER.debug("postprocessing bundle:" + status.getCurrentBundle().getId());
 			processedBundle = doPostProcessBundle(status, bundleData);
 			if (processedBundle.toString().endsWith(")")) {
 				processedBundle.append(";");
 			}
 		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"Unexpected IOException during execution of a postprocessor.",
-					e);
+			throw new BundlingProcessException("Unexpected IOException during execution of a postprocessor.", e);
 		}
 		if (null != nextProcessor) {
-			processedBundle = nextProcessor.postProcessBundle(status,
-					processedBundle);
+			processedBundle = nextProcessor.postProcessBundle(status, processedBundle);
 		}
 		return processedBundle;
 	}

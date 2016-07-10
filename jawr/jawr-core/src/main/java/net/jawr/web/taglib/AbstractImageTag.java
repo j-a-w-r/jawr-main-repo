@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -45,13 +45,10 @@ public abstract class AbstractImageTag extends ImagePathTag {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param renderer
-	 *            the image renderer
 	 */
 	public AbstractImageTag() {
 		super();
-		this.attributeMap = new HashMap<String, Object>();
+		this.attributeMap = new HashMap<>();
 	}
 
 	/**
@@ -228,9 +225,10 @@ public abstract class AbstractImageTag extends ImagePathTag {
 	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
+	@Override
 	public void release() {
 		super.release();
-		this.attributeMap = new HashMap<String, Object>();
+		this.attributeMap = new HashMap<>();
 	}
 
 	/**
@@ -239,22 +237,20 @@ public abstract class AbstractImageTag extends ImagePathTag {
 	 * @throws JspException
 	 *             if a JSP exception has occurred
 	 */
+	@Override
 	public int doEndTag() throws JspException {
 
 		try {
 
 			BinaryResourcesHandler rsHandler = null;
-			if ((rsHandler = (BinaryResourcesHandler) pageContext
-					.getServletContext().getAttribute(
-							JawrConstant.BINARY_CONTEXT_ATTRIBUTE)) == null)
+			if ((rsHandler = (BinaryResourcesHandler) pageContext.getServletContext()
+					.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE)) == null)
 				throw new IllegalStateException(
 						"Binary ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
 
 			JawrConfig jawrConfig = rsHandler.getConfig();
-			this.renderer = RendererFactory.getImgRenderer(jawrConfig,
-					isPlainImage());
-			this.renderer.renderImage(getImgSrcToRender(), getAttributeMap(),
-					pageContext.getOut());
+			this.renderer = RendererFactory.getImgRenderer(jawrConfig, isPlainImage());
+			this.renderer.renderImage(getImgSrcToRender(), getAttributeMap(), pageContext.getOut());
 		} catch (IOException e) {
 			throw new JspException(e);
 		} finally {

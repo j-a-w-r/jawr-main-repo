@@ -1,5 +1,5 @@
 /**
- * Copyright 2008  Jordi Hernández Sellés
+ * Copyright 2008-2016  Jordi Hernández Sellés
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,8 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PropsFilePropertiesSource.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropsFilePropertiesSource.class.getName());
 
 	protected String configLocation;
 	protected int propsHashCode;
@@ -47,6 +46,7 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
 	 * getConfigProperties()
 	 */
+	@Override
 	public final Properties getConfigProperties() {
 		Properties props = doReadConfig();
 
@@ -74,7 +74,8 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	 * it will be read from the filesystem. Otherwise it will be loaded from the
 	 * classpath.
 	 * 
-	 * @param path the configuration path
+	 * @param path
+	 *            the configuration path
 	 * @return the configuration properties
 	 */
 	protected Properties readConfigFile(String path) {
@@ -84,23 +85,18 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 		try {
 			if (path.startsWith(FILE_PREFIX)) {
 				if (LOGGER.isDebugEnabled() && !checking)
-					LOGGER.debug("Using filesystem properties file location at: "
-							+ configLocation);
-				is = new FileInputStream(new File(path.substring(FILE_PREFIX
-						.length())));
+					LOGGER.debug("Using filesystem properties file location at: " + configLocation);
+				is = new FileInputStream(new File(path.substring(FILE_PREFIX.length())));
 			} else {
 				if (LOGGER.isDebugEnabled() && !checking)
-					LOGGER.debug("Reading properties from file at classpath: "
-							+ configLocation);
+					LOGGER.debug("Reading properties from file at classpath: " + configLocation);
 				is = ClassLoaderResourceUtils.getResourceAsStream(path, this);
 			}
 			loadConfig(props, path, is);
 
 		} catch (IOException e) {
-			throw new IllegalArgumentException(
-					"jawr configuration could not be found at " + path
-							+ ". Make sure parameter is properly set "
-							+ "in web.xml. ");
+			throw new IllegalArgumentException("jawr configuration could not be found at " + path
+					+ ". Make sure parameter is properly set " + "in web.xml. ");
 		} finally {
 			IOUtils.close(is);
 		}
@@ -110,18 +106,20 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 
 	/**
 	 * Loads the configuration from the stream
-	 * @param props the properties to update
-	 * @param path The configuration path
-	 * @param is the input stream 
+	 * 
+	 * @param props
+	 *            the properties to update
+	 * @param path
+	 *            The configuration path
+	 * @param is
+	 *            the input stream
 	 */
 	protected void loadConfig(Properties props, String path, InputStream is) {
 		// load properties into a Properties object
 		try {
 			props.load(is);
 		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"Unable to load jawr configuration at " + path
-							+ ".", e);
+			throw new BundlingProcessException("Unable to load jawr configuration at " + path + ".", e);
 		}
 	}
 
@@ -139,6 +137,7 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	 * @see net.jawr.web.resource.bundle.factory.util.ConfigPropertiesSource#
 	 * configChanged()
 	 */
+	@Override
 	public final boolean configChanged() {
 		checking = true;
 		int currentConfigHash = doReadConfig().hashCode();

@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -34,14 +34,13 @@ import org.mozilla.javascript.EvaluatorException;
 public class YUIErrorReporter implements ErrorReporter {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(YUIErrorReporter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(YUIErrorReporter.class);
 
 	/** The bundle processing status */
-	private BundleProcessingStatus status;
+	private final BundleProcessingStatus status;
 
 	/** The bundle content */
-	private StringBuffer bundleData;
+	private final StringBuffer bundleData;
 
 	/** The error line */
 	private int errorLine;
@@ -58,8 +57,7 @@ public class YUIErrorReporter implements ErrorReporter {
 	 *            Contents of the bundle, used when an error occurs to display
 	 *            the conlifcting line.
 	 */
-	public YUIErrorReporter(BundleProcessingStatus status,
-			StringBuffer bundleData) {
+	public YUIErrorReporter(BundleProcessingStatus status, StringBuffer bundleData) {
 		super();
 		this.status = status;
 		this.bundleData = bundleData;
@@ -71,8 +69,8 @@ public class YUIErrorReporter implements ErrorReporter {
 	 * @see org.mozilla.javascript.ErrorReporter#error(java.lang.String,
 	 * java.lang.String, int, java.lang.String, int)
 	 */
-	public void error(String message, String sourceName, int line,
-			String lineSource, int lineOffset) {
+	@Override
+	public void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
 
 		// Only log the first error...
 		if (this.errorLine < 1) {
@@ -100,18 +98,16 @@ public class YUIErrorReporter implements ErrorReporter {
 	 * 
 	 * @return an EvaluatorException that will be thrown.
 	 */
-	public EvaluatorException runtimeError(String message, String sourceName,
-			int line, String lineSource, int lineOffset) {
-		StringBuffer errorMsg = new StringBuffer(
-				"YUI failed to minify the bundle with id: '"
-						+ status.getCurrentBundle().getId() + "'.\n");
-		errorMsg.append("YUI error message(s):[").append(this.yuiErrorMessage)
-				.append("]\n");
+	@Override
+	public EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource,
+			int lineOffset) {
+		StringBuilder errorMsg = new StringBuilder(
+				"YUI failed to minify the bundle with id: '" + status.getCurrentBundle().getId() + "'.\n");
+		errorMsg.append("YUI error message(s):[").append(this.yuiErrorMessage).append("]\n");
 		errorMsg.append("The error happened at this point in your javascript: \n");
 		errorMsg.append("_______________________________________________\n...\n");
 
-		BufferedReader rd = new BufferedReader(new StringReader(
-				bundleData.toString()));
+		BufferedReader rd = new BufferedReader(new StringReader(bundleData.toString()));
 		String s;
 		int totalLines = 0;
 		int start = this.errorLine - 10;
@@ -131,10 +127,10 @@ public class YUIErrorReporter implements ErrorReporter {
 		}
 
 		errorMsg.append("_______________________________________________");
-		errorMsg.append("\nIf you can't find the error, try to check the scripts using JSLint (http://www.jslint.com/) to find the conflicting part of the code.\n");
+		errorMsg.append(
+				"\nIf you can't find the error, try to check the scripts using JSLint (http://www.jslint.com/) to find the conflicting part of the code.\n");
 
-		return new EvaluatorException(errorMsg.toString(), status
-				.getCurrentBundle().getName(), this.errorLine);
+		return new EvaluatorException(errorMsg.toString(), status.getCurrentBundle().getName(), this.errorLine);
 	}
 
 	/*
@@ -143,8 +139,8 @@ public class YUIErrorReporter implements ErrorReporter {
 	 * @see org.mozilla.javascript.ErrorReporter#warning(java.lang.String,
 	 * java.lang.String, int, java.lang.String, int)
 	 */
-	public void warning(String message, String sourceName, int line,
-			String lineSource, int lineOffset) {
+	@Override
+	public void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(message);
 	}

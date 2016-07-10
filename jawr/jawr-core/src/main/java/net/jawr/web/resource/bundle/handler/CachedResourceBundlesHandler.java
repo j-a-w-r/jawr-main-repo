@@ -51,16 +51,16 @@ import net.jawr.web.resource.watcher.ResourceWatcher;
 public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 
 	/** The prefix for text element in cache */
-	private static String TEXT_CACHE_PREFIX = "TEXT.";
+	private static final String TEXT_CACHE_PREFIX = "TEXT.";
 
 	/** The prefix for zipped element in cache */
-	private static String ZIP_CACHE_PREFIX = "ZIP.";
+	private static final String ZIP_CACHE_PREFIX = "ZIP.";
 
 	/** The resource bundle handler */
-	private ResourceBundlesHandler rsHandler;
+	private final ResourceBundlesHandler rsHandler;
 
 	/** The cache manager */
-	private JawrCacheManager cacheMgr;
+	private final JawrCacheManager cacheMgr;
 
 	/**
 	 * Build a cached wrapper around the supplied ResourceBundlesHandler.
@@ -378,8 +378,11 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 		return rsHandler.getDirtyBundleNames();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * setResourceWatcher(net.jawr.web.resource.watcher.ResourceWatcher)
 	 */
 	@Override
 	public void setResourceWatcher(ResourceWatcher watcher) {

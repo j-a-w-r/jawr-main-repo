@@ -34,58 +34,61 @@ import net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware;
  * @author Ibrahim CHAEHOI
  * 
  */
-public class SpriteGenerator implements StreamResourceGenerator,
-		ConfigurationAwareResourceGenerator,
-		WorkingDirectoryLocationAware,
-		PostInitializationAwareResourceGenerator {
+public class SpriteGenerator implements StreamResourceGenerator, ConfigurationAwareResourceGenerator,
+		WorkingDirectoryLocationAware, PostInitializationAwareResourceGenerator {
 
 	/** The stream resource handle for image sprite */
 	private StreamResourceReader rd;
 
 	/** The working directory */
 	private String workingDirectory;
-	
+
 	/** The resource generator resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/** The jawr config */
 	private JawrConfig config;
-	
+
 	/**
 	 * Constructor
-	 * 
-	 * @param rsHandler
-	 *            the resource handler
-	 * @param config
-	 *            the config
 	 */
 	public SpriteGenerator() {
 		resolver = ResourceGeneratorResolverFactory.createPrefixResolver(GeneratorRegistry.SPRITE_GENERATOR_PREFIX);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware#setWorkingDirectory(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.WorkingDirectoryLocationAware#
+	 * setWorkingDirectory(java.lang.String)
 	 */
 	@Override
 	public void setWorkingDirectory(String workingDir) {
 		workingDirectory = workingDir;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.JawrConfig)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * ConfigurationAwareResourceGenerator#setConfig(net.jawr.web.config.
+	 * JawrConfig)
 	 */
 	@Override
 	public void setConfig(JawrConfig config) {
-		
+
 		this.config = config;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.PostInitializationAwareResourceGenerator#afterPropertiesSet()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.
+	 * PostInitializationAwareResourceGenerator#afterPropertiesSet()
 	 */
 	@Override
 	public void afterPropertiesSet() {
-		
+
 		rd = new CssSmartSpritesResourceReader(workingDirectory, config);
 	}
 
@@ -106,10 +109,10 @@ public class SpriteGenerator implements StreamResourceGenerator,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher
-	 * ()
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getPathMatcher ()
 	 */
+	@Override
 	public ResourceGeneratorResolver getResolver() {
 
 		return resolver;
@@ -121,9 +124,10 @@ public class SpriteGenerator implements StreamResourceGenerator,
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
 	 * getDebugModeRequestPath()
 	 */
+	@Override
 	public String getDebugModeRequestPath() {
 
 		return ResourceGenerator.IMG_DEBUGPATH;
 	}
-	
+
 }

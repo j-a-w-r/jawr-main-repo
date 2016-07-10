@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Ibrahim Chaehoi
+ * Copyright 2013-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package net.jawr.web.resource.bundle.renderer;
 import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 
 /**
- * The interface of JS bundle renderer. 
+ * The interface of JS bundle renderer.
  * 
  * @author Ibrahim Chaehoi
  */
@@ -24,22 +24,38 @@ public interface JsBundleLinkRenderer extends BundleRenderer {
 
 	/**
 	 * Initializes the JS Bundle renderer
-	 * @param bundler the resource bundle handler
-	 * @param useRandomParam the flag indicating if it should use random param
-	 * @param async the flag indicating if the link has an async attribute
-	 * @param defer the flag indicating if the link has a deferred attribute
+	 * 
+	 * @param bundler
+	 *            the resource bundle handler
+	 * @param useRandomParam
+	 *            the flag indicating if it should use random param
+	 * @param async
+	 *            the flag indicating if the link has an async attribute
+	 * @param defer
+	 *            the flag indicating if the link has a deferred attribute
+	 * @param crossorigin
+	 *            the cross origin
 	 */
-	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer, String crossorigin);
-	
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, Boolean async, Boolean defer,
+			String crossorigin);
+
 	/**
 	 * Initializes the JS Bundle renderer
-	 * @param bundler the resource bundle handler
-	 * @param type the script type attribute
-	 * @param useRandomParam the flag indicating if it should use random param
-	 * @param async the flag indicating if the link has an async attribute
-	 * @param defer the flag indicating if the link has a deferred attribute
+	 * 
+	 * @param bundler
+	 *            the resource bundle handler
+	 * @param type
+	 *            the script type attribute
+	 * @param useRandomParam
+	 *            the flag indicating if it should use random param
+	 * @param async
+	 *            the flag indicating if the link has an async attribute
+	 * @param defer
+	 *            the flag indicating if the link has a deferred attribute
+	 * @param crossorigin
+	 *            the cross origin
 	 */
-	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam,
-    		Boolean async, Boolean defer, String crossorigin);
-    
+	public void init(ResourceBundlesHandler bundler, String type, Boolean useRandomParam, Boolean async, Boolean defer,
+			String crossorigin);
+
 }

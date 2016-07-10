@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,22 +23,28 @@ import net.jawr.web.config.JawrConfig;
 public class AbstractGlobalProcessingContext {
 
 	/** The Jawr config */
-	private JawrConfig config;
-	
+	private final JawrConfig config;
+
 	/** The flag indicating if the bundle must be processed */
-	private boolean bundleMustBeProcessed;
-	
+	private final boolean bundleMustBeProcessed;
+
 	/**
 	 * Constructor
+	 * 
+	 * @param config
+	 *            the jawr config
+	 * @param processBundle
+	 *            the flag indicating if the bundle should be processed
 	 */
 	public AbstractGlobalProcessingContext(JawrConfig config, boolean processBundle) {
-		
+
 		this.config = config;
 		this.bundleMustBeProcessed = processBundle;
 	}
 
 	/**
 	 * Returns the config
+	 * 
 	 * @return the config
 	 */
 	public JawrConfig getJawrConfig() {
@@ -47,10 +53,11 @@ public class AbstractGlobalProcessingContext {
 
 	/**
 	 * Returns true if the bundles will be processed
+	 * 
 	 * @return true if the bundles will be processed
 	 */
 	public boolean hasBundleToBeProcessed() {
 		return bundleMustBeProcessed;
 	}
-	
+
 }

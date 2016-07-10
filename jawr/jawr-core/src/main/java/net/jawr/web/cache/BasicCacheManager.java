@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2012 Ibrahim Chaehoi
+ * Copyright 2011-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,8 +26,8 @@ import net.jawr.web.config.JawrConfig;
 public class BasicCacheManager extends JawrCacheManager {
 
 	/** The cache hash map */
-	private Map<String, Object> cache = new ConcurrentHashMap<String, Object>();
-	
+	private final Map<String, Object> cache = new ConcurrentHashMap<>();
+
 	/**
 	 * @param config
 	 */
@@ -35,38 +35,47 @@ public class BasicCacheManager extends JawrCacheManager {
 		super(config);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.cache.AbstractCacheManager#put(java.lang.String, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.cache.AbstractCacheManager#put(java.lang.String,
+	 * java.lang.Object)
 	 */
 	@Override
 	public void put(String key, Object value) {
 		cache.put(key, value);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#get(java.lang.String)
 	 */
 	@Override
 	public Object get(String key) {
-		
+
 		return cache.get(key);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#remove(java.lang.String)
 	 */
 	@Override
 	public Object remove(String key) {
-		
+
 		return cache.remove(key);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#clear()
 	 */
 	@Override
 	public void clear() {
-		
+
 		cache.clear();
 	}
 

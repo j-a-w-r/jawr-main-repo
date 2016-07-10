@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -39,168 +39,142 @@ public class ELImageInputTagBeanInfo extends SimpleBeanInfo {
 	 * 
 	 * @see java.beans.SimpleBeanInfo#getPropertyDescriptors()
 	 */
+	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
-		List<PropertyDescriptor> proplist = new ArrayList<PropertyDescriptor>();
+		List<PropertyDescriptor> proplist = new ArrayList<>();
 
 		try {
-			proplist.add(new PropertyDescriptor("base64",
-					ELImageInputTag.class, null, "setBase64Expr"));
+			proplist.add(new PropertyDescriptor("base64", ELImageInputTag.class, null, "setBase64Expr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("align", ELImageInputTag.class,
-					null, "setAlignExpr"));
+			proplist.add(new PropertyDescriptor("align", ELImageInputTag.class, null, "setAlignExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("alt", ELImageInputTag.class,
-					null, "setAltExpr"));
+			proplist.add(new PropertyDescriptor("alt", ELImageInputTag.class, null, "setAltExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("border",
-					ELImageInputTag.class, null, "setBorderExpr"));
+			proplist.add(new PropertyDescriptor("border", ELImageInputTag.class, null, "setBorderExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("dir", ELImageInputTag.class,
-					null, "setDirExpr"));
+			proplist.add(new PropertyDescriptor("dir", ELImageInputTag.class, null, "setDirExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("disabled",
-					ELImageInputTag.class, null, "setDisabledExpr"));
+			proplist.add(new PropertyDescriptor("disabled", ELImageInputTag.class, null, "setDisabledExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("lang", ELImageInputTag.class,
-					null, "setLangExpr"));
+			proplist.add(new PropertyDescriptor("lang", ELImageInputTag.class, null, "setLangExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onblur",
-					ELImageInputTag.class, null, "setOnblurExpr"));
+			proplist.add(new PropertyDescriptor("onblur", ELImageInputTag.class, null, "setOnblurExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onchange",
-					ELImageInputTag.class, null, "setOnchangeExpr"));
+			proplist.add(new PropertyDescriptor("onchange", ELImageInputTag.class, null, "setOnchangeExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onclick",
-					ELImageInputTag.class, null, "setOnclickExpr"));
+			proplist.add(new PropertyDescriptor("onclick", ELImageInputTag.class, null, "setOnclickExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("ondblclick",
-					ELImageInputTag.class, null, "setOndblclickExpr"));
+			proplist.add(new PropertyDescriptor("ondblclick", ELImageInputTag.class, null, "setOndblclickExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onfocus",
-					ELImageInputTag.class, null, "setOnfocusExpr"));
+			proplist.add(new PropertyDescriptor("onfocus", ELImageInputTag.class, null, "setOnfocusExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onkeydown",
-					ELImageInputTag.class, null, "setOnkeydownExpr"));
+			proplist.add(new PropertyDescriptor("onkeydown", ELImageInputTag.class, null, "setOnkeydownExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onkeypress",
-					ELImageInputTag.class, null, "setOnkeypressExpr"));
+			proplist.add(new PropertyDescriptor("onkeypress", ELImageInputTag.class, null, "setOnkeypressExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onkeyup",
-					ELImageInputTag.class, null, "setOnkeyupExpr"));
+			proplist.add(new PropertyDescriptor("onkeyup", ELImageInputTag.class, null, "setOnkeyupExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onmousedown",
-					ELImageInputTag.class, null, "setOnmousedownExpr"));
+			proplist.add(new PropertyDescriptor("onmousedown", ELImageInputTag.class, null, "setOnmousedownExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onmousemove",
-					ELImageInputTag.class, null, "setOnmousemoveExpr"));
+			proplist.add(new PropertyDescriptor("onmousemove", ELImageInputTag.class, null, "setOnmousemoveExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onmouseout",
-					ELImageInputTag.class, null, "setOnmouseoutExpr"));
+			proplist.add(new PropertyDescriptor("onmouseout", ELImageInputTag.class, null, "setOnmouseoutExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onmouseover",
-					ELImageInputTag.class, null, "setOnmouseoverExpr"));
+			proplist.add(new PropertyDescriptor("onmouseover", ELImageInputTag.class, null, "setOnmouseoverExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("onmouseup",
-					ELImageInputTag.class, null, "setOnmouseupExpr"));
+			proplist.add(new PropertyDescriptor("onmouseup", ELImageInputTag.class, null, "setOnmouseupExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("src", ELImageInputTag.class,
-					null, "setSrcExpr"));
+			proplist.add(new PropertyDescriptor("src", ELImageInputTag.class, null, "setSrcExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("style", ELImageInputTag.class,
-					null, "setStyleExpr"));
+			proplist.add(new PropertyDescriptor("style", ELImageInputTag.class, null, "setStyleExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("styleClass",
-					ELImageInputTag.class, null, "setStyleClassExpr"));
+			proplist.add(new PropertyDescriptor("styleClass", ELImageInputTag.class, null, "setStyleClassExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("styleId",
-					ELImageInputTag.class, null, "setStyleIdExpr"));
+			proplist.add(new PropertyDescriptor("styleId", ELImageInputTag.class, null, "setStyleIdExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("tabindex",
-					ELImageInputTag.class, null, "setTabindexExpr"));
+			proplist.add(new PropertyDescriptor("tabindex", ELImageInputTag.class, null, "setTabindexExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("title", ELImageInputTag.class,
-					null, "setTitleExpr"));
+			proplist.add(new PropertyDescriptor("title", ELImageInputTag.class, null, "setTitleExpr"));
 		} catch (IntrospectionException ex) {
 		}
 
 		try {
-			proplist.add(new PropertyDescriptor("value", ELImageInputTag.class,
-					null, "setValueExpr"));
+			proplist.add(new PropertyDescriptor("value", ELImageInputTag.class, null, "setValueExpr"));
 		} catch (IntrospectionException ex) {
 		}
 

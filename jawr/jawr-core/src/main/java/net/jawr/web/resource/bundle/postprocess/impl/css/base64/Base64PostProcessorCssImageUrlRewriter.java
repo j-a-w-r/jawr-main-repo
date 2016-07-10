@@ -51,7 +51,7 @@ import net.jawr.web.util.StringUtils;
 public class Base64PostProcessorCssImageUrlRewriter extends PostProcessorCssImageUrlRewriter {
 
 	/** The logger */
-	private Logger LOGGER = LoggerFactory.getLogger(Base64PostProcessorCssImageUrlRewriter.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(Base64PostProcessorCssImageUrlRewriter.class);
 
 	/** The data prefix */
 	private static final String DATA_PREFIX = "data:";
@@ -87,7 +87,7 @@ public class Base64PostProcessorCssImageUrlRewriter extends PostProcessorCssImag
 	private static final int MAX_LENGTH_FILE = 30000;
 
 	/** The current browser */
-	private String browser;
+	private final String browser;
 
 	/** The maximum image file size authorized to be encoded in base64 */
 	private int maxFileSize;
@@ -96,10 +96,10 @@ public class Base64PostProcessorCssImageUrlRewriter extends PostProcessorCssImag
 	private Map<String, Base64EncodedResource> encodedResources = null;
 
 	/** The flag which determine if we must encode by default or not */
-	private boolean encodeByDefault;
+	private final boolean encodeByDefault;
 
 	/** The flag indicating if we must encode the sprites or not */
-	private boolean encodeSprite;
+	private final boolean encodeSprite;
 
 	/** The flag indicating if we must skip the base64 encoding */
 	private boolean skipBase64Encoding;
@@ -148,7 +148,7 @@ public class Base64PostProcessorCssImageUrlRewriter extends PostProcessorCssImag
 
 		boolean result = defaultValue;
 		if (strVal != null) {
-			result = Boolean.valueOf(strVal).booleanValue();
+			result = Boolean.parseBoolean(strVal);
 		}
 
 		return result;
@@ -166,6 +166,7 @@ public class Base64PostProcessorCssImageUrlRewriter extends PostProcessorCssImag
 	 * @return the new CSS content with image path rewritten
 	 * @throws IOException
 	 */
+	@Override
 	public StringBuffer rewriteUrl(String originalCssPath, String newCssPath, String originalCssContent)
 			throws IOException {
 
@@ -199,8 +200,8 @@ public class Base64PostProcessorCssImageUrlRewriter extends PostProcessorCssImag
 				String url = urlMatcher.group();
 
 				// Skip sprite encoding if it is configured so
-				if (!encodeSprite && url.indexOf(
-						GeneratorRegistry.SPRITE_GENERATOR_PREFIX + GeneratorRegistry.PREFIX_SEPARATOR) != -1) {
+				if (!encodeSprite && url
+						.contains(GeneratorRegistry.SPRITE_GENERATOR_PREFIX + GeneratorRegistry.PREFIX_SEPARATOR)) {
 					skipBase64Encoding = true;
 				}
 

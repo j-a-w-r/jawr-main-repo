@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2015 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,10 +15,12 @@ package net.jawr.web.resource.bundle.renderer;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.jawr.web.DebugMode;
 import net.jawr.web.context.ThreadLocalJawrContext;
@@ -30,9 +32,6 @@ import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.servlet.RendererRequestUtils;
 import net.jawr.web.util.StringUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Abstract base class for implementations of a link renderer.
  * 
@@ -43,8 +42,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(AbstractBundleLinkRenderer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractBundleLinkRenderer.class);
 
 	/** The serial version UID */
 	private static final long serialVersionUID = 7440895269616865487L;
@@ -77,6 +75,7 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * 
 	 * @return the resource bundles handler
 	 */
+	@Override
 	public ResourceBundlesHandler getBundler() {
 		return bundler;
 	}
@@ -90,12 +89,11 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * net.jawr.web.resource.bundle.renderer.BundleRendererContext,
 	 * javax.servlet.jsp.Writer)
 	 */
-	public void renderBundleLinks(String requestedPath,
-			BundleRendererContext ctx, Writer out) throws IOException {
+	@Override
+	public void renderBundleLinks(String requestedPath, BundleRendererContext ctx, Writer out) throws IOException {
 
 		boolean debugOn = bundler.getConfig().isDebugModeOn();
-		JoinableResourceBundle bundle = bundler
-				.resolveBundleForPath(requestedPath);
+		JoinableResourceBundle bundle = bundler.resolveBundleForPath(requestedPath);
 
 		if (null == bundle) {
 
@@ -112,8 +110,7 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 		renderBundleLinks(bundle, requestedPath, ctx, out, debugOn, true);
 
 		if (debugOn) {
-			addComment("Finished adding members resolved by " + requestedPath,
-					out);
+			addComment("Finished adding members resolved by " + requestedPath, out);
 		}
 	}
 
@@ -135,28 +132,26 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void renderBundleLinks(JoinableResourceBundle bundle,
-			String requestedPath, BundleRendererContext ctx, Writer out,
-			boolean debugOn, boolean renderDependencyLinks) throws IOException {
+	protected void renderBundleLinks(JoinableResourceBundle bundle, String requestedPath, BundleRendererContext ctx,
+			Writer out, boolean debugOn, boolean renderDependencyLinks) throws IOException {
 		if (debugOn) {
-			addComment("Start adding members resolved by '" + requestedPath
-					+ "'. Bundle id is: '" + bundle.getId() + "'", out);
+			addComment(
+					"Start adding members resolved by '" + requestedPath + "'. Bundle id is: '" + bundle.getId() + "'",
+					out);
 		}
 
 		// Include the bundle if it has not been included yet
 		if (ctx.getIncludedBundles().add(bundle.getId())) {
 
 			if (renderDependencyLinks) {
-				renderBundleDependenciesLinks(requestedPath, ctx, out, debugOn,
-						bundle.getDependencies());
+				renderBundleDependenciesLinks(requestedPath, ctx, out, debugOn, bundle.getDependencies());
 			}
 
 			renderBundleLinks(bundle, ctx, ctx.getVariants(), out, debugOn);
 
 		} else {
 			if (debugOn) {
-				addComment("The bundle '" + bundle.getId()
-						+ "' is already included in the page.", out);
+				addComment("The bundle '" + bundle.getId() + "' is already included in the page.", out);
 			}
 		}
 	}
@@ -177,12 +172,11 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void renderBundleLinks(JoinableResourceBundle bundle,
-			BundleRendererContext ctx, Map<String, String> variant, Writer out,
-			boolean debugOn) throws IOException {
+	protected void renderBundleLinks(JoinableResourceBundle bundle, BundleRendererContext ctx,
+			Map<String, String> variant, Writer out, boolean debugOn) throws IOException {
 
-		ResourceBundlePathsIterator it = bundler.getBundlePaths(bundle.getId(),
-				new ConditionalCommentRenderer(out), variant);
+		ResourceBundlePathsIterator it = bundler.getBundlePaths(bundle.getId(), new ConditionalCommentRenderer(out),
+				variant);
 		renderBundleLinks(it, ctx, debugOn, out);
 	}
 
@@ -198,8 +192,7 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IOException occurs.
 	 */
-	protected void renderGlobalBundleLinks(BundleRendererContext ctx,
-			Writer out, boolean debugOn) throws IOException {
+	protected void renderGlobalBundleLinks(BundleRendererContext ctx, Writer out, boolean debugOn) throws IOException {
 
 		if (debugOn) {
 			addComment("Start adding global members.", out);
@@ -225,12 +218,11 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected void performGlobalBundleLinksRendering(BundleRendererContext ctx,
-			Writer out, boolean debugOn) throws IOException {
+	protected void performGlobalBundleLinksRendering(BundleRendererContext ctx, Writer out, boolean debugOn)
+			throws IOException {
 
-		ResourceBundlePathsIterator resourceBundleIterator = bundler
-				.getGlobalResourceBundlePaths(getDebugMode(debugOn),
-						new ConditionalCommentRenderer(out), ctx.getVariants());
+		ResourceBundlePathsIterator resourceBundleIterator = bundler.getGlobalResourceBundlePaths(getDebugMode(debugOn),
+				new ConditionalCommentRenderer(out), ctx.getVariants());
 		renderBundleLinks(resourceBundleIterator, ctx, debugOn, out);
 	}
 
@@ -261,24 +253,17 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IOException occurs.
 	 */
-	private void renderBundleDependenciesLinks(String requestedPath,
-			BundleRendererContext ctx, Writer out, boolean debugOn,
-			List<JoinableResourceBundle> dependencies) throws IOException {
+	private void renderBundleDependenciesLinks(String requestedPath, BundleRendererContext ctx, Writer out,
+			boolean debugOn, List<JoinableResourceBundle> dependencies) throws IOException {
 
 		if (dependencies != null && !dependencies.isEmpty()) {
-			for (Iterator<JoinableResourceBundle> iterator = dependencies
-					.iterator(); iterator.hasNext();) {
-				JoinableResourceBundle dependencyBundle = iterator.next();
+			for (JoinableResourceBundle dependencyBundle : dependencies) {
 				if (debugOn) {
-					addComment(
-							"Start adding dependency '"
-									+ dependencyBundle.getId() + "'", out);
+					addComment("Start adding dependency '" + dependencyBundle.getId() + "'", out);
 				}
-				renderBundleLinks(dependencyBundle, requestedPath, ctx, out,
-						debugOn, false);
+				renderBundleLinks(dependencyBundle, requestedPath, ctx, out, debugOn, false);
 				if (debugOn) {
-					addComment("Finished adding dependency '"
-							+ dependencyBundle.getId() + "'", out);
+					addComment("Finished adding dependency '" + dependencyBundle.getId() + "'", out);
 				}
 			}
 		}
@@ -289,14 +274,8 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * 
 	 * @param it
 	 *            the iterator on the bundles
-	 * @param contextPath
-	 *            the context path
-	 * @param includedBundles
-	 *            the included bundles
-	 * @param useGzip
-	 *            the flag indicating if we use gzip or not
-	 * @param isSslRequest
-	 *            the flag indicating if it's an SSL request or not
+	 * @param ctx
+	 *            the renderer context
 	 * @param debugOn
 	 *            the flag indicating if we are in debug mode or not
 	 * @param out
@@ -304,9 +283,8 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected void renderBundleLinks(ResourceBundlePathsIterator it,
-			BundleRendererContext ctx, boolean debugOn, Writer out)
-			throws IOException {
+	protected void renderBundleLinks(ResourceBundlePathsIterator it, BundleRendererContext ctx, boolean debugOn,
+			Writer out) throws IOException {
 
 		String contextPath = ctx.getContextPath();
 		boolean useGzip = ctx.isUseGzip();
@@ -321,39 +299,39 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 				String resourceName = bundlePath.getPath();
 				if (resourceName != null) {
 
-					// Handle external URL 
+					// Handle external URL
 					if (bundlePath.isExternalURL()) {
 						out.write(renderLink(resourceName));
 
 					} else if (debugOn && useRandomParam) {
-						// In debug mode, all the resources are included separately
+						// In debug mode, all the resources are included
+						// separately
 						// and
 						// use a random parameter to avoid caching.
-						// If useRandomParam is set to false, the links are created
+						// If useRandomParam is set to false, the links are
+						// created
 						// without the random parameter.
-						int random = -1;
-							random = randomSeed.nextInt();
+						int random = randomSeed.nextInt();
 						if (random < 0) {
 							random *= -1;
 						}
 
 						out.write(createBundleLink(resourceName, bundlePath.getBundlePrefix(), "d=" + random,
 								contextPath, isSslRequest));
-					//} else if (!debugOn && bundlePath.isProductionURL()) {
-					//	out.write(renderLink(resourceName));
+						// } else if (!debugOn && bundlePath.isProductionURL())
+						// {
+						// out.write(renderLink(resourceName));
 
 					} else if (!debugOn && useGzip) {
-						out.write(createGzipBundleLink(resourceName,
-								bundlePath.getBundlePrefix(), contextPath, isSslRequest));
+						out.write(createGzipBundleLink(resourceName, bundlePath.getBundlePrefix(), contextPath,
+								isSslRequest));
 					} else {
-						out.write(createBundleLink(resourceName, bundlePath.getBundlePrefix(), null,
-								contextPath, isSslRequest));
+						out.write(createBundleLink(resourceName, bundlePath.getBundlePrefix(), null, contextPath,
+								isSslRequest));
 					}
 
-					if (debugOn
-							&& !ctx.getIncludedResources().add(resourceName)) {
-						addComment("The resource '" + resourceName
-								+ "' is already included in the page.", out);
+					if (debugOn && !ctx.getIncludedResources().add(resourceName)) {
+						addComment("The resource '" + resourceName + "' is already included in the page.", out);
 					}
 				}
 			}
@@ -370,10 +348,8 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected void addComment(String commentText, Writer out)
-			throws IOException {
-		StringBuffer sb = new StringBuffer(
-				"<script type=\"text/javascript\">/* ");
+	protected void addComment(String commentText, Writer out) throws IOException {
+		StringBuilder sb = new StringBuilder("<script type=\"text/javascript\">/* ");
 		sb.append(commentText).append(" */</script>").append("\n");
 		out.write(sb.toString());
 	}
@@ -384,60 +360,66 @@ public abstract class AbstractBundleLinkRenderer implements BundleRenderer {
 	 * 
 	 * @param resourceName
 	 *            the resource name
+	 * @param bundlePrefix
+	 *            the bundle prefix
 	 * @param contextPath
 	 *            the context path
+	 * @param isSslRequest
+	 *            the flag indicating if it's an SSL request
 	 * @return the link to the gzip bundle in the page
 	 */
-	protected String createGzipBundleLink(String resourceName,
-			String bundlePrefix, String contextPath, boolean isSslRequest) {
+	protected String createGzipBundleLink(String resourceName, String bundlePrefix, String contextPath,
+			boolean isSslRequest) {
 		// remove '/' from start of name
 		String resource = resourceName.substring(1, resourceName.length());
-		return createBundleLink(BundleRenderer.GZIP_PATH_PREFIX + resource,
-				bundlePrefix, null, contextPath, isSslRequest);
+		return createBundleLink(BundleRenderer.GZIP_PATH_PREFIX + resource, bundlePrefix, null, contextPath,
+				isSslRequest);
 	}
 
 	/**
 	 * Creates a link to a bundle in the page.
-	 * @param bundleId the bundle ID
-	 * @param bundlePrefix the bundle prefix
-	 * @param randomParam the flag indicating if we should use randomParam
-	 * @param contextPath the context path
-	 * @param isSslRequest the flag indicating if it's an SSL request
+	 * 
+	 * @param bundleId
+	 *            the bundle ID
+	 * @param bundlePrefix
+	 *            the bundle prefix
+	 * @param randomParam
+	 *            the flag indicating if we should use randomParam
+	 * @param contextPath
+	 *            the context path
+	 * @param isSslRequest
+	 *            the flag indicating if it's an SSL request
 	 * @return the link to a bundle in the page
 	 */
-	protected String createBundleLink(String bundleId, String bundlePrefix, String randomParam,
-			String contextPath, boolean isSslRequest) {
+	protected String createBundleLink(String bundleId, String bundlePrefix, String randomParam, String contextPath,
+			boolean isSslRequest) {
 
 		// When debug mode is on and the resource is generated the path must
 		// include a parameter
 		String path = bundleId;
 		String fullPath = null;
 		if (bundler.getConfig().isDebugModeOn()) {
-			if (bundler.getConfig().getGeneratorRegistry()
-					.isPathGenerated(bundleId)) {
-				path = PathNormalizer.createGenerationPath(bundleId, bundler
-						.getConfig().getGeneratorRegistry(), randomParam);
+			if (bundler.getConfig().getGeneratorRegistry().isPathGenerated(bundleId)) {
+				path = PathNormalizer.createGenerationPath(bundleId, bundler.getConfig().getGeneratorRegistry(),
+						randomParam);
 			} else {
 				if (StringUtils.isNotEmpty(randomParam)) {
 					path = bundleId + "?" + randomParam;
 				}
 			}
-			
-			fullPath = PathNormalizer.joinPaths(bundler.getConfig()
-					.getServletMapping(), path);
-		}else{
-			
-			if(StringUtils.isNotEmpty(bundlePrefix)){
-				fullPath = PathNormalizer.joinPaths(bundler.getConfig()
-						.getServletMapping(), PathNormalizer.joinPaths(bundlePrefix, path));
-			}else{
-				fullPath = PathNormalizer.joinPaths(bundler.getConfig()
-						.getServletMapping(), path);
+
+			fullPath = PathNormalizer.joinPaths(bundler.getConfig().getServletMapping(), path);
+		} else {
+
+			if (StringUtils.isNotEmpty(bundlePrefix)) {
+				fullPath = PathNormalizer.joinPaths(bundler.getConfig().getServletMapping(),
+						PathNormalizer.joinPaths(bundlePrefix, path));
+			} else {
+				fullPath = PathNormalizer.joinPaths(bundler.getConfig().getServletMapping(), path);
 			}
 		}
-		
-		fullPath = RendererRequestUtils.getRenderedUrl(fullPath,
-				bundler.getConfig(), contextPath, isSslRequest);
+
+		fullPath = RendererRequestUtils.getRenderedUrl(fullPath, bundler.getConfig(), contextPath, isSslRequest);
 
 		// allow debugOverride to pass through on the generated urls
 		if (ThreadLocalJawrContext.isDebugOverriden()) {

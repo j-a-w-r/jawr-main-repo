@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim Chaehoi
+ * Copyright 2012-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -92,8 +92,8 @@ public class UnicodeBOMReader extends Reader {
 	 * Constructs a new <code>UnicodeBOMInputStream</code> that wraps the
 	 * specified <code>InputStream</code>.
 	 * 
-	 * @param inputStream
-	 *            an <code>InputStream</code>.
+	 * @param reader
+	 *            a <code>reader</code>.
 	 * 
 	 * @param strCharset
 	 *            a charset.
@@ -102,8 +102,7 @@ public class UnicodeBOMReader extends Reader {
 	 *             on reading from the specified <code>InputStream</code> when
 	 *             trying to detect the Unicode BOM.
 	 */
-	public UnicodeBOMReader(final Reader reader, final String strCharset)
-			throws IOException
+	public UnicodeBOMReader(final Reader reader, final String strCharset) throws IOException
 
 	{
 		this(reader, Charset.forName(strCharset));
@@ -113,27 +112,24 @@ public class UnicodeBOMReader extends Reader {
 	 * Constructs a new <code>UnicodeBOMInputStream</code> that wraps the
 	 * specified <code>InputStream</code>.
 	 * 
-	 * @param inputStream
-	 *            an <code>InputStream</code>.
+	 * @param reader
+	 *            a <code>reader</code>.
 	 * 
-	 * @param strCharset
+	 * @param pCharset
 	 *            a charset.
 	 * 
 	 * @throws IOException
 	 *             on reading from the specified <code>InputStream</code> when
 	 *             trying to detect the Unicode BOM.
 	 */
-	public UnicodeBOMReader(final Reader reader, final Charset pCharset)
-			throws IOException
+	public UnicodeBOMReader(final Reader reader, final Charset pCharset) throws IOException
 
 	{
 		if (reader == null)
-			throw new InvalidParameterException(
-					"invalid reader: null is not allowed");
+			throw new InvalidParameterException("invalid reader: null is not allowed");
 
 		if (pCharset == null)
-			throw new InvalidParameterException(
-					"invalid charset: null is not allowed");
+			throw new InvalidParameterException("invalid charset: null is not allowed");
 
 		in = new PushbackReader(reader, 4);
 		charset = pCharset;
@@ -147,19 +143,18 @@ public class UnicodeBOMReader extends Reader {
 
 		switch (read) {
 		case 4:
-			if ((bom[0] == (byte) 0xFF) && (bom[1] == (byte) 0xFE)
-					&& (bom[2] == (byte) 0x00) && (bom[3] == (byte) 0x00)) {
+			if ((bom[0] == (byte) 0xFF) && (bom[1] == (byte) 0xFE) && (bom[2] == (byte) 0x00)
+					&& (bom[3] == (byte) 0x00)) {
 				this.bom = BOM.UTF_32_LE;
 				break;
-			} else if ((bom[0] == (byte) 0x00) && (bom[1] == (byte) 0x00)
-					&& (bom[2] == (byte) 0xFE) && (bom[3] == (byte) 0xFF)) {
+			} else if ((bom[0] == (byte) 0x00) && (bom[1] == (byte) 0x00) && (bom[2] == (byte) 0xFE)
+					&& (bom[3] == (byte) 0xFF)) {
 				this.bom = BOM.UTF_32_BE;
 				break;
 			}
 
 		case 3:
-			if ((bom[0] == (byte) 0xEF) && (bom[1] == (byte) 0xBB)
-					&& (bom[2] == (byte) 0xBF)) {
+			if ((bom[0] == (byte) 0xEF) && (bom[1] == (byte) 0xBB) && (bom[2] == (byte) 0xBF)) {
 				this.bom = BOM.UTF_8;
 				break;
 			}
@@ -237,39 +232,48 @@ public class UnicodeBOMReader extends Reader {
 		return in.read(cbuf, off, len);
 	}
 
+	@Override
 	public int read(CharBuffer target) throws IOException {
 		return in.read(target);
 	}
 
+	@Override
 	public int read() throws IOException {
 
 		return in.read();
 	}
 
+	@Override
 	public int read(char[] cbuf) throws IOException {
 		return in.read(cbuf);
 	}
 
+	@Override
 	public long skip(long n) throws IOException {
 		return in.skip(n);
 	}
 
+	@Override
 	public boolean ready() throws IOException {
 		return in.ready();
 	}
 
+	@Override
 	public boolean markSupported() {
 		return in.markSupported();
 	}
 
+	@Override
 	public void mark(int readAheadLimit) throws IOException {
 		in.mark(readAheadLimit);
 	}
 
+	@Override
 	public void reset() throws IOException {
 		in.reset();
 	}
 
+	@Override
 	public void close() throws IOException {
 		in.close();
 	}

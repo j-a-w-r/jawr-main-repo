@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2009-2016 Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,7 +18,8 @@ import javax.management.ObjectName;
 import net.jawr.web.util.StopWatch;
 
 /**
- * This class defines the context for Jawr, it holds the context in a ThreadLocal object.
+ * This class defines the context for Jawr, it holds the context in a
+ * ThreadLocal object.
  * 
  * @author Matt Ruby
  * @author Ibrahim Chaehoi
@@ -26,134 +27,159 @@ import net.jawr.web.util.StopWatch;
 public final class ThreadLocalJawrContext {
 
 	/**
-	 * debugOverride will allow us to override production mode on a request by request basis.
-	 * ThreadLocal is used to hold the overridden status throughout a given request.
+	 * debugOverride will allow us to override production mode on a request by
+	 * request basis. ThreadLocal is used to hold the overridden status
+	 * throughout a given request.
 	 */
-	private static ThreadLocal<JawrContext> jawrContext = new ThreadLocal<JawrContext>(){
+	private static final ThreadLocal<JawrContext> JAWR_CONTEXT = new ThreadLocal<JawrContext>() {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.ThreadLocal#initialValue()
 		 */
+		@Override
 		protected JawrContext initialValue() {
 			return new JawrContext();
 		}
-	    
+
 	};
-	
+
 	/**
 	 * The debugOverride will be automatially set to false
 	 */
 	private ThreadLocalJawrContext() {
-		
+
 	}
-	
+
 	/**
 	 * Returns the mbean object name of the Jawr config manager
+	 * 
 	 * @return the mbean object name of the Jawr config manager
 	 */
 	public static ObjectName getJawrConfigMgrObjectName() {
-		
-		return jawrContext.get().getJawrConfigMgrObjectName();
+
+		return JAWR_CONTEXT.get().getJawrConfigMgrObjectName();
 	}
 
 	/**
 	 * Sets the mbean object name of the Jawr config manager
-	 * @param mbeanObjectName the mbean object name of the Jawr config manager
+	 * 
+	 * @param mbeanObjectName
+	 *            the mbean object name of the Jawr config manager
 	 */
 	public static void setJawrConfigMgrObjectName(ObjectName mbeanObjectName) {
 
-		jawrContext.get().setJawrConfigMgrObjectName(mbeanObjectName);
+		JAWR_CONTEXT.get().setJawrConfigMgrObjectName(mbeanObjectName);
 	}
-	
+
 	/**
 	 * Get the flag stating that production mode should be overridden
+	 * 
 	 * @return the flag stating that production mode should be overridden
 	 */
 	public static boolean isDebugOverriden() {
-		
-		return jawrContext.get().isDebugOverriden();
+
+		return JAWR_CONTEXT.get().isDebugOverriden();
 	}
 
 	/**
 	 * Set the override flag that will live only for this request
-	 * @param override the flag to set
+	 * 
+	 * @param override
+	 *            the flag to set
 	 */
 	public static void setDebugOverriden(boolean override) {
 
-		jawrContext.get().setDebugOverriden(override);
-	}
-	
-	/**
-	 * Returns the flag indicating that we are using making a bundle processing at build time
-	 * @return the flag indicating that we are using making a bundle processing at build time
-	 */
-	public static boolean isBundleProcessingAtBuildTime() {
-		return jawrContext.get().isBundleProcessingAtBuildTime();
+		JAWR_CONTEXT.get().setDebugOverriden(override);
 	}
 
 	/**
-	 * Sets the flag indicating that we are using making a bundle processing at build time
-	 * @param bundleProcessingAtBuildTime the flag to set
+	 * Returns the flag indicating that we are using making a bundle processing
+	 * at build time
+	 * 
+	 * @return the flag indicating that we are using making a bundle processing
+	 *         at build time
+	 */
+	public static boolean isBundleProcessingAtBuildTime() {
+		return JAWR_CONTEXT.get().isBundleProcessingAtBuildTime();
+	}
+
+	/**
+	 * Sets the flag indicating that we are using making a bundle processing at
+	 * build time
+	 * 
+	 * @param bundleProcessingAtBuildTime
+	 *            the flag to set
 	 */
 	public static void setBundleProcessingAtBuildTime(boolean bundleProcessingAtBuildTime) {
-		jawrContext.get().setBundleProcessingAtBuildTime(bundleProcessingAtBuildTime);
+		JAWR_CONTEXT.get().setBundleProcessingAtBuildTime(bundleProcessingAtBuildTime);
 	}
-	
+
 	/**
 	 * Returns the current request
+	 * 
 	 * @return the request
 	 */
 	public static String getRequestURL() {
-		return jawrContext.get().getRequestURL();
+		return JAWR_CONTEXT.get().getRequestURL();
 	}
 
 	/**
 	 * Sets the request
-	 * @param request the request to set
+	 * 
+	 * @param requestURL
+	 *            the request to set
 	 */
 	public static void setRequest(String requestURL) {
-		jawrContext.get().setRequestURL(requestURL);
+		JAWR_CONTEXT.get().setRequestURL(requestURL);
 	}
-	
+
 	/**
 	 * Returns the stop watch used to monitor the processing
+	 * 
 	 * @return the stop watch
 	 */
 	public static StopWatch getStopWatch() {
-		return jawrContext.get().getStopWatch();
+		return JAWR_CONTEXT.get().getStopWatch();
 	}
 
 	/**
 	 * Sets the StopWatch used to monitor the processing
-	 * @param stopWatch the stopWatch to set
+	 * 
+	 * @param stopWatch
+	 *            the stopWatch to set
 	 */
 	public static void setStopWatch(StopWatch stopWatch) {
-		jawrContext.get().setStopWatch(stopWatch);
+		JAWR_CONTEXT.get().setStopWatch(stopWatch);
 	}
-	
+
 	/**
 	 * Returns true if the processing bundle should be interrupted
+	 * 
 	 * @return true if the processing bundle should be interrupted
 	 */
 	public static boolean isInterruptingProcessingBundle() {
-		return jawrContext.get().isInterruptingProcessingBundle();
+		return JAWR_CONTEXT.get().isInterruptingProcessingBundle();
 	}
 
 	/**
-	 * Sets the flag which indicate that the processing bundle should be interrupted
-	 * @param interruptProcessingBundle the flag to set
+	 * Sets the flag which indicate that the processing bundle should be
+	 * interrupted
+	 * 
+	 * @param interruptProcessingBundle
+	 *            the flag to set
 	 */
 	public static void setInterruptProcessingBundle(boolean interruptProcessingBundle) {
-		jawrContext.get().setInterruptProcessingBundle(interruptProcessingBundle);
+		JAWR_CONTEXT.get().setInterruptProcessingBundle(interruptProcessingBundle);
 	}
-	
+
 	/**
-	 * Sets the mbean object name
-	 * @param mbeanObjectName the mbean object name
+	 * Resets the Jawr Context
 	 */
 	public static void reset() {
 
-		jawrContext.remove();
+		JAWR_CONTEXT.remove();
 	}
-	
+
 }

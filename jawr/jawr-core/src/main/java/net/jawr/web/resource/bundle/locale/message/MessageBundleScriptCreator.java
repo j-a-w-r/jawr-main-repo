@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -75,7 +74,7 @@ public class MessageBundleScriptCreator {
 	protected String namespace;
 
 	/** The filter */
-	private String filter;
+	private final String filter;
 
 	/** The locale */
 	protected Locale locale;
@@ -120,7 +119,7 @@ public class MessageBundleScriptCreator {
 		filter = context.getBracketsParam();
 		if (null != filter) {
 			StringTokenizer tk = new StringTokenizer(filter, "\\|");
-			filterList = new ArrayList<String>();
+			filterList = new ArrayList<>();
 			while (tk.hasMoreTokens())
 				filterList.add(tk.nextToken());
 		}
@@ -162,6 +161,8 @@ public class MessageBundleScriptCreator {
 	 * Create the message resource bundles specified and uses a
 	 * BundleStringJsonifier to generate the properties.
 	 * 
+	 * @param charset
+	 *            the charset
 	 * @return the script
 	 */
 	public Reader createScript(Charset charset) {
@@ -210,7 +211,11 @@ public class MessageBundleScriptCreator {
 	 * Loads the message resource bundles specified and uses a
 	 * BundleStringJasonifier to generate the properties.
 	 * 
-	 * @return
+	 * @param charset
+	 *            the charset
+	 * @param bundle
+	 *            the bundle
+	 * @return the script
 	 */
 	public Reader createScript(Charset charset, ResourceBundle bundle) {
 
@@ -223,9 +228,12 @@ public class MessageBundleScriptCreator {
 	 * Loads the message resource bundles specified and uses a
 	 * BundleStringJasonifier to generate the properties.
 	 * 
+	 * @param bundle
+	 *            the bundle
+	 * @param props
+	 *            the properties
 	 * @param charset
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 *            the charset
 	 */
 	public void updateProperties(ResourceBundle bundle, Properties props, Charset charset) {
 

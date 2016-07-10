@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim Chaehoi
+ * Copyright 2012-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,15 +27,18 @@ import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 public class CustomJsPostProcessorChainWrapper extends AbstractJsChainedResourceBundlePostProcessor {
 
 	/** The custom post processor */
-	private ResourceBundlePostProcessor customPostProcessor;
+	private final ResourceBundlePostProcessor customPostProcessor;
 
 	/**
 	 * Constructor
-	 * @param id the ID of the postprocessor 
+	 * 
+	 * @param id
+	 *            the ID of the postprocessor
 	 * @param customPostProcessor
 	 *            Custom implementation of ResourceBundlePostProcessor to wrap
 	 *            with chaining.
-	 * @param isVariantPostProcessor the flag indicating if it's a variant bundle 
+	 * @param isVariantPostProcessor
+	 *            the flag indicating if it's a variant bundle
 	 */
 	public CustomJsPostProcessorChainWrapper(String id, ResourceBundlePostProcessor customPostProcessor,
 			boolean isVariantPostProcessor) {
@@ -53,6 +56,7 @@ public class CustomJsPostProcessorChainWrapper extends AbstractJsChainedResource
 	 * web.resource.bundle.postprocess.BundleProcessingStatus,
 	 * java.lang.StringBuffer)
 	 */
+	@Override
 	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
 			throws IOException {
 		return customPostProcessor.postProcessBundle(status, bundleData);

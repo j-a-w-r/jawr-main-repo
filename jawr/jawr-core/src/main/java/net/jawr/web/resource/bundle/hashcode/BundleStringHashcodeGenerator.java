@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +19,7 @@ import net.jawr.web.config.JawrConfig;
 
 /**
  * The default bundle hashcode generator
+ * 
  * @author Ibrahim Chaehoi
  *
  */
@@ -27,17 +28,22 @@ public class BundleStringHashcodeGenerator implements BundleHashcodeGenerator, S
 	/** The serial version UID */
 	private static final long serialVersionUID = -6293097053045176614L;
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.hash.IBundleHashcodeGenerator#generateHashCode(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.hash.IBundleHashcodeGenerator#
+	 * generateHashCode(java.lang.String)
 	 */
+	@Override
 	public String generateHashCode(JawrConfig config, String content) {
-		
+
 		String generatedHashCode = null;
 		int bundleDataHashCode = content.hashCode();
-		// Since this number is used as part of urls, the -sign is converted to 'N'
+		// Since this number is used as part of urls, the -sign is converted to
+		// 'N'
 		if (bundleDataHashCode < 0) {
 			generatedHashCode = "N" + bundleDataHashCode * -1;
-		} else{
+		} else {
 			generatedHashCode = Integer.toString(bundleDataHashCode);
 		}
 		return generatedHashCode;

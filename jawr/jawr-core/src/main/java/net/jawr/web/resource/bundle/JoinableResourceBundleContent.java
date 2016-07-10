@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ package net.jawr.web.resource.bundle;
 
 import net.jawr.web.util.StringUtils;
 
-
 /**
  * This class defines the content of a joinable resource bundle.
  * 
@@ -27,23 +26,24 @@ public class JoinableResourceBundleContent {
 
 	/** The content */
 	private StringBuffer content;
-	
+
 	// ~---------- Constructor ----------
-	
+
 	/**
-	 * Constructor 
+	 * Constructor
 	 */
 	public JoinableResourceBundleContent() {
 		this(new StringBuffer());
 	}
 
-
 	/**
 	 * Constructor
-	 * @param sb the content
+	 * 
+	 * @param content
+	 *            the content
 	 */
 	public JoinableResourceBundleContent(StringBuffer content) {
-		
+
 		setContent(content);
 	}
 
@@ -51,6 +51,7 @@ public class JoinableResourceBundleContent {
 
 	/**
 	 * Returns the content.
+	 * 
 	 * @return the content.
 	 */
 	public StringBuffer getContent() {
@@ -59,36 +60,44 @@ public class JoinableResourceBundleContent {
 
 	/**
 	 * Sets the content
-	 * @param content the content to set
+	 * 
+	 * @param content
+	 *            the content to set
 	 */
 	public void setContent(StringBuffer content) {
 		this.content = new StringBuffer(StringUtils.normalizeLineFeed(content.toString()));
 	}
-	
+
 	// ~---------- Methods ----------
 
 	/**
 	 * Append a value to the bundle content
-	 * @param value the value to append
+	 * 
+	 * @param value
+	 *            the value to append
 	 * @return the stringBuffer content
 	 */
-	public StringBuffer append(String value){
+	public StringBuffer append(String value) {
 		return this.content.append(StringUtils.normalizeLineFeed(value));
 	}
-	
+
 	/**
 	 * Append the bundle content
-	 * @param bundleContent the value to append
+	 * 
+	 * @param bundleContent
+	 *            the value to append
 	 */
-	public void append(JoinableResourceBundleContent bundleContent){
-		
+	public void append(JoinableResourceBundleContent bundleContent) {
+
 		this.append(bundleContent.content.toString());
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -96,9 +105,12 @@ public class JoinableResourceBundleContent {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -114,5 +126,5 @@ public class JoinableResourceBundleContent {
 			return false;
 		return true;
 	}
-	
+
 }

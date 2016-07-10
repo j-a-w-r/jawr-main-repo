@@ -23,45 +23,66 @@ import net.jawr.web.resource.bundle.postprocess.impl.js.uglify.UglifyPostProcess
 import net.jawr.web.resource.bundle.postprocess.impl.yui.YUIJSCompressor;
 
 /**
- * PostProcessorChainFactory for javascript resources. 
+ * PostProcessorChainFactory for javascript resources.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  *
  */
-public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFactory implements PostProcessorChainFactory {
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.postprocessor.AbstractPostProcessorChainFactory#getCustomProcessorWrapper(net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor, java.lang.String)
+public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFactory
+		implements PostProcessorChainFactory {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.factory.postprocessor.
+	 * AbstractPostProcessorChainFactory#getCustomProcessorWrapper(net.jawr.web.
+	 * resource.bundle.postprocess.ResourceBundlePostProcessor,
+	 * java.lang.String)
 	 */
 	@Override
-	protected ChainedResourceBundlePostProcessor getCustomProcessorWrapper(
-			ResourceBundlePostProcessor customProcessor, String key, boolean isVariantPostProcessor) {
-		
+	protected ChainedResourceBundlePostProcessor getCustomProcessorWrapper(ResourceBundlePostProcessor customProcessor,
+			String key, boolean isVariantPostProcessor) {
+
 		return new CustomJsPostProcessorChainWrapper(key, customProcessor, isVariantPostProcessor);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#buildDefaultProcessor()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#
+	 * buildDefaultProcessor()
 	 */
+	@Override
 	public ResourceBundlePostProcessor buildDefaultProcessorChain() {
 		AbstractChainedResourceBundlePostProcessor processor = buildJSMinPostProcessor();
 		processor.addNextProcessor(buildLicensesProcessor());
 		return processor;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#buildDefaultUnitProcessor()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#
+	 * buildDefaultUnitProcessor()
 	 */
+	@Override
 	public ResourceBundlePostProcessor buildDefaultUnitProcessorChain() {
 		return null;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#getPostProcessor(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.factory.processor.PostProcessorChainFactory#
+	 * getPostProcessor(java.lang.String)
 	 */
-	protected AbstractChainedResourceBundlePostProcessor buildProcessorByKey(String procesorKey){
-		if(PostProcessFactoryConstant.JSMIN.equals(procesorKey))
+	@Override
+	protected AbstractChainedResourceBundlePostProcessor buildProcessorByKey(String procesorKey) {
+		if (PostProcessFactoryConstant.JSMIN.equals(procesorKey))
 			return buildJSMinPostProcessor();
 		else if (PostProcessFactoryConstant.LICENSE_INCLUDER.equals(procesorKey))
 			return buildLicensesProcessor();
@@ -71,11 +92,14 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 			return new YUIJSCompressor(false);
 		else if (PostProcessFactoryConstant.YUI_COMPRESSOR_OBFUSCATOR.equals(procesorKey))
 			return new YUIJSCompressor(true);
-		else throw new IllegalArgumentException("The supplied key [" + procesorKey + "] is not bound to any ResourceBundlePostProcessor. Please check the documentation for valid keys. ");
+		else
+			throw new IllegalArgumentException("The supplied key [" + procesorKey
+					+ "] is not bound to any ResourceBundlePostProcessor. Please check the documentation for valid keys. ");
 	}
-	
+
 	/**
 	 * Creates the Uglify postprocessor
+	 * 
 	 * @return the Uglify postprocessor
 	 */
 	private AbstractChainedResourceBundlePostProcessor buildUglifyJSProcessor() {
@@ -84,10 +108,11 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 
 	/**
 	 * Creates the JSMin postprocessor
+	 * 
 	 * @return the JSMin postprocessor
 	 */
 	private AbstractChainedResourceBundlePostProcessor buildJSMinPostProcessor() {
 		return new JSMinPostProcessor();
 	}
-	
+
 }

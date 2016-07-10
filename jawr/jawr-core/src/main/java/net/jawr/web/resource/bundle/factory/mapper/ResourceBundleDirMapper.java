@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2009 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,6 @@
 package net.jawr.web.resource.bundle.factory.mapper;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,11 +37,10 @@ import org.slf4j.LoggerFactory;
 public class ResourceBundleDirMapper extends AbstractResourceMapper {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ResourceBundleDirMapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceBundleDirMapper.class);
 
 	/** The Set of path to exclude */
-	private Set<String> excludedPaths;
+	private final Set<String> excludedPaths;
 
 	/**
 	 * Constructor
@@ -58,10 +56,8 @@ public class ResourceBundleDirMapper extends AbstractResourceMapper {
 	 * @param excludedPaths
 	 *            Paths to exclude from the mappings.
 	 */
-	public ResourceBundleDirMapper(String baseDir,
-			ResourceReaderHandler rsHandler,
-			List<JoinableResourceBundle> currentBundles,
-			String resourceExtension, Set<String> excludedPaths) {
+	public ResourceBundleDirMapper(String baseDir, ResourceReaderHandler rsHandler,
+			List<JoinableResourceBundle> currentBundles, String resourceExtension, Set<String> excludedPaths) {
 		super(baseDir, rsHandler, currentBundles, resourceExtension);
 		this.excludedPaths = initExcludedPathList(excludedPaths);
 	}
@@ -75,12 +71,11 @@ public class ResourceBundleDirMapper extends AbstractResourceMapper {
 	 * @return the Set of path to exclude
 	 */
 	private Set<String> initExcludedPathList(Set<String> paths) {
-		Set<String> toExclude = new HashSet<String>();
+		Set<String> toExclude = new HashSet<>();
 		if (null == paths)
 			return toExclude;
 
-		for (Iterator<String> it = paths.iterator(); it.hasNext();) {
-			String path = it.next();
+		for (String path : paths) {
 			path = PathNormalizer.asPath(path);
 			toExclude.add(path);
 		}
@@ -90,21 +85,20 @@ public class ResourceBundleDirMapper extends AbstractResourceMapper {
 	/**
 	 * Generates the resource bunles mapping expressions.
 	 * 
-	 * @return Map A map with the resource bundle key and the mapping for it as
-	 *         a value.
+	 * @throws DuplicateBundlePathException
+	 *             if a duplicate path is found in the bundle
 	 */
+	@Override
 	protected void addBundlesToMapping() throws DuplicateBundlePathException {
 		Set<String> paths = rsHandler.getResourceNames(baseDir);
 
-		for (Iterator<String> it = paths.iterator(); it.hasNext();) {
-			String path = it.next();
+		for (String path : paths) {
 			path = PathNormalizer.joinPaths(baseDir, path);
 			if (!excludedPaths.contains(path) && rsHandler.isDirectory(path)) {
 				String bundleKey = path + resourceExtension;
 				addBundleToMap(bundleKey, path + "/**");
 				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Added [" + bundleKey + "] with value ["
-							+ path + "/**] to a generated path list");
+					LOGGER.debug("Added [" + bundleKey + "] with value [" + path + "/**] to a generated path list");
 			}
 		}
 	}

@@ -36,12 +36,13 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	 * net.jawr.web.taglib.jsf.AbstractResourceBundleTag#createRenderer(javax.
 	 * faces.context.FacesContext)
 	 */
+	@Override
 	protected BundleRenderer createRenderer(FacesContext context) {
 
 		ResourceBundlesHandler rsHandler = getResourceBundlesHandler(context);
 		String type = (String) getAttributes().get(JawrConstant.TYPE_ATTR);
-		boolean async = Boolean.valueOf((String) getAttributes().get(JawrConstant.ASYNC_ATTR)).booleanValue();
-		boolean defer = Boolean.valueOf((String) getAttributes().get(JawrConstant.DEFER_ATTR)).booleanValue();
+		boolean async = Boolean.parseBoolean((String) getAttributes().get(JawrConstant.ASYNC_ATTR));
+		boolean defer = Boolean.parseBoolean((String) getAttributes().get(JawrConstant.DEFER_ATTR));
 		String crossorigin = (String) getAttributes().get(JawrConstant.CROSSORIGIN_ATTR);
 		return RendererFactory.getJsBundleRenderer(rsHandler, type, getUseRandomParamFlag(rsHandler.getConfig()), async,
 				defer, crossorigin);

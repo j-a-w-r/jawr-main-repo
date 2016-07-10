@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,8 +14,9 @@
 package net.jawr.web.config.jmx;
 
 /**
- * This interface defines the MBean which manage the Jawr configuration for a we application,
- * so it will affect all JawrConfigManagerMBean associated to Jawr Servlets.
+ * This interface defines the MBean which manage the Jawr configuration for a we
+ * application, so it will affect all JawrConfigManagerMBean associated to Jawr
+ * Servlets.
  * 
  * @author Ibrahim Chaehoi
  */
@@ -68,9 +69,9 @@ public interface JawrApplicationConfigManagerMBean {
 	 * @see net.jawr.web.config.JawrConfig#setGzipResourcesModeOn(boolean)
 	 */
 	public void setGzipResourcesModeOn(String gzipResourcesModeOn);
-	
+
 	/**
-	 * @param charsetName
+	 * @return charsetName
 	 * @see net.jawr.web.config.JawrConfig#getCharsetName(java.lang.String)
 	 */
 	public String getCharsetName();
@@ -87,7 +88,6 @@ public interface JawrApplicationConfigManagerMBean {
 	 */
 	public String getContextPathOverride();
 
-
 	/**
 	 * @param contextPathOverride
 	 * @see net.jawr.web.config.JawrConfig#setContextPathOverride(java.lang.String)
@@ -100,7 +100,6 @@ public interface JawrApplicationConfigManagerMBean {
 	 */
 	public String getContextPathSslOverride();
 
-
 	/**
 	 * @param contextPathOverride
 	 * @see net.jawr.web.config.JawrConfig#setContextPathOverride(java.lang.String)
@@ -108,81 +107,94 @@ public interface JawrApplicationConfigManagerMBean {
 	public void setContextPathSslOverride(String contextPathOverride);
 
 	/**
-	 * @param contextPathOverride
+	 * @param useContextPathOverrideInDebugMode
 	 * @see net.jawr.web.config.JawrConfig#setUseContextPathOverrideInDebugMode(boolean)
 	 */
 	public void setUseContextPathOverrideInDebugMode(String useContextPathOverrideInDebugMode);
 
 	/**
-	 * @param contextPathOverride
+	 * @return the flag indicating if the overriden context path should be used
+	 *         in debug mode
 	 * @see net.jawr.web.config.JawrConfig#getUseContextPathOverrideInDebugMode()
 	 */
 	public String getUseContextPathOverrideInDebugMode();
 
-
 	/**
-	 * Returns the flag which defines if we should process the bundle at server startup. defaults to false.
-	 * @return the flag which defines if we should process the bundle at server startup.
+	 * Returns the flag which defines if we should process the bundle at server
+	 * startup. defaults to false.
+	 * 
+	 * @return the flag which defines if we should process the bundle at server
+	 *         startup.
 	 */
 	public String getUseBundleMapping();
 
 	/**
-	 * Sets the flag which defines if we should process the bundle at server startup. 
-	 * @param usBundleMapping the flag to set
+	 * Sets the flag which defines if we should process the bundle at server
+	 * startup.
+	 * 
+	 * @param usBundleMapping
+	 *            the flag to set
 	 */
 	public void setUseBundleMapping(String usBundleMapping);
 
-	/** 
+	/**
 	 * Returns the jawr working directory path
+	 * 
 	 * @return the jawr working directory path
 	 */
 	public String getJawrWorkingDirectory();
-	
-	/** 
+
+	/**
 	 * Sets the jawr working directory path
-	 * @param jawrWorkingDirectory the path to set
+	 * 
+	 * @param jawrWorkingDirectory
+	 *            the path to set
 	 */
 	public void setJawrWorkingDirectory(String jawrWorkingDirectory);
-	
+
 	/**
-	 * Refresh the configuration. 
+	 * Refresh the configuration.
 	 */
 	public void refreshConfig();
-	
+
 	/**
-	 * Rebuild dirty bundles. 
+	 * Rebuild dirty bundles.
 	 */
 	public void rebuildDirtyBundles();
-	
+
 	/**
-	 * Add a session ID, to the set of debug session ID.
-	 * All request make by sessions where their IDs is contained in the debug session Set,
-	 * will be threated as in debug mode.
-	 *   
-	 * @param sessionId the session ID to add
+	 * Add a session ID, to the set of debug session ID. All request make by
+	 * sessions where their IDs is contained in the debug session Set, will be
+	 * threated as in debug mode.
+	 * 
+	 * @param sessionId
+	 *            the session ID to add
 	 */
 	public void addDebugSessionId(String sessionId);
-	
+
 	/**
-	 * Add a session ID, to the set of debug session ID.
-	 * All request make by sessions where their IDs is contained in the debug session Set,
-	 * will be threated as in debug mode.
-	 *   
-	 * @param sessionId the session ID to add
+	 * Add a session ID, to the set of debug session ID. All request make by
+	 * sessions where their IDs is contained in the debug session Set, will be
+	 * threated as in debug mode.
+	 * 
+	 * @param sessionId
+	 *            the session ID to add
 	 */
 	public void removeDebugSessionId(String sessionId);
 
 	/**
-	 * Remove a session ID from the set of debug session ID.
-	 *   
-	 * @param sessionId the session ID to remove
+	 * Remove All debug session ID.
 	 */
 	public void removeAllDebugSessionId();
-	
+
 	/**
-	 * Returns true if the session ID passed in parameter is a debuggable session ID
-	 * @param sessionId the session ID
-	 * @return true if the session ID passed in parameter is a debuggable session ID
+	 * Returns true if the session ID passed in parameter is a debuggable
+	 * session ID
+	 * 
+	 * @param sessionId
+	 *            the session ID
+	 * @return true if the session ID passed in parameter is a debuggable
+	 *         session ID
 	 */
 	public boolean isDebugSessionId(String sessionId);
 }

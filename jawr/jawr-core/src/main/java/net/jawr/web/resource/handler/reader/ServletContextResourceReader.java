@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Ibrahim Chaehoi
+ * Copyright 2013-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,12 @@ public interface ServletContextResourceReader extends TextResourceReader, Stream
 
 	/**
 	 * Initializes the ServletContextResourceReader
+	 * 
+	 * @param context
+	 *            the servlet context
+	 * @param config
+	 *            the Jawr config
 	 */
 	public void init(ServletContext context, JawrConfig config);
-	
+
 }

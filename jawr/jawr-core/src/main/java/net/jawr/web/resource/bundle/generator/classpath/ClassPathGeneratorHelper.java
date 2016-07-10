@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2015 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -59,8 +59,8 @@ import net.jawr.web.util.FileUtils;
 public class ClassPathGeneratorHelper implements ResourceBrowser {
 
 	/** The logger */
-	private static Logger LOGGER = LoggerFactory.getLogger(ClassPathGeneratorHelper.class); 
-	
+	private static Logger LOGGER = LoggerFactory.getLogger(ClassPathGeneratorHelper.class);
+
 	/** The prefix to preppend before searching resource in classpath */
 	private final String classpathPrefix;
 
@@ -117,7 +117,9 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 
 	/**
 	 * Returns the complete path with the classpath prefix
-	 * @param resourcePath the resource path
+	 * 
+	 * @param resourcePath
+	 *            the resource path
 	 * @return the complete path with the classpath prefix
 	 */
 	private String getCompletePath(String resourcePath) {
@@ -136,48 +138,51 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 	public Set<String> getResourceNames(String path) {
 
 		Set<String> resources = null;
-		
+
 		URL resourceURL = null;
-		
+
 		try {
 			resourceURL = ClassLoaderResourceUtils.getResourceURL(getCompletePath(path), this);
-			if(resourceURL.toString().startsWith(JAR_URL_PREFIX)){
+			if (resourceURL.toString().startsWith(JAR_URL_PREFIX)) {
 				resources = getResourceNamesFromJar(path, resourceURL);
-			}else if(resourceURL.toString().startsWith(FILE_URL_PREFIX)){
-				
+			} else if (resourceURL.toString().startsWith(FILE_URL_PREFIX)) {
+
 				String dirPath = resourceURL.getFile();
 				File dir = new File(dirPath);
 				resources = FileUtils.getResourceNames(dir);
 			}
 		} catch (ResourceNotFoundException e) {
 
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("Unable to find resources name for path '"+path+"'", e);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Unable to find resources name for path '" + path + "'", e);
 			}
 			resources = Collections.emptySet();
 		}
-		
+
 		return resources;
 	}
 
 	/**
 	 * Returns the resources name from a Jar file.
-	 * @param path the directory path
-	 * @param resourceURL the jar file URL
+	 * 
+	 * @param path
+	 *            the directory path
+	 * @param resourceURL
+	 *            the jar file URL
 	 * @return the resources name from a Jar file.
 	 */
 	private Set<String> getResourceNamesFromJar(String path, URL resourceURL) {
-		
+
 		URLConnection con = null;
 
 		try {
-			if(resourceURL.toString().startsWith(JawrConstant.JAR_URL_PREFIX)){
+			if (resourceURL.toString().startsWith(JawrConstant.JAR_URL_PREFIX)) {
 				con = resourceURL.openConnection();
 			}
 		} catch (IOException e) {
 
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("Unable to find resources name for path '"+path+"'", e);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Unable to find resources name for path '" + path + "'", e);
 			}
 			return Collections.emptySet();
 		}
@@ -193,7 +198,6 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 				JarURLConnection jarCon = (JarURLConnection) con;
 				jarCon.setUseCaches(true);
 				jarFile = jarCon.getJarFile();
-				jarFileUrl = jarCon.getJarFileURL().toExternalForm();
 				JarEntry jarEntry = jarCon.getJarEntry();
 				rootEntryPath = (jarEntry != null ? jarEntry.getName() : "");
 			} else {
@@ -211,14 +215,13 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 					jarFile = getJarFile(jarFileUrl);
 				} else {
 					jarFile = new JarFile(urlFile);
-					jarFileUrl = urlFile;
 					rootEntryPath = "";
 				}
 				newJarFile = true;
 			}
 		} catch (IOException e) {
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("Unable to find resources name for path '"+path+"'", e);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Unable to find resources name for path '" + path + "'", e);
 			}
 			return Collections.emptySet();
 		}
@@ -230,7 +233,7 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 				// does.
 				rootEntryPath = rootEntryPath + "/";
 			}
-			Set<String> result = new LinkedHashSet<String>(8);
+			Set<String> result = new LinkedHashSet<>(8);
 			for (Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
 				JarEntry entry = entries.nextElement();
 				String entryPath = entry.getName();
@@ -255,21 +258,27 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 
 	/**
 	 * Checks if the entry is a direct child of the root Entry
-	 * isDirectChildPath( '/a/b/c/' , '/a/b/c/d.txt') => true
-	 * isDirectChildPath( '/a/b/c/' , '/a/b/c/d/') => true
-	 * isDirectChildPath( '/a/b/c/' , '/a/b/c/d/e.txt') => false
-	 * @param rootEntryPath the root entry path
-	 * @param entryPath the entry path to check
+	 * isDirectChildPath( '/a/b/c/' , '/a/b/c/d.txt') => true isDirectChildPath(
+	 * '/a/b/c/' , '/a/b/c/d/') => true isDirectChildPath( '/a/b/c/' ,
+	 * '/a/b/c/d/e.txt') => false
+	 * 
+	 * @param rootEntryPath
+	 *            the root entry path
+	 * @param entryPath
+	 *            the entry path to check
 	 * @return true if the entry is a direct child of the root Entry
 	 */
 	private boolean isDirectChildPath(String rootEntryPath, String entryPath) {
 		boolean result = false;
-		if(entryPath.length() > rootEntryPath.length() && entryPath.startsWith(rootEntryPath)){
+		if (entryPath.length() > rootEntryPath.length() && entryPath.startsWith(rootEntryPath)) {
 			int idx = entryPath.indexOf(URL_SEPARATOR, rootEntryPath.length());
-			if(idx == -1){ // case where the entry is a child file /a/b/c/d.txt 
+			if (idx == -1) { // case where the entry is a child file
+								// /a/b/c/d.txt
 				result = true;
-			}else{
-				if(entryPath.length() == idx+1){ // case where the entry is a child file /a/b/c/d/ 
+			} else {
+				if (entryPath.length() == idx + 1) { // case where the entry is
+														// a child file
+														// /a/b/c/d/
 					result = true;
 				}
 			}
@@ -286,7 +295,7 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 	 */
 	@Override
 	public boolean isDirectory(String path) {
-		
+
 		return path.endsWith(URL_SEPARATOR);
 	}
 
@@ -299,19 +308,19 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {
-		
+
 		String filePath = null;
 		String path = getCompletePath(resourcePath);
 		URL url = null;
 		try {
 			url = ClassLoaderResourceUtils.getResourceURL(path, this);
 			String strURL = url.toString();
-			if(strURL.startsWith(JawrConstant.FILE_URL_PREFIX)){
+			if (strURL.startsWith(JawrConstant.FILE_URL_PREFIX)) {
 				filePath = new File(url.getFile()).getAbsolutePath();
-			}else if(strURL.startsWith(JawrConstant.JAR_URL_PREFIX+JawrConstant.FILE_URL_PREFIX)){
-				String tmp = strURL.substring((JawrConstant.JAR_URL_PREFIX+JawrConstant.FILE_URL_PREFIX).length());
+			} else if (strURL.startsWith(JawrConstant.JAR_URL_PREFIX + JawrConstant.FILE_URL_PREFIX)) {
+				String tmp = strURL.substring((JawrConstant.JAR_URL_PREFIX + JawrConstant.FILE_URL_PREFIX).length());
 				int idxJarContentSeparator = tmp.indexOf("!");
-				if(idxJarContentSeparator != -1){
+				if (idxJarContentSeparator != -1) {
 					tmp = tmp.substring(0, idxJarContentSeparator);
 				}
 				filePath = new File(tmp).getAbsolutePath();
@@ -319,12 +328,18 @@ public class ClassPathGeneratorHelper implements ResourceBrowser {
 		} catch (ResourceNotFoundException e) {
 			filePath = null;
 		}
-		
+
 		return filePath;
 	}
 
 	/**
 	 * Resolve the given jar file URL into a JarFile object.
+	 * 
+	 * @param jarFileUrl
+	 *            the jar file URL
+	 * @return the JAR file
+	 * @throws java.io.IOException
+	 *             if an IO exception occurs
 	 */
 	protected JarFile getJarFile(String jarFileUrl) throws IOException {
 		if (jarFileUrl.startsWith(JawrConstant.FILE_URL_PREFIX)) {

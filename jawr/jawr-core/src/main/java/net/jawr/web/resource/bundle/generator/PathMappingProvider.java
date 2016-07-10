@@ -39,6 +39,8 @@ public interface PathMappingProvider {
 	/**
 	 * Returns the path mappings for the generated resource
 	 * 
+	 * @param bundle
+	 *            the resource bundle
 	 * @param path
 	 *            the path
 	 * @param rsReader

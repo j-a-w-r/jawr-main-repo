@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,33 +25,40 @@ import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import com.yahoo.platform.yui.compressor.CssCompressor;
 
 /**
- * This postprocessor will minify a CSS bundle or file using Julien Lecomte's YUICompressor. 
- * See http://developer.yahoo.com/yui/compressor/ for more information. 
+ * This postprocessor will minify a CSS bundle or file using Julien Lecomte's
+ * YUICompressor. See http://developer.yahoo.com/yui/compressor/ for more
+ * information.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class YUICSSCompressor extends
-		AbstractChainedResourceBundlePostProcessor {
+public class YUICSSCompressor extends AbstractChainedResourceBundlePostProcessor {
 
 	/**
-	 * Constructor 
+	 * Constructor
 	 */
 	public YUICSSCompressor() {
 		super(PostProcessFactoryConstant.YUI_COMPRESSOR);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus, java.lang.StringBuffer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.postprocess.
+	 * AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.
+	 * web.resource.bundle.postprocess.BundleProcessingStatus,
+	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData) throws IOException {
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 		Reader rd = new StringReader(bundleData.toString());
 		CssCompressor compressor = new CssCompressor(rd);
 
 		StringWriter wr = new StringWriter();
-		
+
 		compressor.compress(wr, -1);
-		
+
 		return wr.getBuffer();
 	}
 

@@ -65,10 +65,10 @@ public abstract class AbstractCachedGenerator
 		WorkingDirectoryLocationAware, ResourceReaderHandlerAwareResourceGenerator, BundlingProcessLifeCycleListener {
 
 	/** The Perf Logger */
-	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
+	private static final Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The Logger */
-	private static Logger LOGGER = LoggerFactory.getLogger(AbstractCachedGenerator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCachedGenerator.class);
 
 	/** The separator for file mappings */
 	private static final String SEMICOLON = ";";
@@ -163,8 +163,8 @@ public abstract class AbstractCachedGenerator
 	@Override
 	public void afterPropertiesSet() {
 
-		if(this.config.isUseGeneratorCache()){
-			
+		if (this.config.isUseGeneratorCache()) {
+
 			CachedGenerator annotation = getClass().getAnnotation(CachedGenerator.class);
 			if (annotation != null) {
 				useCache = true;
@@ -175,7 +175,7 @@ public abstract class AbstractCachedGenerator
 					cacheDirectory = cacheDirectory + URL_SEPARATOR;
 				}
 				cacheMode = annotation.mode();
-			
+
 				loadCacheMapping();
 
 				// reset cache if invalid
@@ -208,6 +208,8 @@ public abstract class AbstractCachedGenerator
 	 * 
 	 * @param context
 	 *            the generator context
+	 * @param cacheMode
+	 *            the cache mode
 	 * @return the file path of the temporary resource
 	 */
 	protected String getTempFilePath(GeneratorContext context, CacheMode cacheMode) {
@@ -323,10 +325,10 @@ public abstract class AbstractCachedGenerator
 
 		StringBuilder strbCacheKey = new StringBuilder(path);
 		if (StringUtils.isNotEmpty(context.getBracketsParam())) {
-			strbCacheKey.append("_" + context.getBracketsParam());
+			strbCacheKey.append("_").append(context.getBracketsParam());
 		}
 		if (StringUtils.isNotEmpty(context.getParenthesesParam())) {
-			strbCacheKey.append("_" + context.getParenthesesParam());
+			strbCacheKey.append("_").append(context.getParenthesesParam());
 		}
 
 		String cacheKey = strbCacheKey.toString();
@@ -402,6 +404,7 @@ public abstract class AbstractCachedGenerator
 	 *            the resource path
 	 * @param context
 	 *            the generator context
+	 * @return the reader
 	 */
 	protected Reader generateResource(String path, GeneratorContext context) {
 
@@ -421,7 +424,7 @@ public abstract class AbstractCachedGenerator
 	 * 
 	 * @param context
 	 *            the generator context
-	 * @param linkedResources
+	 * @param fMappings
 	 *            the list of resources to check
 	 * @return true if the resources have been modified
 	 */
@@ -530,9 +533,6 @@ public abstract class AbstractCachedGenerator
 
 	/**
 	 * Serialize the cache file mapping
-	 * 
-	 * @throws IOException
-	 *             if an IO exception occurs
 	 */
 	protected synchronized void serializeCacheMapping() {
 		for (Map.Entry<String, List<FilePathMapping>> entry : linkedResourceMap.entrySet()) {
@@ -543,7 +543,8 @@ public abstract class AbstractCachedGenerator
 
 				for (; iter.hasNext();) {
 					FilePathMapping fMapping = iter.next();
-					strb.append(fMapping.getPath() + MAPPING_TIMESTAMP_SEPARATOR + fMapping.getLastModified());
+					strb.append(fMapping.getPath()).append(MAPPING_TIMESTAMP_SEPARATOR)
+							.append(fMapping.getLastModified());
 					if (iter.hasNext()) {
 						strb.append(SEMICOLON);
 					}
@@ -597,12 +598,12 @@ public abstract class AbstractCachedGenerator
 
 				rd = new BufferedReader(new FileReader(f));
 				for (Enumeration<?> properyNames = cacheProperties.propertyNames(); properyNames.hasMoreElements();) {
-					String name = (String) properyNames.nextElement();
-					if (name.startsWith(JAWR_MAPPING_PREFIX)) {
+					String propName = (String) properyNames.nextElement();
+					if (propName.startsWith(JAWR_MAPPING_PREFIX)) {
 
-						String value = cacheProperties.getProperty(name);
+						String value = cacheProperties.getProperty(propName);
 
-						String resourceMapping = name.substring(JAWR_MAPPING_PREFIX.length());
+						String resourceMapping = propName.substring(JAWR_MAPPING_PREFIX.length());
 						String[] mappings = value.split(SEMICOLON);
 						List<FilePathMapping> fMappings = new CopyOnWriteArrayList<>();
 

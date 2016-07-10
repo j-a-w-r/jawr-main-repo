@@ -32,25 +32,35 @@ public class IOUtils {
 	/**
 	 * Writes all the contents of a Reader to a Writer.
 	 * 
-	 * @param reader the reader to read from
-	 * @param writer the writer to write to
+	 * @param reader
+	 *            the reader to read from
+	 * @param writer
+	 *            the writer to write to
+	 * @throws java.io.IOException
+	 *             if an IOExcption occurs
 	 */
 	public static void copy(Reader reader, Writer writer) throws IOException {
 		copy(reader, writer, false);
 	}
-	
+
 	/**
 	 * Writes all the contents of a Reader to a Writer.
 	 * 
-	 * @param reader the reader to read from
-	 * @param writer the writer to write to
-	 * @param closeStreams the flag indicating if the stream must be close at the end, even if an exception occurs
+	 * @param reader
+	 *            the reader to read from
+	 * @param writer
+	 *            the writer to write to
+	 * @param closeStreams
+	 *            the flag indicating if the stream must be close at the end,
+	 *            even if an exception occurs
+	 * @throws java.io.IOException
+	 *             if an IOExcption occurs
 	 */
 	public static void copy(Reader reader, Writer writer, boolean closeStreams) throws IOException {
 		char[] buf = new char[BUFFER_SIZE];
 		int num = 0;
 
-		try{
+		try {
 			while ((num = reader.read(buf, 0, buf.length)) != -1) {
 				writer.write(buf, 0, num);
 			}
@@ -65,11 +75,14 @@ public class IOUtils {
 	/**
 	 * Writes all the contents of a Reader to a Writer.
 	 * 
-	 * @param reader the reader to read from
-	 * @param writer the writer to write to
+	 * @param input
+	 *            the input to read from
+	 * @param output
+	 *            the output to write to
+	 * @throws java.io.IOException
+	 *             if an IOExcption occurs
 	 */
-	public static void copy(InputStream input, OutputStream output)
-			throws IOException {
+	public static void copy(InputStream input, OutputStream output) throws IOException {
 		byte[] buf = new byte[BUFFER_SIZE];
 		int num = 0;
 
@@ -81,23 +94,31 @@ public class IOUtils {
 	/**
 	 * Writes all the contents of an InputStream to a Writer.
 	 * 
-	 * @param input the input stream to read from
-	 * @param writer the writer to write to
+	 * @param input
+	 *            the input stream to read from
+	 * @param writer
+	 *            the writer to write to
+	 * @throws java.io.IOException
+	 *             if an IOExcption occurs
 	 */
-	public static void copy(InputStream input, Writer writer)
-			throws IOException {
+	public static void copy(InputStream input, Writer writer) throws IOException {
 		copy(new InputStreamReader(input), writer);
 	}
 
 	/**
 	 * Writes all the contents of an InputStream to an OutputStream.
 	 * 
-	 * @param input the input stream to read from
-	 * @param output the output stream to write to
-	 * @param closeStreams the flag indicating if the stream must be close at the end, even if an exception occurs
+	 * @param input
+	 *            the input stream to read from
+	 * @param output
+	 *            the output stream to write to
+	 * @param closeStreams
+	 *            the flag indicating if the stream must be close at the end,
+	 *            even if an exception occurs
+	 * @throws java.io.IOException
+	 *             if an IOExcption occurs
 	 */
-	public static void copy(InputStream input, OutputStream output,
-			boolean closeStreams) throws IOException {
+	public static void copy(InputStream input, OutputStream output, boolean closeStreams) throws IOException {
 		try {
 			copy(input, output);
 		} finally {
@@ -111,29 +132,33 @@ public class IOUtils {
 	/**
 	 * Writes all the contents of a byte array to an OutputStream.
 	 * 
-	 * @param input the input stream to read from
-	 * @param output the output stream to write to
-	 * @param closeStreams the flag indicating if the stream must be close at the end, even if an exception occurs
+	 * @param byteArray
+	 *            the input to read from
+	 * @param out
+	 *            the output stream to write to
+	 * @throws java.io.IOException
+	 *             if an IOExcption occurs
 	 */
 	public static void write(byte[] byteArray, OutputStream out) throws IOException {
-		if(byteArray != null){
+		if (byteArray != null) {
 			out.write(byteArray);
 		}
 	}
-	
+
 	/**
 	 * Copy the readable byte channel to the writable byte channel
 	 * 
-	 * @param inChannel the readable byte channel
-	 * @param outChannel the writable byte channel
-	 * @throws IOException if an IOException occurs.
+	 * @param inChannel
+	 *            the readable byte channel
+	 * @param outChannel
+	 *            the writable byte channel
+	 * @throws IOException
+	 *             if an IOException occurs.
 	 */
-	public static void copy(ReadableByteChannel inChannel,
-			WritableByteChannel outChannel) throws IOException {
+	public static void copy(ReadableByteChannel inChannel, WritableByteChannel outChannel) throws IOException {
 
 		if (inChannel instanceof FileChannel) {
-			((FileChannel) inChannel).transferTo(0, ((FileChannel) inChannel)
-					.size(), outChannel);
+			((FileChannel) inChannel).transferTo(0, ((FileChannel) inChannel).size(), outChannel);
 		} else {
 
 			final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
@@ -164,7 +189,8 @@ public class IOUtils {
 	/**
 	 * Close the input stream
 	 * 
-	 * @param stream the input stream to close
+	 * @param stream
+	 *            the input stream to close
 	 */
 	public static void close(InputStream stream) {
 
@@ -181,7 +207,8 @@ public class IOUtils {
 	/**
 	 * Close the output stream
 	 * 
-	 * @param stream the output stream to close
+	 * @param stream
+	 *            the output stream to close
 	 */
 	public static void close(OutputStream stream) {
 
@@ -198,7 +225,8 @@ public class IOUtils {
 	/**
 	 * Close the channel
 	 * 
-	 * @param channel the channel to close
+	 * @param channel
+	 *            the channel to close
 	 */
 	public static void close(Channel channel) {
 		if (channel != null) {
@@ -213,7 +241,9 @@ public class IOUtils {
 
 	/**
 	 * Close the reader
-	 * @param reader the reader to close
+	 * 
+	 * @param reader
+	 *            the reader to close
 	 */
 	public static void close(Reader reader) {
 		if (reader != null) {
@@ -225,10 +255,12 @@ public class IOUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Close the writer
-	 * @param writer the writer to close
+	 * 
+	 * @param writer
+	 *            the writer to close
 	 */
 	public static void close(Writer writer) {
 		if (writer != null) {
@@ -242,30 +274,38 @@ public class IOUtils {
 	}
 
 	/**
-     * Get the contents of an <code>InputStream</code> as a String
-     * using the platform default character encoding.
-     * @param input  the <code>InputStream</code> to read from
-     * @return the requested String
-     * @throws NullPointerException if the input is null
-     * @throws IOException if an I/O error occurs
-     */
-    public static String toString(InputStream input) throws IOException {
-        StringWriter sw = new StringWriter();
-        copy(input, sw);
-        return sw.toString();
-    }
-
-    /**
-     * Get the contents of an <code>Reader</code> as a String
-     * using the platform default character encoding.
-     * @param rd  the <code>Reader</code> to read from
-     * @return the requested String
-     * @throws NullPointerException if the input is null
-     * @throws IOException if an I/O error occurs
-     */
-    public static String toString(Reader rd) throws IOException {
+	 * Get the contents of an <code>InputStream</code> as a String using the
+	 * platform default character encoding.
+	 * 
+	 * @param input
+	 *            the <code>InputStream</code> to read from
+	 * @return the requested String
+	 * @throws NullPointerException
+	 *             if the input is null
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	public static String toString(InputStream input) throws IOException {
 		StringWriter sw = new StringWriter();
-        copy(rd, sw);
-        return sw.toString();
+		copy(input, sw);
+		return sw.toString();
+	}
+
+	/**
+	 * Get the contents of an <code>Reader</code> as a String using the platform
+	 * default character encoding.
+	 * 
+	 * @param rd
+	 *            the <code>Reader</code> to read from
+	 * @return the requested String
+	 * @throws NullPointerException
+	 *             if the input is null
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	public static String toString(Reader rd) throws IOException {
+		StringWriter sw = new StringWriter();
+		copy(rd, sw);
+		return sw.toString();
 	}
 }

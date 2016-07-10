@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package net.jawr.web.resource.bundle.factory.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,25 +40,28 @@ import net.jawr.web.util.StringUtils;
  * 
  */
 public class PropertiesConfigHelper {
-	
+
 	/** The properties */
-	private Properties props;
-	
+	private final Properties props;
+
 	/** The prefix of the properties */
-	private String prefix;
-	
+	private final String prefix;
+
 	/** The bundle name pattern */
-	private Pattern bundleNamePattern;
-	
+	private final Pattern bundleNamePattern;
+
 	/** The post processor class name pattern */
-	private Pattern postProcessorClassPattern = Pattern.compile("(jawr\\.custom\\.postprocessors\\.)([-_a-zA-Z0-9]+).class");
+	private final Pattern postProcessorClassPattern = Pattern
+			.compile("(jawr\\.custom\\.postprocessors\\.)([-_a-zA-Z0-9]+).class");
 
 	/** The global preprocessor class name pattern */
-	private Pattern globalPreProcessorClassPattern = Pattern.compile("(jawr\\.custom\\.global\\.preprocessor\\.)([-_a-zA-Z0-9]+).class");
-	
+	private final Pattern globalPreProcessorClassPattern = Pattern
+			.compile("(jawr\\.custom\\.global\\.preprocessor\\.)([-_a-zA-Z0-9]+).class");
+
 	/** The global postprocessor class name pattern */
-	private Pattern globalPostProcessorClassPattern = Pattern.compile("(jawr\\.custom\\.global\\.postprocessor\\.)([-_a-zA-Z0-9]+).class");
-	
+	private final Pattern globalPostProcessorClassPattern = Pattern
+			.compile("(jawr\\.custom\\.global\\.postprocessor\\.)([-_a-zA-Z0-9]+).class");
+
 	/**
 	 * Build a properties wrapper that appends 'jawr.' and the specified
 	 * resourceType to a a supplied key before retrieveing its value from the
@@ -73,16 +77,18 @@ public class PropertiesConfigHelper {
 		this.props = props;
 		this.prefix = PropertiesBundleConstant.PROPS_PREFIX + resourceType + ".";
 		String bundle = prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY;
-		String pattern = "(" + bundle.replaceAll("\\.", "\\\\.")
-				+ ")([-_a-zA-Z0-9]+)\\.id";
+		String pattern = "(" + bundle.replaceAll("\\.", "\\\\.") + ")([-_a-zA-Z0-9]+)\\.id";
 		this.bundleNamePattern = Pattern.compile(pattern);
 	}
 
 	/**
-	 * Returns the value of the common property, or the default value if no value is defined
-	 * instead.
-	 * @param key the key of the property
-	 * @param defaultValue the default value
+	 * Returns the value of the common property, or the default value if no
+	 * value is defined instead.
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @param defaultValue
+	 *            the default value
 	 * @return the value of the common property
 	 */
 	public String getCommonProperty(String key, String defaultValue) {
@@ -91,7 +97,9 @@ public class PropertiesConfigHelper {
 
 	/**
 	 * Returns the value of the common property
-	 * @param key the key of the property
+	 * 
+	 * @param key
+	 *            the key of the property
 	 * @return the value of the common property
 	 */
 	public String getCommonProperty(String key) {
@@ -99,169 +107,198 @@ public class PropertiesConfigHelper {
 	}
 
 	/**
-	 * Returns as a set, the comma separated values of a property 
-	 * @param key the key of the property
-	 * @return a set of the comma separated values of a property 
+	 * Returns as a set, the comma separated values of a property
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @return a set of the comma separated values of a property
 	 */
 	public Set<String> getCommonPropertyAsSet(String key) {
-		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(props.getProperty(PropertiesBundleConstant.PROPS_PREFIX+key, ""),
+		Set<String> propertiesSet = new HashSet<>();
+		StringTokenizer tk = new StringTokenizer(props.getProperty(PropertiesBundleConstant.PROPS_PREFIX + key, ""),
 				",");
 		while (tk.hasMoreTokens())
 			propertiesSet.add(tk.nextToken().trim());
 		return propertiesSet;
 	}
-	
+
 	/**
-	 * Returns the value of the custom bundle property, or the default value if no value is defined
-	 * @param bundleName the bundle name
-	 * @param key the key of the property
-	 * @param defaultValue the default value
-	 * @return the value of the custom bundle property, or the default value if no value is defined
+	 * Returns the value of the custom bundle property, or the default value if
+	 * no value is defined
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param key
+	 *            the key of the property
+	 * @param defaultValue
+	 *            the default value
+	 * @return the value of the custom bundle property, or the default value if
+	 *         no value is defined
 	 */
-	public String getCustomBundleProperty(String bundleName, String key,
-			String defaultValue) {
-		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key, defaultValue);
+	public String getCustomBundleProperty(String bundleName, String key, String defaultValue) {
+		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY + bundleName + key,
+				defaultValue);
 	}
 
 	/**
-	 * Returns the value of the custom bundle property, or the default value if no value is defined
-	 * @param bundleName the bundle name
-	 * @param key the key of the property
+	 * Returns the value of the custom bundle property, or the default value if
+	 * no value is defined
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param key
+	 *            the key of the property
 	 * @return the value of the custom bundle property
 	 */
 	public String getCustomBundleProperty(String bundleName, String key) {
-		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key);
+		return props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY + bundleName + key);
 	}
 
 	/**
-	 * Returns the value of the custom bundle boolean property, or <b>false</b> if no value is defined
-	 * @param bundleName the bundle name
-	 * @param key the key of the property
+	 * Returns the value of the custom bundle boolean property, or <b>false</b>
+	 * if no value is defined
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param key
+	 *            the key of the property
 	 * @return the value of the custom bundle property
 	 */
 	public boolean getCustomBundleBooleanProperty(String bundleName, String key) {
-		return Boolean.parseBoolean(props.getProperty(prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY
-				+ bundleName + key, "false"));
+		return Boolean.parseBoolean(props.getProperty(
+				prefix + PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_PROPERTY + bundleName + key, "false"));
 	}
-	
+
 	/**
-	 * Returns as a list, the comma separated values of a property 
-	 * @param key the key of the property
-	 * @return a list of the comma separated values of a property 
+	 * Returns as a list, the comma separated values of a property
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param key
+	 *            the key of the property
+	 * @return a list of the comma separated values of a property
 	 */
 	public List<String> getCustomBundlePropertyAsList(String bundleName, String key) {
-		List<String> propertiesList = new ArrayList<String>();
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
-				",");
+		List<String> propertiesList = new ArrayList<>();
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""), ",");
 		while (tk.hasMoreTokens())
 			propertiesList.add(tk.nextToken().trim());
 		return propertiesList;
 	}
-	
+
 	/**
-	 * Returns as a set, the comma separated values of a property 
-	 * @param key the key of the property
-	 * @return a set of the comma separated values of a property 
+	 * Returns as a set, the comma separated values of a property
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param key
+	 *            the key of the property
+	 * @return a set of the comma separated values of a property
 	 */
 	public Set<String> getCustomBundlePropertyAsSet(String bundleName, String key) {
-		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
-				",");
+		Set<String> propertiesSet = new HashSet<>();
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""), ",");
 		while (tk.hasMoreTokens())
 			propertiesSet.add(tk.nextToken().trim());
 		return propertiesSet;
 	}
-	
+
 	/**
-	 * Returns as a set, the comma separated values of a property 
-	 * @param key the key of the property
-	 * @return a set of the comma separated values of a property 
+	 * Returns as a set, the comma separated values of a property
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param key
+	 *            the key of the property
+	 * @return a set of the comma separated values of a property
 	 */
-	public Map<String,List<String>> getCustomBundlePropertyAsMap(String bundleName, String key) {
-		Map<String,List<String>> propertiesMap = new HashMap<String,List<String>>();
-		
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""),
-				";");
-		while (tk.hasMoreTokens()){
+	public Map<String, List<String>> getCustomBundlePropertyAsMap(String bundleName, String key) {
+		Map<String, List<String>> propertiesMap = new HashMap<>();
+
+		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, key, ""), ";");
+		while (tk.hasMoreTokens()) {
 			String[] mapEntry = tk.nextToken().trim().split(":");
-			
+
 			String mapKey = mapEntry[0];
 			String values = mapEntry[1];
 			StringTokenizer valueTk = new StringTokenizer(values, ",");
-			List<String> valueList = new ArrayList<String>();
-			while (valueTk.hasMoreTokens()){
+			List<String> valueList = new ArrayList<>();
+			while (valueTk.hasMoreTokens()) {
 				valueList.add(valueTk.nextToken().trim());
 			}
 			propertiesMap.put(mapKey, valueList);
 		}
 		return propertiesMap;
 	}
-	
+
 	/**
-	 * Returns the map of variantSet for the bundle 
-	 * @param bundleName the bundle name
-	 * @return the map of variantSet for the bundle 
+	 * Returns the map of variantSet for the bundle
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @return the map of variantSet for the bundle
 	 */
 	public Map<String, VariantSet> getCustomBundleVariantSets(String bundleName) {
-		Map<String, VariantSet> variantSets = new HashMap<String, VariantSet>();
-		
-		StringTokenizer tk = new StringTokenizer(getCustomBundleProperty(bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_VARIANTS, ""),
-				";");
-		while (tk.hasMoreTokens()){
+		Map<String, VariantSet> variantSets = new HashMap<>();
+
+		StringTokenizer tk = new StringTokenizer(
+				getCustomBundleProperty(bundleName, PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_VARIANTS, ""), ";");
+		while (tk.hasMoreTokens()) {
 			String[] mapEntry = tk.nextToken().trim().split(":");
-			
+
 			String type = mapEntry[0];
 			String defaultVariant = mapEntry[1];
 			String values = mapEntry[2];
 			String[] variantsArray = StringUtils.split(values, ",");
-			List<String> variants = new ArrayList<String>();
-			for (int i = 0; i < variantsArray.length; i++) {
-				variants.add(variantsArray[i]);
-			}
-			
+			List<String> variants = new ArrayList<>();
+			variants.addAll(Arrays.asList(variantsArray));
+
 			VariantSet variantSet = new VariantSet(type, defaultVariant, variants);
 			variantSets.put(type, variantSet);
 		}
 		return variantSets;
 	}
-	
+
 	/**
-	 * Returns as a set, the comma separated values of a property 
-	 * @param key the key of the property
-	 * @return a set of the comma separated values of a property 
+	 * Returns as a set, the comma separated values of a property
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @return a set of the comma separated values of a property
 	 */
 	public Set<String> getPropertyAsSet(String key) {
-		Set<String> propertiesSet = new HashSet<String>();
-		StringTokenizer tk = new StringTokenizer(props.getProperty(prefix+key, ""),
-				",");
+		Set<String> propertiesSet = new HashSet<>();
+		StringTokenizer tk = new StringTokenizer(props.getProperty(prefix + key, ""), ",");
 		while (tk.hasMoreTokens())
 			propertiesSet.add(tk.nextToken().trim());
 		return propertiesSet;
 	}
 
 	/**
-	 * Returns the value of a property, or the default value if no value is defined
-	 * @param key the key of the property
-	 * @param defaultValue the default value
-	 * @return the value of a property, or the default value if no value is defined
+	 * Returns the value of a property, or the default value if no value is
+	 * defined
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @param defaultValue
+	 *            the default value
+	 * @return the value of a property, or the default value if no value is
+	 *         defined
 	 */
 	public String getProperty(String key, String defaultValue) {
 		return props.getProperty(prefix + key, defaultValue);
 	}
 
 	/**
-	 * Returns the set of names for the bundles 
-	 * @return the set of names for the bundles 
+	 * Returns the set of names for the bundles
+	 * 
+	 * @return the set of names for the bundles
 	 */
 	public Set<String> getPropertyBundleNameSet() {
-		
-		Set<String> bundleNameSet = new HashSet<String>();
 
-		for (Iterator<Object> it = props.keySet().iterator();it.hasNext();) {
-			Object key = it.next();
+		Set<String> bundleNameSet = new HashSet<>();
+
+		for (Object key : props.keySet()) {
 			Matcher matcher = bundleNamePattern.matcher((String) key);
 			if (matcher.matches()) {
 
@@ -274,37 +311,43 @@ public class PropertiesConfigHelper {
 
 	/**
 	 * Returns the set of post processor name based on the class definition
+	 * 
 	 * @return the set of post processor name based on the class definition
 	 */
-	public Map<String,String> getCustomPostProcessorMap() {
+	public Map<String, String> getCustomPostProcessorMap() {
 		return getCustomMap(postProcessorClassPattern);
 	}
-	
+
 	/**
 	 * Returns the map of custom global preprocessor
+	 * 
 	 * @return the map of custom global preprocessor
 	 */
-	public Map<String,String> getCustomGlobalPreprocessorMap() {
+	public Map<String, String> getCustomGlobalPreprocessorMap() {
 		return getCustomMap(globalPreProcessorClassPattern);
 	}
-	
+
 	/**
 	 * Returns the map of custom global preprocessor
+	 * 
 	 * @return the map of custom global preprocessor
 	 */
-	public Map<String,String> getCustomGlobalPostprocessorMap() {
+	public Map<String, String> getCustomGlobalPostprocessorMap() {
 		return getCustomMap(globalPostProcessorClassPattern);
 	}
-	
+
 	/**
-	 * Returns the map, where the key is the 2 group of the pattern and the value is the property value
-	 * @param keyPattern the pattern of the key
+	 * Returns the map, where the key is the 2 group of the pattern and the
+	 * value is the property value
+	 * 
+	 * @param keyPattern
+	 *            the pattern of the key
 	 * @return the map.
 	 */
-	private Map<String,String> getCustomMap(Pattern keyPattern) {
-		Map<String,String> map = new HashMap<String,String>();
+	private Map<String, String> getCustomMap(Pattern keyPattern) {
+		Map<String, String> map = new HashMap<>();
 
-		for (Iterator<Object> it = props.keySet().iterator();it.hasNext();) {
+		for (Iterator<Object> it = props.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			Matcher matcher = keyPattern.matcher(key);
 			if (matcher.matches()) {
@@ -316,12 +359,13 @@ public class PropertiesConfigHelper {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * Appends the prefix (jawr.) to the specified key and reads it from the
 	 * properties object.
 	 * 
-	 * @param key the suffix of the key property 
+	 * @param key
+	 *            the suffix of the key property
 	 * @return the value of the property jawr.+key
 	 */
 	public String getProperty(String key) {
@@ -330,12 +374,16 @@ public class PropertiesConfigHelper {
 
 	/**
 	 * Returns the boolean value of a property
-	 * @param prop the properties
-	 * @param name the name of the property
-	 * @param defaultValue the default value
+	 * 
+	 * @param prop
+	 *            the properties
+	 * @param name
+	 *            the name of the property
+	 * @param defaultValue
+	 *            the default value
 	 * @return false;
 	 */
-	public static boolean getBooleanValue(Properties prop, String name, boolean defaultValue){
+	public static boolean getBooleanValue(Properties prop, String name, boolean defaultValue) {
 		String strProp = prop.getProperty(name, Boolean.toString(defaultValue));
 		return Boolean.valueOf(strProp);
 	}

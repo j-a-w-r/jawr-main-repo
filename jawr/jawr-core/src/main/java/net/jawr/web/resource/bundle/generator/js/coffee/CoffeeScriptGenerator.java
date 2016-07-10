@@ -51,11 +51,10 @@ import net.jawr.web.util.js.JavascriptEngine;
  * @author ibrahim Chaehoi
  */
 @CachedGenerator(name = "Coffee", cacheDirectory = "coffeeJS", mappingFileName = "coffeeCache.txt", mode = CacheMode.ALL)
-public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
-		implements ICoffeeScriptGenerator {
+public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implements ICoffeeScriptGenerator {
 
 	/** The Logger */
-	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
+	private static final Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The default coffee script options */
 	private static final String COFFEE_SCRIPT_DEFAULT_OPTIONS = "";
@@ -76,7 +75,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	private static final String DEFAULT_COFFEE_SCRIPT_JS_LOCATION = "/net/jawr/web/resource/bundle/generator/js/coffee/coffee-script.js";
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/** The coffeeScript object */
 	private Object coffeeScript;
@@ -165,7 +164,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 
 		Reader rd = null;
 		try {
-			List<Class<?>> excluded = new ArrayList<Class<?>>();
+			List<Class<?>> excluded = new ArrayList<>();
 			excluded.add(ICoffeeScriptGenerator.class);
 			JoinableResourceBundle bundle = context.getBundle();
 			rd = rsHandler.getResource(bundle, path, false, excluded);
@@ -181,9 +180,7 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 				addLinkedResources(path, context, fMapping);
 			}
 
-		} catch (ResourceNotFoundException e) {
-			throw new BundlingProcessException(e);
-		} catch (IOException e) {
+		} catch (ResourceNotFoundException | IOException e) {
 			throw new BundlingProcessException(e);
 		}
 
@@ -216,8 +213,9 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	 */
 	@Override
 	protected boolean isCacheValid() {
-		return super.isCacheValid() && StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION),
-				config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION))
+		return super.isCacheValid()
+				&& StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION),
+						config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION))
 				&& StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS),
 						config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFFEE_SCRIPT_DEFAULT_OPTIONS))
 				&& StringUtils.equals(cacheProperties.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE),
@@ -227,6 +225,8 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator
 	/**
 	 * Compile the CoffeeScript source to a JS source
 	 * 
+	 * @param resourcePath
+	 *            the resource path
 	 * @param coffeeScriptSource
 	 *            the CoffeeScript source
 	 * @return the JS source

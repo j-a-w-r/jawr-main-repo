@@ -33,33 +33,30 @@ public class ELJavascriptBundleTagBeanInfo extends SimpleBeanInfo {
 	 * 
 	 * @see java.beans.SimpleBeanInfo#getPropertyDescriptors()
 	 */
+	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 
-		List<PropertyDescriptor> proplist = new ArrayList<PropertyDescriptor>();
+		List<PropertyDescriptor> proplist = new ArrayList<>();
 
 		try {
-			proplist.add(new PropertyDescriptor("type", ELJavascriptBundleTag.class,
-					null, "setTypeExpr"));
+			proplist.add(new PropertyDescriptor("type", ELJavascriptBundleTag.class, null, "setTypeExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("async", ELJavascriptBundleTag.class,
-					null, "setAsync"));
+			proplist.add(new PropertyDescriptor("async", ELJavascriptBundleTag.class, null, "setAsync"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("defer", ELJavascriptBundleTag.class,
-					null, "setDefer"));
+			proplist.add(new PropertyDescriptor("defer", ELJavascriptBundleTag.class, null, "setDefer"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("src", ELJavascriptBundleTag.class,
-					null, "setSrcExpr"));
+			proplist.add(new PropertyDescriptor("src", ELJavascriptBundleTag.class, null, "setSrcExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("useRandomParam",
-					ELJavascriptBundleTag.class, null, "setUseRandomParamExpr"));
+			proplist.add(new PropertyDescriptor("useRandomParam", ELJavascriptBundleTag.class, null,
+					"setUseRandomParamExpr"));
 		} catch (IntrospectionException ex) {
 		}
 

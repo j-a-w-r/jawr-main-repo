@@ -100,15 +100,18 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		this.resolver = ResourceGeneratorResolverFactory.createPrefixResolver(GeneratorRegistry.MESSAGE_BUNDLE_PREFIX);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#beforeBundlingProcess()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * beforeBundlingProcess()
 	 */
 	@Override
 	public void beforeBundlingProcess() {
 		super.beforeBundlingProcess();
 		cachedAvailableLocalePerResource.clear();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -207,7 +210,6 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	protected List<FilePathMapping> getFileMappings(String path, GeneratorContext context, List<Locale> locales) {
 
 		List<FilePathMapping> fMappings = new ArrayList<>();
-		FilePathMapping fMapping = null;
 		String fileSuffix = PROPERTIES_FILE_SUFFIX;
 
 		String[] names = path.split(RESOURCE_BUNDLE_SEPARATOR);
@@ -224,7 +226,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 					String fileName = f.getAbsolutePath();
 					if (StringUtils.isNotEmpty(fileName)) {
 						long lastModified = rsHandler.getLastModified(fileName);
-						fMapping = new FilePathMapping(fileName, lastModified);
+						FilePathMapping fMapping = new FilePathMapping(fileName, lastModified);
 						fMappings.add(fMapping);
 					}
 				}
@@ -281,6 +283,7 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#
 	 * getDebugModeBuildTimeGenerationPath(java.lang.String)
 	 */
+	@Override
 	public String getDebugModeBuildTimeGenerationPath(String path) {
 
 		String debugPath = path.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR);
@@ -314,11 +317,11 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 */
 	protected List<String> findAvailableLocales(String resource) {
 		List<String> availableLocales = cachedAvailableLocalePerResource.get(resource);
-		if(availableLocales == null){
+		if (availableLocales == null) {
 			availableLocales = LocaleUtils.getAvailableLocaleSuffixesForBundle(resource);
 			cachedAvailableLocalePerResource.put(resource, availableLocales);
 		}
-		
+
 		return availableLocales;
 	}
 
@@ -329,13 +332,14 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 	 * net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator
 	 * #getAvailableVariants(java.lang.String)
 	 */
+	@Override
 	public Map<String, VariantSet> getAvailableVariants(String resource) {
 
 		List<String> localeVariants = getAvailableLocales(resource);
 		if (localeVariants.isEmpty()) {
 			throw new BundlingProcessException("Enable to find the resource bundle : " + resource);
 		}
-		Map<String, VariantSet> variants = new HashMap<String, VariantSet>();
+		Map<String, VariantSet> variants = new HashMap<>();
 		VariantSet variantSet = new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", localeVariants);
 		variants.put(JawrConstant.LOCALE_VARIANT_TYPE, variantSet);
 		return variants;
@@ -397,8 +401,8 @@ public class ResourceBundleMessagesGenerator extends AbstractJavascriptGenerator
 		 *            the file prefix
 		 */
 		public MessageBundleFileFilter(String prefix) {
-			String regex = "(.*)"+Pattern.quote(File.separator+prefix)
-					+ "(_[a-zA-Z]+){0,3}\\." + PROPERTIES_FILE_SUFFIX.substring(1);
+			String regex = "(.*)" + Pattern.quote(File.separator + prefix) + "(_[a-zA-Z]+){0,3}\\."
+					+ PROPERTIES_FILE_SUFFIX.substring(1);
 			this.pattern = Pattern.compile(regex);
 		}
 

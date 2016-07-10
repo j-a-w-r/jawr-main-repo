@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Ibrahim Chaehoi
+ * Copyright 2011-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,15 +24,17 @@ import net.jawr.web.resource.bundle.global.processor.AbstractGlobalProcessorChai
  * @author Ibrahim Chaehoi
  * 
  */
-public class BasicGlobalPostprocessorChainFactory extends AbstractGlobalProcessorChainFactory<GlobalPostProcessingContext> implements
-		GlobalPostprocessorChainFactory {
+public class BasicGlobalPostprocessorChainFactory extends
+		AbstractGlobalProcessorChainFactory<GlobalPostProcessingContext> implements GlobalPostprocessorChainFactory {
 
 	/**
 	 * Build the global preprocessor from the ID given in parameter
 	 * 
-	 * @param key the ID of the preprocessor
+	 * @param key
+	 *            the ID of the preprocessor
 	 * @return a global preprocessor
 	 */
+	@Override
 	protected AbstractChainedGlobalProcessor<GlobalPostProcessingContext> buildProcessorByKey(String key) {
 
 		AbstractChainedGlobalProcessor<GlobalPostProcessingContext> processor = null;

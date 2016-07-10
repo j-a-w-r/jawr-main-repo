@@ -1,5 +1,5 @@
 /**
- * Copyright 2007 Jordi Hernández Sellés
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,23 +14,46 @@
 package net.jawr.web.exception;
 
 /**
- * Exception to throw during configuration process, if the mappings result in a duplicate mapping for a given path.
- *  
+ * Exception to throw during configuration process, if the mappings result in a
+ * duplicate mapping for a given path.
+ * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
 public class DuplicateBundlePathException extends Exception {
-	private static final long serialVersionUID = 1848915729978060353L;
-	private String bundlePath;
 
+	/** The serial version UID */
+	private static final long serialVersionUID = 1848915729978060353L;
+
+	/** The bundle path */
+	private final String bundlePath;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param bundleName
+	 *            the bundle nam
+	 */
 	public DuplicateBundlePathException(String bundleName) {
 		super();
 		this.bundlePath = bundleName;
 	}
 
+	/**
+	 * Returns the bundle path
+	 * 
+	 * @return the bundle path
+	 */
 	public String getBundlePath() {
 		return bundlePath;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Throwable#getMessage()
+	 */
+	@Override
 	public String getMessage() {
 		return "At least two bundles share the pathname: " + getBundlePath();
 	}

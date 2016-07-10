@@ -29,7 +29,7 @@ import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 public class CustomPostProcessorChainWrapper extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The custom post processor */
-	private ResourceBundlePostProcessor customPostProcessor;
+	private final ResourceBundlePostProcessor customPostProcessor;
 
 	/**
 	 * Constructor
@@ -39,7 +39,8 @@ public class CustomPostProcessorChainWrapper extends AbstractChainedResourceBund
 	 * @param customPostProcessor
 	 *            Custom implementation of ResourceBundlePostProcessor to wrap
 	 *            with chaining.
-	 * @param isVariantPostProcessor the flag indicating if it's a variant post processor
+	 * @param isVariantPostProcessor
+	 *            the flag indicating if it's a variant post processor
 	 */
 	public CustomPostProcessorChainWrapper(String id, ResourceBundlePostProcessor customPostProcessor,
 			boolean isVariantPostProcessor) {
@@ -57,6 +58,7 @@ public class CustomPostProcessorChainWrapper extends AbstractChainedResourceBund
 	 * web.resource.bundle.postprocess.BundleProcessingStatus,
 	 * java.lang.StringBuffer)
 	 */
+	@Override
 	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
 			throws IOException {
 		return customPostProcessor.postProcessBundle(status, bundleData);

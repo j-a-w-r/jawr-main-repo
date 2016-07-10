@@ -38,19 +38,19 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigChangeListenerThread.class.getName());
 
 	/** The wait duration in millisecond */
-	private long waitMillis;
+	private final long waitMillis;
 
 	/** The configuration source */
-	private ConfigPropertiesSource propertiesSource;
+	private final ConfigPropertiesSource propertiesSource;
 
 	/** The overridden properties */
-	private Properties overriddenProperties;
+	private final Properties overriddenProperties;
 
 	/** The listener for configuration changes */
-	private ConfigChangeListener listener;
+	private final ConfigChangeListener listener;
 
 	/** The resource bundles handler */
-	private ResourceBundlesHandler bundlesHandler;
+	private final ResourceBundlesHandler bundlesHandler;
 
 	/** The flag indicating if we should continue the check */
 	private boolean continuePolling;
@@ -58,6 +58,8 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	/**
 	 * Constructor
 	 * 
+	 * @param resourceType
+	 *            the resource type
 	 * @param propertiesSource
 	 *            the properties source
 	 * @param overriddenProperties
@@ -87,6 +89,7 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
+	@Override
 	public void run() {
 		// Flag to avoid checking the very first time, when the request handler
 		// has just started.

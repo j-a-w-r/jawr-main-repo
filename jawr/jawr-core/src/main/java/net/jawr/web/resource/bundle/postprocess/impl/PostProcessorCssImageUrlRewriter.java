@@ -96,7 +96,7 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 		this.binaryMapping = binaryMappping;
 		// Set the result in a cache, so we will not search for it the next time
 		if (binaryMapping == null) {
-			binaryMapping = new HashMap<String, String>();
+			binaryMapping = new HashMap<>();
 		}
 	}
 
@@ -107,15 +107,8 @@ public class PostProcessorCssImageUrlRewriter extends CssImageUrlRewriter {
 	 * getRewrittenImagePath (java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	protected String getRewrittenImagePath(String originalCssPath, String newCssPath, String url) throws IOException {
-
-		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) config.getContext()
-				.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
-		String binaryServletPath = "";
-
-		if (binaryRsHandler != null) {
-			binaryServletPath = PathNormalizer.asPath(binaryRsHandler.getConfig().getServletMapping());
-		}
 
 		String imgUrl = null;
 

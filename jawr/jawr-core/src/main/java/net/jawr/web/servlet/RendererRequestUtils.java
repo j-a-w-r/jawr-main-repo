@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2013 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -49,7 +49,7 @@ public class RendererRequestUtils {
 	private static final String BUNDLE_RENDERER_CONTEXT_ATTR_PREFIX = "net.jawr.web.resource.renderer.BUNDLE_RENDERER_CONTEXT";
 
 	/** The IE user agent pattern */
-	private static Pattern IE_USER_AGENT_PATTERN = Pattern.compile("MSIE (\\d+)");
+	private static final Pattern IE_USER_AGENT_PATTERN = Pattern.compile("MSIE (\\d+)");
 
 	/**
 	 * The attribute name of the exception in the request when a dispatch error
@@ -58,8 +58,8 @@ public class RendererRequestUtils {
 	private static final String ERROR_EXCEPTION = "javax.servlet.error.exception";
 
 	/**
-	 * The attribute name of the request uri attribute in the request when there is a
-	 * forward
+	 * The attribute name of the request uri attribute in the request when there
+	 * is a forward
 	 */
 	private static final String FORWARD_REQUEST_URI = "javax.servlet.forward.request_uri";
 
@@ -80,8 +80,8 @@ public class RendererRequestUtils {
 	 * 
 	 * @param request
 	 *            the request
-	 * @param resourceType
-	 *            the resource type
+	 * @param renderer
+	 *            the bundle renderer
 	 * @return the bundle renderer context.
 	 */
 	public static BundleRendererContext getBundleRendererContext(HttpServletRequest request, BundleRenderer renderer) {
@@ -90,12 +90,14 @@ public class RendererRequestUtils {
 		// If we are handling a error dispatch, we should remove the current
 		// RendererContext to use a new one
 		String jawrErrorDispathAttributeName = JAWR_ERROR_DISPATCH + renderer.getResourceType();
-		clearRequestWhenDispatch(request, ERROR_EXCEPTION, bundleRendererCtxAttributeName, jawrErrorDispathAttributeName);
+		clearRequestWhenDispatch(request, ERROR_EXCEPTION, bundleRendererCtxAttributeName,
+				jawrErrorDispathAttributeName);
 
 		// If we are handling a forward dispatch, we should remove the current
 		// RendererContext to use a new one
 		String jawrForwardDispathAttributeName = JAWR_FOWARD_DISPATCH + renderer.getResourceType();
-		clearRequestWhenDispatch(request, FORWARD_REQUEST_URI, bundleRendererCtxAttributeName, jawrForwardDispathAttributeName);
+		clearRequestWhenDispatch(request, FORWARD_REQUEST_URI, bundleRendererCtxAttributeName,
+				jawrForwardDispathAttributeName);
 
 		BundleRendererContext ctx = (BundleRendererContext) request.getAttribute(bundleRendererCtxAttributeName);
 		if (ctx == null) {
@@ -108,13 +110,19 @@ public class RendererRequestUtils {
 
 	/**
 	 * Clears the request when dispatch
-	 * @param request the request
-	 * @param requestDispatchAttribute the request attribute name to determine the dispatch type 
-	 * @param bundleRendererCtxAttributeName the bundle renderer context attriubte to clean
-	 * @param jawrDispathAttributeName the jawr dispatch attribute used to ensure that the clear is done only once
+	 * 
+	 * @param request
+	 *            the request
+	 * @param requestDispatchAttribute
+	 *            the request attribute name to determine the dispatch type
+	 * @param bundleRendererCtxAttributeName
+	 *            the bundle renderer context attriubte to clean
+	 * @param jawrDispathAttributeName
+	 *            the jawr dispatch attribute used to ensure that the clear is
+	 *            done only once
 	 */
-	protected static void clearRequestWhenDispatch(HttpServletRequest request, String requestDispatchAttribute, String bundleRendererCtxAttributeName,
-			String jawrDispathAttributeName) {
+	protected static void clearRequestWhenDispatch(HttpServletRequest request, String requestDispatchAttribute,
+			String bundleRendererCtxAttributeName, String jawrDispathAttributeName) {
 		if (request.getAttribute(requestDispatchAttribute) != null
 				&& request.getAttribute(jawrDispathAttributeName) == null) {
 			request.removeAttribute(bundleRendererCtxAttributeName);
@@ -151,7 +159,7 @@ public class RendererRequestUtils {
 		// If gzip is completely off, return false.
 		if (!jawrConfig.isGzipResourcesModeOn())
 			rets = false;
-		else if (req.getHeader("Accept-Encoding") != null && req.getHeader("Accept-Encoding").indexOf("gzip") != -1) {
+		else if (req.getHeader("Accept-Encoding") != null && req.getHeader("Accept-Encoding").contains("gzip")) {
 
 			// If gzip for IE6 or less is off, the user agent is checked to
 			// avoid compression.
@@ -177,7 +185,7 @@ public class RendererRequestUtils {
 	public static boolean isIE(HttpServletRequest req) {
 
 		String agent = req.getHeader("User-Agent");
-		return null != agent && agent.indexOf("MSIE") != -1;
+		return null != agent && agent.contains("MSIE");
 	}
 
 	/**
@@ -268,7 +276,7 @@ public class RendererRequestUtils {
 	/**
 	 * Sets a request debuggable if the session is a debuggable session.
 	 * 
-	 * @param req
+	 * @param request
 	 *            the request
 	 */
 	public static void inheritSessionDebugProperty(HttpServletRequest request) {
@@ -304,7 +312,7 @@ public class RendererRequestUtils {
 	/**
 	 * Renders the URL taking in account the context path, the jawr config
 	 * 
-	 * @param newUrl
+	 * @param url
 	 *            the URL
 	 * @param jawrConfig
 	 *            the jawr config

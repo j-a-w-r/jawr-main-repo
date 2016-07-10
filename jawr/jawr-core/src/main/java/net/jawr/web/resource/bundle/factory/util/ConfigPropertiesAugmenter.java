@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Jordi Hernández Sellés
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,15 +13,14 @@
  */
 package net.jawr.web.resource.bundle.factory.util;
 
-import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
-
-import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.jawr.web.resource.bundle.factory.PropertiesBundleConstant;
 
 /**
  * Utility class which can be used to merge several configuration sources. It
@@ -31,12 +30,12 @@ import org.slf4j.LoggerFactory;
  * additional mappings.
  * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
 public class ConfigPropertiesAugmenter {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ConfigPropertiesAugmenter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigPropertiesAugmenter.class);
 
 	/** The configuration properties */
 	private final Properties configProperties;
@@ -54,8 +53,7 @@ public class ConfigPropertiesAugmenter {
 	 * @param privateConfigProperties
 	 *            Set of names of properties which may not be overridden.
 	 */
-	public ConfigPropertiesAugmenter(Properties configProperties,
-			Set<String> privateConfigProperties) {
+	public ConfigPropertiesAugmenter(Properties configProperties, Set<String> privateConfigProperties) {
 		super();
 		this.configProperties = configProperties;
 		this.privateConfigProperties = privateConfigProperties;
@@ -80,19 +78,13 @@ public class ConfigPropertiesAugmenter {
 	 *            the configuration properties to add
 	 */
 	public void augmentConfiguration(Properties configToAdd) {
-		for (Iterator<Entry<Object, Object>> it = configToAdd.entrySet()
-				.iterator(); it.hasNext();) {
-
-			Entry<Object, Object> entry = it.next();
+		for (Entry<Object, Object> entry : configToAdd.entrySet()) {
 			String configKey = (String) entry.getKey();
 			String configValue = (String) entry.getValue();
 
 			// Skip the property is it is not overridable
-			if (null != privateConfigProperties
-					&& privateConfigProperties.contains(configKey)) {
-				LOGGER.warn("The property "
-						+ configKey
-						+ " can not be overridden. It will remain with a value of "
+			if (null != privateConfigProperties && privateConfigProperties.contains(configKey)) {
+				LOGGER.warn("The property " + configKey + " can not be overridden. It will remain with a value of "
 						+ configProperties.get(configKey));
 				continue;
 			}
@@ -117,22 +109,17 @@ public class ConfigPropertiesAugmenter {
 	 * @return true if the property is augmentable or not.
 	 */
 	protected boolean isAugmentable(String configKey) {
-		boolean rets = false;
-		rets = (configKey
-				.endsWith(PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_NAMES)
-				|| // Bundles
-				configKey
-						.endsWith(PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS)
-				|| // mappings
-				configKey
-						.endsWith(PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_NAMES)
-				|| // children of composites
+		boolean rets = (configKey.endsWith(PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_NAMES) || // Bundles
+				configKey.endsWith(PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_MAPPINGS) || // mappings
+				configKey.endsWith(PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_COMPOSITE_NAMES) || // children
+																										// of
+																										// composites
 				configKey.equals(PropertiesBundleConstant.CUSTOM_POSTPROCESSORS
-						+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_NAMES) || // Postprocessors
-																					// definition
-		configKey.equals(PropertiesBundleConstant.PROPS_PREFIX
-				+ PropertiesBundleConstant.CUSTOM_GENERATORS)); // Generators
-																// definition
+						+ PropertiesBundleConstant.CUSTOM_POSTPROCESSORS_NAMES)
+				|| // Postprocessors
+					// definition
+				configKey.equals(PropertiesBundleConstant.PROPS_PREFIX + PropertiesBundleConstant.CUSTOM_GENERATORS)); // Generators
+																														// definition
 
 		rets = rets && configProperties.containsKey(configKey);
 		return rets;

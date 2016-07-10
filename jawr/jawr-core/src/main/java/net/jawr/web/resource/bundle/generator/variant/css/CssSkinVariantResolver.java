@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
  */
 public class CssSkinVariantResolver extends AbstractCssSkinVariantResolver {
 
-	private Logger log = LoggerFactory.getLogger(CssSkinVariantResolver.class);
+	/** The logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(CssSkinVariantResolver.class);
 
 	/**
 	 * Constructor
@@ -57,6 +58,7 @@ public class CssSkinVariantResolver extends AbstractCssSkinVariantResolver {
 	 * net.jawr.web.resource.bundle.variant.VariantResolver#resolveVariant(javax
 	 * .servlet.http.HttpServletRequest)
 	 */
+	@Override
 	public String resolveVariant(HttpServletRequest request) {
 
 		Cookie[] cookies = request.getCookies();
@@ -70,7 +72,7 @@ public class CssSkinVariantResolver extends AbstractCssSkinVariantResolver {
 				}
 			}
 		}
-		log.debug("Resolved skin " + skin);
+		LOGGER.debug("Resolved skin " + skin);
 
 		return skin;
 	}

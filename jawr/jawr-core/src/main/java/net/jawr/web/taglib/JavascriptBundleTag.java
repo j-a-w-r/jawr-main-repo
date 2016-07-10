@@ -20,7 +20,8 @@ import net.jawr.web.resource.bundle.renderer.RendererFactory;
 import net.jawr.web.util.StringUtils;
 
 /**
- * Implementation of a jsp taglib AbstractResourceBundleTag used to render javascript bundles. 
+ * Implementation of a jsp taglib AbstractResourceBundleTag used to render
+ * javascript bundles.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
@@ -32,19 +33,21 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 
 	/** The type attribute */
 	protected String type;
-	
+
 	/** The async attribute */
 	protected String async;
-	
+
 	/** The defer attribute */
 	protected String defer;
-	
+
 	/** The crossorigin attribute */
 	protected String crossorigin;
-	
+
 	/**
 	 * Sets the type attribute
-	 * @param type the type to set
+	 * 
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -58,7 +61,7 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	public void setAsync(String async) {
 		this.async = async;
 	}
-	
+
 	/**
 	 * Set the defer attribute.
 	 * 
@@ -77,30 +80,36 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 		this.crossorigin = crossorigin;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#getResourceHandlerAttributeName()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#
+	 * getResourceHandlerAttributeName()
 	 */
 	@Override
 	protected String getResourceHandlerAttributeName() {
 		return JawrConstant.JS_CONTEXT_ATTRIBUTE;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#createRenderer(net.jawr.web.resource.bundle.handler.ResourceBundlesHandler, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.taglib.AbstractResourceBundleTag#createRenderer(net.jawr.web
+	 * .resource.bundle.handler.ResourceBundlesHandler, boolean)
 	 */
 	@Override
-	protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler,
-			Boolean useRandomParam) {
-		
+	protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler, Boolean useRandomParam) {
+
 		Boolean asyncFlag = null;
-		if(StringUtils.isNotEmpty(async)){
+		if (StringUtils.isNotEmpty(async)) {
 			asyncFlag = Boolean.valueOf(async);
 		}
 		Boolean deferFlag = null;
-		if(StringUtils.isNotEmpty(defer)){
+		if (StringUtils.isNotEmpty(defer)) {
 			deferFlag = Boolean.valueOf(defer);
 		}
-		return  RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, asyncFlag, deferFlag, crossorigin);
+		return RendererFactory.getJsBundleRenderer(rsHandler, type, useRandomParam, asyncFlag, deferFlag, crossorigin);
 	}
 
 	/*
@@ -108,8 +117,9 @@ public class JavascriptBundleTag extends AbstractResourceBundleTag {
 	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
+	@Override
 	public void release() {
-		
+
 		super.release();
 		async = null;
 		defer = null;

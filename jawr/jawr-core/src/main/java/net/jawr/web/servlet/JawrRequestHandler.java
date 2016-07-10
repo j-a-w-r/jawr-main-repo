@@ -194,16 +194,16 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * ServletConfig object. If applicable, a ConfigChangeListenerThread will be
 	 * started to listen to changes in the properties configuration.
 	 * 
-	 * @param servletContext
-	 *            ServletContext
-	 * @param servletConfig
-	 *            ServletConfig
+	 * @param context
+	 *            the servlet context
+	 * @param config
+	 *            the servlet config
 	 * @throws ServletException
 	 *             if an exception occurs
 	 */
 	@SuppressWarnings("unchecked")
 	public JawrRequestHandler(ServletContext context, ServletConfig config) throws ServletException {
-		this.initParameters = new HashMap<String, Object>();
+		this.initParameters = new HashMap<>();
 		Enumeration<String> params = config.getInitParameterNames();
 		while (params.hasMoreElements()) {
 			String param = (String) params.nextElement();
@@ -223,10 +223,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * Parameters normally read from it are read from the initParams Map, and
 	 * the configProps are used instead of reading a .properties file.
 	 * 
-	 * @param servletContext
-	 *            ServletContext
-	 * @param servletConfig
-	 *            ServletConfig
+	 * @param context
+	 *            the servlet context
+	 * @param initParams
+	 *            the init parameters
+	 * @param configProps
+	 *            the config properties
 	 * @throws ServletException
 	 *             if an exception occurs
 	 */
@@ -291,7 +293,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Initialize the properties reloading checker daemon if specified
 		if (!ThreadLocalJawrContext.isBundleProcessingAtBuildTime()
 				&& null != props.getProperty(CONFIG_RELOAD_INTERVAL)) {
-			int interval = Integer.valueOf(props.getProperty(CONFIG_RELOAD_INTERVAL)).intValue();
+			int interval = Integer.parseInt(props.getProperty(CONFIG_RELOAD_INTERVAL));
 			LOGGER.warn("Jawr started with configuration auto reloading on. "
 					+ "Be aware that a daemon thread will be checking for changes to configuration every " + interval
 					+ " seconds.");
@@ -532,9 +534,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				rsReaderHandler, rsBundleHandler, jawrConfig);
 		try {
 			bundlesHandler = factory.buildResourceBundlesHandler();
-		} catch (DuplicateBundlePathException e) {
-			throw new ServletException(e);
-		} catch (BundleDependencyException e) {
+		} catch (DuplicateBundlePathException | BundleDependencyException e) {
 			throw new ServletException(e);
 		}
 
@@ -614,6 +614,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * 
 	 * @param props
 	 *            the properties
+	 * @return the Jawr config
 	 */
 	protected JawrConfig createJawrConfig(Properties props) {
 		jawrConfig = new JawrConfig(resourceType, props, configPropResolver);
@@ -754,8 +755,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	/**
 	 * Initialize the ThreadLocalJawrContext
 	 * 
-	 * @param requestthe
-	 *            HTTP request
+	 * @param request
+	 *            the HTTP request
 	 */
 	protected void initThreadLocalJawrContext(HttpServletRequest request) {
 		ThreadLocalJawrContext.setJawrConfigMgrObjectName(JmxUtils.getJawrConfigMBeanObjectName(
@@ -868,8 +869,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 *            the request
 	 * @param response
 	 *            the response
-	 * @param validBundle
-	 *            the flag indicating if the requested bundle is a valid bundle
+	 * @param bundleHashcodeType
+	 *            the bundle hashcode type
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
@@ -938,7 +939,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		} catch (ResourceNotFoundException e) {
 			logBundleNotFound(requestedPath);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			return;
 		}
 	}
 
@@ -1186,6 +1186,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	/**
 	 * Refresh the dirty bundles
 	 */
+	@Override
 	public synchronized void rebuildDirtyBundles() {
 
 		if (LOGGER.isDebugEnabled()) {
@@ -1231,6 +1232,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * @see net.jawr.web.resource.bundle.factory.util.ConfigChangeListener#
 	 * configChanged (java.util.Properties)
 	 */
+	@Override
 	public synchronized void configChanged(Properties newConfig) {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Reloading Jawr configuration");

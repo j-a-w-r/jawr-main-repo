@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Ibrahim Chaehoi
+ * Copyright 2015-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -60,6 +60,8 @@ public class JawrScssStylesheet extends ScssStylesheet {
 	 *            the path
 	 * @param scssResolver
 	 *            the scss resolver
+	 * @param charset
+	 *            the charset
 	 * @throws IOException
 	 *             if an {@link IOException} occurs
 	 * @throws CSSException
@@ -80,14 +82,14 @@ public class JawrScssStylesheet extends ScssStylesheet {
 		parser.setDocumentHandler(docHandler);
 
 		FilePathMapping fMapping = scssResolver.getFilePathMapping(path);
-		if(fMapping != null){
+		if (fMapping != null) {
 			scssResolver.addLinkedResource(fMapping);
 			if (bundle != null) {
-				bundle.getFilePathMappings().add(
-						new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified()));
+				bundle.getFilePathMappings()
+						.add(new FilePathMapping(bundle, fMapping.getPath(), fMapping.getLastModified()));
 			}
 		}
-		
+
 		try {
 			parser.parseStyleSheet(source);
 		} catch (ParseException e) {

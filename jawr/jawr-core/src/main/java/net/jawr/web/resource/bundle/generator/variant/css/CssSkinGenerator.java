@@ -55,8 +55,7 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  */
 public class CssSkinGenerator extends AbstractCSSGenerator implements VariantResourceGenerator, ResourceBrowser,
-		StreamResourceGenerator, ResourceReaderHandlerAwareResourceGenerator,
-		PostInitializationAwareResourceGenerator {
+		StreamResourceGenerator, ResourceReaderHandlerAwareResourceGenerator, PostInitializationAwareResourceGenerator {
 
 	/** The resource browser */
 	private ResourceBrowser rsBrowser;
@@ -81,7 +80,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	private String skinMappingType = JawrConstant.SKIN_TYPE_MAPPING_SKIN_LOCALE;
 
 	/** The skin mapping */
-	private Map<String, Map<String, VariantSet>> skinMapping = new HashMap<String, Map<String, VariantSet>>();
+	private Map<String, Map<String, VariantSet>> skinMapping = new HashMap<>();
 
 	/** The resource strategy class */
 	private Class<?> resourceProviderStrategyClass;
@@ -130,15 +129,15 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 			config.getGeneratorRegistry().registerVariantResolver(cssSkinResolver);
 		}
 		if (initSkinMapping) {
-			String skinMappingType = config.getProperty(JawrConstant.SKIN_TYPE_MAPPING_CONFIG_PARAM);
-			if (StringUtils.isNotEmpty(skinMappingType)) {
-				if (skinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN)
-						|| skinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_SKIN_LOCALE)) {
-					this.skinMappingType = skinMappingType;
+			String cfgSkinMappingType = config.getProperty(JawrConstant.SKIN_TYPE_MAPPING_CONFIG_PARAM);
+			if (StringUtils.isNotEmpty(cfgSkinMappingType)) {
+				if (cfgSkinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN)
+						|| cfgSkinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_SKIN_LOCALE)) {
+					this.skinMappingType = cfgSkinMappingType;
 				} else {
-					throw new IllegalArgumentException(
-							"The value for the '" + JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN + "' " + "property ["
-									+ skinMappingType + "] is invalid. " + "Please check the docs for valid values ");
+					throw new IllegalArgumentException("The value for the '"
+							+ JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN + "' " + "property [" + cfgSkinMappingType
+							+ "] is invalid. " + "Please check the docs for valid values ");
 				}
 			}
 			this.skinMapping = getSkinMapping(rsBrowser, config);
@@ -154,6 +153,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * #setResourceReaderHandler(net.jawr
 	 * .web.resource.handler.reader.ResourceReaderHandler)
 	 */
+	@Override
 	public void setResourceReaderHandler(ResourceReaderHandler rsHandler) {
 
 		rsBrowser = rsHandler;
@@ -165,6 +165,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * @see net.jawr.web.resource.bundle.generator.
 	 * PostInitializationAwareResourceGenerator#afterPropertiesSet()
 	 */
+	@Override
 	public void afterPropertiesSet() {
 
 		this.urlRewriter = new CssImageUrlRewriter(config);
@@ -176,15 +177,15 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 		}
 
 		// Init skin mapping
-		String skinMappingType = config.getProperty(JawrConstant.SKIN_TYPE_MAPPING_CONFIG_PARAM);
-		if (StringUtils.isNotEmpty(skinMappingType)) {
-			if (skinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN)
-					|| skinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_SKIN_LOCALE)) {
-				this.skinMappingType = skinMappingType;
+		String cfgSkinMappingType = config.getProperty(JawrConstant.SKIN_TYPE_MAPPING_CONFIG_PARAM);
+		if (StringUtils.isNotEmpty(cfgSkinMappingType)) {
+			if (cfgSkinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN)
+					|| cfgSkinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_SKIN_LOCALE)) {
+				this.skinMappingType = cfgSkinMappingType;
 			} else {
 				throw new IllegalArgumentException(
 						"The value for the '" + JawrConstant.SKIN_TYPE_MAPPING_LOCALE_SKIN + "' " + "property ["
-								+ skinMappingType + "] is invalid. " + "Please check the docs for valid values ");
+								+ cfgSkinMappingType + "] is invalid. " + "Please check the docs for valid values ");
 			}
 		}
 		this.skinMapping = getSkinMapping(rsBrowser, config);
@@ -198,6 +199,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
 	 * getPathMatcher ()
 	 */
+	@Override
 	public ResourceGeneratorResolver getResolver() {
 
 		return resolver;
@@ -210,14 +212,14 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator
 	 * #getAvailableVariants(java.lang.String)
 	 */
+	@Override
 	public Map<String, VariantSet> getAvailableVariants(String mapping) {
 
-		Map<String, VariantSet> availableVariants = new HashMap<String, VariantSet>();
+		Map<String, VariantSet> availableVariants = new HashMap<>();
 		String skinRootDir = getSkinRootDir(mapping, skinMapping.keySet());
 		if (skinRootDir != null) {
 			Map<String, VariantSet> variantSets = skinMapping.get(skinRootDir);
-			for (Iterator<VariantSet> it = variantSets.values().iterator(); it.hasNext();) {
-				VariantSet variantSet = it.next();
+			for (VariantSet variantSet : variantSets.values()) {
 				availableVariants.put(variantSet.getType(), variantSet);
 			}
 		}
@@ -225,12 +227,16 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 		return availableVariants;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * java.lang.String)
 	 */
 	@Override
 	protected Reader generateResource(String path, GeneratorContext context) {
-		
+
 		Reader reader = null;
 		ResourceReaderHandler readerHandler = context.getResourceReaderHandler();
 
@@ -260,6 +266,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames
 	 * (java.lang.String)
 	 */
+	@Override
 	public Set<String> getResourceNames(String path) {
 
 		String resourcePath = getResolver().getResourcePath(path);
@@ -273,6 +280,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java
 	 * .lang.String)
 	 */
+	@Override
 	public boolean isDirectory(String path) {
 
 		String resourcePath = getResolver().getResourcePath(path);
@@ -295,24 +303,24 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	/**
 	 * Returns the skin mapping from the Jawr config
 	 * 
-	 * @param the
-	 *            resource browser
+	 * @param rsBrowser
+	 *            the resource browser
 	 * @param config
 	 *            the Jawr config
 	 * @return the skin mapping
 	 */
 	public Map<String, Map<String, VariantSet>> getSkinMapping(ResourceBrowser rsBrowser, JawrConfig config) {
 
-		Map<String, Map<String, VariantSet>> skinMapping = new HashMap<String, Map<String, VariantSet>>();
+		Map<String, Map<String, VariantSet>> currentSkinMapping = new HashMap<>();
 		PropertiesConfigHelper props = new PropertiesConfigHelper(config.getConfigProperties(), JawrConstant.CSS_TYPE);
 		Set<String> skinRootDirectories = props.getPropertyAsSet(JawrConstant.SKIN_DEFAULT_ROOT_DIRS);
 		if (skinMappingType.equals(JawrConstant.SKIN_TYPE_MAPPING_SKIN_LOCALE)) {
-			updateSkinMappingUsingTypeSkinLocale(rsBrowser, config, skinMapping, skinRootDirectories);
+			updateSkinMappingUsingTypeSkinLocale(rsBrowser, config, currentSkinMapping, skinRootDirectories);
 		} else {
-			updateSkinMappingUsingTypeLocaleSkin(rsBrowser, config, skinMapping, skinRootDirectories);
+			updateSkinMappingUsingTypeLocaleSkin(rsBrowser, config, currentSkinMapping, skinRootDirectories);
 		}
 
-		return skinMapping;
+		return currentSkinMapping;
 	}
 
 	/**
@@ -368,7 +376,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 
 			if (defaultLocaleName == null) {
 				defaultLocaleName = localeName;
-			} else if (defaultLocaleName != null && !defaultLocaleName.equals(localeName)) {
+			} else if (!defaultLocaleName.equals(localeName)) {
 				throw new BundlingProcessException(
 						"The default locale for the skin root directories are not the same. Please check your configuration.");
 			}
@@ -438,7 +446,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 
 			if (defaultLocaleName == null) {
 				defaultLocaleName = localeName;
-			} else if (defaultLocaleName != null && !defaultLocaleName.equals(localeName)) {
+			} else if (!defaultLocaleName.equals(localeName)) {
 				throw new BundlingProcessException(
 						"The default locale for the skin root directories are not the same. Please check your configuration.");
 			}
@@ -450,14 +458,14 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 			skinMapping.put(localeRootDir, variantsMap);
 		}
 
-		CssSkinVariantResolver resolver = (CssSkinVariantResolver) config.getGeneratorRegistry()
+		CssSkinVariantResolver skinResolver = (CssSkinVariantResolver) config.getGeneratorRegistry()
 				.getVariantResolver(JawrConstant.SKIN_VARIANT_TYPE);
-		if (resolver == null) {
-			resolver = new CssSkinVariantResolver(defaultSkinName, config.getSkinCookieName());
-			config.getGeneratorRegistry().registerVariantResolver(resolver);
+		if (skinResolver == null) {
+			skinResolver = new CssSkinVariantResolver(defaultSkinName, config.getSkinCookieName());
+			config.getGeneratorRegistry().registerVariantResolver(skinResolver);
 		} else {
-			resolver.setDefaultSkin(defaultSkinName);
-			resolver.setSkinCookieName(config.getSkinCookieName());
+			skinResolver.setDefaultSkin(defaultSkinName);
+			skinResolver.setSkinCookieName(config.getSkinCookieName());
 		}
 
 	}
@@ -467,14 +475,13 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	 * 
 	 * @param path
 	 *            the resource path
-	 * @param the
-	 *            set of skin root directories
+	 * @param skinRootDirs
+	 *            the set of skin root directories
 	 * @return the skin root dir
 	 */
 	public String getSkinRootDir(String path, Set<String> skinRootDirs) {
 		String skinRootDir = null;
-		for (Iterator<String> itSkinDir = skinRootDirs.iterator(); itSkinDir.hasNext();) {
-			String skinDir = itSkinDir.next();
+		for (String skinDir : skinRootDirs) {
 			if (path.startsWith(skinDir)) {
 				skinRootDir = skinDir;
 			}
@@ -497,8 +504,8 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	private Map<String, VariantSet> getVariants(ResourceBrowser rsBrowser, String rootDir, String defaultSkinName,
 			String defaultLocaleName, boolean mappingSkinLocale) {
 		Set<String> paths = rsBrowser.getResourceNames(rootDir);
-		Set<String> skinNames = new HashSet<String>();
-		Set<String> localeVariants = new HashSet<String>();
+		Set<String> skinNames = new HashSet<>();
+		Set<String> localeVariants = new HashSet<>();
 		for (Iterator<String> itPath = paths.iterator(); itPath.hasNext();) {
 			String path = rootDir + itPath.next();
 			if (rsBrowser.isDirectory(path)) {
@@ -539,7 +546,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	private Map<String, VariantSet> getVariants(String defaultSkin, Set<String> skinNames, String defaultLocaleName,
 			Set<String> localeVariants) {
 
-		Map<String, VariantSet> skinVariants = new HashMap<String, VariantSet>();
+		Map<String, VariantSet> skinVariants = new HashMap<>();
 		if (!skinNames.isEmpty()) {
 			skinVariants.put(JawrConstant.SKIN_VARIANT_TYPE,
 					new VariantSet(JawrConstant.SKIN_VARIANT_TYPE, defaultSkin, skinNames));
@@ -662,9 +669,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 		try {
 			strategy = (VariantResourceReaderStrategy) resourceProviderStrategyClass.newInstance();
 			strategy.initVariantProviderStrategy(context, variantSetMap);
-		} catch (InstantiationException e) {
-			throw new BundlingProcessException(e);
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new BundlingProcessException(e);
 		}
 
@@ -690,7 +695,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 			ResourceReaderHandler readerHandler, String skinRootDir, String[] paths, Map<String, String> variantMap) {
 
 		Reader reader = null;
-		StringBuffer path = new StringBuffer(skinRootDir);
+		StringBuilder path = new StringBuilder(skinRootDir);
 		String skinVariant = (String) variantMap.get(JawrConstant.SKIN_VARIANT_TYPE);
 		String localeVariant = (String) variantMap.get(JawrConstant.LOCALE_VARIANT_TYPE);
 
@@ -723,9 +728,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 				StringBuffer result = urlRewriter.rewriteUrl(finalPath, originalPath, content);
 				reader = new StringReader(result.toString());
 			}
-		} catch (ResourceNotFoundException e) {
-			// Nothing to do
-		} catch (IOException e) {
+		} catch (ResourceNotFoundException | IOException e) {
 			// Nothing to do
 		}
 
@@ -735,8 +738,8 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	/**
 	 * Set the variant resource reader strategy
 	 * 
-	 * @param strategy
-	 *            the resource reader strategy to set
+	 * @param strategyClass
+	 *            the variant resource reader strategy class
 	 */
 	public void setVariantResourceReaderStrategy(Class<?> strategyClass) {
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -44,8 +44,7 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 	private static final long serialVersionUID = -4551240917172286444L;
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JawrServlet.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JawrServlet.class);
 
 	/** The request handler */
 	protected JawrRequestHandler requestHandler;
@@ -55,29 +54,25 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 	 * 
 	 * @see javax.servlet.GenericServlet#init()
 	 */
+	@Override
 	public void init() throws ServletException {
 		try {
-			String type = getServletConfig().getInitParameter(
-					JawrConstant.TYPE_INIT_PARAMETER);
+			String type = getServletConfig().getInitParameter(JawrConstant.TYPE_INIT_PARAMETER);
 			if (JawrConstant.BINARY_TYPE.equals(type)) {
-				requestHandler = new JawrBinaryResourceRequestHandler(
-						getServletContext(), getServletConfig());
+				requestHandler = new JawrBinaryResourceRequestHandler(getServletContext(), getServletConfig());
 			} else {
-				requestHandler = new JawrRequestHandler(getServletContext(),
-						getServletConfig());
+				requestHandler = new JawrRequestHandler(getServletContext(), getServletConfig());
 			}
 		} catch (ServletException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal, "Jawr servlet with name "
-					+ getServletConfig().getServletName()
+			LOGGER.error(fatal, "Jawr servlet with name " + getServletConfig().getServletName()
 					+ " failed to initialize properly. ");
 			LOGGER.error(fatal, "Cause:");
 			LOGGER.error(fatal, e.getMessage(), e);
 			throw e;
 		} catch (Throwable e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal, "Jawr servlet with name "
-					+ getServletConfig().getServletName()
+			LOGGER.error(fatal, "Jawr servlet with name " + getServletConfig().getServletName()
 					+ " failed to initialize properly. ");
 			LOGGER.error(fatal, "Cause: ");
 			LOGGER.error(fatal, e.getMessage(), e);
@@ -88,12 +83,11 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
-	 * , javax.servlet.http.HttpServletResponse)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.
+	 * HttpServletRequest , javax.servlet.http.HttpServletResponse)
 	 */
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		requestHandler.doGet(req, resp);
 	}
 
@@ -102,6 +96,7 @@ public class JawrServlet extends HttpServlet implements ServletContextListener {
 	 * 
 	 * @see javax.servlet.GenericServlet#destroy()
 	 */
+	@Override
 	public void destroy() {
 		requestHandler.destroy();
 	}

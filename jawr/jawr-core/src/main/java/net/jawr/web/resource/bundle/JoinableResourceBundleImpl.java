@@ -14,7 +14,6 @@
 package net.jawr.web.resource.bundle;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,15 +133,16 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			this.id = PathNormalizer.asPath(id);
 		}
 		this.name = name;
-		
+
 		if (bundlePrefix != null) {
 			this.bundlePrefix = PathNormalizer.asDirPath(bundlePrefix);
 		}
-		
-		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceReaderHandler, generatorRegistry);
+
+		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceReaderHandler,
+				generatorRegistry);
 		this.bundlePathMapping = new BundlePathMapping(this);
 
-		prefixMap = new ConcurrentHashMap<String, String>();
+		prefixMap = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -175,9 +175,10 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			LOGGER.debug("Adding mapped files for bundle " + id);
 		}
 
-		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceReaderHandler, generatorRegistry);
+		this.bundlePathMappingBuilder = createBundlePathMappingBuilder(fileExtension, resourceReaderHandler,
+				generatorRegistry);
 		this.bundlePathMapping = bundlePathMappingBuilder.build(pathMappings);
-		
+
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Added " + this.bundlePathMapping.getItemPathList().size() + " files and "
 					+ bundlePathMapping.getLicensesPathList().size() + " licenses for the bundle " + id);
@@ -187,12 +188,17 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 	/**
 	 * Returns the bundle path mapping builder
-	 * @param fileExtension the file extension
-	 * @param resourceReaderHandler the resource reader handler
-	 * @param generatorRegistry the generator registry
+	 * 
+	 * @param fileExtension
+	 *            the file extension
+	 * @param resourceReaderHandler
+	 *            the resource reader handler
+	 * @param generatorRegistry
+	 *            the generator registry
+	 * @return the bundle path mapping builder
 	 */
-	protected BundlePathMappingBuilder createBundlePathMappingBuilder(String fileExtension, ResourceReaderHandler resourceReaderHandler,
-			GeneratorRegistry generatorRegistry) {
+	protected BundlePathMappingBuilder createBundlePathMappingBuilder(String fileExtension,
+			ResourceReaderHandler resourceReaderHandler, GeneratorRegistry generatorRegistry) {
 		return new BundlePathMappingBuilder(this, fileExtension, generatorRegistry, resourceReaderHandler);
 	}
 
@@ -201,6 +207,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getId()
 	 */
+	@Override
 	public String getId() {
 		return this.id;
 	}
@@ -210,6 +217,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getName()
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -220,6 +228,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getBundlePrefix()
 	 */
+	@Override
 	public String getBundlePrefix() {
 		return bundlePrefix;
 	}
@@ -229,6 +238,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#isComposite()
 	 */
+	@Override
 	public boolean isComposite() {
 		return false;
 	}
@@ -239,6 +249,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
 	 * getUnitaryPostProcessor ()
 	 */
+	@Override
 	public ResourceBundlePostProcessor getUnitaryPostProcessor() {
 		return unitaryPostProcessor;
 	}
@@ -249,6 +260,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param unitaryPostProcessor
 	 *            the unitary post processor
 	 */
+	@Override
 	public void setUnitaryPostProcessor(ResourceBundlePostProcessor unitaryPostProcessor) {
 		this.unitaryPostProcessor = unitaryPostProcessor;
 	}
@@ -259,6 +271,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
 	 * getBundlePostProcessor ()
 	 */
+	@Override
 	public ResourceBundlePostProcessor getBundlePostProcessor() {
 		return bundlePostProcessor;
 	}
@@ -269,6 +282,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param bundlePostProcessor
 	 *            the post processor to set
 	 */
+	@Override
 	public void setBundlePostProcessor(ResourceBundlePostProcessor bundlePostProcessor) {
 		this.bundlePostProcessor = bundlePostProcessor;
 	}
@@ -279,6 +293,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
 	 * getExplorerConditionalExpression()
 	 */
+	@Override
 	public String getExplorerConditionalExpression() {
 		return explorerConditionalExpression;
 	}
@@ -297,10 +312,11 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @param variantSets
 	 */
+	@Override
 	public void setVariants(Map<String, VariantSet> variantSets) {
 
 		if (variantSets != null) {
-			this.variants = new TreeMap<String, VariantSet>(variantSets);
+			this.variants = new TreeMap<>(variantSets);
 			variantKeys = VariantUtils.getAllVariantKeys(this.variants);
 		}
 	}
@@ -310,6 +326,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getVariants()
 	 */
+	@Override
 	public Map<String, VariantSet> getVariants() {
 
 		return variants;
@@ -322,6 +339,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getLocaleVariantKeys
 	 * ()
 	 */
+	@Override
 	public List<String> getVariantKeys() {
 
 		return variantKeys;
@@ -333,6 +351,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
 	 * getAlternateProductionURL ()
 	 */
+	@Override
 	public String getAlternateProductionURL() {
 		return this.alternateProductionURL;
 	}
@@ -374,6 +393,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#belongsTobundle(java
 	 * .lang.String)
 	 */
+	@Override
 	public boolean belongsToBundle(String itemPath) {
 
 		boolean belongsToBundle = false;
@@ -402,6 +422,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getInclusionPattern()
 	 */
+	@Override
 	public InclusionPattern getInclusionPattern() {
 		return this.inclusionPattern;
 	}
@@ -413,6 +434,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#setMappings(java.
 	 * util.List)
 	 */
+	@Override
 	public void setMappings(List<String> pathMappings) {
 
 		this.bundlePathMapping = this.bundlePathMappingBuilder.build(pathMappings);
@@ -434,6 +456,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList()
 	 */
+	@Override
 	public List<BundlePath> getItemPathList() {
 		return bundlePathMapping.getItemPathList();
 	}
@@ -445,6 +468,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemDebugPathList
 	 * ()
 	 */
+	@Override
 	public List<BundlePath> getItemDebugPathList() {
 		return bundlePathMapping.getItemDebugPathList();
 	}
@@ -456,20 +480,27 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getFilePathMappings
 	 * ()
 	 */
+	@Override
 	public List<FilePathMapping> getFilePathMappings() {
 		return bundlePathMapping.getFilePathMappings();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#getLinkedFilePathMappings()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
+	 * getLinkedFilePathMappings()
 	 */
 	@Override
 	public List<FilePathMapping> getLinkedFilePathMappings() {
 		return bundlePathMapping.getLinkedFilePathMappings();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#setLinkedFilePathMappings(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#
+	 * setLinkedFilePathMappings(java.util.List)
 	 */
 	@Override
 	public void setLinkedFilePathMappings(List<FilePathMapping> mappings) {
@@ -483,6 +514,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList(java
 	 * .lang.String)
 	 */
+	@Override
 	public List<BundlePath> getItemDebugPathList(Map<String, String> variants) {
 
 		if (StringUtils.isNotEmpty(debugURL)) {
@@ -498,6 +530,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getItemPathList(java
 	 * .lang.String)
 	 */
+	@Override
 	public List<BundlePath> getItemPathList(Map<String, String> variants) {
 		return getItemPathList(bundlePathMapping.getItemPathList(), variants);
 	}
@@ -517,10 +550,9 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 			return itemList;
 		}
 
-		List<BundlePath> rets = new ArrayList<BundlePath>();
+		List<BundlePath> rets = new ArrayList<>();
 
-		for (Iterator<BundlePath> it = itemList.iterator(); it.hasNext();) {
-			BundlePath bundlePath = it.next();
+		for (BundlePath bundlePath : itemList) {
 			String path = bundlePath.getPath();
 			if (generatorRegistry.isPathGenerated(path)) {
 				Set<String> variantTypes = generatorRegistry.getGeneratedResourceVariantTypes(path);
@@ -544,6 +576,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @param dependencies
 	 *            the bundle dependencies
 	 */
+	@Override
 	public void setDependencies(List<JoinableResourceBundle> dependencies) {
 		this.dependencies = dependencies;
 	}
@@ -554,6 +587,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getDependencies()
 	 */
+	@Override
 	public List<JoinableResourceBundle> getDependencies() {
 		return dependencies;
 	}
@@ -564,6 +598,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * @see
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getLicensesPathList()
 	 */
+	@Override
 	public Set<String> getLicensesPathList() {
 		return this.bundlePathMapping.getLicensesPathList();
 	}
@@ -585,6 +620,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getURLPrefix(java
 	 * .util.Map)
 	 */
+	@Override
 	public String getURLPrefix(Map<String, String> variants) {
 
 		if (null == this.urlPrefix)
@@ -606,6 +642,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#getBundleDataHashCode
 	 * ()
 	 */
+	@Override
 	public String getBundleDataHashCode(String variantKey) {
 		if (StringUtils.isEmpty(variantKey)) {
 			return this.urlPrefix;
@@ -621,6 +658,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle#setBundleDataHashCode
 	 * (java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setBundleDataHashCode(String variantKey, String bundleDataHashCode) {
 
 		String prefix = bundleDataHashCode;
@@ -655,6 +693,7 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return "JoinableResourceBundleImpl [id=" + id + ", name=" + name + "]";
 	}
@@ -680,10 +719,14 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 		return dirty;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.JoinableResourceBundle#resetBundleMapping()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.JoinableResourceBundle#resetBundleMapping()
 	 */
-	public void resetBundleMapping(){
+	@Override
+	public void resetBundleMapping() {
 		this.variants = null;
 		this.variantKeys = null;
 		this.bundlePathMapping = bundlePathMappingBuilder.build();

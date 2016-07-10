@@ -81,7 +81,8 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
-	// TODO check if this method can not be refactored to getResource(JoinableResourceBundle bundle, String resourceName)
+	// TODO check if this method can not be refactored to
+	// getResource(JoinableResourceBundle bundle, String resourceName)
 	// When bundle is set consider it like if processing bundle flag to true.
 	Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle)
 			throws ResourceNotFoundException;
@@ -96,7 +97,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @param processingBundle
 	 *            the flag indicating that we are currently processing the
 	 *            bundles
-	 * @param excludes
+	 * @param excludedReader
 	 *            the list of excluded reader
 	 * @return the reader to the resource
 	 * @throws ResourceNotFoundException
@@ -128,8 +129,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
-	InputStream getResourceAsStream(String resourceName, boolean processingBundle)
-			throws ResourceNotFoundException;
+	InputStream getResourceAsStream(String resourceName, boolean processingBundle) throws ResourceNotFoundException;
 
 	/**
 	 * Returns the last modified date of the resource path available on
@@ -140,5 +140,5 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @return the last modified date
 	 */
 	long getLastModified(String filePath);
-	
+
 }

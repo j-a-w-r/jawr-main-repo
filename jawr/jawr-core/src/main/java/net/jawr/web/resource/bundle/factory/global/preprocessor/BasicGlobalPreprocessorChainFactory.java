@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2011 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,14 +24,18 @@ import net.jawr.web.resource.bundle.global.processor.AbstractGlobalProcessorChai
  * @author Ibrahim Chaehoi
  * 
  */
-public class BasicGlobalPreprocessorChainFactory extends AbstractGlobalProcessorChainFactory<GlobalPreprocessingContext> implements
-		GlobalPreprocessorChainFactory {
+public class BasicGlobalPreprocessorChainFactory extends AbstractGlobalProcessorChainFactory<GlobalPreprocessingContext>
+		implements GlobalPreprocessorChainFactory {
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.global.processor.AbstractGlobalProcessorChainFactory#buildProcessorByKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.global.processor.
+	 * AbstractGlobalProcessorChainFactory#buildProcessorByKey(java.lang.String)
 	 */
+	@Override
 	protected AbstractChainedGlobalProcessor<GlobalPreprocessingContext> buildProcessorByKey(String key) {
-		
+
 		AbstractChainedGlobalProcessor<GlobalPreprocessingContext> processor = null;
 
 		if (key.equals(JawrConstant.GLOBAL_CSS_SMARTSPRITES_PREPROCESSOR_ID)) {
@@ -40,6 +44,5 @@ public class BasicGlobalPreprocessorChainFactory extends AbstractGlobalProcessor
 
 		return processor;
 	}
-
 
 }

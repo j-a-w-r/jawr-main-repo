@@ -41,21 +41,21 @@ public class ClassPathBinaryResourceGenerator implements ResourceBrowser, Stream
 	protected ResourceGeneratorResolver resolver;
 
 	/** The classpath generator helper */
-	private ClassPathGeneratorHelper helper;
+	private final ClassPathGeneratorHelper helper;
 
 	/**
 	 * Constructor.
 	 */
 	public ClassPathBinaryResourceGenerator() {
-		helper = new ClassPathGeneratorHelper(
-				getClassPathGeneratorHelperPrefix());
+		helper = new ClassPathGeneratorHelper(getClassPathGeneratorHelperPrefix());
 		resolver = createResolver(getGeneratorPrefix());
 	}
 
 	/**
 	 * create the resource generator resolver
 	 *
-	 * @param  generatorPrefix the generator prefix
+	 * @param generatorPrefix
+	 *            the generator prefix
 	 * @return the resource generator resolver
 	 */
 	protected ResourceGeneratorResolver createResolver(String generatorPrefix) {
@@ -83,10 +83,10 @@ public class ClassPathBinaryResourceGenerator implements ResourceBrowser, Stream
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher
-	 * ()
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getPathMatcher ()
 	 */
+	@Override
 	public ResourceGeneratorResolver getResolver() {
 
 		return resolver;
@@ -98,6 +98,7 @@ public class ClassPathBinaryResourceGenerator implements ResourceBrowser, Stream
 	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
 	 * getDebugModeRequestPath()
 	 */
+	@Override
 	public String getDebugModeRequestPath() {
 
 		return ResourceGenerator.IMG_DEBUGPATH;
@@ -110,6 +111,7 @@ public class ClassPathBinaryResourceGenerator implements ResourceBrowser, Stream
 	 * createResourceAsStream
 	 * (net.jawr.web.resource.bundle.generator.GeneratorContext)
 	 */
+	@Override
 	public InputStream createResourceAsStream(GeneratorContext context) {
 
 		InputStream is = null;
@@ -120,24 +122,36 @@ public class ClassPathBinaryResourceGenerator implements ResourceBrowser, Stream
 		return is;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(
+	 * java.lang.String)
 	 */
 	@Override
 	public Set<String> getResourceNames(String path) {
 		return helper.getResourceNames(resolver.getResourcePath(path));
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.
+	 * lang.String)
 	 */
 	@Override
 	public boolean isDirectory(String path) {
 		return helper.isDirectory(path);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.
+	 * lang.String)
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {

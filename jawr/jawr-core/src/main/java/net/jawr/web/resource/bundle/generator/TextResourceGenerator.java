@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -17,19 +17,18 @@ import java.io.Reader;
 
 /**
  * This interface is implemented by all class which generates image resources.
- *  
+ * 
  * @author Ibrahim Chaehoi
  *
  */
-public interface TextResourceGenerator extends ResourceGenerator{
+public interface TextResourceGenerator extends ResourceGenerator {
 
 	/**
-	 * Create a reader on a generated resource (any script not read from the war file 
-	 * structure). 
+	 * Create a reader on a generated resource (any script not read from the war
+	 * file structure).
 	 * 
-	 * @param path
-	 * @param servletContext
-	 * @param charset
+	 * @param context
+	 *            the generator context
 	 * @return the reader for the generated resource
 	 */
 	public Reader createResource(GeneratorContext context);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,8 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
 import net.jawr.web.servlet.JawrRequestHandler;
 
 /**
- * Transfer object meant for a factory to use to create a JoinableResourceBundle.
+ * Transfer object meant for a factory to use to create a
+ * JoinableResourceBundle.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
@@ -28,75 +29,87 @@ import net.jawr.web.servlet.JawrRequestHandler;
  */
 public class ResourceBundleDefinition {
 
-	/** The bundle ID, the URL path which will be used to reference the bundle */
+	/**
+	 * The bundle ID, the URL path which will be used to reference the bundle
+	 */
 	private String bundleId;
-	
-	/** The bundle name, which is used to define the bundle in the properties ( for ex : jawr.js.bundle.<bundleName>.mapping ) */
+
+	/**
+	 * The bundle name, which is used to define the bundle in the properties (
+	 * for ex : jawr.js.bundle.<bundleName>.mapping )
+	 */
 	private String bundleName;
-	
+
 	/** The bundle prefix, which will be added to the URL */
 	private String bundlePrefix;
-	
+
 	/** The mappings */
 	private List<String> mappings;
-	
+
 	/** The flag indicating if the bundle is a global one */
 	private boolean isGlobal;
-	
+
 	/** The flag indicating if the bundle is a composite one */
 	private boolean isComposite;
-	
+
 	/** The order for the inclusion */
 	private int inclusionOrder;
-	
+
 	/** The flag indicating if this bundle must only be included in debug */
 	private boolean debugOnly = false;
-	
+
 	/** The flag indicating if this bundle must never be included in debug */
 	private boolean debugNever = false;
-	
+
 	/** The comma separated list of per file post processors */
 	private String unitaryPostProcessorKeys;
-	
+
 	/** The comma separated list of bundle post processors */
 	private String bundlePostProcessorKeys;
-	
-	/** The IE specific conditional expression, which is used to defined if the bundle must be included or not */
+
+	/**
+	 * The IE specific conditional expression, which is used to defined if the
+	 * bundle must be included or not
+	 */
 	private String ieConditionalExpression;
-	
+
 	/** The alternate production URL */
 	private String alternateProductionURL;
-	
+
 	/** The debug URL */
 	private String debugURL;
-	
+
 	/** The list of children for composite bundle */
 	private List<ResourceBundleDefinition> children;
-	
+
 	/** The variant map */
 	private Map<String, VariantSet> variants;
 
 	/** The list of dependencies */
 	private List<String> dependencies;
-	
+
 	/**
 	 * Returns the variant map
-	 * @param variants the variant map
+	 * 
+	 * @return the variant map
 	 */
 	public Map<String, VariantSet> getVariants() {
 		return this.variants;
 	}
-	
+
 	/**
 	 * Returns the variant map
-	 * @param variants the variant map
+	 * 
+	 * @param variants
+	 *            the variant map
 	 */
 	public void setVariants(Map<String, VariantSet> variants) {
 		this.variants = variants;
 	}
-	
+
 	/**
 	 * Returns the list of children for composite bundle
+	 * 
 	 * @return the list of children for composite bundle
 	 */
 	public List<ResourceBundleDefinition> getChildren() {
@@ -105,7 +118,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the list of children for composite bundle
-	 * @param children the list to set
+	 * 
+	 * @param children
+	 *            the list to set
 	 */
 	public void setChildren(List<ResourceBundleDefinition> children) {
 		this.children = children;
@@ -113,6 +128,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the bundle ID
+	 * 
 	 * @return the bundle ID
 	 */
 	public String getBundleId() {
@@ -121,7 +137,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the bundle ID
-	 * @param bundleId the bundle ID to set
+	 * 
+	 * @param bundleId
+	 *            the bundle ID to set
 	 */
 	public void setBundleId(String bundleId) {
 		if (JawrRequestHandler.CLIENTSIDE_HANDLER_REQ_PATH.equals(bundleId))
@@ -129,18 +147,21 @@ public class ResourceBundleDefinition {
 					+ "] can't be used since it's the same as the clientside handler path. Please change this id (or the name of the script)");
 		this.bundleId = bundleId;
 	}
-	
+
 	/**
 	 * Returns the bundle name
+	 * 
 	 * @return the bundle name
 	 */
 	public String getBundleName() {
 		return bundleName;
 	}
-	
+
 	/**
 	 * Sets the bundle name
-	 * @param bundleName the name to set 
+	 * 
+	 * @param bundleName
+	 *            the name to set
 	 */
 	public void setBundleName(String bundleName) {
 		this.bundleName = bundleName;
@@ -148,22 +169,26 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the bundle prefix
-	 * @param the bundle prefix to set
+	 * 
+	 * @param bundlePrefix
+	 *            the bundle prefix to set
 	 */
 	public void setBundlePrefix(String bundlePrefix) {
 		this.bundlePrefix = bundlePrefix;
 	}
-	
+
 	/**
 	 * Returns the bundle prefix
+	 * 
 	 * @return the bundle prefix
 	 */
 	public String getBundlePrefix() {
 		return bundlePrefix;
 	}
-	
+
 	/**
 	 * Returns the path mappings for the bundle
+	 * 
 	 * @return the path mappings for the bundle
 	 */
 	public List<String> getMappings() {
@@ -172,7 +197,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the path mappings for the bundle
-	 * @param mappings the mappings to set
+	 * 
+	 * @param mappings
+	 *            the mappings to set
 	 */
 	public void setMappings(List<String> mappings) {
 		this.mappings = mappings;
@@ -180,6 +207,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the bundle dependencies
+	 * 
 	 * @return the bundle dependencies
 	 */
 	public List<String> getDependencies() {
@@ -188,7 +216,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the bundle dependencies
-	 * @param dependencies the bundle dependencies
+	 * 
+	 * @param dependencies
+	 *            the bundle dependencies
 	 */
 	public void setDependencies(List<String> dependencies) {
 		this.dependencies = dependencies;
@@ -196,6 +226,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the flag indicating if the bundle is a global one
+	 * 
 	 * @return true if the bundle is a global one, false otherwise
 	 */
 	public boolean isGlobal() {
@@ -204,7 +235,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the flag indicating if the bundle is a global one
-	 * @param isGlobal the flag to set
+	 * 
+	 * @param isGlobal
+	 *            the flag to set
 	 */
 	public void setGlobal(boolean isGlobal) {
 		this.isGlobal = isGlobal;
@@ -212,6 +245,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the inclusion order of the bundle
+	 * 
 	 * @return the inclusion order of the bundle
 	 */
 	public int getInclusionOrder() {
@@ -220,7 +254,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the inclusion order of the bundle
-	 * @param inclusionOrder the inclusion order to set 
+	 * 
+	 * @param inclusionOrder
+	 *            the inclusion order to set
 	 */
 	public void setInclusionOrder(int inclusionOrder) {
 		this.inclusionOrder = inclusionOrder;
@@ -228,7 +264,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the flag indicating if the bundle must be included only in debug
-	 * @return true if the bundle must be included only in debug, false otherwise
+	 * 
+	 * @return true if the bundle must be included only in debug, false
+	 *         otherwise
 	 */
 	public boolean isDebugOnly() {
 		return debugOnly;
@@ -236,7 +274,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the flag indicating if the bundle must be included only in debug
-	 * @param debugOnly the flag to set
+	 * 
+	 * @param debugOnly
+	 *            the flag to set
 	 */
 	public void setDebugOnly(boolean debugOnly) {
 		this.debugOnly = debugOnly;
@@ -244,7 +284,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the flag indicating if the bundle must never be included in debug
-	 * @return true if the bundle must be included never in debug, false otherwise
+	 * 
+	 * @return true if the bundle must be included never in debug, false
+	 *         otherwise
 	 */
 	public boolean isDebugNever() {
 		return debugNever;
@@ -252,7 +294,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the flag indicating if the bundle must never be included in debug
-	 * @param debugNever the flag to set
+	 * 
+	 * @param debugNever
+	 *            the flag to set
 	 */
 	public void setDebugNever(boolean debugNever) {
 		this.debugNever = debugNever;
@@ -260,6 +304,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the comma separated list of file post processors for the bundle
+	 * 
 	 * @return the comma separated list of file post processors for the bundle
 	 */
 	public String getUnitaryPostProcessorKeys() {
@@ -268,7 +313,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the list of file post processors for the bundle
-	 * @param unitaryPostProcessorKeys the list of file post processors to set 
+	 * 
+	 * @param unitaryPostProcessorKeys
+	 *            the list of file post processors to set
 	 */
 	public void setUnitaryPostProcessorKeys(String unitaryPostProcessorKeys) {
 		this.unitaryPostProcessorKeys = unitaryPostProcessorKeys;
@@ -276,6 +323,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the comma separated list of post processors for the bundle
+	 * 
 	 * @return the comma separated list of post processors for the bundle
 	 */
 	public String getBundlePostProcessorKeys() {
@@ -284,7 +332,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the list of post processors for the bundle
-	 * @param bundlePostProcessorKeys the list of post processors to set 
+	 * 
+	 * @param bundlePostProcessorKeys
+	 *            the list of post processors to set
 	 */
 	public void setBundlePostProcessorKeys(String bundlePostProcessorKeys) {
 		this.bundlePostProcessorKeys = bundlePostProcessorKeys;
@@ -292,6 +342,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns true if the bundle is a composite one
+	 * 
 	 * @return true if the bundle is a composite one, false otherwise
 	 */
 	public boolean isComposite() {
@@ -300,22 +351,29 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the flag indicating if the bundle is a composite one
-	 * @param isComposite the flag to set
+	 * 
+	 * @param isComposite
+	 *            the flag to set
 	 */
 	public void setComposite(boolean isComposite) {
 		this.isComposite = isComposite;
 	}
 
 	/**
-	 * Returns the IE specific conditional expression, which is used to defined if the bundle must be included or not
-	 * @return the IE specific conditional expression, which is used to defined if the bundle must be included or not
+	 * Returns the IE specific conditional expression, which is used to defined
+	 * if the bundle must be included or not
+	 * 
+	 * @return the IE specific conditional expression, which is used to defined
+	 *         if the bundle must be included or not
 	 */
 	public String getIeConditionalExpression() {
 		return ieConditionalExpression;
 	}
 
 	/**
-	 * Sets the IE specific conditional expression, which is used to defined if the bundle must be included or not
+	 * Sets the IE specific conditional expression, which is used to defined if
+	 * the bundle must be included or not
+	 * 
 	 * @param ieConditionalExpression
 	 */
 	public void setIeConditionalExpression(String ieConditionalExpression) {
@@ -324,6 +382,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the alternate production URL
+	 * 
 	 * @return the alternate production URL
 	 */
 	public String getAlternateProductionURL() {
@@ -332,7 +391,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the alternate production URL
-	 * @param alternateProductionURL the alternateProductionURL to set
+	 * 
+	 * @param alternateProductionURL
+	 *            the alternateProductionURL to set
 	 */
 	public void setAlternateProductionURL(String alternateProductionURL) {
 		this.alternateProductionURL = alternateProductionURL;
@@ -340,6 +401,7 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Returns the debug URL
+	 * 
 	 * @return the debug URL
 	 */
 	public String getDebugURL() {
@@ -348,7 +410,9 @@ public class ResourceBundleDefinition {
 
 	/**
 	 * Sets the debug URL
-	 * @param debugURL the debugURL to set
+	 * 
+	 * @param debugURL
+	 *            the debugURL to set
 	 */
 	public void setDebugURL(String debugURL) {
 		this.debugURL = debugURL;

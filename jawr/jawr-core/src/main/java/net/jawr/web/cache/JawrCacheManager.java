@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2013 Ibrahim Chaehoi
+ * Copyright 2011-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,36 +24,45 @@ public abstract class JawrCacheManager {
 
 	/**
 	 * Constructor
-	 * @param config the config
+	 * 
+	 * @param config
+	 *            the config
 	 */
 	public JawrCacheManager(JawrConfig config) {
-		
+
 	}
-	
+
 	/**
 	 * Put an element in cache
-	 * @param key the element key
-	 * @param value the element to put in cache
+	 * 
+	 * @param key
+	 *            the element key
+	 * @param value
+	 *            the element to put in cache
 	 */
 	public abstract void put(String key, Object value);
-	
+
 	/**
 	 * Retrieve an element from the cache using its key
-	 * @param key the element key
+	 * 
+	 * @param key
+	 *            the element key
 	 * @return an element from the cache
 	 */
 	public abstract Object get(String key);
-	
+
 	/**
 	 * Remove an element from the cache using its key
-	 * @param key the element key
+	 * 
+	 * @param key
+	 *            the element key
 	 * @return an element from the cache
 	 */
 	public abstract Object remove(String key);
-	
+
 	/**
 	 * Clear the cache content
 	 */
 	public abstract void clear();
-	
+
 }

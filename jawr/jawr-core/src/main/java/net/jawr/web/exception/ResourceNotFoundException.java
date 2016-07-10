@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,31 +14,38 @@
 package net.jawr.web.exception;
 
 /**
- * Exception thrown when trying to access a non existing resource, be it from the store or the servlet context. 
+ * Exception thrown when trying to access a non existing resource, be it from
+ * the store or the servlet context.
  * 
  * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
  */
 public class ResourceNotFoundException extends Exception {
-	
+
 	/** The serial version UID */
 	private static final long serialVersionUID = -8792768175785512913L;
 
 	/** The requested path */
-	private String requestedPath;
-	
+	private final String requestedPath;
+
 	/**
 	 * Constructor
-	 * @param requestedPath the requested path
+	 * 
+	 * @param requestedPath
+	 *            the requested path
+	 * @param parentException
+	 *            the parent exception
 	 */
 	public ResourceNotFoundException(String requestedPath, Exception parentException) {
 		super(parentException);
 		this.requestedPath = requestedPath;
 	}
-	
+
 	/**
 	 * Constructor
-	 * @param requestedPath the requested path
+	 * 
+	 * @param requestedPath
+	 *            the requested path
 	 */
 	public ResourceNotFoundException(String requestedPath) {
 		super();
@@ -47,6 +54,7 @@ public class ResourceNotFoundException extends Exception {
 
 	/**
 	 * Returns the requested path
+	 * 
 	 * @return teh requested path
 	 */
 	public String getRequestedPath() {

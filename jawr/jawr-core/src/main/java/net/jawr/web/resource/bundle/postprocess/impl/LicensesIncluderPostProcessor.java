@@ -43,12 +43,10 @@ import org.slf4j.LoggerFactory;
  * @author Ibrahim Chaehoi
  * 
  */
-public class LicensesIncluderPostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
+public class LicensesIncluderPostProcessor extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(LicensesIncluderPostProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LicensesIncluderPostProcessor.class);
 
 	/**
 	 * Constructor
@@ -65,50 +63,46 @@ public class LicensesIncluderPostProcessor extends
 	 * #doPostProcessBundle(net.jawr.web.resource.bundle.JoinableResourceBundle,
 	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 
 		JoinableResourceBundle bundle = status.getCurrentBundle();
 		Charset charset = status.getJawrConfig().getResourceCharset();
-		if (bundle.getLicensesPathList().size() == 0)
+		if (bundle.getLicensesPathList().isEmpty())
 			return bundleData;
 
 		ByteArrayOutputStream baOs = new ByteArrayOutputStream();
 		WritableByteChannel wrChannel = Channels.newChannel(baOs);
 		Writer writer = Channels.newWriter(wrChannel, charset.name());
-		BufferedWriter bwriter = new BufferedWriter(writer);
+		try (BufferedWriter bwriter = new BufferedWriter(writer)) {
+			for (Iterator<String> it = bundle.getLicensesPathList().iterator(); it.hasNext();) {
+				String path = it.next();
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("Adding license file: " + path);
 
-		for (Iterator<String> it = bundle.getLicensesPathList().iterator(); it
-				.hasNext();) {
-			String path = it.next();
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug("Adding license file: " + path);
+				Reader rd = null;
+				try {
+					rd = status.getRsReader().getResource(bundle, path);
+				} catch (ResourceNotFoundException e) {
+					throw new BundlingProcessException(
+							"Unexpected ResourceNotFoundException when reading a sorting file [" + path + "]");
+				}
 
-			Reader rd = null;
-			try {
-				rd = status.getRsReader().getResource(bundle, path);
-			} catch (ResourceNotFoundException e) {
-				throw new BundlingProcessException(
-						"Unexpected ResourceNotFoundException when reading a sorting file ["
-								+ path + "]");
+				try (BufferedReader bRd = new BufferedReader(rd)) {
+					// Make a buffered reader, to read line by line.
+					String line = bRd.readLine();
+
+					// Write each line and the corresponding new line.
+					while (line != null) {
+						bwriter.write(line);
+						if (((line = bRd.readLine()) != null) || it.hasNext())
+							bwriter.newLine();
+					}
+				}
 			}
-
-			// Make a buffered reader, to read line by line.
-			BufferedReader bRd = new BufferedReader(rd);
-
-			String line = bRd.readLine();
-
-			// Write each line and the corresponding new line.
-			while (line != null) {
-				bwriter.write(line);
-				if (((line = bRd.readLine()) != null) || it.hasNext())
-					bwriter.newLine();
-			}
-			bRd.close();
 		}
-		bwriter.close();
-		return new StringBuffer(baOs.toString(charset.name()))
-				.append(bundleData);
+		return new StringBuffer(baOs.toString(charset.name())).append(bundleData);
 	}
 
 }

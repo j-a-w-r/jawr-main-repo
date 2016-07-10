@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -46,52 +46,51 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 	/** The flag to use random param */
 	protected String useRandomParam = null;
 
-	/** The flag indicating if we should use the random parameter */
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#doStartTag()
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 
-		HttpServletRequest request = (HttpServletRequest) pageContext
-			.getRequest();
-		
-		if(null == pageContext.getServletContext().getAttribute(getResourceHandlerAttributeName()))
-			throw new IllegalStateException("ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-		ResourceBundlesHandler rsHandler = (ResourceBundlesHandler) pageContext.getServletContext().getAttribute(getResourceHandlerAttributeName());
-		JawrConfig jawrConfig = rsHandler.getConfig(); 
-		
-		if(RendererRequestUtils.refreshConfigIfNeeded(request, jawrConfig)){
-			rsHandler = (ResourceBundlesHandler) pageContext.getServletContext().getAttribute(getResourceHandlerAttributeName());
-			jawrConfig = rsHandler.getConfig(); 
+		if (null == pageContext.getServletContext().getAttribute(getResourceHandlerAttributeName()))
+			throw new IllegalStateException(
+					"ResourceBundlesHandler not present in servlet context. Initialization of Jawr either failed or never occurred.");
+
+		ResourceBundlesHandler rsHandler = (ResourceBundlesHandler) pageContext.getServletContext()
+				.getAttribute(getResourceHandlerAttributeName());
+		JawrConfig jawrConfig = rsHandler.getConfig();
+
+		if (RendererRequestUtils.refreshConfigIfNeeded(request, jawrConfig)) {
+			rsHandler = (ResourceBundlesHandler) pageContext.getServletContext()
+					.getAttribute(getResourceHandlerAttributeName());
+			jawrConfig = rsHandler.getConfig();
 		}
-				
+
 		Boolean useRandomFlag = null;
-		if(StringUtils.isNotEmpty(useRandomParam)){
+		if (StringUtils.isNotEmpty(useRandomParam)) {
 			useRandomFlag = Boolean.valueOf(useRandomParam);
 		}
 		// Renderer istance which takes care of generating the response
 		BundleRenderer renderer = createRenderer(rsHandler, useRandomFlag);
-		
+
 		// set the debug override
 		RendererRequestUtils.setRequestDebuggable(request, jawrConfig);
 
 		try {
-			BundleRendererContext ctx = RendererRequestUtils
-					.getBundleRendererContext(request, renderer);
+			BundleRendererContext ctx = RendererRequestUtils.getBundleRendererContext(request, renderer);
 			renderer.renderBundleLinks(src, ctx, pageContext.getOut());
 
 		} catch (IOException ex) {
-			throw new JspException(
-					"Unexpected IOException when writing script tags for path "
-							+ src, ex);
-		}finally{
+			throw new JspException("Unexpected IOException when writing script tags for path " + src, ex);
+		} finally {
 			// Reset the Thread local for the Jawr context
 			ThreadLocalJawrContext.reset();
 		}
-		
+
 		return SKIP_BODY;
 	}
 
@@ -116,28 +115,34 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 
 	/**
 	 * Returns the resource bundle attribute name
+	 * 
 	 * @return the resource bundle attribute name
 	 */
 	protected abstract String getResourceHandlerAttributeName();
-	
+
 	/**
 	 * Returns the bundle renderer
-	 * @param rsHandler the resource bundle handler
-	 * @param useRandomParam the flag indicating if we must add the random param in debug mode or not
+	 * 
+	 * @param rsHandler
+	 *            the resource bundle handler
+	 * @param useRandomParam
+	 *            the flag indicating if we must add the random param in debug
+	 *            mode or not
 	 * @return the bundle renderer
 	 */
 	protected abstract BundleRenderer createRenderer(ResourceBundlesHandler rsHandler, Boolean useRandomParam);
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
+	@Override
 	public void release() {
 
 		src = null;
 		useRandomParam = null;
-		
+
 		// Reset the Thread local for the Jawr context
 		ThreadLocalJawrContext.reset();
 	}

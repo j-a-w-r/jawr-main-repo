@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,8 @@
 package net.jawr.web.exception;
 
 /**
- * Exception to throw during configuration process, if the mappings result in a circular dependency definition for a given path.
+ * Exception to throw during configuration process, if the mappings result in a
+ * circular dependency definition for a given path.
  * 
  * @author Ibrahim Chaehoi
  *
@@ -25,15 +26,18 @@ public class BundleDependencyException extends Exception {
 	private static final long serialVersionUID = 5973452875314885576L;
 
 	/** The bundle name */
-	private String bundleName;
-	
+	private final String bundleName;
+
 	/** The message */
-	private String message;
-	
+	private final String message;
+
 	/**
 	 * Constructor
-	 * @param bundleName the bundle name
-	 * @param conflictBundleName the name of the bundle in conflict
+	 * 
+	 * @param bundleName
+	 *            the bundle name
+	 * @param message
+	 *            the message
 	 */
 	public BundleDependencyException(String bundleName, String message) {
 		super();
@@ -41,21 +45,22 @@ public class BundleDependencyException extends Exception {
 		this.message = message;
 	}
 
-	
 	/**
 	 * Returns the bundle name
+	 * 
 	 * @return the bundle name
 	 */
 	public String getBundleName() {
 		return bundleName;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Throwable#getMessage()
 	 */
+	@Override
 	public String getMessage() {
-		return "An error occured during the dependency resolution of the bundle '" + bundleName +"'. " +
-				message;
+		return "An error occured during the dependency resolution of the bundle '" + bundleName + "'. " + message;
 	}
 }

@@ -158,6 +158,8 @@ public class SassVaadinGenerator extends AbstractCSSGenerator implements ISassRe
 	 *            the resource content to compile
 	 * @param path
 	 *            the compiled resource path
+	 * @param context
+	 *            the generator context
 	 * @return the compiled CSS content
 	 */
 	protected String compile(JoinableResourceBundle bundle, String content, String path, GeneratorContext context) {

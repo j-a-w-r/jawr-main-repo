@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,10 +16,10 @@ package net.jawr.web.taglib.jsf;
 import java.io.IOException;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.jsp.JspException;
 
 /**
- * Abstract implementation of a facelets taglib component which will display images.
+ * Abstract implementation of a facelets taglib component which will display
+ * images.
  * 
  * @author Ibrahim Chaehoi
  * 
@@ -29,15 +29,19 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	/**
 	 * Renders the image tag
 	 * 
-	 * @param context the faces context
-	 * @throws IOException if an IO exception occurs.
+	 * @param context
+	 *            the faces context
+	 * @throws IOException
+	 *             if an IO exception occurs.
 	 */
+	@Override
 	protected abstract void render(FacesContext context) throws IOException;
 
 	/**
 	 * Returns the attribute value associated to the name passed in parameter
 	 * 
-	 * @param attributeName the attribute name
+	 * @param attributeName
+	 *            the attribute name
 	 * @return the attribute value
 	 */
 	protected Object getAttribute(String attributeName) {
@@ -49,7 +53,6 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	 * Prepares the style attributes for inclusion in the component's HTML tag.
 	 * 
 	 * @return The prepared String for inclusion in the HTML tag.
-	 * @throws JspException if invalid attributes are specified
 	 */
 	protected String prepareStyles() {
 		StringBuffer styles = new StringBuffer();
@@ -65,9 +68,11 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	}
 
 	/**
-	 * Prepares the internationalization attributes, appending them to the the given StringBuffer.
+	 * Prepares the internationalization attributes, appending them to the the
+	 * given StringBuffer.
 	 * 
-	 * @param handlers The StringBuffer that output will be appended to.
+	 * @param handlers
+	 *            The StringBuffer that output will be appended to.
 	 * @since Struts 1.3.6
 	 */
 	protected void prepareInternationalization(StringBuffer handlers) {
@@ -90,9 +95,11 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	}
 
 	/**
-	 * Prepares the mouse event handlers, appending them to the the given StringBuffer.
+	 * Prepares the mouse event handlers, appending them to the the given
+	 * StringBuffer.
 	 * 
-	 * @param handlers The StringBuffer that output will be appended to.
+	 * @param handlers
+	 *            The StringBuffer that output will be appended to.
 	 */
 	protected void prepareMouseEvents(StringBuffer handlers) {
 		prepareAttribute(handlers, "onclick", getAttribute("onclick"));
@@ -105,9 +112,11 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	}
 
 	/**
-	 * Prepares the keyboard event handlers, appending them to the the given StringBuffer.
+	 * Prepares the keyboard event handlers, appending them to the the given
+	 * StringBuffer.
 	 * 
-	 * @param handlers The StringBuffer that output will be appended to.
+	 * @param handlers
+	 *            The StringBuffer that output will be appended to.
 	 */
 	protected void prepareKeyEvents(StringBuffer handlers) {
 		prepareAttribute(handlers, "onkeydown", getAttribute("onkeydown"));
@@ -116,12 +125,17 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	}
 
 	/**
-	 * Prepares an attribute if the value is not null, appending it to the the given StringBuffer.
+	 * Prepares an attribute if the value is not null, appending it to the the
+	 * given StringBuffer.
 	 * 
-	 * @param handlers The StringBuffer that output will be appended to.
+	 * @param handlers
+	 *            The StringBuffer that output will be appended to.
+	 * @param name
+	 *            the property name
+	 * @param value
+	 *            the property value
 	 */
-	protected void prepareAttribute(StringBuffer handlers, String name,
-			Object value) {
+	protected void prepareAttribute(StringBuffer handlers, String name, Object value) {
 		if (value != null) {
 			handlers.append(" ");
 			handlers.append(name);
@@ -132,12 +146,17 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	}
 
 	/**
-	 * Prepares an attribute if the value is not null, appending it to the the given StringBuffer.
+	 * Prepares an attribute if the value is not null, appending it to the the
+	 * given StringBuffer.
 	 * 
-	 * @param handlers The StringBuffer that output will be appended to.
+	 * @param handlers
+	 *            The StringBuffer that output will be appended to.
+	 * @param name
+	 *            the property name
+	 * @param value
+	 *            the property value
 	 */
-	protected void prepareAttribute(StringBuffer handlers, String name,
-			boolean value) {
+	protected void prepareAttribute(StringBuffer handlers, String name, boolean value) {
 
 		handlers.append(" ");
 		handlers.append(name);
@@ -150,15 +169,17 @@ public abstract class AbstractHtmlImageTag extends ImagePathTag {
 	/**
 	 * Prepare the image URL
 	 * 
-	 * @param context the faces context
-	 * @param results the result
-	 * @throws IOException if an exception occurs
+	 * @param context
+	 *            the faces context
+	 * @param results
+	 *            the result
+	 * @throws IOException
+	 *             if an exception occurs
 	 */
-	protected void prepareImageUrl(FacesContext context, StringBuffer results)
-			throws IOException {
+	protected void prepareImageUrl(FacesContext context, StringBuffer results) throws IOException {
 
 		String src = (String) getAttributes().get("src");
-		boolean base64 = Boolean.valueOf((String) getAttributes().get("base64")).booleanValue();
+		boolean base64 = Boolean.parseBoolean((String) getAttributes().get("base64"));
 		prepareAttribute(results, "src", getImageUrl(context, src, base64));
 	}
 

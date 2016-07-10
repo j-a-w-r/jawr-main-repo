@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,31 +25,42 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
  * @author Ibrahim Chaehoi
  *
  */
-public class LocaleVariantResolverWrapper implements VariantResolver , LocaleResolver {
+public class LocaleVariantResolverWrapper implements VariantResolver, LocaleResolver {
 
 	/** The locale resolver */
 	private final LocaleResolver localeResolver;
-	
+
 	/**
 	 * Constructor
-	 * @param localeResolver the locale resolver
+	 * 
+	 * @param localeResolver
+	 *            the locale resolver
 	 */
 	public LocaleVariantResolverWrapper(LocaleResolver localeResolver) {
 		this.localeResolver = localeResolver;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.variant.VariantResolver#getVariantType()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.variant.VariantResolver#getVariantType()
 	 */
+	@Override
 	public String getVariantType() {
 		return JawrConstant.LOCALE_VARIANT_TYPE;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.variant.VariantResolver#resolveVariant(javax.servlet.http.HttpServletRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.variant.VariantResolver#resolveVariant(javax
+	 * .servlet.http.HttpServletRequest)
 	 */
+	@Override
 	public String resolveVariant(final HttpServletRequest request) {
-	
+
 		return localeResolver.resolveLocaleCode(request);
 	}
 
@@ -58,13 +69,19 @@ public class LocaleVariantResolverWrapper implements VariantResolver , LocaleRes
 	 * @return
 	 * @see net.jawr.web.resource.bundle.locale.LocaleResolver#resolveLocaleCode(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	public String resolveLocaleCode(HttpServletRequest request) {
 		return localeResolver.resolveLocaleCode(request);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.variant.VariantResolver#getAvailableVariant(java.lang.String, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.variant.VariantResolver#getAvailableVariant(
+	 * java.lang.String, java.util.List)
 	 */
+	@Override
 	public String getAvailableVariant(String variant, VariantSet variantSet) {
 		String availableVariant = null;
 		if (variantSet.contains(variant)) {
@@ -78,10 +95,10 @@ public class LocaleVariantResolverWrapper implements VariantResolver , LocaleRes
 				}
 			}
 		}
-		if(availableVariant == null){
+		if (availableVariant == null) {
 			availableVariant = variantSet.getDefaultVariant();
 		}
-		
+
 		return availableVariant;
 	}
 

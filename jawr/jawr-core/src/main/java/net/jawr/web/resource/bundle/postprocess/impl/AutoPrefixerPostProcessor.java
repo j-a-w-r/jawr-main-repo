@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Ibrahim Chaehoi
+ * Copyright 2015-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -80,7 +80,7 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 
 		StopWatch stopWatch = new StopWatch("Initializing JS engine for Autoprefixer");
 		stopWatch.start();
-		
+
 		// Load JavaScript Script Engine
 		String script = config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION, AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
 		String jsEngineName = config.getJavascriptEngineName(AUTOPREFIXER_JS_ENGINE);
@@ -90,11 +90,10 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 		jsEngine.evaluate("autoprefixer.js", inputStream);
 		String strOptions = config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS);
 		this.options = jsEngine.execEval(strOptions);
-		
+
 		jsEngine.evaluate("initAutoPrefixer.js", String.format("processor = autoprefixer(%s);", strOptions));
 		jsEngine.evaluate("jawrAutoPrefixerProcess.js",
-				String.format("function process(cssSource, opts){" 
-						+ "var result = processor.process(cssSource, opts);"
+				String.format("function process(cssSource, opts){" + "var result = processor.process(cssSource, opts);"
 						+ "if(result.warnings){" + "result.warnings().forEach(function(message){"
 						+ "if(logger.isWarnEnabled()){" + "logger.warn(message.toString());" + "}" + "});}"
 						+ "return result.css;" + "}"));
@@ -152,9 +151,7 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 		try {
 			res = (String) jsEngine.invokeFunction("process", cssSource, options);
 
-		} catch (NoSuchMethodException e) {
-			throw new BundlingProcessException(e);
-		} catch (ScriptException e) {
+		} catch (NoSuchMethodException | ScriptException e) {
 			throw new BundlingProcessException(e);
 		}
 

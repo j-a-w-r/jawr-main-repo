@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Ibrahim Chaehoi
+ * Copyright 2008-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,22 +51,22 @@ public class ELCSSBundleTag extends CSSBundleTag {
 	 */
 	private String mediaExpr;
 
-	/** 
-	 * The flag indicating if we must display alternate stylesheets 
+	/**
+	 * The flag indicating if we must display alternate stylesheets
 	 */
-    private String displayAlternateExpr;
-    
-    /** 
-	 * The flag indicating if it's an alternate stylesheet 
+	private String displayAlternateExpr;
+
+	/**
+	 * The flag indicating if it's an alternate stylesheet
 	 */
-    private String alternateExpr;
-    
-    /** 
-     * The title 
-     */
-    private String titleExpr;
-    
-    /**
+	private String alternateExpr;
+
+	/**
+	 * The title
+	 */
+	private String titleExpr;
+
+	/**
 	 * Returns the srcExpr
 	 * 
 	 * @return the srcExpr
@@ -125,6 +125,7 @@ public class ELCSSBundleTag extends CSSBundleTag {
 
 	/**
 	 * Gets the alternate expression
+	 * 
 	 * @return the alternateExpr
 	 */
 	public String getAlternateExpr() {
@@ -133,7 +134,9 @@ public class ELCSSBundleTag extends CSSBundleTag {
 
 	/**
 	 * Sets the alternate expression
-	 * @param alternateExpr the alternateExpr to set
+	 * 
+	 * @param alternateExpr
+	 *            the alternateExpr to set
 	 */
 	public void setAlternateExpr(String alternateExpr) {
 		this.alternateExpr = alternateExpr;
@@ -141,6 +144,7 @@ public class ELCSSBundleTag extends CSSBundleTag {
 
 	/**
 	 * Gets the alternate expression
+	 * 
 	 * @return the displayAlternateExpr
 	 */
 	public String getDisplayAlternateExpr() {
@@ -149,14 +153,17 @@ public class ELCSSBundleTag extends CSSBundleTag {
 
 	/**
 	 * Sets the alternate expression
-	 * @param getDisplayAlternateExpr the getDisplayAlternateExpr to set
+	 * 
+	 * @param displayAlternateExpr
+	 *            the getDisplayAlternateExpr to set
 	 */
 	public void setDisplayAlternateExpr(String displayAlternateExpr) {
 		this.displayAlternateExpr = displayAlternateExpr;
 	}
-	
+
 	/**
 	 * Gets the title expression
+	 * 
 	 * @return the titleExpr
 	 */
 	public String getTitleExpr() {
@@ -165,7 +172,9 @@ public class ELCSSBundleTag extends CSSBundleTag {
 
 	/**
 	 * Sets the title expression
-	 * @param titleExpr the titleExpr to set
+	 * 
+	 * @param titleExpr
+	 *            the titleExpr to set
 	 */
 	public void setTitleExpr(String titleExpr) {
 		this.titleExpr = titleExpr;
@@ -176,46 +185,45 @@ public class ELCSSBundleTag extends CSSBundleTag {
 	 * 
 	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#doStartTag()
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 
 		String string = null;
 		Boolean bool = null;
 
 		if (srcExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("srcExpr",
-					srcExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("srcExpr", srcExpr, String.class, this, pageContext);
 			setSrc(string);
 		}
 
 		if (useRandomParamExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate(
-					"useRandomParamExpr", useRandomParamExpr, String.class,
-					this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("useRandomParamExpr", useRandomParamExpr,
+					String.class, this, pageContext);
 			setUseRandomParam(string);
 		}
 
 		if (mediaExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("mediaExpr",
-					mediaExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("mediaExpr", mediaExpr, String.class, this,
+					pageContext);
 			setMedia(string);
 		}
 
 		if (titleExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("titleExpr",
-					titleExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("titleExpr", titleExpr, String.class, this,
+					pageContext);
 			setTitle(string);
 		}
 
 		if (alternateExpr != null) {
-			bool = (Boolean) ExpressionEvaluatorManager.evaluate("alternateExpr",
-					alternateExpr, Boolean.class, this, pageContext);
-			setAlternate(bool.booleanValue());
+			bool = (Boolean) ExpressionEvaluatorManager.evaluate("alternateExpr", alternateExpr, Boolean.class, this,
+					pageContext);
+			setAlternate(bool);
 		}
-		
+
 		if (displayAlternateExpr != null) {
-			bool = (Boolean) ExpressionEvaluatorManager.evaluate("displayAlternateExpr",
-					displayAlternateExpr, Boolean.class, this, pageContext);
-			setAlternate(bool.booleanValue());
+			bool = (Boolean) ExpressionEvaluatorManager.evaluate("displayAlternateExpr", displayAlternateExpr,
+					Boolean.class, this, pageContext);
+			setAlternate(bool);
 		}
 
 		return super.doStartTag();
@@ -226,6 +234,7 @@ public class ELCSSBundleTag extends CSSBundleTag {
 	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
+	@Override
 	public void release() {
 		super.release();
 		setSrcExpr(null);

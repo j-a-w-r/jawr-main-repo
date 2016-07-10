@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -46,8 +46,7 @@ import org.slf4j.MarkerFactory;
 public class OrphanResourceBundlesMapper {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(OrphanResourceBundlesMapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrphanResourceBundlesMapper.class);
 
 	/** The base directory */
 	protected String baseDir;
@@ -65,7 +64,7 @@ public class OrphanResourceBundlesMapper {
 	protected String resourceExtension;
 
 	/** The bundle mapping */
-	private List<String> bundleMapping;
+	private final List<String> bundleMapping;
 
 	/**
 	 * Constructor
@@ -81,10 +80,8 @@ public class OrphanResourceBundlesMapper {
 	 * @param resourceExtension
 	 *            the resource file extension
 	 */
-	public OrphanResourceBundlesMapper(String baseDir,
-			ResourceReaderHandler rsHandler,
-			GeneratorRegistry generatorRegistry,
-			List<JoinableResourceBundle> currentBundles,
+	public OrphanResourceBundlesMapper(String baseDir, ResourceReaderHandler rsHandler,
+			GeneratorRegistry generatorRegistry, List<JoinableResourceBundle> currentBundles,
 			String resourceExtension) {
 
 		this.baseDir = "/**";
@@ -92,33 +89,32 @@ public class OrphanResourceBundlesMapper {
 			if (generatorRegistry.isPathGenerated(baseDir)) {
 				this.baseDir = PathNormalizer.normalizePath(baseDir) + "/**";
 			} else if (!"/".equals(baseDir)) {
-				this.baseDir = "/" + PathNormalizer.normalizePath(baseDir)
-						+ "/**";
+				this.baseDir = "/" + PathNormalizer.normalizePath(baseDir) + "/**";
 			}
 		}
 
 		this.rsHandler = rsHandler;
 		this.generatorRegistry = generatorRegistry;
-		this.currentBundles = new ArrayList<JoinableResourceBundle>();
+		this.currentBundles = new ArrayList<>();
 		if (null != currentBundles)
 			this.currentBundles.addAll(currentBundles);
 		this.resourceExtension = resourceExtension;
-		this.bundleMapping = new ArrayList<String>();
+		this.bundleMapping = new ArrayList<>();
 	}
 
 	/**
 	 * Scan all dirs starting at baseDir, and add each orphan resource to the
 	 * resources map.
 	 * 
-	 * @return
+	 * @return the list of orphan resources
+	 * @throws DuplicateBundlePathException
+	 *             if a duplicate path is found in the bundle
 	 */
 	public List<String> getOrphansList() throws DuplicateBundlePathException {
 
 		// Create a mapping for every resource available
-		JoinableResourceBundleImpl tempBundle = new JoinableResourceOrphanBundleImpl(
-				"orphansTemp", "orphansTemp", this.resourceExtension,
-				new InclusionPattern(),
-				Collections.singletonList(this.baseDir), rsHandler,
+		JoinableResourceBundleImpl tempBundle = new JoinableResourceOrphanBundleImpl("orphansTemp", "orphansTemp",
+				this.resourceExtension, new InclusionPattern(), Collections.singletonList(this.baseDir), rsHandler,
 				generatorRegistry);
 
 		// Add licenses
@@ -142,34 +138,29 @@ public class OrphanResourceBundlesMapper {
 	 * @param filePath
 	 * @param currentMappedResources
 	 */
-	private void addFileIfNotMapped(String filePath)
-			throws DuplicateBundlePathException {
+	private void addFileIfNotMapped(String filePath) throws DuplicateBundlePathException {
 
-		for (Iterator<JoinableResourceBundle> it = currentBundles.iterator(); it
-				.hasNext();) {
-			JoinableResourceBundle bundle = it.next();
+		for (JoinableResourceBundle bundle : currentBundles) {
 			List<BundlePath> items = bundle.getItemPathList();
 			List<BundlePath> itemsDebug = bundle.getItemDebugPathList();
 			Set<String> licenses = bundle.getLicensesPathList();
 
 			for (BundlePath path : items) {
-				if(path.getPath().equals(filePath)){
+				if (path.getPath().equals(filePath)) {
 					return;
 				}
 			}
 			for (BundlePath path : itemsDebug) {
-				if(path.getPath().equals(filePath)){
+				if (path.getPath().equals(filePath)) {
 					return;
 				}
 			}
-			
+
 			if (licenses.contains(filePath))
 				return;
 			else if (filePath.equals(bundle.getId())) {
 				Marker fatal = MarkerFactory.getMarker("FATAL");
-				LOGGER.error(fatal,
-						"Duplicate bundle id resulted from orphan mapping of:"
-								+ filePath);
+				LOGGER.error(fatal, "Duplicate bundle id resulted from orphan mapping of:" + filePath);
 				throw new DuplicateBundlePathException(filePath);
 			}
 		}

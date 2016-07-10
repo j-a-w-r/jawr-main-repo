@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2014  Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016  Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -41,8 +41,7 @@ import org.slf4j.LoggerFactory;
 public class ClassLoaderResourceUtils {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ClassLoaderResourceUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClassLoaderResourceUtils.class);
 
 	/**
 	 * Attempots to load a resource from the classpath, either usinf the
@@ -53,8 +52,7 @@ public class ClassLoaderResourceUtils {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	public static InputStream getResourceAsStream(String resourcePath,
-			Object source) throws FileNotFoundException {
+	public static InputStream getResourceAsStream(String resourcePath, Object source) throws FileNotFoundException {
 
 		// Try the current classloader
 		InputStream is = source.getClass().getResourceAsStream(resourcePath);
@@ -62,7 +60,7 @@ public class ClassLoaderResourceUtils {
 		// Weblogic 10 likes this one better..
 		if (null == is) {
 			ClassLoader cl = source.getClass().getClassLoader();
-			if (null != cl){
+			if (null != cl) {
 				is = cl.getResourceAsStream(resourcePath);
 			}
 		}
@@ -72,8 +70,7 @@ public class ClassLoaderResourceUtils {
 		// classpath or inaccessible from the current context.
 
 		if (null == is) {
-			is = Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream(resourcePath);
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
 		}
 
 		if (null == is) {
@@ -85,16 +82,14 @@ public class ClassLoaderResourceUtils {
 			MBeanServer mbs = JmxUtils.getMBeanServer();
 			if (mbs != null) {
 
-				ObjectName name = ThreadLocalJawrContext
-						.getJawrConfigMgrObjectName();
+				ObjectName name = ThreadLocalJawrContext.getJawrConfigMgrObjectName();
 				if (name != null) {
 					try {
 
 						ClassLoader cl = mbs.getClassLoaderFor(name);
 						is = cl.getResourceAsStream(resourcePath);
 					} catch (Exception e) {
-						LOGGER.error("Unable to instanciate the Jawr MBean '"
-								+ name.getCanonicalName() + "'", e);
+						LOGGER.error("Unable to instanciate the Jawr MBean '" + name.getCanonicalName() + "'", e);
 					}
 				}
 			}
@@ -107,12 +102,8 @@ public class ClassLoaderResourceUtils {
 			try {
 				URL url = getResourceURL(resourcePath, source);
 				is = new FileInputStream(new File(url.getFile()));
-			} catch (ResourceNotFoundException e) {
-				throw new FileNotFoundException(resourcePath
-						+ " could not be found. ");
-			} catch (IOException e) {
-				throw new FileNotFoundException(resourcePath
-						+ " could not be found. ");
+			} catch (ResourceNotFoundException | IOException e) {
+				throw new FileNotFoundException(resourcePath + " could not be found. ");
 			}
 		}
 
@@ -131,8 +122,7 @@ public class ClassLoaderResourceUtils {
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
-	public static URL getResourceURL(String resourcePath, Object source)
-			throws ResourceNotFoundException {
+	public static URL getResourceURL(String resourcePath, Object source) throws ResourceNotFoundException {
 
 		// Try the current classloader
 		URL url = source.getClass().getResource(resourcePath);
@@ -148,29 +138,23 @@ public class ClassLoaderResourceUtils {
 		// classloader. If that fails ott, the resource is either not on the
 		// classpath or inaccessible from the current context.
 		if (null == url) {
-			url = Thread.currentThread().getContextClassLoader()
-					.getResource(resourcePath);
+			url = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
 
 			// Last chance, hack in the classloader
 			if (null == url) {
-				ClassLoader threadClassLoader = Thread.currentThread()
-						.getContextClassLoader();
+				ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
 				try {
-					Thread.currentThread().setContextClassLoader(
-							source.getClass().getClassLoader());
+					Thread.currentThread().setContextClassLoader(source.getClass().getClassLoader());
 					if (Thread.currentThread().getContextClassLoader() != null) {
-						url = Thread.currentThread().getContextClassLoader()
-								.getResource(resourcePath);
+						url = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
 					}
 				} finally {
-					Thread.currentThread().setContextClassLoader(
-							threadClassLoader);
+					Thread.currentThread().setContextClassLoader(threadClassLoader);
 				}
 
 			}
 			if (null == url) {
-				throw new ResourceNotFoundException(resourcePath
-						+ " could not be found. ");
+				throw new ResourceNotFoundException(resourcePath + " could not be found. ");
 			}
 		}
 
@@ -187,8 +171,7 @@ public class ClassLoaderResourceUtils {
 	 *            the object
 	 * @return the URL or null if not found
 	 */
-	public static Enumeration<URL> getResources(String resourcePath,
-			Object source) {
+	public static Enumeration<URL> getResources(String resourcePath, Object source) {
 
 		// Try the current classloader
 		Enumeration<URL> urls = null;
@@ -204,25 +187,20 @@ public class ClassLoaderResourceUtils {
 			// classpath or inaccessible from the current context.
 
 			if (null == urls) {
-				urls = Thread.currentThread().getContextClassLoader()
-						.getResources(resourcePath);
+				urls = Thread.currentThread().getContextClassLoader().getResources(resourcePath);
 			}
 
 			// Last chance, hack in the classloader
 			if (null == urls) {
-				ClassLoader threadClassLoader = Thread.currentThread()
-						.getContextClassLoader();
+				ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
 				try {
-					Thread.currentThread().setContextClassLoader(
-							source.getClass().getClassLoader());
+					Thread.currentThread().setContextClassLoader(source.getClass().getClassLoader());
 					if (Thread.currentThread().getContextClassLoader() != null) {
 
-						urls = Thread.currentThread().getContextClassLoader()
-								.getResources(resourcePath);
+						urls = Thread.currentThread().getContextClassLoader().getResources(resourcePath);
 					}
 				} finally {
-					Thread.currentThread().setContextClassLoader(
-							threadClassLoader);
+					Thread.currentThread().setContextClassLoader(threadClassLoader);
 				}
 			}
 		} catch (IOException e) {
@@ -259,14 +237,10 @@ public class ClassLoaderResourceUtils {
 		try {
 			rets = clazz.newInstance();
 		} catch (Exception e) {
-			throw new BundlingProcessException(
-					e.getMessage()
-							+ " [The custom class "
-							+ clazz.getName()
-							+ " could not be instantiated, check wether it is available on the classpath and"
-							+ " verify that it has a zero-arg constructor].\n"
-							+ " The specific error message is: "
-							+ e.getClass().getName() + ":" + e.getMessage(), e);
+			throw new BundlingProcessException(e.getMessage() + " [The custom class " + clazz.getName()
+					+ " could not be instantiated, check wether it is available on the classpath and"
+					+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
+					+ e.getClass().getName() + ":" + e.getMessage(), e);
 		}
 		return rets;
 	}
@@ -274,7 +248,8 @@ public class ClassLoaderResourceUtils {
 	/**
 	 * Checks whether the class is present.
 	 *
-	 * @param classname  the name of class to be checked
+	 * @param classname
+	 *            the name of class to be checked
 	 * @return true if the class is present.
 	 */
 	public static boolean isClassPresent(String classname) {
@@ -305,41 +280,27 @@ public class ClassLoaderResourceUtils {
 		if (null == clazz) {
 			Exception classNotFoundEx = null;
 			try {
-				clazz = Class.forName(classname, true,
-						new ClassLoaderResourceUtils().getClass()
-								.getClassLoader());
+				clazz = Class.forName(classname, true, new ClassLoaderResourceUtils().getClass().getClassLoader());
 			} catch (Exception e) {
 				// Try the third approach
 				classNotFoundEx = e;
 			}
 			if (null == clazz) {
-				ClassLoader threadClassLoader = Thread.currentThread()
-						.getContextClassLoader();
+				ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
 				if (null != threadClassLoader) {
 					try {
-						clazz = Class.forName(classname, true,
-								threadClassLoader);
+						clazz = Class.forName(classname, true, threadClassLoader);
 					} catch (Exception e) {
-						throw new BundlingProcessException(
-								e.getMessage()
-										+ " [The custom class "
-										+ classname
-										+ " could not be instantiated, check wether it is available on the classpath and"
-										+ " verify that it has a zero-arg constructor].\n"
-										+ " The specific error message is: "
-										+ e.getClass().getName() + ":"
-										+ e.getMessage(), e);
+						throw new BundlingProcessException(e.getMessage() + " [The custom class " + classname
+								+ " could not be instantiated, check wether it is available on the classpath and"
+								+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
+								+ e.getClass().getName() + ":" + e.getMessage(), e);
 					}
 				} else {
-					throw new BundlingProcessException(
-							classNotFoundEx.getMessage()
-									+ " [The custom class "
-									+ classname
-									+ " could not be instantiated, check wether it is available on the classpath and"
-									+ " verify that it has a zero-arg constructor].\n"
-									+ " The specific error message is: "
-									+ classNotFoundEx.getClass().getName()
-									+ ":" + classNotFoundEx.getMessage(),
+					throw new BundlingProcessException(classNotFoundEx.getMessage() + " [The custom class " + classname
+							+ " could not be instantiated, check wether it is available on the classpath and"
+							+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
+							+ classNotFoundEx.getClass().getName() + ":" + classNotFoundEx.getMessage(),
 							classNotFoundEx);
 				}
 
@@ -354,7 +315,9 @@ public class ClassLoaderResourceUtils {
 	 * 
 	 * @param classname
 	 *            the class to build an instance of.
-	 * @return
+	 * @param params
+	 *            the parameters
+	 * @return the class instance
 	 */
 	public static Object buildObjectInstance(String classname, Object[] params) {
 		Object rets = null;
@@ -369,14 +332,10 @@ public class ClassLoaderResourceUtils {
 			rets = clazz.getConstructor(paramTypes).newInstance(params);
 
 		} catch (Exception e) {
-			throw new BundlingProcessException(
-					e.getMessage()
-							+ " [The custom class "
-							+ classname
-							+ " could not be instantiated, check wether it is available on the classpath and"
-							+ " verify that it has a zero-arg constructor].\n"
-							+ " The specific error message is: "
-							+ e.getClass().getName() + ":" + e.getMessage(), e);
+			throw new BundlingProcessException(e.getMessage() + " [The custom class " + classname
+					+ " could not be instantiated, check wether it is available on the classpath and"
+					+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
+					+ e.getClass().getName() + ":" + e.getMessage(), e);
 		}
 		return rets;
 	}

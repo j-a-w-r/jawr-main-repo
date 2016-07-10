@@ -15,39 +15,44 @@ package net.jawr.web.resource.bundle.global.processor;
 
 import java.util.Map;
 
-import net.jawr.web.resource.bundle.global.processor.GlobalProcessor;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleProvider;
 
 /**
- * Interface for a factory of chained preprocessor objects. It is meant to ease 
- * configuration implementations. 
+ * Interface for a factory of chained preprocessor objects. It is meant to ease
+ * configuration implementations.
  * 
  * @author Ibrahim Chaehoi
  *
  */
-public interface GlobalProcessorChainFactory<T extends AbstractGlobalProcessingContext> extends BundlingProcessLifeCycleProvider {
+public interface GlobalProcessorChainFactory<T extends AbstractGlobalProcessingContext>
+		extends BundlingProcessLifeCycleProvider {
 
 	/**
-	 * Builds the default chain of processors for resources, be it javascript or css ones. 
+	 * Builds the default chain of processors for resources, be it javascript or
+	 * css ones.
+	 * 
 	 * @return the default chain of processors
 	 */
 	GlobalProcessor<T> buildDefaultProcessorChain();
 
 	/**
-	 * Builds a chain of processors based on a comma-separated list of processor keys. 
-	 * @param processorKeys the comma-separated list of processor keys.
+	 * Builds a chain of processors based on a comma-separated list of processor
+	 * keys.
+	 * 
+	 * @param processorKeys
+	 *            the comma-separated list of processor keys.
 	 * @return a chain of processors
 	 */
 	GlobalProcessor<T> buildProcessorChain(String processorKeys);
-	
-	
+
 	/**
-	 * Sets a map of custom processors to use. 
-	 * The map has a key to name a processor (to be used in bundle definitions), and 
-	 * the class name of a custom processor class which must implement 
-	 * net.jawr.web.resource.bundle.global.preprocessor.GlobalProcessor 
+	 * Sets a map of custom processors to use. The map has a key to name a
+	 * processor (to be used in bundle definitions), and the class name of a
+	 * custom processor class which must implement
+	 * net.jawr.web.resource.bundle.global.preprocessor.GlobalProcessor
 	 * 
-	 * @param keysClassNames the map associated the keys and the class names.
+	 * @param keysClassNames
+	 *            the map associated the keys and the class names.
 	 */
 	void setCustomGlobalProcessors(Map<String, String> keysClassNames);
 

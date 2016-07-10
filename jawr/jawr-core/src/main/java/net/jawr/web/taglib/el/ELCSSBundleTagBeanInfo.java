@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2010 Ibrahim Chaehoi
+ * Copyright 2008-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,41 +33,37 @@ public class ELCSSBundleTagBeanInfo extends SimpleBeanInfo {
 	 * 
 	 * @see java.beans.SimpleBeanInfo#getPropertyDescriptors()
 	 */
+	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 
-		List<PropertyDescriptor> proplist = new ArrayList<PropertyDescriptor>();
+		List<PropertyDescriptor> proplist = new ArrayList<>();
 
 		try {
-			proplist.add(new PropertyDescriptor("src", ELCSSBundleTag.class,
-					null, "setSrcExpr"));
+			proplist.add(new PropertyDescriptor("src", ELCSSBundleTag.class, null, "setSrcExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("useRandomParam",
-					ELCSSBundleTag.class, null, "setUseRandomParamExpr"));
+			proplist.add(new PropertyDescriptor("useRandomParam", ELCSSBundleTag.class, null, "setUseRandomParamExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("media", ELCSSBundleTag.class,
-					null, "setMediaExpr"));
+			proplist.add(new PropertyDescriptor("media", ELCSSBundleTag.class, null, "setMediaExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("title", ELCSSBundleTag.class,
-					null, "setTitleExpr"));
+			proplist.add(new PropertyDescriptor("title", ELCSSBundleTag.class, null, "setTitleExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("alternate", ELCSSBundleTag.class,
-					null, "setAlternateExpr"));
+			proplist.add(new PropertyDescriptor("alternate", ELCSSBundleTag.class, null, "setAlternateExpr"));
 		} catch (IntrospectionException ex) {
 		}
 		try {
-			proplist.add(new PropertyDescriptor("displayAlternate", ELCSSBundleTag.class,
-					null, "setDisplayAlternateExpr"));
+			proplist.add(
+					new PropertyDescriptor("displayAlternate", ELCSSBundleTag.class, null, "setDisplayAlternateExpr"));
 		} catch (IntrospectionException ex) {
 		}
-		
+
 		PropertyDescriptor[] result = new PropertyDescriptor[proplist.size()];
 		return ((PropertyDescriptor[]) proplist.toArray(result));
 	}

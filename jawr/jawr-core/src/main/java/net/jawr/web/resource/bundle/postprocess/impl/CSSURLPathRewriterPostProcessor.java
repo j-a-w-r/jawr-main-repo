@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,19 +23,22 @@ import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 
 /**
- * Single file postprocessor used to rewrite CSS URLs according to the new relative locations of the references when
- * added to a bundle. Since the path changes, the URLs must be rewritten accordingly.  
- * URLs in css files are expected to be according to the css spec (see http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-uri). 
- * Thus, single double, or no quotes enclosing the url are allowed (and remain as they are after rewriting). Escaped parens and quotes 
- * are allowed within the url.   
- *  
+ * Single file postprocessor used to rewrite CSS URLs according to the new
+ * relative locations of the references when added to a bundle. Since the path
+ * changes, the URLs must be rewritten accordingly. URLs in css files are
+ * expected to be according to the css spec (see
+ * http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-uri). Thus, single
+ * double, or no quotes enclosing the url are allowed (and remain as they are
+ * after rewriting). Escaped parens and quotes are allowed within the url.
+ * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class CSSURLPathRewriterPostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
-	
-	/** This variable is used to fake the gzip prefix for the full bundle path */
+public class CSSURLPathRewriterPostProcessor extends AbstractChainedResourceBundlePostProcessor {
+
+	/**
+	 * This variable is used to fake the gzip prefix for the full bundle path
+	 */
 	private static final String FAKE_BUNDLE_PREFIX = "/prefix/";
 
 	/**
@@ -44,22 +47,31 @@ public class CSSURLPathRewriterPostProcessor extends
 	public CSSURLPathRewriterPostProcessor() {
 		super(PostProcessFactoryConstant.URL_PATH_REWRITER);
 	}
-	
+
 	/**
-	 * Constructor
-	 * The post processor ID
+	 * Constructor The post processor ID
+	 * 
+	 * @param id
+	 *            the ID of the postprocessor
 	 */
 	protected CSSURLPathRewriterPostProcessor(String id) {
 		super(id);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.postprocess.impl.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus, java.lang.StringBuffer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.postprocess.impl.
+	 * AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.
+	 * web.resource.bundle.postprocess.BundleProcessingStatus,
+	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
-		
-		// Retrieve the full bundle path, so we will be able to define the relative path for the css images
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
+
+		// Retrieve the full bundle path, so we will be able to define the
+		// relative path for the css images
 		String fullBundlePath = getFinalFullBundlePath(status);
 		PostProcessorCssImageUrlRewriter urlRewriter = createImageUrlRewriter(status);
 		return urlRewriter.rewriteUrl(status.getLastPathAdded(), fullBundlePath, bundleData.toString());
@@ -67,58 +79,64 @@ public class CSSURLPathRewriterPostProcessor extends
 
 	/**
 	 * Creates the image URL rewriter
-	 * @param status the bundle processing status
+	 * 
+	 * @param status
+	 *            the bundle processing status
 	 * @return the image URL rewriter
 	 */
-	protected PostProcessorCssImageUrlRewriter createImageUrlRewriter(
-			BundleProcessingStatus status) {
+	protected PostProcessorCssImageUrlRewriter createImageUrlRewriter(BundleProcessingStatus status) {
 		return new PostProcessorCssImageUrlRewriter(status);
 	}
-	
+
 	/**
-	 * Returns the full path for the CSS bundle, taking in account the css servlet path if defined, 
-	 * the caching prefix, and the url context path overridden
-	 *   
+	 * Returns the full path for the CSS bundle, taking in account the css
+	 * servlet path if defined, the caching prefix, and the url context path
+	 * overridden
+	 * 
+	 * @param status
+	 *            the bundle processing status
 	 * @return the full bundle path
 	 */
 	public String getFinalFullBundlePath(BundleProcessingStatus status) {
 
 		JawrConfig jawrConfig = status.getJawrConfig();
-		String fullBundlePath = null;
 		String bundleName = status.getCurrentBundle().getId();
-		
-		String bundlePrefix = getBundlePrefix(status, jawrConfig, bundleName);  
-		
+
+		String bundlePrefix = getBundlePrefix(status, jawrConfig, bundleName);
+
 		// Concatenate the bundle prefix and the bundle name
-		fullBundlePath = PathNormalizer.concatWebPath(bundlePrefix, bundleName);
-		
+		String fullBundlePath = PathNormalizer.concatWebPath(bundlePrefix, bundleName);
+
 		return fullBundlePath;
 	}
 
 	/**
 	 * Returns the bundle prefix
-	 * @param status the bundle processing status
-	 * @param jawrConfig the jawr config
-	 * @param bundleName the bundle name
+	 * 
+	 * @param status
+	 *            the bundle processing status
+	 * @param jawrConfig
+	 *            the jawr config
+	 * @param bundleName
+	 *            the bundle name
 	 * @return the bundle prefix
 	 */
-	protected String getBundlePrefix(BundleProcessingStatus status,
-			JawrConfig jawrConfig, String bundleName) {
-		
+	protected String getBundlePrefix(BundleProcessingStatus status, JawrConfig jawrConfig, String bundleName) {
+
 		// Generation the bundle prefix
 		String bundlePrefix = status.getCurrentBundle().getBundlePrefix();
-		if(bundlePrefix == null){
+		if (bundlePrefix == null) {
 			bundlePrefix = "";
-		}else{
+		} else {
 			bundlePrefix = PathNormalizer.asPath(bundlePrefix);
 		}
-		if(!bundleName.equals(ResourceGenerator.CSS_DEBUGPATH)){
+		if (!bundleName.equals(ResourceGenerator.CSS_DEBUGPATH)) {
 			bundlePrefix += FAKE_BUNDLE_PREFIX;
 		}
-		
-		// Add path reference for the servlet mapping if it exists 
-		if(! "".equals(jawrConfig.getServletMapping())){
-			bundlePrefix = PathNormalizer.asPath(jawrConfig.getServletMapping()+bundlePrefix)+"/";
+
+		// Add path reference for the servlet mapping if it exists
+		if (!"".equals(jawrConfig.getServletMapping())) {
+			bundlePrefix = PathNormalizer.asPath(jawrConfig.getServletMapping() + bundlePrefix) + "/";
 		}
 		return bundlePrefix;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Ibrahim Chaehoi
+ * Copyright 2015-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -104,22 +104,26 @@ public class PathMapping {
 	 * 
 	 * @return true if the mapping has a FileFilter
 	 */
-	public boolean hasFileFilter(){
+	public boolean hasFileFilter() {
 		return fileFilter != null;
 	}
-	
+
 	/**
-	 * Returns true if the file path passed in parameter is accepted by this mapping.
-	 * This method throws an {@link UnsupportedOperationException} if the mapping has no filter.
+	 * Returns true if the file path passed in parameter is accepted by this
+	 * mapping. This method throws an {@link UnsupportedOperationException} if
+	 * the mapping has no filter.
 	 * 
+	 * @param path
+	 *            the path to check
 	 * @return the file filter
 	 */
 	public boolean accept(String path) {
 
-		if(fileFilter == null){
-			throw new UnsupportedOperationException("This method can't be called on a PahMapping which doesn't have a fileFilter");
+		if (fileFilter == null) {
+			throw new UnsupportedOperationException(
+					"This method can't be called on a PahMapping which doesn't have a fileFilter");
 		}
-		
+
 		File f = new File(path);
 		return fileFilter.accept(f);
 	}

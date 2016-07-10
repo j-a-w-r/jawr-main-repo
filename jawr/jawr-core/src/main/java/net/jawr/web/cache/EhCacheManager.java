@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Ibrahim Chaehoi
+ * Copyright 2012-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,9 +13,11 @@
  */
 package net.jawr.web.cache;
 
+import java.io.FileNotFoundException;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
@@ -53,16 +55,13 @@ public class EhCacheManager extends JawrCacheManager {
 	public EhCacheManager(JawrConfig config) {
 
 		super(config);
-		String configPath = config.getProperty(JAWR_EHCACHE_CONFIG_PATH,
-				DEFAULT_EHCACHE_CONFIG_PATH);
+		String configPath = config.getProperty(JAWR_EHCACHE_CONFIG_PATH, DEFAULT_EHCACHE_CONFIG_PATH);
 		String cacheName = config.getProperty(JAWR_EHCACHE_CACHE_NAME);
 		try {
-			CacheManager cacheMgr = CacheManager
-					.create(ClassLoaderResourceUtils.getResourceAsStream(
-							configPath, this));
+			CacheManager cacheMgr = CacheManager.create(ClassLoaderResourceUtils.getResourceAsStream(configPath, this));
 			cache = cacheMgr.getCache(cacheName);
 
-		} catch (Exception e) {
+		} catch (FileNotFoundException | CacheException | IllegalStateException | ClassCastException e) {
 			LOGGER.error("Unable to load EHCACHE configuration file", e);
 		}
 
@@ -74,6 +73,7 @@ public class EhCacheManager extends JawrCacheManager {
 	 * @see net.jawr.web.cache.AbstractCacheManager#put(java.lang.String,
 	 * java.lang.Object)
 	 */
+	@Override
 	public void put(String key, Object obj) {
 
 		cache.put(new Element(key, obj));
@@ -84,6 +84,7 @@ public class EhCacheManager extends JawrCacheManager {
 	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#get(java.lang.String)
 	 */
+	@Override
 	public Object get(String key) {
 
 		Element element = cache.get(key);
@@ -98,6 +99,7 @@ public class EhCacheManager extends JawrCacheManager {
 	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#remove(java.lang.String)
 	 */
+	@Override
 	public Object remove(String key) {
 
 		Element element = cache.get(key);
@@ -112,6 +114,7 @@ public class EhCacheManager extends JawrCacheManager {
 	 * 
 	 * @see net.jawr.web.cache.AbstractCacheManager#clear()
 	 */
+	@Override
 	public void clear() {
 		cache.removeAll();
 	}

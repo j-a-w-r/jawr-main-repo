@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
+import net.jawr.web.minification.JSMin;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
@@ -46,12 +47,10 @@ import org.slf4j.MarkerFactory;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class ClientSideHandlerGeneratorImpl implements
-		ClientSideHandlerGenerator {
+public class ClientSideHandlerGeneratorImpl implements ClientSideHandlerGenerator {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ClientSideHandlerGeneratorImpl.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientSideHandlerGeneratorImpl.class.getName());
 
 	/**
 	 * Global bundles, to include in every page
@@ -87,8 +86,7 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * net.jawr.web.config.JawrConfig, java.util.List, java.util.List)
 	 */
 	@Override
-	public void init(JawrConfig config,
-			List<JoinableResourceBundle> globalBundles,
+	public void init(JawrConfig config, List<JoinableResourceBundle> globalBundles,
 			List<JoinableResourceBundle> contextBundles) {
 
 		if (null == mainScriptTemplate) {
@@ -109,17 +107,15 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * @see net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator#
 	 * getClientSideHandler(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	public StringBuffer getClientSideHandlerScript(HttpServletRequest request) {
 
 		StringBuffer sb = getHeaderSection(request);
 
-		boolean useGzip = RendererRequestUtils.isRequestGzippable(request,
-				this.config);
+		boolean useGzip = RendererRequestUtils.isRequestGzippable(request, this.config);
 
-		Map<String, String> variants = this.config.getGeneratorRegistry()
-				.resolveVariants(request);
-		sb.append("JAWR.loader.mapping='")
-				.append(getPathPrefix(request, this.config)).append("';\n");
+		Map<String, String> variants = this.config.getGeneratorRegistry().resolveVariants(request);
+		sb.append("JAWR.loader.mapping='").append(getPathPrefix(request, this.config)).append("';\n");
 
 		// Start an self executing function
 		sb.append("(function(){\n");
@@ -132,19 +128,16 @@ public class ClientSideHandlerGeneratorImpl implements
 		sb.append("]\n");
 
 		// Retrieve the resourcehandler for CSS if there is one.
-		ResourceBundlesHandler rsHandler = (ResourceBundlesHandler) request
-				.getSession().getServletContext()
+		ResourceBundlesHandler rsHandler = (ResourceBundlesHandler) request.getSession().getServletContext()
 				.getAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE);
 		boolean isCSSHandler = false;
 		if (null != rsHandler) {
-			ClientSideHandlerGenerator generator = rsHandler
-					.getClientSideHandler();
+			ClientSideHandlerGenerator generator = rsHandler.getClientSideHandler();
 			// If this is not a pointer to the same generator it means this
 			// generator is the javascript one,
 			// so we add CSS bundles to the script
 			if (this != generator) {
-				variants = rsHandler.getConfig().getGeneratorRegistry()
-						.resolveVariants(request);
+				variants = rsHandler.getConfig().getGeneratorRegistry().resolveVariants(request);
 				sb.append(";JAWR.loader.cssbundles = [");
 				sb.append(generator.getClientSideBundles(variants, useGzip));
 				sb.append("];\n");
@@ -152,9 +145,7 @@ public class ClientSideHandlerGeneratorImpl implements
 				isCSSHandler = true;
 
 			// Add the mapping for css resources
-			sb.append("JAWR.loader.cssmapping='")
-					.append(getPathPrefix(request, rsHandler.getConfig()))
-					.append("';\n");
+			sb.append("JAWR.loader.cssmapping='").append(getPathPrefix(request, rsHandler.getConfig())).append("';\n");
 		}
 		// End self executing function
 		sb.append("})();");
@@ -166,13 +157,9 @@ public class ClientSideHandlerGeneratorImpl implements
 
 		// The global bundles are already sorted and filtered by the
 		// bundleshandler
-		for (Iterator<JoinableResourceBundle> it = globalBundles.iterator(); it
-				.hasNext();) {
-			JoinableResourceBundle bundle = (JoinableResourceBundle) it.next();
-			String func = isCSSHandler ? "JAWR.loader.style("
-					: "JAWR.loader.script(";
-			sb.append(func).append(JavascriptStringUtil.quote(bundle.getId()))
-					.append(");\n");
+		for (JoinableResourceBundle bundle : globalBundles) {
+			String func = isCSSHandler ? "JAWR.loader.style(" : "JAWR.loader.script(";
+			sb.append(func).append(JavascriptStringUtil.quote(bundle.getId())).append(");\n");
 		}
 
 		// Minify the result
@@ -180,10 +167,8 @@ public class ClientSideHandlerGeneratorImpl implements
 			JSMinPostProcessor p = new JSMinPostProcessor();
 			try {
 				sb = p.minifyStringBuffer(sb, config.getResourceCharset());
-			} catch (Exception e) {
-				throw new BundlingProcessException(
-						"Unexpected error creating client side resource handler",
-						e);
+			} catch (IOException | JSMin.JSMinException e) {
+				throw new BundlingProcessException("Unexpected error creating client side resource handler", e);
 			}
 		}
 		return sb;
@@ -192,13 +177,13 @@ public class ClientSideHandlerGeneratorImpl implements
 	/**
 	 * Returns the header section for the client side handler
 	 * 
-	 * @param request the HTTP request
+	 * @param request
+	 *            the HTTP request
 	 * @return the header section for the client side handler
 	 */
 	protected StringBuffer getHeaderSection(HttpServletRequest request) {
 		StringBuffer sb = new StringBuffer(mainScriptTemplate.toString());
-		sb.append("JAWR.app_context_path='").append(request.getContextPath())
-				.append("';\n");
+		sb.append("JAWR.app_context_path='").append(request.getContextPath()).append("';\n");
 		return sb;
 	}
 
@@ -208,8 +193,8 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * @see net.jawr.web.resource.bundle.handler.ClientSideHandlerGenerator#
 	 * getClientSideBundles(java.lang.String, boolean)
 	 */
-	public StringBuffer getClientSideBundles(Map<String, String> variants,
-			boolean useGzip) {
+	@Override
+	public StringBuffer getClientSideBundles(Map<String, String> variants, boolean useGzip) {
 		StringBuffer sb = new StringBuffer();
 		addAllBundles(globalBundles, variants, sb, useGzip);
 		if (!globalBundles.isEmpty() && !contextBundles.isEmpty()) {
@@ -225,7 +210,8 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * context path override if present, or using the context path and possibly
 	 * the jawr mapping.
 	 * 
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the path prefix
 	 */
 	private String getPathPrefix(HttpServletRequest request, JawrConfig config) {
@@ -240,10 +226,8 @@ public class ClientSideHandlerGeneratorImpl implements
 			}
 		}
 
-		String mapping = null == config.getServletMapping() ? "" : config
-				.getServletMapping();
-		String path = PathNormalizer.joinPaths(request.getContextPath(),
-				mapping);
+		String mapping = null == config.getServletMapping() ? "" : config.getServletMapping();
+		String path = PathNormalizer.joinPaths(request.getContextPath(), mapping);
 		path = path.endsWith("/") ? path : path + '/';
 		return path;
 	}
@@ -252,15 +236,18 @@ public class ClientSideHandlerGeneratorImpl implements
 	 * Adds a javascript Resourcebundle representation for each member of a List
 	 * containing JoinableResourceBundles
 	 * 
-	 * @param bundles the bundles
-	 * @param variants the variant map
-	 * @param buf the buffer
-	 * @param useGzip the flag indicating if we use gzip compression or not.
+	 * @param bundles
+	 *            the bundles
+	 * @param variants
+	 *            the variant map
+	 * @param buf
+	 *            the buffer
+	 * @param useGzip
+	 *            the flag indicating if we use gzip compression or not.
 	 */
-	private void addAllBundles(List<JoinableResourceBundle> bundles,
-			Map<String, String> variants, StringBuffer buf, boolean useGzip) {
-		for (Iterator<JoinableResourceBundle> it = bundles.iterator(); it
-				.hasNext();) {
+	private void addAllBundles(List<JoinableResourceBundle> bundles, Map<String, String> variants, StringBuffer buf,
+			boolean useGzip) {
+		for (Iterator<JoinableResourceBundle> it = bundles.iterator(); it.hasNext();) {
 			JoinableResourceBundle bundle = it.next();
 			appendBundle(bundle, variants, buf, useGzip);
 
@@ -272,22 +259,24 @@ public class ClientSideHandlerGeneratorImpl implements
 	/**
 	 * Creates a javascript objet that represents a bundle
 	 * 
-	 * @param bundle the bundle
-	 * @param variants the variant map
-	 * @param buf the buffer
-	 * @param useGzip the flag indicating if we use gzip compression or not.
+	 * @param bundle
+	 *            the bundle
+	 * @param variants
+	 *            the variant map
+	 * @param buf
+	 *            the buffer
+	 * @param useGzip
+	 *            the flag indicating if we use gzip compression or not.
 	 */
-	private void appendBundle(JoinableResourceBundle bundle,
-			Map<String, String> variants, StringBuffer buf, boolean useGzip) {
-		buf.append("r(").append(JavascriptStringUtil.quote(bundle.getId()))
-				.append(",");
+	private void appendBundle(JoinableResourceBundle bundle, Map<String, String> variants, StringBuffer buf,
+			boolean useGzip) {
+		buf.append("r(").append(JavascriptStringUtil.quote(bundle.getId())).append(",");
 		String path = bundle.getURLPrefix(variants);
 		if (useGzip) {
 			if (path.charAt(0) == '/') {
 				path = path.substring(1); // remove leading '/'
 			}
-			buf.append(JavascriptStringUtil
-					.quote(BundleRenderer.GZIP_PATH_PREFIX + path));
+			buf.append(JavascriptStringUtil.quote(BundleRenderer.GZIP_PATH_PREFIX + path));
 		} else {
 			if (path.charAt(0) != '/') {
 				path = "/" + path; // Add leading '/'
@@ -296,22 +285,18 @@ public class ClientSideHandlerGeneratorImpl implements
 		}
 
 		boolean skipItems = false;
-		if (bundle.getItemPathList().size() == 1
-				&& null == bundle.getExplorerConditionalExpression()) {
+		if (bundle.getItemPathList().size() == 1 && null == bundle.getExplorerConditionalExpression()) {
 			skipItems = bundle.getItemPathList().get(0).getPath().equals(bundle.getId());
 		}
 
 		if (!skipItems) {
 			buf.append(",[");
-			for (Iterator<BundlePath> it = bundle.getItemPathList(variants)
-					.iterator(); it.hasNext();) {
+			for (Iterator<BundlePath> it = bundle.getItemPathList(variants).iterator(); it.hasNext();) {
 				path = it.next().getPath();
 				if (this.config.getGeneratorRegistry().isPathGenerated(path)) {
-					path = PathNormalizer.createGenerationPath(path,
-							this.config.getGeneratorRegistry(), null);
+					path = PathNormalizer.createGenerationPath(path, this.config.getGeneratorRegistry(), null);
 				}
-				if ("".equals(this.config.getContextPathOverride())
-						&& path.startsWith("/"))
+				if ("".equals(this.config.getContextPathOverride()) && path.startsWith("/"))
 					path = path.substring(1);
 				buf.append(JavascriptStringUtil.quote(path));
 				if (it.hasNext())
@@ -320,9 +305,7 @@ public class ClientSideHandlerGeneratorImpl implements
 			buf.append("]");
 
 			if (null != bundle.getExplorerConditionalExpression()) {
-				buf.append(",'")
-						.append(bundle.getExplorerConditionalExpression())
-						.append("'");
+				buf.append(",'").append(bundle.getExplorerConditionalExpression()).append("'");
 			}
 		}
 		if (null != bundle.getAlternateProductionURL()) {
@@ -332,9 +315,7 @@ public class ClientSideHandlerGeneratorImpl implements
 				buf.append(",null,null");
 			else if (null == bundle.getExplorerConditionalExpression())
 				buf.append(",null");
-			buf.append(","
-					+ JavascriptStringUtil.quote(bundle
-							.getAlternateProductionURL()));
+			buf.append(",").append(JavascriptStringUtil.quote(bundle.getAlternateProductionURL()));
 
 		}
 		buf.append(")");
@@ -360,10 +341,8 @@ public class ClientSideHandlerGeneratorImpl implements
 
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal,
-					"a serious error occurred when initializing ClientSideHandlerGeneratorImpl");
-			throw new BundlingProcessException(
-					"Classloading issues prevent loading the loader template to be loaded. ",
+			LOGGER.error(fatal, "a serious error occurred when initializing ClientSideHandlerGeneratorImpl");
+			throw new BundlingProcessException("Classloading issues prevent loading the loader template to be loaded. ",
 					e);
 		} finally {
 			IOUtils.close(is);

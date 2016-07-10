@@ -1,5 +1,5 @@
 /**
- * Copyright 2007 Jordi Hernández Sellés
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,83 +23,87 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class is used to determine which files are named with the convention of using a 
- * conditional comment expression as a suffix. 
+ * This class is used to determine which files are named with the convention of
+ * using a conditional comment expression as a suffix.
  * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
 public class IENamedResourceFilter {
-	
+
 	private static final String COMMENTS_REGEX = "^.*_ie(.js|.css)$";
 	private static final String OPERATORS_REGEX = "(_(lt|lte|gt|gte))?(_\\d(\\.(\\d)*)?)?_ie(.js|.css)$";
-	
+
 	private static final Pattern COMMENTS_PATTERN = Pattern.compile(COMMENTS_REGEX, Pattern.CASE_INSENSITIVE);
 	private static final Pattern OPERATORS_PATTERN = Pattern.compile(OPERATORS_REGEX, Pattern.CASE_INSENSITIVE);
-	
-	
+
 	/**
-	 * Finds all the paths in a collection which contain IE conditional comment 
-	 * syntax, extracts all of them from the collection. 
-	 * @param paths 
-	 * @return A Map with all the extracted paths, in which the key is the corresponding IE expression and 
-	 * 			the value is a List instance containing all the paths that match that expression. 
+	 * Finds all the paths in a collection which contain IE conditional comment
+	 * syntax, extracts all of them from the collection.
+	 * 
+	 * @param paths
+	 * @return A Map with all the extracted paths, in which the key is the
+	 *         corresponding IE expression and the value is a List instance
+	 *         containing all the paths that match that expression.
 	 */
 	public Map<String, List<String>> filterPathSet(Collection<String> paths) {
-		
-		Map<String, List<String>> expressions = new HashMap<String, List<String>>();
-		List<String> toRemove = new ArrayList<String>();
-		for(Iterator<String> it = paths.iterator(); it.hasNext();) {
-			String path = it.next().toString();
-			if( COMMENTS_PATTERN.matcher(path).matches() ){
-				
+
+		Map<String, List<String>> expressions = new HashMap<>();
+		List<String> toRemove = new ArrayList<>();
+		for (Iterator<String> it = paths.iterator(); it.hasNext();) {
+			String path = it.next();
+			if (COMMENTS_PATTERN.matcher(path).matches()) {
+
 				Matcher matcher = OPERATORS_PATTERN.matcher(path);
 				matcher.find();
 				String sufix = matcher.group();
-				sufix = sufix.substring(0,sufix.lastIndexOf("."));
+				sufix = sufix.substring(0, sufix.lastIndexOf("."));
 				String expressionKey = createExpressionKey(sufix);
-				
-				if( expressions.containsKey(expressionKey) ) {
+
+				if (expressions.containsKey(expressionKey)) {
 					List<String> fileNames = expressions.get(expressionKey);
 					fileNames.add(path);
-				}
-				else {
-					List<String> fileNames = new ArrayList<String>();
+				} else {
+					List<String> fileNames = new ArrayList<>();
 					fileNames.add(path);
-					expressions.put(expressionKey,fileNames);					
+					expressions.put(expressionKey, fileNames);
 				}
-				toRemove.add(path);			
+				toRemove.add(path);
 			}
 		}
 		// Remove extracted paths from the source collection
-		for(Iterator<String> it = toRemove.iterator(); it.hasNext();) {
+		for (Iterator<String> it = toRemove.iterator(); it.hasNext();) {
 			paths.remove(it.next());
 		}
-		
+
 		return expressions;
 	}
-	
+
 	/**
-	 * Creates an IE conditional expression by transforming the sufix of a filename. 
+	 * Creates an IE conditional expression by transforming the sufix of a
+	 * filename.
+	 * 
 	 * @param sufix
 	 * @return
 	 */
 	private String createExpressionKey(String sufix) {
-		String[] parts =  sufix.split("_");
-		StringBuffer ret = new StringBuffer("[if ");
+		String[] parts = sufix.split("_");
+		StringBuilder ret = new StringBuilder("[if ");
 		boolean ieAdded = false;
-		for (int i = 0; i < parts.length; i++) {					
-			if("".equals(parts[i]))
-					continue;
-			if("ie".equals(parts[i]))
+		for (String part : parts) {
+			if ("".equals(part)) {
+				continue;
+			}
+			if ("ie".equals(part)) {
 				break;
-			else if(Pattern.matches("(lt|lte|gt|gte)", parts[i])) 
-				ret.append(parts[i] + " ");
-			else {
-				ret.append("IE " + parts[i]);
+			} else if (Pattern.matches("(lt|lte|gt|gte)", part)) {
+				ret.append(part).append(" ");
+			} else {
+				ret.append("IE ").append(part);
 				ieAdded = true;
-			}	
+			}
 		}
-		if(!ieAdded)
+		if (!ieAdded)
 			ret.append("IE");
 		ret.append("]");
 		return ret.toString();

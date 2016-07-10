@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -24,9 +24,13 @@ public interface BundleHashcodeGenerator {
 
 	/**
 	 * Returns the hashcode for the content given in parameter
-	 * @param content the content to hash
+	 * 
+	 * @param config
+	 *            the Jawr config
+	 * @param content
+	 *            the content to hash
 	 * @return the hashcode for the content given in parameter
 	 */
 	String generateHashCode(JawrConfig config, String content);
-	
+
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2015  Ibrahim Chaehoi
+ * Copyright 2009-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -50,7 +50,6 @@ import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.handler.BundleHashcodeType;
 import net.jawr.web.resource.handler.bundle.ResourceBundleHandler;
-import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.servlet.util.MIMETypesSupport;
 import net.jawr.web.util.StopWatch;
@@ -68,15 +67,10 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	private static final long serialVersionUID = -8342090032443416738L;
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JawrBinaryResourceRequestHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JawrBinaryResourceRequestHandler.class);
 
 	/** The performance processing logger */
-	private static final Logger PERF_PROCESSING_LOGGER = LoggerFactory
-			.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
-
-	/** The resource handler */
-	private ResourceReaderHandler rsReaderHandler;
+	private static final Logger PERF_PROCESSING_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
 	/** The resource handler */
 	private ResourceBundleHandler rsBundleHandler;
@@ -98,14 +92,13 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * ServletConfig object. If applicable, a ConfigChangeListenerThread will be
 	 * started to listen to changes in the properties configuration.
 	 * 
-	 * @param servletContext
-	 *            ServletContext
-	 * @param servletConfig
-	 *            ServletConfig
+	 * @param context
+	 *            the servlet context
+	 * @param config
+	 *            the servlet config
 	 * @throws ServletException
 	 */
-	public JawrBinaryResourceRequestHandler(ServletContext context,
-			ServletConfig config) throws ServletException {
+	public JawrBinaryResourceRequestHandler(ServletContext context, ServletConfig config) throws ServletException {
 		super(context, config);
 		this.binaryMimeTypeMap = MIMETypesSupport.getSupportedProperties(this);
 		resourceType = JawrConstant.BINARY_TYPE;
@@ -116,15 +109,18 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * Parameters normally read rom it are read from the initParams Map, and the
 	 * configProps are used instead of reading a .properties file.
 	 * 
-	 * @param servletContext
-	 *            ServletContext
-	 * @param servletConfig
-	 *            ServletConfig
+	 * @param context
+	 *            the servlet context
+	 * @param initParams
+	 *            the init parameters
+	 * @param configProps
+	 *            the config properties
+	 * 
 	 * @throws ServletException
+	 *             if a servlet exception occurs
 	 */
-	public JawrBinaryResourceRequestHandler(ServletContext context,
-			Map<String, Object> initParams, Properties configProps)
-			throws ServletException {
+	public JawrBinaryResourceRequestHandler(ServletContext context, Map<String, Object> initParams,
+			Properties configProps) throws ServletException {
 
 		super(context, initParams, configProps);
 		this.binaryMimeTypeMap = MIMETypesSupport.getSupportedProperties(this);
@@ -140,15 +136,13 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *             if an exception occurs
 	 */
 	@Override
-	protected void initializeJawrConfig(Properties props)
-			throws ServletException {
+	protected void initializeJawrConfig(Properties props) throws ServletException {
 
-		StopWatch stopWatch = new StopWatch("Jawr Processing for '"+resourceType+"' resource"); 
+		StopWatch stopWatch = new StopWatch("Jawr Processing for '" + resourceType + "' resource");
 		ThreadLocalJawrContext.setStopWatch(stopWatch);
 		stopWatch.start("Initialize jawr config for binary resource handler");
 		if (this.binaryMimeTypeMap == null) {
-			this.binaryMimeTypeMap = MIMETypesSupport
-					.getSupportedProperties(this);
+			this.binaryMimeTypeMap = MIMETypesSupport.getSupportedProperties(this);
 		}
 
 		// init registry
@@ -166,8 +160,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 
 		// Set mapping, to be used by the tag lib to define URLs that point to
 		// this servlet.
-		String mapping = (String) initParameters
-				.get(JawrConstant.SERVLET_MAPPING_PROPERTY_NAME);
+		String mapping = (String) initParameters.get(JawrConstant.SERVLET_MAPPING_PROPERTY_NAME);
 		if (null != mapping) {
 			jawrConfig.setServletMapping(mapping);
 		}
@@ -180,10 +173,9 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		rsBundleHandler = initResourceBundleHandler();
 
 		// Initialize custom generators
-		PropertiesConfigHelper propertiesHelper = new PropertiesConfigHelper(
-				props, resourceType);
-		Iterator<String> generators = propertiesHelper.getCommonPropertyAsSet(
-				PropertiesBundleConstant.CUSTOM_GENERATORS).iterator();
+		PropertiesConfigHelper propertiesHelper = new PropertiesConfigHelper(props, resourceType);
+		Iterator<String> generators = propertiesHelper
+				.getCommonPropertyAsSet(PropertiesBundleConstant.CUSTOM_GENERATORS).iterator();
 		while (generators.hasNext()) {
 			String generatorClass = (String) generators.next();
 			generatorRegistry.registerGenerator(generatorClass);
@@ -196,12 +188,10 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		}
 		stopWatch.stop();
 		stopWatch.start("initialize mapping for binary resource handler");
-		binaryRsHandler = new BinaryResourcesHandler(jawrConfig,
-				rsReaderHandler, rsBundleHandler);
+		binaryRsHandler = new BinaryResourcesHandler(jawrConfig, rsReaderHandler, rsBundleHandler);
 		initMapping(binaryRsHandler);
 
-		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE,
-				binaryRsHandler);
+		servletContext.setAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE, binaryRsHandler);
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Configuration read. Current config:");
@@ -210,15 +200,16 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 
 		stopWatch.stop();
 		stopWatch.start("initialize mapping for binary resource handler");
-		if(PERF_PROCESSING_LOGGER.isDebugEnabled()){
+		if (PERF_PROCESSING_LOGGER.isDebugEnabled()) {
 			PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
 		}
 		// Warn when in debug mode
 		if (jawrConfig.isDebugModeOn()) {
-			LOGGER.warn("Jawr initialized in DEVELOPMENT MODE. Do NOT use this mode in production or integration servers. ");
+			LOGGER.warn(
+					"Jawr initialized in DEVELOPMENT MODE. Do NOT use this mode in production or integration servers. ");
 		}
 		stopWatch.stop();
-		if(PERF_PROCESSING_LOGGER.isDebugEnabled()){
+		if (PERF_PROCESSING_LOGGER.isDebugEnabled()) {
 			PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
 		}
 	}
@@ -231,35 +222,29 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 */
 	private void initMapping(BinaryResourcesHandler binaryRsHandler) {
 
-		if (jawrConfig.getUseBundleMapping()
-				&& rsBundleHandler.isExistingMappingFile()) {
+		if (jawrConfig.getUseBundleMapping() && rsBundleHandler.isExistingMappingFile()) {
 
 			// Initialize the binary web resource mapping
-			Iterator<Entry<Object, Object>> mapIterator = bundleMapping
-					.entrySet().iterator();
+			Iterator<Entry<Object, Object>> mapIterator = bundleMapping.entrySet().iterator();
 			while (mapIterator.hasNext()) {
 				Entry<Object, Object> entry = mapIterator.next();
-				binaryRsHandler.addMapping((String) entry.getKey(), entry
-						.getValue().toString());
+				binaryRsHandler.addMapping((String) entry.getKey(), entry.getValue().toString());
 			}
 
 		} else {
 			// Create a resource handler to read files from the WAR archive or
 			// exploded dir.
 
-			String binaryResourcesDefinition = jawrConfig
-					.getBinaryResourcesDefinition();
+			String binaryResourcesDefinition = jawrConfig.getBinaryResourcesDefinition();
 			if (binaryResourcesDefinition != null) {
 
-				StringTokenizer tokenizer = new StringTokenizer(
-						binaryResourcesDefinition, ",");
+				StringTokenizer tokenizer = new StringTokenizer(binaryResourcesDefinition, ",");
 				while (tokenizer.hasMoreTokens()) {
 					String pathMapping = tokenizer.nextToken();
 
 					// path is a generated image and ends with an image
 					// extension
-					if (generatorRegistry
-							.isGeneratedBinaryResource(pathMapping)
+					if (generatorRegistry.isGeneratedBinaryResource(pathMapping)
 							&& hasBinaryFileExtension(pathMapping)) {
 
 						addBinaryResourcePath(binaryRsHandler, pathMapping);
@@ -271,23 +256,18 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 					// path ends in /, the folder is included with all
 					// subfolders
 					else if (pathMapping.endsWith("/**")) {
-						addItemsFromDir(
-								binaryRsHandler,
-								pathMapping.substring(0,
-										pathMapping.lastIndexOf("**")), true);
+						addItemsFromDir(binaryRsHandler, pathMapping.substring(0, pathMapping.lastIndexOf("**")), true);
 					} else if (hasBinaryFileExtension(pathMapping)) {
 						addBinaryResourcePath(binaryRsHandler, pathMapping);
 					} else
-						LOGGER.warn("Wrong mapping ["
-								+ pathMapping
-								+ "] for image bundle. Please check configuration. ");
+						LOGGER.warn(
+								"Wrong mapping [" + pathMapping + "] for image bundle. Please check configuration. ");
 				}
 			}
 		}
 
 		// Store the bundle mapping
-		if (jawrConfig.getUseBundleMapping()
-				&& !rsBundleHandler.isExistingMappingFile()) {
+		if (jawrConfig.getUseBundleMapping() && !rsBundleHandler.isExistingMappingFile()) {
 			rsBundleHandler.storeJawrBundleMapping(bundleMapping);
 		}
 
@@ -303,21 +283,16 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * @param resourcePath
 	 *            the image path
 	 */
-	private void addBinaryResourcePath(BinaryResourcesHandler binRsHandler,
-			String resourcePath) {
+	private void addBinaryResourcePath(BinaryResourcesHandler binRsHandler, String resourcePath) {
 
 		try {
-			String resultPath = CheckSumUtils.getCacheBustedUrl(resourcePath,
-					rsReaderHandler, jawrConfig);
+			String resultPath = CheckSumUtils.getCacheBustedUrl(resourcePath, rsReaderHandler, jawrConfig);
 			binRsHandler.addMapping(resourcePath, resultPath);
 			bundleMapping.put(resourcePath, resultPath);
 		} catch (IOException e) {
-			LOGGER.error(
-					"An exception occurs while defining the mapping for the file : "
-							+ resourcePath, e);
+			LOGGER.error("An exception occurs while defining the mapping for the file : " + resourcePath, e);
 		} catch (ResourceNotFoundException e) {
-			LOGGER.error("Impossible to define the checksum for the resource '"
-					+ resourcePath
+			LOGGER.error("Impossible to define the checksum for the resource '" + resourcePath
 					+ "'. Unable to retrieve the content of the file.");
 		}
 	}
@@ -352,30 +327,24 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *            boolean If subfolders will be included. In such case, every
 	 *            folder below the path is included.
 	 */
-	private void addItemsFromDir(BinaryResourcesHandler binRsHandler,
-			String dirName, boolean addSubDirs) {
+	private void addItemsFromDir(BinaryResourcesHandler binRsHandler, String dirName, boolean addSubDirs) {
 		Set<String> resources = rsReaderHandler.getResourceNames(dirName);
 
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Adding " + resources.size()
-					+ " resources from path [" + dirName + "] to binary bundle");
+			LOGGER.debug("Adding " + resources.size() + " resources from path [" + dirName + "] to binary bundle");
 		}
 
-		GeneratorRegistry generatorRegistry = binRsHandler.getConfig()
-				.getGeneratorRegistry();
+		GeneratorRegistry binGeneratorRegistry = binRsHandler.getConfig().getGeneratorRegistry();
 
-		List<String> folders = new ArrayList<String>();
-		boolean generatedPath = generatorRegistry.isPathGenerated(dirName);
-		for (Iterator<String> it = resources.iterator(); it.hasNext();) {
-			String resourceName = it.next();
-			String resourcePath = PathNormalizer.joinPaths(dirName,
-					resourceName, generatedPath);
+		List<String> folders = new ArrayList<>();
+		boolean generatedPath = binGeneratorRegistry.isPathGenerated(dirName);
+		for (String resourceName : resources) {
+			String resourcePath = PathNormalizer.joinPaths(dirName, resourceName, generatedPath);
 			if (hasBinaryFileExtension(resourceName)) {
 				addBinaryResourcePath(binRsHandler, resourcePath);
 
 				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Added to item path list:"
-							+ PathNormalizer.asPath(resourcePath));
+					LOGGER.debug("Added to item path list:" + PathNormalizer.asPath(resourcePath));
 			} else if (addSubDirs) {
 
 				try {
@@ -393,10 +362,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		// Add subfolders if requested. Subfolders are added last unless
 		// specified in sorting file.
 		if (addSubDirs) {
-			for (Iterator<String> it = folders.iterator(); it.hasNext();) {
-				String folderName = it.next();
-				addItemsFromDir(binRsHandler,
-						PathNormalizer.joinPaths(dirName, folderName), true);
+			for (String folderName : folders) {
+				addItemsFromDir(binRsHandler, PathNormalizer.joinPaths(dirName, folderName), true);
 			}
 		}
 	}
@@ -410,22 +377,19 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *            the request
 	 * @param response
 	 *            the response
-	 * @param validBundle
-	 *            the flag indicating if the requested bundle is a valid bundle
+	 * @param bundleHashcodeType
+	 *            the bundle hashcode type
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
 	@Override
-	protected void processRequest(String requestedPath,
-			HttpServletRequest request, HttpServletResponse response,
+	protected void processRequest(String requestedPath, HttpServletRequest request, HttpServletResponse response,
 			BundleHashcodeType bundleHashcodeType) throws IOException {
 
 		boolean responseHeaderWritten = false;
 		boolean validBundle = true;
-		if (!jawrConfig.isDebugModeOn()
-				&& jawrConfig.isStrictMode()
-				&& bundleHashcodeType
-						.equals(BundleHashcodeType.INVALID_HASHCODE)) {
+		if (!jawrConfig.isDebugModeOn() && jawrConfig.isStrictMode()
+				&& bundleHashcodeType.equals(BundleHashcodeType.INVALID_HASHCODE)) {
 			validBundle = false;
 		}
 
@@ -433,9 +397,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		// If-none-match headers and set response caching headers.
 		if (!this.jawrConfig.isDebugModeOn()) {
 			// If a browser checks for changes, always respond 'no changes'.
-			if (validBundle
-					&& (null != request.getHeader(IF_MODIFIED_SINCE_HEADER) || null != request
-							.getHeader(IF_NONE_MATCH_HEADER))) {
+			if (validBundle && (null != request.getHeader(IF_MODIFIED_SINCE_HEADER)
+					|| null != request.getHeader(IF_NONE_MATCH_HEADER))) {
 				response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Returning 'not modified' header. ");
@@ -447,8 +410,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 				setResponseHeaders(response);
 			} else {
 
-				responseHeaderWritten = illegalBundleRequestHandler
-						.writeResponseHeader(requestedPath, request, response);
+				responseHeaderWritten = illegalBundleRequestHandler.writeResponseHeader(requestedPath, request,
+						response);
 				if (!responseHeaderWritten) {
 					// Add caching headers
 					setResponseHeaders(response);
@@ -461,8 +424,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 
 		try {
 			if (isValidRequestedPath(filePath)
-					&& (validBundle || illegalBundleRequestHandler
-							.canWriteContent(requestedPath, request))) {
+					&& (validBundle || illegalBundleRequestHandler.canWriteContent(requestedPath, request))) {
 
 				// Set the content type
 				response.setContentType(getContentType(requestedPath, request));
@@ -470,18 +432,17 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 
 			} else {
 				if (!responseHeaderWritten) {
-					LOGGER.error("Unable to load the image for the request URI : "
-							+ request.getRequestURI());
+					LOGGER.error("Unable to load the image for the request URI : " + request.getRequestURI());
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
 			}
 		} catch (EOFException eofex) {
 			LOGGER.info("Browser cut off response", eofex);
 		} catch (ResourceNotFoundException e) {
-			LOGGER.info("Unable to write resource " + request.getRequestURI(),	e);
+			LOGGER.info("Unable to write resource " + request.getRequestURI(), e);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		} catch (Exception ex) {
-			LOGGER.error("Unable to write resource " + request.getRequestURI(),	ex);
+		} catch (IOException ex) {
+			LOGGER.error("Unable to write resource " + request.getRequestURI(), ex);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 
@@ -499,8 +460,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	protected BundleHashcodeType isValidBundle(String requestedPath) {
 		BundleHashcodeType bundleHashcodeType = BundleHashcodeType.VALID_HASHCODE;
 		if (!jawrConfig.isDebugModeOn()) {
-			bundleHashcodeType = binaryRsHandler
-					.getBundleHashcodeType(requestedPath);
+			bundleHashcodeType = binaryRsHandler.getBundleHashcodeType(requestedPath);
 		}
 		return bundleHashcodeType;
 	}
@@ -514,9 +474,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * java.lang.String)
 	 */
 	@Override
-	protected boolean copyRequestedContentToResponse(String requestedPath,
-			HttpServletResponse response, String contentType)
-			throws IOException {
+	protected boolean copyRequestedContentToResponse(String requestedPath, HttpServletResponse response,
+			String contentType) throws IOException {
 
 		boolean copyDone = false;
 		if (isValidRequestedPath(requestedPath)) {
@@ -541,9 +500,8 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	protected boolean handleSpecificRequest(String requestedPath,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected boolean handleSpecificRequest(String requestedPath, HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
 		boolean processed = false;
 		// Retrieve the file path
@@ -564,12 +522,13 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	/**
 	 * Returns the content type for the image
 	 * 
-	 * @param request
-	 *            the request
 	 * @param filePath
 	 *            the image file path
+	 * @param request
+	 *            the request
 	 * @return the content type of the image
 	 */
+	@Override
 	protected String getContentType(String filePath, HttpServletRequest request) {
 		String requestUri = request.getRequestURI();
 
@@ -577,19 +536,18 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		String extension = getExtension(filePath);
 		if (extension == null) {
 
-			LOGGER.info("No extension found for the request URI : "
-					+ requestUri);
+			LOGGER.info("No extension found for the request URI : " + requestUri);
 			return null;
 		}
 
-		String contentType = (String) binaryMimeTypeMap.get(extension);
-		if (contentType == null) {
+		String binContentType = (String) binaryMimeTypeMap.get(extension);
+		if (binContentType == null) {
 
-			LOGGER.info("No binary extension match the extension '"
-					+ extension + "' for the request URI : " + requestUri);
+			LOGGER.info(
+					"No binary extension match the extension '" + extension + "' for the request URI : " + requestUri);
 			return null;
 		}
-		return contentType;
+		return binContentType;
 	}
 
 	/**
@@ -599,6 +557,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *            the requested path
 	 * @return true if the path is valid and can be accessed.
 	 */
+	@Override
 	protected boolean isValidRequestedPath(String requestedPath) {
 
 		boolean result = true;
@@ -619,13 +578,11 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 * javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	protected void writeContent(String requestedPath,
-			HttpServletRequest request, HttpServletResponse response)
+	protected void writeContent(String requestedPath, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ResourceNotFoundException {
 
 		String resourceName = requestedPath;
-		if (!jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(
-				resourceName)
+		if (!jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(resourceName)
 				&& !resourceName.startsWith(URL_SEPARATOR)) {
 			resourceName = URL_SEPARATOR + resourceName;
 		}
@@ -640,7 +597,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 			LOGGER.debug("Browser cut off response", eofex);
 		} catch (IOException e) {
 			if (ClientAbortExceptionResolver.isClientAbortException(e)) {
-				LOGGER.debug("Browser cut off response", e);				
+				LOGGER.debug("Browser cut off response", e);
 			} else {
 				throw e;
 			}
@@ -656,8 +613,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 	 *            the file name
 	 * @return the file name without the cache buster.
 	 */
-	private String getRealFilePath(String fileName,
-			BundleHashcodeType bundleHashcodeType) {
+	private String getRealFilePath(String fileName, BundleHashcodeType bundleHashcodeType) {
 
 		String realFilePath = fileName;
 		if (bundleHashcodeType.equals(BundleHashcodeType.INVALID_HASHCODE)) {
@@ -666,8 +622,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 				realFilePath = realFilePath.substring(idx);
 			}
 		} else {
-			String[] resourceInfo = PathNormalizer
-					.extractBinaryResourceInfo(realFilePath);
+			String[] resourceInfo = PathNormalizer.extractBinaryResourceInfo(realFilePath);
 			realFilePath = resourceInfo[0];
 		}
 

@@ -74,7 +74,10 @@ public class JawrLessSource extends StringSource {
 	 *            the content
 	 * @param name
 	 *            the resource name
+	 * @param parent
+	 *            the parent less source file
 	 * @param rsReaderHandler
+	 *            the resource reader handler
 	 */
 	public JawrLessSource(JoinableResourceBundle bundle, String content, String name, JawrLessSource parent,
 			ResourceReaderHandler rsReaderHandler) {
@@ -107,8 +110,7 @@ public class JawrLessSource extends StringSource {
 		try {
 			Reader rd = getResourceReader(resource);
 			result = IOUtils.toString(rd);
-			FilePathMapping linkedResource = FilePathMappingUtils.buildFilePathMapping(resource,
-					rsReaderHandler);
+			FilePathMapping linkedResource = FilePathMappingUtils.buildFilePathMapping(resource, rsReaderHandler);
 			if (linkedResource != null) {
 				addLinkedResource(linkedResource);
 				if (bundle != null) {
@@ -117,9 +119,7 @@ public class JawrLessSource extends StringSource {
 				}
 			}
 
-		} catch (ResourceNotFoundException e) {
-			throw new BundlingProcessException(e);
-		} catch (IOException e) {
+		} catch (ResourceNotFoundException | IOException e) {
 			throw new BundlingProcessException(e);
 		}
 
@@ -128,7 +128,9 @@ public class JawrLessSource extends StringSource {
 
 	/**
 	 * Adds a linked resource to the less source
-	 * @param linkedResource the linked resource to add
+	 * 
+	 * @param linkedResource
+	 *            the linked resource to add
 	 */
 	private void addLinkedResource(FilePathMapping linkedResource) {
 		linkedResources.add(linkedResource);
@@ -147,7 +149,7 @@ public class JawrLessSource extends StringSource {
 	 *             if the resoure is not found
 	 */
 	private Reader getResourceReader(String resource) throws ResourceNotFoundException {
-		List<Class<?>> excluded = new ArrayList<Class<?>>();
+		List<Class<?>> excluded = new ArrayList<>();
 		excluded.add(ILessCssResourceGenerator.class);
 		return rsReaderHandler.getResource(bundle, resource, false, excluded);
 	}

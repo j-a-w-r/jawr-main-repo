@@ -1,5 +1,5 @@
 /**
- * Copyright 2015  Ibrahim Chaehoi
+ * Copyright 2015-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -36,9 +36,9 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCs
  * This class define the WebJars locator resolver. If the webjars-jquery library
  * is in the classpath, 'webjars:jquery.js' will automatically locate the
  * resource instead of using the full ressource path
- * 'webjars:/jquery/2.1.4/jquery.js'
- * To avoid resource reference collision if there multiple resource with the same name in different webjars,
- * like below :</br>
+ * 'webjars:/jquery/2.1.4/jquery.js' To avoid resource reference collision if
+ * there multiple resource with the same name in different webjars, like below
+ * :</br>
  * webjars:/jquery.js[jquery]
  *
  * @author (Original) Ted Liang (https://github.com/tedliang)
@@ -47,15 +47,13 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCs
 public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 
 	/** The logger */
-	private static Logger LOGGER = LoggerFactory
-			.getLogger(WebJarsLocatorCssGenerator.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(WebJarsLocatorCssGenerator.class);
 
 	/** The webjars resource prefix */
 	private final static String WEBJARS_RESOURCE_PREFIX = "META-INF/resources/webjars";
 
 	/** The webjars resource prefix */
-	private static Pattern WEBJARS_PREFIX_PATTERN = Pattern
-			.compile(WEBJARS_RESOURCE_PREFIX + "(/[^/]*/[^/]*)");
+	private static Pattern WEBJARS_PREFIX_PATTERN = Pattern.compile(WEBJARS_RESOURCE_PREFIX + "(/[^/]*/[^/]*)");
 
 	/** The webjars Asset locator */
 	private final WebJarAssetLocator locator;
@@ -97,14 +95,13 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 	 *            the flag indicating that we should check the resource path for
 	 *            warning
 	 */
-	public WebJarsLocatorPathResolver(String prefix,
-			boolean checkResourcePathForInfo,
+	public WebJarsLocatorPathResolver(String prefix, boolean checkResourcePathForInfo,
 			boolean checkResourcePathForWarning) {
 		super(prefix);
 		this.locator = new WebJarAssetLocator();
 		this.checkResourcePathForInfo = checkResourcePathForInfo;
 		this.checkResourcePathForWarning = checkResourcePathForWarning;
-		this.pathsChecked = new ArrayList<String>();
+		this.pathsChecked = new ArrayList<>();
 	}
 
 	/*
@@ -118,45 +115,44 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 	public String getResourcePath(String requestedPath) {
 		String resourcePath = super.getResourcePath(requestedPath);
 		GeneratorMappingHelper helper = new GeneratorMappingHelper(resourcePath);
-		String fullPath = null; 
-		if(StringUtils.isNotEmpty(helper.getBracketsParam())){
+		String fullPath = null;
+		if (StringUtils.isNotEmpty(helper.getBracketsParam())) {
 			// Use the webjars reference stored in the bracket params
 			fullPath = locator.getFullPath(helper.getBracketsParam(), helper.getPath());
-		}else{
+		} else {
 			fullPath = locator.getFullPath(resourcePath);
 		}
 		if (checkResourcePathForInfo || checkResourcePathForWarning) {
 			checkResourcePath(resourcePath, fullPath);
 		}
-		return fullPath
-				.substring(GeneratorRegistry.WEBJARS_GENERATOR_HELPER_PREFIX
-						.length() - 2);
+		return fullPath.substring(GeneratorRegistry.WEBJARS_GENERATOR_HELPER_PREFIX.length() - 2);
 	}
 
 	/**
-     * List assets within a folder.
-     *
-     * @param folderPath the root path to the folder.
-     * @return a set of folder paths that match.
-     */
-    public Set<String> getResourceNames(String folder){
-    	String path = super.getResourcePath(folder);
+	 * List assets within a folder.
+	 *
+	 * @param folder
+	 *            the root path to the folder.
+	 * @return a set of folder paths that match.
+	 */
+	public Set<String> getResourceNames(String folder) {
+		String path = super.getResourcePath(folder);
 		Set<String> assets = locator.listAssets(path);
-		Set<String> resourceNames = new HashSet<String>();
+		Set<String> resourceNames = new HashSet<>();
 		for (String asset : assets) {
 			int idx = asset.indexOf(path);
-			if(idx != -1){
-				String name = asset.substring(idx+path.length());
+			if (idx != -1) {
+				String name = asset.substring(idx + path.length());
 				idx = name.indexOf(JawrConstant.URL_SEPARATOR);
-				if(idx != -1){
-					name = name.substring(0, idx+1);
+				if (idx != -1) {
+					name = name.substring(0, idx + 1);
 				}
 				resourceNames.add(name);
 			}
 		}
 		return resourceNames;
-    }
-    
+	}
+
 	/**
 	 * Checks the resource path to warn users if the resource path used may lead
 	 * to issues in binary resources (image, fonts, ...) references in the
@@ -175,32 +171,22 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 
 			if (checkResourcePathForInfo) {
 
-				String pathToCheck = fullPath.substring(WEBJARS_RESOURCE_PREFIX
-						.length());
-				if (path.equals(pathToCheck)
-						|| (URL_SEPARATOR + path).equals(pathToCheck)) {
+				String pathToCheck = fullPath.substring(WEBJARS_RESOURCE_PREFIX.length());
+				if (path.equals(pathToCheck) || (URL_SEPARATOR + path).equals(pathToCheck)) {
 					if (LOGGER.isInfoEnabled()) {
 
-						Matcher matcher = WEBJARS_PREFIX_PATTERN
-								.matcher(fullPath);
+						Matcher matcher = WEBJARS_PREFIX_PATTERN.matcher(fullPath);
 						String useCorrectPathMsg = "";
 						if (matcher.find()) {
-							String shortPath = fullPath.substring(matcher
-									.group().length());
+							String shortPath = fullPath.substring(matcher.group().length());
 							useCorrectPathMsg = "In your case, you should reference the resource '"
-									+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
-									+ GeneratorRegistry.PREFIX_SEPARATOR
-									+ path
-									+ "' by '"
-									+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
-									+ GeneratorRegistry.PREFIX_SEPARATOR
-									+ shortPath + "'";
+									+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX + GeneratorRegistry.PREFIX_SEPARATOR
+									+ path + "' by '" + GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
+									+ GeneratorRegistry.PREFIX_SEPARATOR + shortPath + "'";
 						}
 
-						LOGGER.info("\nThe resource '"
-								+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
-								+ GeneratorRegistry.PREFIX_SEPARATOR
-								+ path
+						LOGGER.info("\nThe resource '" + GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
+								+ GeneratorRegistry.PREFIX_SEPARATOR + path
 								+ "' is referenced with it's version number. If you change the version of your webjars package, you'll need to update your mapping.\n"
 								+ "A better way to reference your resource is to avoid using the version number reference.\n"
 								+ useCorrectPathMsg);
@@ -214,23 +200,16 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 
 				Matcher matcher = WEBJARS_PREFIX_PATTERN.matcher(fullPath);
 				if (matcher.find()) {
-					String shortPath = fullPath.substring(matcher.group()
-							.length());
+					String shortPath = fullPath.substring(matcher.group().length());
 					if (!path.equals(shortPath)) {
 						if (LOGGER.isWarnEnabled()) {
-							LOGGER.warn("\nThe reference to the CSS resource '"
-									+ path
-									+ "' could lead to issues "
+							LOGGER.warn("\nThe reference to the CSS resource '" + path + "' could lead to issues "
 									+ "in binary resources (image, fonts, ...) mappings for the generated CSS resource.\n"
 									+ "Please update your bundle mapping to use webjars reference path which start after the version number.\n"
 									+ "In your case, you should reference the resource '"
-									+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
-									+ GeneratorRegistry.PREFIX_SEPARATOR
-									+ path
-									+ "' by '"
-									+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
-									+ GeneratorRegistry.PREFIX_SEPARATOR
-									+ shortPath + "'");
+									+ GeneratorRegistry.WEBJARS_GENERATOR_PREFIX + GeneratorRegistry.PREFIX_SEPARATOR
+									+ path + "' by '" + GeneratorRegistry.WEBJARS_GENERATOR_PREFIX
+									+ GeneratorRegistry.PREFIX_SEPARATOR + shortPath + "'");
 
 						}
 					}

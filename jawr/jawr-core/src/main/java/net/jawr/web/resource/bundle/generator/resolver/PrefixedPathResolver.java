@@ -16,7 +16,8 @@ package net.jawr.web.resource.bundle.generator.resolver;
 import net.jawr.web.util.StringUtils;
 
 /**
- * This class defines the resolver which are resolved using a prefix in the path : (jar:/mypackage/myscript.js)
+ * This class defines the resolver which are resolved using a prefix in the path
+ * : (jar:/mypackage/myscript.js)
  * 
  * @author ibrahim Chaehoi
  */
@@ -24,68 +25,89 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 
 	/** The generator prefix separator */
 	public static final String PREFIX_SEPARATOR = ":";
-	
+
 	/** The prefix */
 	private String prefix;
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param prefix the path prefix
+	 * @param prefix
+	 *            the path prefix
 	 */
 	public PrefixedPathResolver(String prefix) {
 		this(prefix, PREFIX_SEPARATOR);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param prefix the path prefix
-	 * @param separator the prefix separator
+	 * @param prefix
+	 *            the path prefix
+	 * @param separator
+	 *            the prefix separator
 	 */
 	public PrefixedPathResolver(String prefix, String separator) {
-		this.prefix = prefix+separator;
+		this.prefix = prefix + separator;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver#getType()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
+	 * #getType()
 	 */
 	@Override
 	public ResolverType getType() {
-		
+
 		return ResolverType.PREFIXED;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher#matchPath(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.matcher.
+	 * ResourceGeneratorPathMatcher#matchPath(java.lang.String)
 	 */
+	@Override
 	public boolean matchPath(String path) {
-		
+
 		boolean match = false;
-		if(StringUtils.isNotEmpty(path)){
+		if (StringUtils.isNotEmpty(path)) {
 			match = path.startsWith(prefix);
 		}
 		return match;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher#isSameAs(net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.matcher.
+	 * ResourceGeneratorPathMatcher#isSameAs(net.jawr.web.resource.bundle.
+	 * generator.matcher.ResourceGeneratorPathMatcher)
 	 */
+	@Override
 	public boolean isSameAs(ResourceGeneratorResolver matcher) {
-		
+
 		return equals(matcher);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorPathMatcher#getResourcePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.matcher.
+	 * ResourceGeneratorPathMatcher#getResourcePath(java.lang.String)
 	 */
+	@Override
 	public String getResourcePath(String requestedPath) {
-		
+
 		return requestedPath.substring(prefix.length());
 	}
 
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -110,7 +132,9 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -121,6 +145,4 @@ public class PrefixedPathResolver implements ResourceGeneratorResolver {
 		return result;
 	}
 
-	
-	
 }

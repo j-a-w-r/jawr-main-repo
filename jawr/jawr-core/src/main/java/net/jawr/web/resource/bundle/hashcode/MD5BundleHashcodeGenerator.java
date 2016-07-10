@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -26,8 +26,7 @@ import net.jawr.web.resource.bundle.CheckSumUtils;
  * 
  * @author Ibrahim Chaehoi
  */
-public class MD5BundleHashcodeGenerator implements BundleHashcodeGenerator,
-		Serializable {
+public class MD5BundleHashcodeGenerator implements BundleHashcodeGenerator, Serializable {
 
 	/** The serial version UID */
 	private static final long serialVersionUID = -5332600063100369915L;
@@ -35,18 +34,16 @@ public class MD5BundleHashcodeGenerator implements BundleHashcodeGenerator,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.hash.BundleHashcodeGenerator#generateHashCode
-	 * (net.jawr.web.config.JawrConfig, java.lang.String)
+	 * @see net.jawr.web.resource.bundle.hash.BundleHashcodeGenerator#
+	 * generateHashCode (net.jawr.web.config.JawrConfig, java.lang.String)
 	 */
+	@Override
 	public String generateHashCode(JawrConfig config, String content) {
 
 		try {
-			return CheckSumUtils.getMD5Checksum(content,
-					config.getResourceCharset());
+			return CheckSumUtils.getMD5Checksum(content, config.getResourceCharset());
 		} catch (IOException e) {
-			throw new BundlingProcessException(
-					"Unable to generate the bundle hashcode", e);
+			throw new BundlingProcessException("Unable to generate the bundle hashcode", e);
 		}
 	}
 

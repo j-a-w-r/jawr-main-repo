@@ -45,7 +45,7 @@ public class JawrWatchEventProcessor extends Thread {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JawrWatchEventProcessor.class);
 
 	/** The flag indicating if the watch event processor is stopped or not */
-	private AtomicBoolean stopProcessing = new AtomicBoolean(false);
+	private final AtomicBoolean stopProcessing = new AtomicBoolean(false);
 
 	/** The resource watcher */
 	private final ResourceWatcher watcher;
@@ -57,7 +57,7 @@ public class JawrWatchEventProcessor extends Thread {
 	private final BlockingQueue<JawrWatchEvent> watchEvents;
 
 	/** The last process time */
-	private AtomicLong lastProcessTime = new AtomicLong();
+	private final AtomicLong lastProcessTime = new AtomicLong();
 
 	/**
 	 * Constructor
@@ -75,8 +75,7 @@ public class JawrWatchEventProcessor extends Thread {
 	}
 
 	/**
-	 * @param stopProcessing
-	 *            the stopProcessing to set
+	 * Sets the stop processing to true
 	 */
 	public void stopProcessing() {
 		this.stopProcessing.set(true);
@@ -135,16 +134,15 @@ public class JawrWatchEventProcessor extends Thread {
 				String filePath = resolvedPath.toFile().getAbsolutePath();
 				if (mapping.isAsset()) {
 					String fileName = FileNameUtils.getName(filePath);
-					if (fileName.equals(FileNameUtils.getName(mapping.getPath()))){
+					if (fileName.equals(FileNameUtils.getName(mapping.getPath()))) {
 						bundles.add(mapping.getBundle());
 					}
 				} else {
 					if (isDir) {
-						if (mapping.isRecursive() && 
-								(!mapping.hasFileFilter() || mapping.accept(filePath))) {
+						if (mapping.isRecursive() && (!mapping.hasFileFilter() || mapping.accept(filePath))) {
 							bundles.add(mapping.getBundle());
 						}
-					} else if(!mapping.hasFileFilter() || mapping.accept(filePath)){
+					} else if (!mapping.hasFileFilter() || mapping.accept(filePath)) {
 						bundles.add(mapping.getBundle());
 					}
 					if (mapping.isRecursive()) {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -34,8 +34,7 @@ import org.slf4j.LoggerFactory;
 public class PropertyUtils {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PropertyUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropertyUtils.class);
 
 	/**
 	 * Return the value of the specified simple property of the specified bean,
@@ -61,8 +60,7 @@ public class PropertyUtils {
 	 *                if an accessor method for this propety cannot be found
 	 */
 	public static String getProperty(Object bean, String name)
-			throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
 		String value = null;
 
@@ -75,8 +73,7 @@ public class PropertyUtils {
 
 		Method readMethod = descriptor.getReadMethod();
 		if (readMethod == null) {
-			throw new NoSuchMethodException("Property '" + name
-					+ "' has no getter method");
+			throw new NoSuchMethodException("Property '" + name + "' has no getter method");
 		}
 
 		// Call the property getter and return the value
@@ -116,16 +113,15 @@ public class PropertyUtils {
 	 * @exception NoSuchMethodException
 	 *                if an accessor method for this propety cannot be found
 	 */
-	private static PropertyDescriptor getPropertyDescriptor(Object bean,
-			String name) {
+	private static PropertyDescriptor getPropertyDescriptor(Object bean, String name) {
 		PropertyDescriptor descriptor = null;
-		PropertyDescriptor descriptors[] = getPropertyDescriptors(bean
-				.getClass());
+		PropertyDescriptor descriptors[] = getPropertyDescriptors(bean.getClass());
 		if (descriptors != null) {
 
-			for (int i = 0; i < descriptors.length; i++) {
-				if (name.equals(descriptors[i].getName()))
-					descriptor = descriptors[i];
+			for (PropertyDescriptor descriptor1 : descriptors) {
+				if (name.equals(descriptor1.getName())) {
+					descriptor = descriptor1;
+				}
 			}
 		}
 		return descriptor;
@@ -139,6 +135,7 @@ public class PropertyUtils {
 	 * 
 	 * @param beanClass
 	 *            Bean class for which property descriptors are requested
+	 * @return the property descriptors
 	 * 
 	 * @exception IllegalArgumentException
 	 *                if <code>beanClass</code> is null
@@ -192,8 +189,7 @@ public class PropertyUtils {
 	 *                if an accessor method for this propety cannot be found
 	 */
 	public static void setProperty(Object bean, String name, Object value)
-			throws IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException {
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
 		if (bean == null) {
 			throw new IllegalArgumentException("No bean specified");
@@ -209,8 +205,7 @@ public class PropertyUtils {
 		}
 		Method writeMethod = descriptor.getWriteMethod();
 		if (writeMethod == null) {
-			throw new NoSuchMethodException("Property '" + name
-					+ "' has no setter method");
+			throw new NoSuchMethodException("Property '" + name + "' has no setter method");
 		}
 
 		// Call the property setter method
@@ -236,9 +231,8 @@ public class PropertyUtils {
 	 * @throws InvocationTargetException
 	 *             if an exception occurs
 	 */
-	private static Object invokeMethod(Method method, Object bean,
-			Object[] values) throws IllegalAccessException,
-			InvocationTargetException {
+	private static Object invokeMethod(Method method, Object bean, Object[] values)
+			throws IllegalAccessException, InvocationTargetException {
 		try {
 
 			return method.invoke(bean, values);
@@ -246,8 +240,7 @@ public class PropertyUtils {
 		} catch (IllegalArgumentException e) {
 
 			LOGGER.error("Method invocation failed.", e);
-			throw new IllegalArgumentException("Cannot invoke "
-					+ method.getDeclaringClass().getName() + "."
+			throw new IllegalArgumentException("Cannot invoke " + method.getDeclaringClass().getName() + "."
 					+ method.getName() + " - " + e.getMessage());
 
 		}

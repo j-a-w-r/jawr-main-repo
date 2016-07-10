@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -15,20 +15,21 @@ package net.jawr.web.resource.bundle.generator;
 
 import java.util.List;
 
-
 /**
  * The interface of objects which can handle locale aware resources
- *  
+ * 
  * @author Ibrahim Chaehoi
  *
  */
-public interface LocaleAwareResourceGenerator extends ResourceGenerator{
-	
+public interface LocaleAwareResourceGenerator extends ResourceGenerator {
+
 	/**
-	 * Returns the list of available locales for a resource 
-	 * @param resource the resource name
-	 * @return the list of available locales for a resource 
+	 * Returns the list of available locales for a resource
+	 * 
+	 * @param mapping
+	 *            the resource name
+	 * @return the list of available locales for a resource
 	 */
 	public List<String> getAvailableLocales(String mapping);
-	
+
 }

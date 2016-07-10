@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2013 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -21,33 +21,45 @@ import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
- * Facelets taglib which uses a CSSHTMLBundleLinkRenderer to render links for CSS bundles. 
+ * Facelets taglib which uses a CSSHTMLBundleLinkRenderer to render links for
+ * CSS bundles.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
 public class CSSBundleTag extends AbstractResourceBundleTag {
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.jsf.AbstractResourceBundleTag#createRenderer(javax.faces.context.FacesContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.taglib.jsf.AbstractResourceBundleTag#createRenderer(javax.
+	 * faces.context.FacesContext)
 	 */
+	@Override
 	protected BundleRenderer createRenderer(FacesContext context) {
-		
+
 		ResourceBundlesHandler rsHandler = getResourceBundlesHandler(context);
-		
-		String media = (String)getAttributes().get(JawrConstant.MEDIA_ATTR); 
-		boolean alternate = Boolean.valueOf((String) getAttributes().get(JawrConstant.ALTERNATE_ATTR)).booleanValue();
-		boolean displayAlternate = Boolean.valueOf((String) getAttributes().get(JawrConstant.DISPLAY_ALTERNATE_ATTR)).booleanValue();
-		String title = (String)getAttributes().get(JawrConstant.TITLE_ATTR);
-		
-        return  RendererFactory.getCssBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), media, alternate, displayAlternate, title);
+
+		String media = (String) getAttributes().get(JawrConstant.MEDIA_ATTR);
+		boolean alternate = Boolean.parseBoolean((String) getAttributes().get(JawrConstant.ALTERNATE_ATTR));
+		boolean displayAlternate = Boolean
+				.parseBoolean((String) getAttributes().get(JawrConstant.DISPLAY_ALTERNATE_ATTR));
+		String title = (String) getAttributes().get(JawrConstant.TITLE_ATTR);
+
+		return RendererFactory.getCssBundleRenderer(rsHandler, getUseRandomParamFlag(rsHandler.getConfig()), media,
+				alternate, displayAlternate, title);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.taglib.jsf.AbstractResourceBundleTag#getResourceHandlerAttributeName()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.taglib.jsf.AbstractResourceBundleTag#
+	 * getResourceHandlerAttributeName()
 	 */
-	protected String getResourceBundlesHandlerAttributeName(){
+	@Override
+	protected String getResourceBundlesHandlerAttributeName() {
 		return JawrConstant.CSS_CONTEXT_ATTRIBUTE;
 	}
-		
+
 }

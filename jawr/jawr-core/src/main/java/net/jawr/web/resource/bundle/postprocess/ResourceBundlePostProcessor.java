@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,22 +13,22 @@
  */
 package net.jawr.web.resource.bundle.postprocess;
 
-
-
 /**
- * Interface for bundle postprocessors, which will perform different kinds
- * of processing on joined resource bundles, such as compression. 
+ * Interface for bundle postprocessors, which will perform different kinds of
+ * processing on joined resource bundles, such as compression.
  * 
  * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
  */
 public interface ResourceBundlePostProcessor {
-	
+
 	/**
-	 * Postprocess a bundle of resources. 
-	 * @param StringBuffer Joined resources. 
-	 * @return StringBuffer a buffer containing the postprocessed bundle. 
+	 * Postprocess a bundle of resources.
+	 * 
+	 * @param bundleString
+	 *            Joined resources.
+	 * @return StringBuffer a buffer containing the postprocessed bundle.
 	 */
-	public StringBuffer postProcessBundle(BundleProcessingStatus status,StringBuffer bundleString);
-	 
+	public StringBuffer postProcessBundle(BundleProcessingStatus status, StringBuffer bundleString);
+
 }

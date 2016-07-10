@@ -20,27 +20,29 @@ import net.jawr.web.exception.JawrLinkRenderingException;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 
 /**
- * Renderer for internet explorer conditional comments. Wraps script or stylesheet tags
- * with conditional comments for IE specific contents.  
+ * Renderer for internet explorer conditional comments. Wraps script or
+ * stylesheet tags with conditional comments for IE specific contents.
  * 
  * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
  */
 public class ConditionalCommentRenderer implements ConditionalCommentCallbackHandler {
-	
 
-    private static final String PRE_TAG = "<!--[";
-    private static final String POST_TAG = "]>\n";
-    private static final String CLOSING_TAG = "<![endif]-->\n";
-	private Writer out;
-	
+	private static final String PRE_TAG = "<!--[";
+	private static final String POST_TAG = "]>\n";
+	private static final String CLOSING_TAG = "<![endif]-->\n";
+	private final Writer out;
 
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler#openConditionalComment(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler#
+	 * openConditionalComment(java.lang.String)
 	 */
+	@Override
 	public void openConditionalComment(String expression) {
-		StringBuffer sb = new StringBuffer(PRE_TAG);
+		StringBuilder sb = new StringBuilder(PRE_TAG);
 		sb.append(expression).append(POST_TAG);
 		try {
 			out.write(sb.toString());
@@ -48,10 +50,15 @@ public class ConditionalCommentRenderer implements ConditionalCommentCallbackHan
 			throw new JawrLinkRenderingException(e);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler#closeConditionalComment()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler#
+	 * closeConditionalComment()
 	 */
+	@Override
 	public void closeConditionalComment() {
 		try {
 			out.write(CLOSING_TAG);
@@ -60,16 +67,16 @@ public class ConditionalCommentRenderer implements ConditionalCommentCallbackHan
 		}
 	}
 
-
 	/**
-	 * Create a renderer that writes conditional comments to the 
-	 * specified writer. 
-	 * @param out Writer
+	 * Create a renderer that writes conditional comments to the specified
+	 * writer.
+	 * 
+	 * @param out
+	 *            Writer
 	 */
 	public ConditionalCommentRenderer(Writer out) {
 		super();
 		this.out = out;
 	}
-
 
 }

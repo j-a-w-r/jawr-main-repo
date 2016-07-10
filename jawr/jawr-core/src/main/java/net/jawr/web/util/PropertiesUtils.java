@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Ibrahim Chaehoi
+ * Copyright 2014-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -33,58 +33,69 @@ public final class PropertiesUtils {
 
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
-	
+
 	/**
 	 * Constructor
 	 */
 	private PropertiesUtils() {
-		
+
 	}
-	
+
 	/**
 	 * Filters the properties file using the prefix given in parameter.
 	 * 
-	 * @param prefix the prefix of the property to retrieve
-	 * @param removePrefix the flag indicating if the prefix should be removed from the property key.
+	 * @param props
+	 *            the properties
+	 * @param prefix
+	 *            the prefix of the property to retrieve
+	 * @param removePrefix
+	 *            the flag indicating if the prefix should be removed from the
+	 *            property key.
 	 * @return the filtered properties
 	 */
-	public static Map<String, String> filterProperties(Properties props, String prefix, boolean removePrefix){
-	
+	public static Map<String, String> filterProperties(Properties props, String prefix, boolean removePrefix) {
+
 		List<String> excludedProperties = Collections.emptyList();
 		return filterProperties(props, prefix, removePrefix, excludedProperties);
 	}
-	
+
 	/**
 	 * Filters the properties file using the prefix given in parameter.
 	 * 
-	 * @param prefix the prefix of the property to retrieve
-	 * @param removePrefix the flag indicating if the prefix should be removed from the property key.
-	 * @param excludedProperties the properties which are excluded from the filtered properties
+	 * @param props
+	 *            the properties
+	 * @param prefix
+	 *            the prefix of the property to retrieve
+	 * @param removePrefix
+	 *            the flag indicating if the prefix should be removed from the
+	 *            property key.
+	 * @param excludedProperties
+	 *            the properties which are excluded from the filtered properties
 	 * @return the filtered properties
 	 */
 	public static Map<String, String> filterProperties(Properties props, String prefix, boolean removePrefix,
-			List<String> excludedProperties){
-		
-		Map<String, String> filteredProps = new HashMap<String, String>();
+			List<String> excludedProperties) {
+
+		Map<String, String> filteredProps = new HashMap<>();
 		Set<Entry<Object, Object>> entrySet = props.entrySet();
 		for (Entry<Object, Object> propEntry : entrySet) {
 			String key = (String) propEntry.getKey();
 			if (key.startsWith(prefix)) {
 
 				String newKey = key;
-				if(removePrefix){
+				if (removePrefix) {
 					newKey = key.substring(prefix.length());
 				}
-				if(!excludedProperties.contains(key)){
+				if (!excludedProperties.contains(key)) {
 					filteredProps.put(newKey, (String) propEntry.getValue());
-				}else{
-					if(LOGGER.isWarnEnabled()){
-						LOGGER.warn("The property '"+key+"' has been excluded.");
+				} else {
+					if (LOGGER.isWarnEnabled()) {
+						LOGGER.warn("The property '" + key + "' has been excluded.");
 					}
 				}
 			}
 		}
-		
+
 		return filteredProps;
 	}
 }

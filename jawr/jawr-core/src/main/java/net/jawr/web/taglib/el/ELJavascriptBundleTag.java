@@ -76,7 +76,9 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 
 	/**
 	 * Sets the typeExpr
-	 * @param typeExpr the typeExpr to set
+	 * 
+	 * @param typeExpr
+	 *            the typeExpr to set
 	 */
 	public void setTypeExpr(String typeExpr) {
 		this.typeExpr = typeExpr;
@@ -103,6 +105,7 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 
 	/**
 	 * Returns the async expression
+	 * 
 	 * @return the async expression
 	 */
 	public String getAsyncExpr() {
@@ -121,6 +124,7 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 
 	/**
 	 * Returns the defer expression
+	 * 
 	 * @return the defer expression
 	 */
 	public String getDeferExpr() {
@@ -145,35 +149,33 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 	public int doStartTag() throws JspException {
 
 		String string = null;
-		
+
 		if (srcExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("srcExpr",
-					srcExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("srcExpr", srcExpr, String.class, this, pageContext);
 			setSrc(string);
 		}
-		
+
 		if (typeExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("typeExpr",
-					typeExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("typeExpr", typeExpr, String.class, this,
+					pageContext);
 			setType(string);
 		}
-		
+
 		if (asyncExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("asyncExpr",
-					asyncExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("asyncExpr", asyncExpr, String.class, this,
+					pageContext);
 			setAsync(string);
 		}
-		
+
 		if (deferExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate("deferExpr",
-					deferExpr, String.class, this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("deferExpr", deferExpr, String.class, this,
+					pageContext);
 			setDefer(string);
 		}
 
 		if (useRandomParamExpr != null) {
-			string = (String) ExpressionEvaluatorManager.evaluate(
-					"useRandomParamExpr", useRandomParamExpr, String.class,
-					this, pageContext);
+			string = (String) ExpressionEvaluatorManager.evaluate("useRandomParamExpr", useRandomParamExpr,
+					String.class, this, pageContext);
 			setUseRandomParam(string);
 		}
 
@@ -185,6 +187,7 @@ public class ELJavascriptBundleTag extends JavascriptBundleTag {
 	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
+	@Override
 	public void release() {
 		super.release();
 		setTypeExpr(null);

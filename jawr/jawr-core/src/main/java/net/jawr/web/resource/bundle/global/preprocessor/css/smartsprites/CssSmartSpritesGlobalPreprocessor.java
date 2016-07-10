@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -49,12 +48,10 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
  * @author Ibrahim Chaehoi
  * 
  */
-public class CssSmartSpritesGlobalPreprocessor extends
-		AbstractChainedGlobalProcessor<GlobalPreprocessingContext> {
+public class CssSmartSpritesGlobalPreprocessor extends AbstractChainedGlobalProcessor<GlobalPreprocessingContext> {
 
 	/** The logger */
-	private static Logger LOGGER = LoggerFactory
-			.getLogger(CssSmartSpritesGlobalPreprocessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CssSmartSpritesGlobalPreprocessor.class);
 
 	/** The error level name */
 	private static final String ERROR_LEVEL = "ERROR";
@@ -75,59 +72,58 @@ public class CssSmartSpritesGlobalPreprocessor extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.global.processor.GlobalProcessor#processBundles
-	 * (
-	 * net.jawr.web.resource.bundle.global.processor.AbstractGlobalProcessingContext
-	 * , java.util.List)
+	 * @see net.jawr.web.resource.bundle.global.processor.GlobalProcessor#
+	 * processBundles ( net.jawr.web.resource.bundle.global.processor.
+	 * AbstractGlobalProcessingContext , java.util.List)
 	 */
-	public void processBundles(GlobalPreprocessingContext ctx,
-			List<JoinableResourceBundle> bundles) {
+	@Override
+	public void processBundles(GlobalPreprocessingContext ctx, List<JoinableResourceBundle> bundles) {
 
 		ResourceReaderHandler rsHandler = ctx.getRsReaderHandler();
-		
+
 		Set<String> resourcePaths = getResourcePaths(bundles);
 		JawrConfig jawrConfig = ctx.getJawrConfig();
 		Charset charset = jawrConfig.getResourceCharset();
 
-		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig
-				.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig.getContext()
+				.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 
-		generateSprites(rsHandler, binaryRsHandler, resourcePaths, jawrConfig,
-					charset);
-	
+		generateSprites(rsHandler, binaryRsHandler, resourcePaths, jawrConfig, charset);
+
 		// Update CSS resource handler
 		CssSmartSpritesResourceReader cssSpriteResourceReader = new CssSmartSpritesResourceReader(
 				rsHandler.getWorkingDirectory(), jawrConfig);
-		
+
 		updateBundlesDirtyState(bundles, cssSpriteResourceReader);
-		
-		ctx.getRsReaderHandler().addResourceReader(
-				cssSpriteResourceReader);
+
+		ctx.getRsReaderHandler().addResourceReader(cssSpriteResourceReader);
 
 		// Update image resource handler
-		ResourceReaderHandler imgStreamRsHandler = binaryRsHandler
-				.getRsReaderHandler();
+		ResourceReaderHandler imgStreamRsHandler = binaryRsHandler.getRsReaderHandler();
 		imgStreamRsHandler.addResourceReader(cssSpriteResourceReader);
 	}
 
 	/**
 	 * Update the bundles dirty state
-	 * @param bundles the list of bundle
-	 * @param cssSpriteResourceReader the css sprite resource reader
+	 * 
+	 * @param bundles
+	 *            the list of bundle
+	 * @param cssSpriteResourceReader
+	 *            the css sprite resource reader
 	 */
-	private void updateBundlesDirtyState(List<JoinableResourceBundle> bundles, CssSmartSpritesResourceReader cssSpriteResourceReader) {
+	private void updateBundlesDirtyState(List<JoinableResourceBundle> bundles,
+			CssSmartSpritesResourceReader cssSpriteResourceReader) {
 
 		for (JoinableResourceBundle bundle : bundles) {
-			
+
 			List<BundlePath> bundlePaths = bundle.getItemPathList();
 			for (BundlePath bundlePath : bundlePaths) {
 				String path = bundlePath.getPath();
 				File stdFile = cssSpriteResourceReader.getGeneratedCssFile(path);
 				File bckFile = cssSpriteResourceReader.getBackupFile(path);
-				if(bckFile.exists()){
+				if (bckFile.exists()) {
 					try {
-						if(!FileUtils.contentEquals(stdFile, bckFile)){
+						if (!FileUtils.contentEquals(stdFile, bckFile)) {
 							bundle.setDirty(true);
 							break;
 						}
@@ -155,14 +151,12 @@ public class CssSmartSpritesGlobalPreprocessor extends
 	 * @param charset
 	 *            the charset
 	 */
-	private void generateSprites(ResourceReaderHandler cssRsHandler,
-			BinaryResourcesHandler binaryRsHandler, Set<String> resourcePaths,
-			JawrConfig jawrConfig, Charset charset) {
+	private void generateSprites(ResourceReaderHandler cssRsHandler, BinaryResourcesHandler binaryRsHandler,
+			Set<String> resourcePaths, JawrConfig jawrConfig, Charset charset) {
 
 		MessageLevel msgLevel = MessageLevel.valueOf(ERROR_LEVEL);
 		String sinkLevel = WARN_LEVEL;
-		if (LOGGER.isTraceEnabled() || LOGGER.isDebugEnabled()
-				|| LOGGER.isInfoEnabled()) { // logLevel.isGreaterOrEqual(Level.DEBUG)
+		if (LOGGER.isTraceEnabled() || LOGGER.isDebugEnabled() || LOGGER.isInfoEnabled()) { // logLevel.isGreaterOrEqual(Level.DEBUG)
 			msgLevel = MessageLevel.valueOf(INFO_LEVEL);
 			sinkLevel = INFO_LEVEL;
 		} else if (LOGGER.isWarnEnabled() || LOGGER.isErrorEnabled()) { // logLevel.isGreaterOrEqual(Level.WARN)
@@ -170,54 +164,45 @@ public class CssSmartSpritesGlobalPreprocessor extends
 			sinkLevel = WARN_LEVEL;
 		}
 
-		MessageLog messageLog = new MessageLog(
-				new MessageSink[] { new LogMessageSink(sinkLevel) });
+		MessageLog messageLog = new MessageLog(new MessageSink[] { new LogMessageSink(sinkLevel) });
 
-		SmartSpritesResourceHandler smartSpriteRsHandler = new SmartSpritesResourceHandler(
-				cssRsHandler, binaryRsHandler.getRsReaderHandler(),
-				jawrConfig.getGeneratorRegistry(), binaryRsHandler.getConfig()
-						.getGeneratorRegistry(), charset.toString(), messageLog);
+		SmartSpritesResourceHandler smartSpriteRsHandler = new SmartSpritesResourceHandler(cssRsHandler,
+				binaryRsHandler.getRsReaderHandler(), jawrConfig.getGeneratorRegistry(),
+				binaryRsHandler.getConfig().getGeneratorRegistry(), charset.toString(), messageLog);
 
-		smartSpriteRsHandler.setContextPath(jawrConfig
-				.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
+		smartSpriteRsHandler.setContextPath(jawrConfig.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
 
-		String outDir = cssRsHandler.getWorkingDirectory()
-				+ JawrConstant.CSS_SMARTSPRITES_TMP_DIR;
+		String outDir = cssRsHandler.getWorkingDirectory() + JawrConstant.CSS_SMARTSPRITES_TMP_DIR;
 
 		// Create temp directories
 		File tmpDir = new File(outDir);
-		
+
 		if (!tmpDir.exists()) {
 			if (!tmpDir.mkdirs()) {
-				throw new BundlingProcessException(
-						"Impossible to create temporary directory : " + tmpDir);
+				throw new BundlingProcessException("Impossible to create temporary directory : " + tmpDir);
 			}
-		}else{
+		} else {
 			// Copy to backup and clean temp directories
 			try {
-				File backupDir = new File(cssRsHandler.getWorkingDirectory()
-						+ JawrConstant.SPRITE_BACKUP_GENERATED_CSS_DIR);
+				File backupDir = new File(
+						cssRsHandler.getWorkingDirectory() + JawrConstant.SPRITE_BACKUP_GENERATED_CSS_DIR);
 				if (!backupDir.exists()) {
 					if (!backupDir.mkdirs()) {
-						throw new BundlingProcessException(
-								"Impossible to create temporary directory : " + backupDir);
+						throw new BundlingProcessException("Impossible to create temporary directory : " + backupDir);
 					}
 				}
 				FileUtils.copyDirectory(tmpDir, backupDir);
 				FileUtils.cleanDirectory(tmpDir);
-			
+
 			} catch (IOException e) {
-				throw new BundlingProcessException(
-						"Impossible to clean temporary directory : " + outDir, e);
+				throw new BundlingProcessException("Impossible to clean temporary directory : " + outDir, e);
 			}
 		}
 
-		SmartSpritesParameters params = new SmartSpritesParameters("/", null,
-				outDir, null, msgLevel, "", PngDepth.valueOf("AUTO"), false,
-				charset.toString(), true);
-		
-		SpriteBuilder spriteBuilder = new SpriteBuilder(params, messageLog,
-				smartSpriteRsHandler);
+		SmartSpritesParameters params = new SmartSpritesParameters("/", null, outDir, null, msgLevel, "",
+				PngDepth.valueOf("AUTO"), false, charset.toString(), true);
+
+		SpriteBuilder spriteBuilder = new SpriteBuilder(params, messageLog, smartSpriteRsHandler);
 		try {
 			spriteBuilder.buildSprites(resourcePaths);
 		} catch (IOException e) {
@@ -234,12 +219,10 @@ public class CssSmartSpritesGlobalPreprocessor extends
 	 */
 	private Set<String> getResourcePaths(List<JoinableResourceBundle> bundles) {
 
-		Set<String> resourcePaths = new HashSet<String>();
+		Set<String> resourcePaths = new HashSet<>();
 
-		for (Iterator<JoinableResourceBundle> iterator = bundles.iterator(); iterator
-				.hasNext();) {
-			JoinableResourceBundle bundle = iterator.next();
-			for(BundlePath bundlePath : bundle.getItemPathList()){
+		for (JoinableResourceBundle bundle : bundles) {
+			for (BundlePath bundlePath : bundle.getItemPathList()) {
 				resourcePaths.add(bundlePath.getPath());
 			}
 		}
@@ -276,24 +259,32 @@ public class CssSmartSpritesGlobalPreprocessor extends
 		 * org.carrot2.labs.smartsprites.message.MessageSink#add(org.carrot2
 		 * .labs.smartsprites.message.Message)
 		 */
+		@Override
 		public void add(Message message) {
-			
-			if(LOGGER.isInfoEnabled() && logLevel.equals(INFO_LEVEL) && logLevelGreaterOrEqualThan(message.level, MessageLevel.INFO)){
+
+			if (LOGGER.isInfoEnabled() && logLevel.equals(INFO_LEVEL)
+					&& logLevelGreaterOrEqualThan(message.level, MessageLevel.INFO)) {
 				LOGGER.info(message.getFormattedMessage());
-			}else if(LOGGER.isWarnEnabled() && logLevel.equals(WARN_LEVEL) && logLevelGreaterOrEqualThan(message.level, MessageLevel.WARN)){
+			} else if (LOGGER.isWarnEnabled() && logLevel.equals(WARN_LEVEL)
+					&& logLevelGreaterOrEqualThan(message.level, MessageLevel.WARN)) {
 				LOGGER.warn(message.getFormattedMessage());
-			}else if(LOGGER.isErrorEnabled() && logLevel.equals(ERROR_LEVEL)  && logLevelGreaterOrEqualThan(message.level, MessageLevel.ERROR)){
+			} else if (LOGGER.isErrorEnabled() && logLevel.equals(ERROR_LEVEL)
+					&& logLevelGreaterOrEqualThan(message.level, MessageLevel.ERROR)) {
 				LOGGER.error(message.getFormattedMessage());
 			}
 		}
-		
+
 		/**
 		 * Checks if the first messsage level is greater than the second one.
-		 * @param msgLevel1 the first messsage
-		 * @param msgLevel2 the second messsage
-		 * @return true if if the first messsage level is greater than the second one
+		 * 
+		 * @param msgLevel1
+		 *            the first messsage
+		 * @param msgLevel2
+		 *            the second messsage
+		 * @return true if if the first messsage level is greater than the
+		 *         second one
 		 */
-		private boolean logLevelGreaterOrEqualThan(MessageLevel msgLevel1, MessageLevel msgLevel2){
+		private boolean logLevelGreaterOrEqualThan(MessageLevel msgLevel1, MessageLevel msgLevel2) {
 			return MessageLevel.COMPARATOR.compare(msgLevel1, msgLevel2) >= 0;
 		}
 	}

@@ -23,9 +23,10 @@ import net.jawr.web.resource.bundle.factory.util.PathNormalizer;
 import net.jawr.web.util.StringUtils;
 
 /**
- * Standard implementation of ResourceBundlePathsIterator. Uses a ConditionalCommentCallbackHandler
- * to signal the use of conditional comments. It is meant to use in production mode, thus the 
- * paths returned are those of the bundled files. 
+ * Standard implementation of ResourceBundlePathsIterator. Uses a
+ * ConditionalCommentCallbackHandler to signal the use of conditional comments.
+ * It is meant to use in production mode, thus the paths returned are those of
+ * the bundled files.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
@@ -33,83 +34,99 @@ import net.jawr.web.util.StringUtils;
 public class PathsIteratorImpl extends AbstractPathsIterator implements ResourceBundlePathsIterator {
 
 	/** The bundle iterator */
-	private Iterator<JoinableResourceBundle> bundlesIterator;
-	
+	private final Iterator<JoinableResourceBundle> bundlesIterator;
+
 	/** The current bundle */
 	private JoinableResourceBundle currentBundle;
-	
+
 	/**
 	 * Constructor
-	 * @param bundles the bundle
-	 * @param commentCallbackHandler the comment callback handler
-	 * @param variants the variant map
+	 * 
+	 * @param bundles
+	 *            the bundle
+	 * @param commentCallbackHandler
+	 *            the comment callback handler
+	 * @param variants
+	 *            the variant map
 	 */
-	public PathsIteratorImpl(List<JoinableResourceBundle> bundles,ConditionalCommentCallbackHandler commentCallbackHandler, 
-			Map<String, String> variants) {
-		super(commentCallbackHandler,variants);
-		
+	public PathsIteratorImpl(List<JoinableResourceBundle> bundles,
+			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
+		super(commentCallbackHandler, variants);
+
 		List<JoinableResourceBundle> nonDebugOnlyBundles = filterBundlesToRender(bundles);
 		this.bundlesIterator = nonDebugOnlyBundles.iterator();
 	}
 
 	/**
 	 * Filters the bundle to render
-	 * @param bundles the list of bundles
+	 * 
+	 * @param bundles
+	 *            the list of bundles
 	 * @return the list of filtered bundle
 	 */
-	protected List<JoinableResourceBundle> filterBundlesToRender(
-			List<JoinableResourceBundle> bundles) {
-		List<JoinableResourceBundle> filteredBundles = new ArrayList<JoinableResourceBundle>();
-		for(JoinableResourceBundle bundle : bundles){
-			if(!bundle.getInclusionPattern().isIncludeOnlyOnDebug()){
+	protected List<JoinableResourceBundle> filterBundlesToRender(List<JoinableResourceBundle> bundles) {
+		List<JoinableResourceBundle> filteredBundles = new ArrayList<>();
+		for (JoinableResourceBundle bundle : bundles) {
+			if (!bundle.getInclusionPattern().isIncludeOnlyOnDebug()) {
 				filteredBundles.add(bundle);
 			}
 		}
 		return filteredBundles;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#addIterationEventListener(net.jawr.web.resource.bundle.iterator.BundleIterationListener)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#
+	 * addIterationEventListener(net.jawr.web.resource.bundle.iterator.
+	 * BundleIterationListener)
 	 */
 	public void addIterationEventListener(ConditionalCommentCallbackHandler listener) {
 		this.commentCallbackHandler = listener;
 
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#nextPath()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator#
+	 * nextPath()
 	 */
+	@Override
 	public BundlePath nextPath() {
-		
+
 		currentBundle = bundlesIterator.next();
-		
-		if(null != currentBundle.getExplorerConditionalExpression())
+
+		if (null != currentBundle.getExplorerConditionalExpression())
 			commentCallbackHandler.openConditionalComment(currentBundle.getExplorerConditionalExpression());
-		
+
 		String name = currentBundle.getId();
-	
+
 		BundlePath bundlePath = null;
-		
+
 		String productionURL = currentBundle.getAlternateProductionURL();
-		if(StringUtils.isEmpty(productionURL)){
-			bundlePath = new BundlePath(currentBundle.getBundlePrefix(), PathNormalizer.joinPaths(currentBundle.getURLPrefix(variants),name), false);
-		}else{
+		if (StringUtils.isEmpty(productionURL)) {
+			bundlePath = new BundlePath(currentBundle.getBundlePrefix(),
+					PathNormalizer.joinPaths(currentBundle.getURLPrefix(variants), name), false);
+		} else {
 			bundlePath = new BundlePath(currentBundle.getBundlePrefix(), productionURL, true);
 		}
-		
+
 		return bundlePath;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Iterator#hasNext()
 	 */
+	@Override
 	public boolean hasNext() {
-		
+
 		boolean hasNext = bundlesIterator.hasNext();
-		if(null != currentBundle && null != currentBundle.getExplorerConditionalExpression())
+		if (null != currentBundle && null != currentBundle.getExplorerConditionalExpression())
 			commentCallbackHandler.closeConditionalComment();
-		
+
 		return hasNext;
 	}
 

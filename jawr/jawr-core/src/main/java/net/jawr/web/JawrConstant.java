@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -74,13 +74,13 @@ public class JawrConstant {
 
 	/** The http scheme */
 	public static final String HTTP = "http";
-	
+
 	/** The https scheme */
 	public static final String HTTPS = "https";
-	
+
 	/** The ssl protocole name */
 	public static final String SSL = "ssl";
-	
+
 	/** The https url prefix */
 	public static final String HTTPS_URL_PREFIX = "https://";
 
@@ -89,16 +89,17 @@ public class JawrConstant {
 
 	/** The jawr bundle mapping properties file name for JS resources */
 	public static final String JAWR_JS_MAPPING_PROPERTIES_FILENAME = "jawr-js-mapping.properties";
-	
+
 	/** The jawr bundle mapping properties file name for CSS resources */
 	public static final String JAWR_CSS_MAPPING_PROPERTIES_FILENAME = "jawr-css-mapping.properties";
-	
+
 	/** The jawr bundle mapping properties file name for binary resources */
 	public static final String JAWR_BINARY_MAPPING_PROPERTIES_FILENAME = "jawr-binary-mapping.properties";
-	
+
 	/** The jawr bundle mapping properties file name for image resources */
-	//public static final String JAWR_IMG_MAPPING_PROPERTIES_FILENAME = "jawr-img-mapping.properties";
-	
+	// public static final String JAWR_IMG_MAPPING_PROPERTIES_FILENAME =
+	// "jawr-img-mapping.properties";
+
 	/** The servlet mapping property name */
 	public static final String SERVLET_MAPPING_PROPERTY_NAME = "mapping";
 
@@ -113,7 +114,7 @@ public class JawrConstant {
 
 	/** The property which enables the use of JMX */
 	public static final String JMX_ENABLE_FLAG_SYSTEL_PROPERTY = "com.sun.management.jmxremote";
-	
+
 	/** The servlet temp directory property name */
 	public static final String SERVLET_CONTEXT_TEMPDIR = "javax.servlet.context.tempdir";
 
@@ -125,10 +126,10 @@ public class JawrConstant {
 
 	/** The ID of the empty global preprocessor */
 	public static final String EMPTY_GLOBAL_PREPROCESSOR_ID = "none";
-	
+
 	/** The ID of the empty global postprocessor */
 	public static final String EMPTY_GLOBAL_POSTPROCESSOR_ID = "none";
-	
+
 	/** The ID of the google closure postprocessor */
 	public static final String GLOBAL_GOOGLE_CLOSURE_POSTPROCESSOR_ID = "closure";
 
@@ -138,15 +139,15 @@ public class JawrConstant {
 	/** The WEB-INF directory prefix */
 	public static final String WEB_INF_DIR_PREFIX = "/WEB-INF/";
 
-	/** The WEB-INF directory  */
+	/** The WEB-INF directory */
 	public static final String WEB_INF_DIR = "/WEB-INF";
-	
-	/** The META-INF directory  */
+
+	/** The META-INF directory */
 	public static final String META_INF_DIR = "/META-INF";
-	
+
 	/** The generator cache directory name */
 	public static final String GENERATOR_CACHE_DIR = "generatorCache";
-	
+
 	/** The directory for CSS created by sprite generators */
 	public static final String SPRITE_GENERATED_CSS_DIR = "/generatedCss/";
 
@@ -158,7 +159,7 @@ public class JawrConstant {
 
 	/** The name for the default value */
 	public static final String DEFAULT = "default";
-	
+
 	/** The MD5 algorithm name */
 	public static final String MD5_ALGORITHM = "MD5";
 
@@ -194,52 +195,54 @@ public class JawrConstant {
 
 	/** The variant separator character */
 	public static final char VARIANT_SEPARATOR_CHAR = '@';
-	
-	/** The request parameter to check that the refresh has already been taken in account for the request */
+
+	/**
+	 * The request parameter to check that the refresh has already been taken in
+	 * account for the request
+	 */
 	public static final String JAWR_BUNDLE_REFRESH_CHECK = "jawr.bundle.refresh.check";
 
 	/** The refresh key parameter */
 	public static final String REFRESH_KEY_PARAM = "refreshKey";
-	
+
 	// Tag
 	/** The name of the media attribute */
 	public static final String MEDIA_ATTR = "media";
-	
+
 	/** The name of the title attribute */
 	public static final String TITLE_ATTR = "title";
-	
+
 	/** The name of the alternate attribute */
 	public static final String ALTERNATE_ATTR = "alternate";
-	
+
 	/** The name of the displayAlternate attribute */
 	public static final String DISPLAY_ALTERNATE_ATTR = "displayAlternate";
-	
+
 	/** The name of the href attribute */
 	public static final String HREF_ATTR = "href";
-	
+
 	/** The name of the src attribute */
 	public static final String SRC_ATTR = "src";
 
 	/** The name of the type attribute */
 	public static final String TYPE_ATTR = "type";
-	
+
 	/** The name of the async attribute */
 	public static final String ASYNC_ATTR = "async";
-	
+
 	/** The name of the defer attribute */
 	public static final String DEFER_ATTR = "defer";
-	
+
 	/** The name of the crossorigin attribute */
 	public static final String CROSSORIGIN_ATTR = "crossorigin";
-	
+
 	/** Max file size jawr property name */
-	public static final String BASE64_MAX_IMG_FILE_SIZE = 
-		"jawr.css.postprocessor.base64ImageEncoder.maxFileLength";
+	public static final String BASE64_MAX_IMG_FILE_SIZE = "jawr.css.postprocessor.base64ImageEncoder.maxFileLength";
 
 	public static final String BASE64_ENCODE_BY_DEFAULT = "jawr.css.postprocessor.base64ImageEncoder.encode.by.default";
-	
+
 	public static final String BASE64_ENCODE_SPRITE = "jawr.css.postprocessor.base64ImageEncoder.encode.sprite";
-	
+
 	public static final String POST_PROCESSING_CTX_JAWR_BINARY_MAPPING = "jawrBinaryMapping";
 
 	public static final String BASE64_ENCODED_RESOURCES = "BASE64_ENCODED_RESOURCES";
@@ -263,27 +266,37 @@ public class JawrConstant {
 	/** The Jawr config property to set the base context directory */
 	public static final String JAWR_BASECONTEXT_DIRECTORY = "jawr.basecontext.directory";
 
-	/** The Jawr config property to set if the priorrty of the base context directory*/
+	/**
+	 * The Jawr config property to set if the priorrty of the base context
+	 * directory
+	 */
 	public static final String JAWR_BASECONTEXT_DIRECTORY_HIGH_PRIORITY = "jawr.basecontext.directory.high.priority";
 
-	/** The Jawr config property to set if the locale generator should fallback to the systemn locale or not */
+	/**
+	 * The Jawr config property to set if the locale generator should fallback
+	 * to the systemn locale or not
+	 */
 	public static final String JAWR_LOCALE_GENERATOR_FALLBACK_TO_SYSTEM_LOCALE = "jawr.locale.generator.fallbackToSystemLocale";
-	
-	/** The Jawr config property to set if the locale generator should add quote to the message key or noy */
+
+	/**
+	 * The Jawr config property to set if the locale generator should add quote
+	 * to the message key or noy
+	 */
 	public static final String JAWR_LOCALE_GENERATOR_ADD_QUOTE_TO_MSG_KEY = "jawr.locale.generator.quoteMsgKey";
 
 	/** The ResourceBundle charset. The default one is "ISO-8859-1" */
 	public static final String JAWR_LOCALE_GENERATOR_RESOURCE_BUNDLE_CHARSET = "jawr.locale.generator.resourceBundle.charset";
-	
+
 	/** The default resource extensions */
-	public static final List<String> DEFAULT_RESOURCE_EXTENSIONS = Arrays.asList("sorting","license","eot","svg","ttf","woff");
+	public static final List<String> DEFAULT_RESOURCE_EXTENSIONS = Arrays.asList("sorting", "license", "eot", "svg",
+			"ttf", "woff");
 
 	/** The Jawr property name for MBean prefix */
 	public static final String JAWR_JMX_MBEAN_PREFIX = "jawr.jmx.mbean.prefix";
 
 	/** The default JS client side handler generator */
 	public static final String DEFAULT_JS_CLIENTSIDE_HANDLER_CLASS = ClientSideHandlerGeneratorImpl.class.getName();
-	
+
 	/** The default JS bundle link renderer class */
 	public static final String DEFAULT_JS_BUNDLE_LINK_RENDERER_CLASS = JavascriptHTMLBundleLinkRenderer.class.getName();
 
@@ -294,7 +307,8 @@ public class JawrConstant {
 	public static final String DEFAULT_IMG_RENDERER_CLASS = ImgHTMLRenderer.class.getName();
 
 	/** The default servlet context resource reader class */
-	public static final String DEFAULT_SERVLET_CTX_RESOURCE_READER_CLASS = BaseServletContextResourceReader.class.getName();
+	public static final String DEFAULT_SERVLET_CTX_RESOURCE_READER_CLASS = BaseServletContextResourceReader.class
+			.getName();
 
 	/** The uglify JS engine property name */
 	public static final String UGLIFY_POSTPROCESSOR_JS_ENGINE = "jawr.js.postprocessor.uglify.js.engine";
@@ -310,13 +324,13 @@ public class JawrConstant {
 
 	/** The Javascript engine property name */
 	public static final String JS_ENGINE_PROPERTY = "jawr.js.engine";
-	
+
 	/** The default Javascript engine */
 	public static final String DEFAULT_JS_ENGINE = "mozilla.rhino";
 
 	/** The performance processing logger */
 	public static final String PERF_PROCESSING_LOGGER = "net.jawr.perf.processing";
-	
+
 	/** The performance request handling logger */
 	public static final String PERF_REQ_HANDLING_LOGGER = "net.jawr.perf.request";
 
@@ -344,10 +358,16 @@ public class JawrConstant {
 	/** The mixed URL mode */
 	public static final String SASS_GENERATOR_MIXED_URL_MODE = "mixed";
 
-	/** The delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
+	/**
+	 * The delay after last event, this is used to to ensure that a batch
+	 * modification is ended before starting the build
+	 */
 	public static final int DEFAULT_DELAY_AFTER_LAST_EVENT = 2000;
 
-	/** The property name which defines the delay after last event, this is used to to ensure that a batch modification is ended before starting the build */
+	/**
+	 * The property name which defines the delay after last event, this is used
+	 * to to ensure that a batch modification is ended before starting the build
+	 */
 	public static final String JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT = "jawr.smart.bundling.delay.after.last.event";
 
 	/** URL prefix for jar file */

@@ -42,7 +42,7 @@ public class CssImageUrlRewriter {
 	private static final String URL_SEPARATOR = "/";
 
 	/** The URL regexp pattern */
-	public static String URL_REGEXP = "url\\(\\s*" // 'url('
+	public static final String URL_REGEXP = "url\\(\\s*" // 'url('
 			// and any number of whitespaces
 			+ "(?!(\"|')?(data|mhtml|cid):)(((\\\\\\))|[^)])*)" // any sequence
 																// of
@@ -71,7 +71,7 @@ public class CssImageUrlRewriter {
 
 	/** The binary servlet path */
 	protected String binaryServletPath = "";
-	
+
 	/** The Jawr config */
 	protected JawrConfig config;
 
@@ -134,6 +134,7 @@ public class CssImageUrlRewriter {
 	 *            the original CSS content
 	 * @return the new CSS content with image path rewritten
 	 * @throws IOException
+	 *             if an IO exception occurs
 	 */
 	public StringBuffer rewriteUrl(String originalCssPath, String newCssPath, String originalCssContent)
 			throws IOException {
@@ -156,10 +157,10 @@ public class CssImageUrlRewriter {
 	 * 
 	 * @param match
 	 *            the matched URL
+	 * @param originalPath
+	 *            the original path
 	 * @param newCssPath
-	 *            the full bundle path
-	 * @param status
-	 *            the bundle processing status
+	 *            the new Css Path
 	 * @return the image URL path
 	 * @throws IOException
 	 *             if an IO exception occurs
@@ -201,7 +202,7 @@ public class CssImageUrlRewriter {
 		// Check if the URL is absolute, if it is return it as is.
 		int firstSlash = url.indexOf('/');
 		if (0 == firstSlash || (firstSlash != -1 && url.charAt(++firstSlash) == '/')) {
-			StringBuffer sb = new StringBuffer("url(");
+			StringBuilder sb = new StringBuilder("url(");
 			sb.append(quoteStr).append(url).append(urlSuffix).append(quoteStr).append(")");
 			return sb.toString();
 		}
@@ -251,7 +252,7 @@ public class CssImageUrlRewriter {
 
 			// Add image servlet path in the URL, if it's defined
 			if (StringUtils.isNotEmpty(binaryServletPath)) {
-				fullImgPath = binaryServletPath + JawrConstant.URL_SEPARATOR +fullImgPath;
+				fullImgPath = binaryServletPath + JawrConstant.URL_SEPARATOR + fullImgPath;
 			}
 			imgUrl = PathNormalizer.getRelativeWebPath(PathNormalizer.getParentPath(newCssPath), fullImgPath);
 

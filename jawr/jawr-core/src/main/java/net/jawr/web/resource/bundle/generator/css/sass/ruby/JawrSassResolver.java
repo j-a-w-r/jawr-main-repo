@@ -36,19 +36,19 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 public class JawrSassResolver {
 
 	/** The resource reader handler */
-	private ResourceReaderHandler rsHandler;
+	private final ResourceReaderHandler rsHandler;
 
 	/** The bundle */
-	private JoinableResourceBundle bundle;
+	private final JoinableResourceBundle bundle;
 
 	/** The resource path */
-	private String scssPath;
+	private final String scssPath;
 
 	/** The flag indicating if we are using absolute URL or not */
-	private boolean useAbsoluteUrl;
+	private final boolean useAbsoluteUrl;
 
 	/** The linked resources */
-	private List<FilePathMapping> linkedResources = new ArrayList<>();
+	private final List<FilePathMapping> linkedResources = new ArrayList<>();
 
 	/**
 	 * Constructor

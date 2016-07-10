@@ -40,7 +40,7 @@ public class MessageBundleControl extends ResourceBundle.Control {
 	private boolean fallbackToSystemLocale = true;
 
 	/** The charset */
-	private Charset charset;
+	private final Charset charset;
 
 	/**
 	 * Constructor

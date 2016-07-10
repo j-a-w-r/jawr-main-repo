@@ -41,13 +41,13 @@ public class JawrScssResolver extends AbstractResolver {
 	private static final long serialVersionUID = -6883663899372194879L;
 
 	/** The resource reader handler */
-	private ResourceReaderHandler rsHandler;
+	private final ResourceReaderHandler rsHandler;
 
 	/** The bundle */
-	private JoinableResourceBundle bundle;
+	private final JoinableResourceBundle bundle;
 
 	/** The linked resources */
-	private List<FilePathMapping> linkedResources = new ArrayList<>();
+	private final List<FilePathMapping> linkedResources = new ArrayList<>();
 
 	/**
 	 * Constructor

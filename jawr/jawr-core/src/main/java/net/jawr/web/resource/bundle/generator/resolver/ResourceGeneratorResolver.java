@@ -13,10 +13,9 @@
  */
 package net.jawr.web.resource.bundle.generator.resolver;
 
-
 /**
- * This interface defines the matcher which will be used to determine 
- * if the ResourceGenerator is responsible to handle a path
+ * This interface defines the matcher which will be used to determine if the
+ * ResourceGenerator is responsible to handle a path
  * 
  * @author ibrahim Chaehoi
  *
@@ -28,40 +27,44 @@ public interface ResourceGeneratorResolver {
 	 */
 	public enum ResolverType {
 		PREFIXED,
-		
+
 		SUFFIXED
 	}
-	
+
 	/**
 	 * Returns the type of the resource generator (Prefixed or suffixed)
 	 * 
 	 * @return the type of the resource generator
 	 */
 	ResolverType getType();
-	
+
 	/**
 	 * Checks if the path matches the ResourceGenerator
-	 *  
-	 * @param path the path
+	 * 
+	 * @param path
+	 *            the path
 	 * 
 	 * @return true if the path matches
 	 */
 	boolean matchPath(String path);
-	
+
 	/**
 	 * Returns the resource path to be handled by the ResourceGenerator
-	 *  
-	 * @param path the requested path
+	 * 
+	 * @param requestedPath
+	 *            the requested path
 	 * 
 	 * @return the resource path
 	 */
 	String getResourcePath(String requestedPath);
-	
+
 	/**
 	 * Checks if the matcher is same as the one passed in parameter
-	 * @param matcher the matcher to test
+	 * 
+	 * @param matcher
+	 *            the matcher to test
 	 * @return true if the matcher is same as the one passed in parameter
 	 */
 	boolean isSameAs(ResourceGeneratorResolver matcher);
-	
+
 }

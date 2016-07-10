@@ -45,7 +45,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssResourceGenerator {
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/** The Less compiler */
 	private LessCompiler compiler;
@@ -97,11 +97,12 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 	 * 
 	 * @return the generated resource
 	 */
+	@Override
 	protected Reader generateResource(String path, GeneratorContext context) {
 
 		Reader rd = null;
 		try {
-			List<Class<?>> excluded = new ArrayList<Class<?>>();
+			List<Class<?>> excluded = new ArrayList<>();
 			excluded.add(ILessCssResourceGenerator.class);
 			JoinableResourceBundle bundle = context.getBundle();
 			rd = context.getResourceReaderHandler().getResource(bundle, path, false, excluded);
@@ -112,9 +113,7 @@ public class LessCssGenerator extends AbstractCSSGenerator implements ILessCssRe
 			String content = IOUtils.toString(rd);
 			String result = compile(bundle, content, path, context);
 			rd = new StringReader(result);
-		} catch (ResourceNotFoundException e) {
-			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
-		} catch (IOException e) {
+		} catch (ResourceNotFoundException | IOException e) {
 			throw new BundlingProcessException("Unable to generate content for resource path : '" + path + "'", e);
 		}
 		return rd;

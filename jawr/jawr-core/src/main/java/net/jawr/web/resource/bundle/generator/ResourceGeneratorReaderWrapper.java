@@ -38,38 +38,51 @@ import net.jawr.web.resource.handler.reader.TextResourceReader;
 public class ResourceGeneratorReaderWrapper implements TextResourceReader {
 
 	/** The resource generator wrapped */
-	private TextResourceGenerator generator;
+	private final TextResourceGenerator generator;
 
 	/** The resource handler */
-	private ResourceReaderHandler rsHandler;
+	private final ResourceReaderHandler rsHandler;
 
 	/** The Jawr config */
-	private JawrConfig config;
+	private final JawrConfig config;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param generator
 	 *            the generator
+	 * @param rsHandler
+	 *            the resource handler
+	 * @param config
+	 *            the jawr config
 	 */
-	public ResourceGeneratorReaderWrapper(TextResourceGenerator generator,
-			ResourceReaderHandler rsHandler, JawrConfig config) {
+	public ResourceGeneratorReaderWrapper(TextResourceGenerator generator, ResourceReaderHandler rsHandler,
+			JawrConfig config) {
 		this.generator = generator;
 		this.config = config;
 		this.rsHandler = rsHandler;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.
+	 * jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
 	 */
 	@Override
 	public Reader getResource(JoinableResourceBundle bundle, String resourceName) {
-	
+
 		return getResource(bundle, resourceName, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.
+	 * jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
+	 * boolean)
 	 */
 	@Override
 	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle) {
@@ -77,38 +90,32 @@ public class ResourceGeneratorReaderWrapper implements TextResourceReader {
 		Locale locale = null;
 		String path = generator.getResolver().getResourcePath(resourceName);
 
-		Map<String, String> contextVariants = new HashMap<String, String>();
-		Map<String, VariantSet> variantSets = new HashMap<String, VariantSet>();
-		if (generator instanceof VariantResourceGenerator
-				|| generator instanceof LocaleAwareResourceGenerator) {
+		Map<String, String> contextVariants = new HashMap<>();
+		Map<String, VariantSet> variantSets = new HashMap<>();
+		if (generator instanceof VariantResourceGenerator || generator instanceof LocaleAwareResourceGenerator) {
 
 			int variantSuffixIdx = path.indexOf("@");
 			if (variantSuffixIdx != -1) {
-				
-				String variantKey = path.substring(path
-						.indexOf('@') + 1);
-				
+
+				String variantKey = path.substring(path.indexOf('@') + 1);
+
 				// Remove variant suffix
 				path = path.substring(0, variantSuffixIdx);
-				
+
 				String[] variants = variantKey.split("@");
 				if (generator instanceof VariantResourceGenerator) {
-					variantSets = ((VariantResourceGenerator) generator)
-							.getAvailableVariants(path);
+					variantSets = ((VariantResourceGenerator) generator).getAvailableVariants(path);
 				} else { // instanceof LocaleAwareResourceGenerator
 					List<String> availableLocales = ((LocaleAwareResourceGenerator) generator)
 							.getAvailableLocales(path);
 					if (availableLocales != null) {
 						variantSets.put(JawrConstant.LOCALE_VARIANT_TYPE,
-								new VariantSet(
-										JawrConstant.LOCALE_VARIANT_TYPE, "",
-										availableLocales));
+								new VariantSet(JawrConstant.LOCALE_VARIANT_TYPE, "", availableLocales));
 					}
 				}
 
 				// Sort the variant types
-				List<String> variantTypes = new ArrayList<String>(
-						variantSets.keySet());
+				List<String> variantTypes = new ArrayList<>(variantSets.keySet());
 				Collections.sort(variantTypes);
 				int nbVariants = variants.length;
 
@@ -116,7 +123,7 @@ public class ResourceGeneratorReaderWrapper implements TextResourceReader {
 					String variantType = variantTypes.get(i);
 					String variantValue = variants[i];
 					contextVariants.put(variantType, variantValue);
-					if (variantType == JawrConstant.LOCALE_VARIANT_TYPE) {
+					if (variantType.equals(JawrConstant.LOCALE_VARIANT_TYPE)) {
 						// Resourcebundle should be doing this for me...
 						String[] params = variantValue.split("_");
 						switch (params.length) {

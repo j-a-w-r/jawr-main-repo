@@ -29,53 +29,58 @@ import net.jawr.web.resource.bundle.iterator.BundlePath;
 public class BundlePathMapping {
 
 	/** The resource bundle */
-	private JoinableResourceBundle bundle;
+	private final JoinableResourceBundle bundle;
 
 	/**
 	 * The list of path mappings. It could contains directory mapping like
 	 * 'myPath/**'
 	 */
-	private List<PathMapping> pathMappings;
-	
+	private final List<PathMapping> pathMappings;
+
 	/**
 	 * The final item path list containing all the resource linked to this
 	 * bundle
 	 */
 	private List<BundlePath> itemPathList;
-	
+
 	/**
-	 * The list of file path mappings. It could only contains file mapping to resources used by the bundle
+	 * The list of file path mappings. It could only contains file mapping to
+	 * resources used by the bundle
 	 */
-	private List<FilePathMapping> filePathMappings;
-	
+	private final List<FilePathMapping> filePathMappings;
+
 	/**
-	 * The list of file path mappings for linked resources. It could only contains file mapping to resources used by the bundle
+	 * The list of file path mappings for linked resources. It could only
+	 * contains file mapping to resources used by the bundle
 	 */
 	private List<FilePathMapping> linkedFilePathMappings;
-	
+
 	/**
 	 * The final item path list containing all the resource linked to this
 	 * bundle for debug mode
 	 */
 	private List<BundlePath> itemDebugPathList;
 
-	/** 
-	 * The license path list 
+	/**
+	 * The license path list
 	 */
 	private Set<String> licensesPathList;
 
 	/**
 	 * Constructor
+	 * 
+	 * @param bundle
+	 *            the bundle
 	 */
 	public BundlePathMapping(JoinableResourceBundle bundle) {
 
 		this.bundle = bundle;
-		this.itemPathList = new CopyOnWriteArrayList<BundlePath>();
-		this.itemDebugPathList = new CopyOnWriteArrayList<BundlePath>();
-		this.licensesPathList = new HashSet<String>();
-		this.pathMappings = new CopyOnWriteArrayList<PathMapping>();
-		this.filePathMappings = new CopyOnWriteArrayList<FilePathMapping>();
-		this.linkedFilePathMappings = new CopyOnWriteArrayList<FilePathMapping>();
+		this.itemPathList = new CopyOnWriteArrayList<>();
+		this.itemDebugPathList = new CopyOnWriteArrayList<>();
+		this.licensesPathList = new HashSet<>();
+		this.pathMappings = new CopyOnWriteArrayList<>();
+		this.filePathMappings = new CopyOnWriteArrayList<>();
+		this.linkedFilePathMappings = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -146,7 +151,7 @@ public class BundlePathMapping {
 	public void setLicensesPathList(Set<String> licensesPathList) {
 		this.licensesPathList = licensesPathList;
 	}
-	
+
 	/**
 	 * @return the filePathMappings
 	 */
@@ -160,10 +165,12 @@ public class BundlePathMapping {
 	public List<FilePathMapping> getLinkedFilePathMappings() {
 		return linkedFilePathMappings;
 	}
-	
+
 	/**
 	 * Sets the file path mappings for linked resources
-	 * @param mappings the mapping to set
+	 * 
+	 * @param mappings
+	 *            the mapping to set
 	 */
 	public void setLinkedFilePathMappings(List<FilePathMapping> mappings) {
 		this.linkedFilePathMappings = mappings;

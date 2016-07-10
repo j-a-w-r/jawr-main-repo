@@ -32,8 +32,8 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 	/**
 	 * Constructor The default separator is '.'
 	 * 
-	 * @param prefix
-	 *            the path prefix
+	 * @param suffix
+	 *            the path suffix
 	 */
 	public SuffixedPathResolver(String suffix) {
 		this(suffix, SUFFIX_SEPARATOR);
@@ -42,8 +42,8 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 	/**
 	 * Constructor
 	 * 
-	 * @param prefix
-	 *            the path prefix
+	 * @param suffix
+	 *            the path suffix
 	 * @param separator
 	 *            the suffix separator
 	 */
@@ -69,6 +69,7 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 	 * @see net.jawr.web.resource.bundle.generator.matcher.
 	 * ResourceGeneratorPathMatcher#matchPath(java.lang.String)
 	 */
+	@Override
 	public boolean matchPath(String path) {
 
 		boolean match = false;
@@ -85,6 +86,7 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 	 * ResourceGeneratorPathMatcher#isSameAs(net.jawr.web.resource.bundle.
 	 * generator.matcher.ResourceGeneratorPathMatcher)
 	 */
+	@Override
 	public boolean isSameAs(ResourceGeneratorResolver matcher) {
 
 		return equals(matcher);
@@ -96,6 +98,7 @@ public class SuffixedPathResolver implements ResourceGeneratorResolver {
 	 * @see net.jawr.web.resource.bundle.generator.matcher.
 	 * ResourceGeneratorPathMatcher#getResourcePath(java.lang.String)
 	 */
+	@Override
 	public String getResourcePath(String requestedPath) {
 
 		return requestedPath;

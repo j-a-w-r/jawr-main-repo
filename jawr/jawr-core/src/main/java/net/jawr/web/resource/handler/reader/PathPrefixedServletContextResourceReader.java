@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -31,15 +31,20 @@ import net.jawr.web.util.StringUtils;
  * @author Ibrahim Chaehoi
  * 
  */
-public class PathPrefixedServletContextResourceReader extends
-		BaseServletContextResourceReader {
+public class PathPrefixedServletContextResourceReader extends BaseServletContextResourceReader {
 
 	/** The path prefix to append to any requested resource */
-	private String pathPrefix;
+	private final String pathPrefix;
 
 	/**
 	 * Constructor
-	 * @param pathPrefix the path prefix
+	 * 
+	 * @param context
+	 *            the servlet context
+	 * @param config
+	 *            the Jawr config
+	 * @param pathPrefix
+	 *            the path prefix
 	 */
 	public PathPrefixedServletContextResourceReader(ServletContext context, JawrConfig config, String pathPrefix) {
 		this.pathPrefix = pathPrefix;

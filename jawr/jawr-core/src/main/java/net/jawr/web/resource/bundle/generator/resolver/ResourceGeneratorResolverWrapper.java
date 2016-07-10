@@ -1,5 +1,5 @@
 /**
- * Copyright 20122016  Ibrahim Chaehoi
+ * Copyright 2012-2016  Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -23,16 +23,17 @@ import net.jawr.web.resource.bundle.generator.ResourceGenerator;
  * 
  * @author ibrahim Chaehoi
  */
-public class ResourceGeneratorResolverWrapper implements ResourceGeneratorResolver, Comparable<ResourceGeneratorResolverWrapper>, Serializable {
+public class ResourceGeneratorResolverWrapper
+		implements ResourceGeneratorResolver, Comparable<ResourceGeneratorResolverWrapper>, Serializable {
 
 	/** The serial version UID */
 	private static final long serialVersionUID = -5731212158947768492L;
 
 	/** The resource generator */
-	private ResourceGenerator generator;
+	private final ResourceGenerator generator;
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	public ResourceGeneratorResolverWrapper(ResourceGenerator generator, ResourceGeneratorResolver resolver) {
 		this.generator = generator;
@@ -67,6 +68,7 @@ public class ResourceGeneratorResolverWrapper implements ResourceGeneratorResolv
 	 * net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorResolver#
 	 * matchPath(java.lang.String)
 	 */
+	@Override
 	public boolean matchPath(String path) {
 		return resolver.matchPath(path);
 	}
@@ -78,6 +80,7 @@ public class ResourceGeneratorResolverWrapper implements ResourceGeneratorResolv
 	 * net.jawr.web.resource.bundle.generator.matcher.ResourceGeneratorResolver#
 	 * getResourcePath(java.lang.String)
 	 */
+	@Override
 	public String getResourcePath(String requestedPath) {
 		return resolver.getResourcePath(requestedPath);
 	}
@@ -90,15 +93,19 @@ public class ResourceGeneratorResolverWrapper implements ResourceGeneratorResolv
 	 * isSameAs(net.jawr.web.resource.bundle.generator.matcher.
 	 * ResourceGeneratorResolver)
 	 */
+	@Override
 	public boolean isSameAs(ResourceGeneratorResolver matcher) {
 		return resolver.isSameAs(matcher);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(ResourceGeneratorResolverWrapper rWrapper) {
-		
+
 		ResolverComparator comparator = new ResolverComparator();
 		return comparator.compare(resolver, rWrapper.resolver);
 	}

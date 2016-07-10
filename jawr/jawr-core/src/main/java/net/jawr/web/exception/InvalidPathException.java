@@ -1,5 +1,5 @@
 /**
- * Copyright 2007 Jordi Hernández Sellés
+ * Copyright 2007-2016 Jordi Hernández Sellés
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -14,24 +14,39 @@
 package net.jawr.web.exception;
 
 /**
- * An exception to be thrown if an invalid path is requested from the filesystem. 
+ * An exception to be thrown if an invalid path is requested from the
+ * filesystem.
  * 
  * @author Jordi Hernández Sellés
  *
  */
 public class InvalidPathException extends RuntimeException {
-	
-	private String invalidPath;
 
+	/** The serial version UID */
+	private static final long serialVersionUID = -2061741852994690500L;
+
+	/** The invalid path */
+	private final String invalidPath;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param invalidPath
+	 *            the invalid path
+	 */
 	public InvalidPathException(String invalidPath) {
 		super();
 		this.invalidPath = invalidPath;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Throwable#getMessage()
+	 */
+	@Override
 	public String getMessage() {
-		return "An invalid path mapping was used. The resulting path [" + invalidPath +"] does not exist";
+		return "An invalid path mapping was used. The resulting path [" + invalidPath + "] does not exist";
 	}
 
-	private static final long serialVersionUID = -2061741852994690500L;
-	
 }

@@ -39,20 +39,20 @@ public class FilePathMapping extends PathMapping {
 	 */
 	public FilePathMapping(JoinableResourceBundle bundle, String filePath, long lastModified) {
 		super(bundle, filePath);
-		
+
 		this.lastModified = lastModified;
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param file
+	 * @param f
 	 *            the file
 	 */
 	public FilePathMapping(File f) {
 		this(f.getAbsolutePath(), f.lastModified());
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -65,7 +65,7 @@ public class FilePathMapping extends PathMapping {
 		super(null, filePath);
 		this.lastModified = lastModified;
 	}
-	
+
 	/**
 	 * @return the lastModified
 	 */
@@ -81,7 +81,9 @@ public class FilePathMapping extends PathMapping {
 		this.lastModified = lastModified;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -92,7 +94,9 @@ public class FilePathMapping extends PathMapping {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -112,7 +116,5 @@ public class FilePathMapping extends PathMapping {
 		}
 		return true;
 	}
-
-	
 
 }

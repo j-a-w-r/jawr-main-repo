@@ -37,23 +37,29 @@ import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.util.StringUtils;
 
 /**
- * This class defines the Post processor which handle the inclusion of the CSS define with @import statement
+ * This class defines the Post processor which handle the inclusion of the CSS
+ * define with @import statement
  * 
  * @author Ibrahim Chaehoi
  * 
  */
-public class CSSImportPostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
+public class CSSImportPostProcessor extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The url pattern */
-	private static final Pattern IMPORT_PATTERN = Pattern.compile(	"@import\\s*url\\(\\s*" // 'url(' and any number of whitespaces 
-																+ "[\"']?(?!(https?:)|(//))([^\"')]*)[\"']?" // any sequence of characters, except an unescaped ')'
-																+ "\\s*\\)\\s*(\\w+)?\\s*;?",  // Any number of whitespaces, then ')'
-																Pattern.CASE_INSENSITIVE); // works with 'URL('
-	
+	private static final Pattern IMPORT_PATTERN = Pattern.compile(
+			"@import\\s*url\\(\\s*" // 'url(' and any number of whitespaces
+					+ "[\"']?(?!(https?:)|(//))([^\"')]*)[\"']?" // any sequence
+																	// of
+																	// characters,
+																	// except an
+																	// unescaped
+																	// ')'
+					+ "\\s*\\)\\s*(\\w+)?\\s*;?", // Any number of whitespaces,
+													// then ')'
+			Pattern.CASE_INSENSITIVE); // works with 'URL('
+
 	/**
 	 * Constructor
-	 * @param id the Id of the post processor
 	 */
 	public CSSImportPostProcessor() {
 		super(PostProcessFactoryConstant.CSS_IMPORT);
@@ -62,79 +68,88 @@ public class CSSImportPostProcessor extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.web.resource.bundle.postprocess
-	 * .BundleProcessingStatus, java.lang.StringBuffer)
+	 * @see net.jawr.web.resource.bundle.postprocess.
+	 * AbstractChainedResourceBundlePostProcessor#doPostProcessBundle(net.jawr.
+	 * web.resource.bundle.postprocess .BundleProcessingStatus,
+	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 
 		String data = bundleData.toString();
-		
+
 		// Rewrite each css url path
 		Matcher matcher = IMPORT_PATTERN.matcher(data);
 		StringBuffer sb = new StringBuffer();
-		while(matcher.find()) {
-		
+		while (matcher.find()) {
+
 			String content = getCssPathContent(matcher.group(3), matcher.group(4), status);
 			matcher.appendReplacement(sb, RegexUtil.adaptReplacementToMatcher(content));
 		}
 		matcher.appendTail(sb);
 		return sb;
-		
+
 	}
 
 	/**
 	 * Retrieve the content of the css to import
-	 * @param cssPathToImport the path of the css to import
-	 * @param media the media
-	 * @param status the bundle processing status
+	 * 
+	 * @param cssPathToImport
+	 *            the path of the css to import
+	 * @param media
+	 *            the media
+	 * @param status
+	 *            the bundle processing status
 	 * @return the content of the css to import
-	 * @throws IOException if an IOException occurs
+	 * @throws IOException
+	 *             if an IOException occurs
 	 */
-	private String getCssPathContent(String cssPathToImport, String media, BundleProcessingStatus status) throws IOException {
-		
+	private String getCssPathContent(String cssPathToImport, String media, BundleProcessingStatus status)
+			throws IOException {
+
 		String currentCssPath = status.getLastPathAdded();
-		
+
 		String path = cssPathToImport;
 
 		JawrConfig jawrConfig = status.getJawrConfig();
-		
-		if(jawrConfig.getGeneratorRegistry().isPathGenerated(path)){
-			
-			ResourceGenerator generator =  jawrConfig.getGeneratorRegistry().getResourceGenerator(path);
-			if(generator != null && generator.getResolver() instanceof SuffixedPathResolver){
+
+		if (jawrConfig.getGeneratorRegistry().isPathGenerated(path)) {
+
+			ResourceGenerator generator = jawrConfig.getGeneratorRegistry().getResourceGenerator(path);
+			if (generator != null && generator.getResolver() instanceof SuffixedPathResolver) {
 				path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 			}
-		}else if(!cssPathToImport.startsWith("/")) { // relative URL
+		} else if (!cssPathToImport.startsWith("/")) { // relative URL
 			path = PathNormalizer.concatWebPath(currentCssPath, cssPathToImport);
 		}
-		
+
 		FilePathMappingUtils.buildFilePathMapping(status.getCurrentBundle(), path, status.getRsReader());
 		Reader reader = null;
-		
+
 		try {
 			reader = status.getRsReader().getResource(status.getCurrentBundle(), path, true);
 		} catch (ResourceNotFoundException e) {
-			throw new IOException("Css to import '"+path+"' was not found", e);
+			throw new IOException("Css to import '" + path + "' was not found", e);
 		}
-		
+
 		StringWriter content = new StringWriter();
 		IOUtils.copy(reader, content, true);
-		
-		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig.getContext().getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
-		if(binaryRsHandler != null){
+
+		BinaryResourcesHandler binaryRsHandler = (BinaryResourcesHandler) jawrConfig.getContext()
+				.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+		if (binaryRsHandler != null) {
 			jawrConfig = binaryRsHandler.getConfig();
 		}
 		// Rewrite image URL
 		CssImportedUrlRewriter urlRewriter = new CssImportedUrlRewriter(jawrConfig);
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		boolean isMediaAttributeSet = StringUtils.isNotEmpty(media);
-		if(isMediaAttributeSet){
-			result.append("@media "+media+" {\n");
+		if (isMediaAttributeSet) {
+			result.append("@media ").append(media).append(" {\n");
 		}
 		result.append(urlRewriter.rewriteUrl(path, currentCssPath, content.getBuffer().toString()));
-		if(isMediaAttributeSet){
+		if (isMediaAttributeSet) {
 			result.append("\n}\n");
 		}
 		return result.toString();
@@ -146,13 +161,15 @@ public class CSSImportPostProcessor extends
 	 * @author Ibrahim Chaehoi
 	 */
 	private static class CssImportedUrlRewriter extends CssImageUrlRewriter {
-		
+
 		/** The generator registry */
-		private GeneratorRegistry generatorRegistry;
-		
+		private final GeneratorRegistry generatorRegistry;
+
 		/**
 		 * Constructor
-		 * @param generatorRegistry the generator registry
+		 * 
+		 * @param generatorRegistry
+		 *            the generator registry
 		 */
 		public CssImportedUrlRewriter(JawrConfig jawrConfig) {
 
@@ -160,21 +177,25 @@ public class CSSImportPostProcessor extends
 			this.generatorRegistry = jawrConfig.getGeneratorRegistry();
 		}
 
-		
-		/* (non-Javadoc)
-		 * @see net.jawr.web.resource.bundle.css.CssImageUrlRewriter#getRewrittenImagePath(java.lang.String, java.lang.String, java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see net.jawr.web.resource.bundle.css.CssImageUrlRewriter#
+		 * getRewrittenImagePath(java.lang.String, java.lang.String,
+		 * java.lang.String)
 		 */
-		protected String getRewrittenImagePath(String originalCssPath,
-				String newCssPath, String url) throws IOException {
-			
+		@Override
+		protected String getRewrittenImagePath(String originalCssPath, String newCssPath, String url)
+				throws IOException {
+
 			String currentPath = originalCssPath;
-			
+
 			String imgPath = PathNormalizer.concatWebPath(currentPath, url);
-			if(!generatorRegistry.isGeneratedBinaryResource(imgPath) && !generatorRegistry.isHandlingCssImage(originalCssPath)){
-				imgPath = PathNormalizer.getRelativeWebPath(PathNormalizer
-						.getParentPath(newCssPath), imgPath);
+			if (!generatorRegistry.isGeneratedBinaryResource(imgPath)
+					&& !generatorRegistry.isHandlingCssImage(originalCssPath)) {
+				imgPath = PathNormalizer.getRelativeWebPath(PathNormalizer.getParentPath(newCssPath), imgPath);
 			}
-			
+
 			return imgPath;
 		}
 	}

@@ -31,8 +31,8 @@ import net.jawr.web.util.FileUtils;
 import net.jawr.web.util.StringUtils;
 
 /**
- * This class defines the resource reader which is based on a file system and which can handle
- * text and stream resources.
+ * This class defines the resource reader which is based on a file system and
+ * which can handle text and stream resources.
  * 
  * @author Ibrahim Chaehoi
  *
@@ -41,108 +41,137 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 
 	/** The base directory */
 	private String baseDir;
-	
+
 	/** The charset */
 	private Charset charset;
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param baseDir the base directory
-	 * @param charset the charset
+	 * @param config
+	 *            the Jawr config
 	 */
 	public FileSystemResourceReader(JawrConfig config) {
 		this(config.getProperty(JawrConstant.JAWR_BASECONTEXT_DIRECTORY), config);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param baseDir the base directory
-	 * @param charset the charset
+	 * @param baseDir
+	 *            the base directory
+	 * @param config
+	 *            the Jawr config
 	 */
 	public FileSystemResourceReader(String baseDir, JawrConfig config) {
-		
+
 		this.baseDir = baseDir;
-		if(StringUtils.isEmpty(this.baseDir)){
-			throw new BundlingProcessException("The 'jawr.basecontext.directory' is not set. Please provide a value or remove it if it's not used.");
+		if (StringUtils.isEmpty(this.baseDir)) {
+			throw new BundlingProcessException(
+					"The 'jawr.basecontext.directory' is not set. Please provide a value or remove it if it's not used.");
 		}
 		if (this.baseDir != null && this.baseDir.startsWith(JawrConstant.FILE_URI_PREFIX)) {
 			this.baseDir = this.baseDir.substring(JawrConstant.FILE_URI_PREFIX.length());
 		}
-		
+
 		File baseDirFile = new File(this.baseDir);
-		if(!baseDirFile.exists()){
-			throw new BundlingProcessException("The base context directory '"+this.baseDir+" doesn't exists. Please check your configuration.");
-		}else if(!baseDirFile.isDirectory()){
-			throw new BundlingProcessException("The base context directory '"+this.baseDir+" is not a directory. Please check your configuration.");
+		if (!baseDirFile.exists()) {
+			throw new BundlingProcessException("The base context directory '" + this.baseDir
+					+ " doesn't exists. Please check your configuration.");
+		} else if (!baseDirFile.isDirectory()) {
+			throw new BundlingProcessException("The base context directory '" + this.baseDir
+					+ " is not a directory. Please check your configuration.");
 		}
 		this.charset = config.getResourceCharset();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.ResourceReader#getResource(java.lang.
+	 * String)
 	 */
 	@Override
 	public Reader getResource(JoinableResourceBundle bundle, String resourceName) {
-		
+
 		return getResource(bundle, resourceName, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.TextResourceReader#getResource(net.
+	 * jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
+	 * boolean)
 	 */
 	@Override
 	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle) {
-		
+
 		Reader rd = null;
 		FileInputStream fis = (FileInputStream) getResourceAsStream(resourceName);
-        if(fis != null){
-        	FileChannel inchannel = fis.getChannel();
-        	rd = Channels.newReader(inchannel,charset.newDecoder (),-1);
-        }
-		
-        return rd;
+		if (fis != null) {
+			FileChannel inchannel = fis.getChannel();
+			rd = Channels.newReader(inchannel, charset.newDecoder(), -1);
+		}
+
+		return rd;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String)
 	 */
 	@Override
 	public InputStream getResourceAsStream(String resourceName) {
-		
+
 		return getResourceAsStream(resourceName, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.handler.reader.StreamResourceReader#
+	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
+	 * java.lang.String, boolean)
 	 */
 	@Override
 	public InputStream getResourceAsStream(String resourceName, boolean processingBundle) {
-		
+
 		InputStream is = null;
 		try {
 			File resource = new File(baseDir, resourceName);
-			is = new FileInputStream( resource );
+			is = new FileInputStream(resource);
 		} catch (FileNotFoundException e) {
 			// Nothing to do
 		}
-		
-		return is; 
+
+		return is;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames(
+	 * java.lang.String)
 	 */
 	@Override
 	public Set<String> getResourceNames(String path) {
 		path = path.replace('/', File.separatorChar);
 		File resource = new File(baseDir, path);
-        return FileUtils.getResourceNames(resource);
+		return FileUtils.getResourceNames(resource);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java.
+	 * lang.String)
 	 */
 	@Override
 	public boolean isDirectory(String dirPath) {
@@ -150,8 +179,12 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 		return new File(baseDir, path).isDirectory();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getFilePath(java.
+	 * lang.String)
 	 */
 	@Override
 	public String getFilePath(String resourcePath) {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -18,15 +18,13 @@ import java.util.List;
 import net.jawr.web.JawrConstant;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 
-
 /**
- * This class defines the empty global preprocessor, which do nothing. 
+ * This class defines the empty global preprocessor, which do nothing.
  * 
  * @author Ibrahim Chaehoi
  *
  */
-public class EmptyGlobalProcessor<T extends AbstractGlobalProcessingContext> extends
-		AbstractChainedGlobalProcessor<T> {
+public class EmptyGlobalProcessor<T extends AbstractGlobalProcessingContext> extends AbstractChainedGlobalProcessor<T> {
 
 	/**
 	 * Construtor
@@ -35,14 +33,18 @@ public class EmptyGlobalProcessor<T extends AbstractGlobalProcessingContext> ext
 		super(JawrConstant.EMPTY_GLOBAL_PREPROCESSOR_ID);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.global.preprocessor.GlobalPreprocessor#processBundles(net.jawr.web.resource.bundle.global.preprocessor.GlobalPreprocessingContext, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.global.preprocessor.GlobalPreprocessor#
+	 * processBundles(net.jawr.web.resource.bundle.global.preprocessor.
+	 * GlobalPreprocessingContext, java.util.List)
 	 */
-	public void processBundles(T ctx,
-			List<JoinableResourceBundle> bundles) {
+	@Override
+	public void processBundles(T ctx, List<JoinableResourceBundle> bundles) {
 
 		// Nothing to do
-		
+
 	}
 
 }

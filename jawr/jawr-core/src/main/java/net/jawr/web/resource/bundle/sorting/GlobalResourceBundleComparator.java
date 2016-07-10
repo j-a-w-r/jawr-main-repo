@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,8 +20,8 @@ import net.jawr.web.resource.bundle.JoinableResourceBundle;
 
 /**
  * Implementation of Comparator interface used to determine the inclusion order
- * of global bundles. Compares the inclusion order attribute of each bundle's 
- * InclusionPattern attribute.  
+ * of global bundles. Compares the inclusion order attribute of each bundle's
+ * InclusionPattern attribute.
  * 
  * @author Jordi Hernández Sellés
  * @author ibrahim Chaehoi
@@ -32,12 +32,15 @@ public class GlobalResourceBundleComparator implements Comparator<JoinableResour
 	/** The serial version UID */
 	private static final long serialVersionUID = -277897413409167116L;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Comparator#compare(T, T)
 	 */
+	@Override
 	public int compare(JoinableResourceBundle bundleA, JoinableResourceBundle bundleB) {
-		Integer a = new Integer(bundleA.getInclusionPattern().getInclusionOrder());
-		Integer b = new Integer(bundleB.getInclusionPattern().getInclusionOrder());
+		Integer a = bundleA.getInclusionPattern().getInclusionOrder();
+		Integer b = bundleB.getInclusionPattern().getInclusionOrder();
 		return a.compareTo(b);
 	}
 

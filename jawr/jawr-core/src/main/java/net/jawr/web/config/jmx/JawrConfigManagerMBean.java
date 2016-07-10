@@ -16,7 +16,8 @@ package net.jawr.web.config.jmx;
 import java.util.List;
 
 /**
- * This interface defines the MBean which manage the Jawr configuration for a servlet.
+ * This interface defines the MBean which manage the Jawr configuration for a
+ * servlet.
  * 
  * @author Ibrahim Chaehoi
  */
@@ -27,7 +28,6 @@ public interface JawrConfigManagerMBean {
 	 * @see net.jawr.web.config.JawrConfig#getContextPathOverride()
 	 */
 	String getContextPathOverride();
-
 
 	/**
 	 * @param ctxPathOverride
@@ -41,7 +41,6 @@ public interface JawrConfigManagerMBean {
 	 */
 	String getContextPathSslOverride();
 
-
 	/**
 	 * @param ctxPathOverride
 	 * @see net.jawr.web.config.JawrConfig#setContextPathOverride(java.lang.String)
@@ -49,13 +48,14 @@ public interface JawrConfigManagerMBean {
 	void setContextPathSslOverride(String ctxPathOverride);
 
 	/**
-	 * @param contextPathOverride
+	 * @param useCtxPathOverrideInDebugMode
 	 * @see net.jawr.web.config.JawrConfig#setUseContextPathOverrideInDebugMode(boolean)
 	 */
 	void setUseContextPathOverrideInDebugMode(boolean useCtxPathOverrideInDebugMode);
 
 	/**
-	 * @param contextPathOverride
+	 * @return the flag indicating that we should use the overriden context path
+	 *         in debug mode
 	 * @see net.jawr.web.config.JawrConfig#getUseContextPathOverrideInDebugMode()
 	 */
 	boolean getUseContextPathOverrideInDebugMode();
@@ -103,7 +103,8 @@ public interface JawrConfigManagerMBean {
 	String getBinaryHashAlgorithm();
 
 	/**
-	 * @param binaryHashAlgorithm the binary hash algorithm to set
+	 * @param binaryHashAlgorithm
+	 *            the binary hash algorithm to set
 	 * @see net.jawr.web.config.JawrConfig#setBinaryHashAlgorithm(java.lang.String)
 	 */
 	void setBinaryHashAlgorithm(String binaryHashAlgorithm);
@@ -143,7 +144,7 @@ public interface JawrConfigManagerMBean {
 	 * @see net.jawr.web.config.JawrConfig#setGzipResourcesModeOn(boolean)
 	 */
 	void setGzipResourcesModeOn(boolean gzipModeOn);
-	
+
 	/**
 	 * @return
 	 * @see net.jawr.web.config.JawrConfig#isCssClasspathImageHandledByClasspathCss()
@@ -155,9 +156,9 @@ public interface JawrConfigManagerMBean {
 	 * @see net.jawr.web.config.JawrConfig#setCssClasspathImageHandledByClasspathCss(boolean)
 	 */
 	void setCssClasspathImageHandledByClasspathCss(boolean useClasspathCssImgServlet);
-	
+
 	/**
-	 * @param charsetName
+	 * @return charsetName
 	 * @see net.jawr.web.config.JawrConfig#getCharsetName(java.lang.String)
 	 */
 	String getCharsetName();
@@ -169,7 +170,7 @@ public interface JawrConfigManagerMBean {
 	void setCharsetName(String charsetName);
 
 	/**
-	 * @param cssLinkFlavor
+	 * @return cssLinkFlavor
 	 * @see net.jawr.web.config.JawrConfig#setCssLinkFlavor(java.lang.String)
 	 */
 	String getCssLinkFlavor();
@@ -181,42 +182,53 @@ public interface JawrConfigManagerMBean {
 	void setCssLinkFlavor(String cssLinkFlavor);
 
 	/**
-	 * Returns the flag which defines if we should process the bundle at server startup. defaults to false.
-	 * @return the flag which defines if we should process the bundle at server startup.
+	 * Returns the flag which defines if we should process the bundle at server
+	 * startup. defaults to false.
+	 * 
+	 * @return the flag which defines if we should process the bundle at server
+	 *         startup.
 	 */
 	boolean isUseBundleMapping();
 
 	/**
-	 * Sets the flag which defines if we should process the bundle at server startup. 
-	 * @param usBundleMapping the flag to set
+	 * Sets the flag which defines if we should process the bundle at server
+	 * startup.
+	 * 
+	 * @param usBundleMapping
+	 *            the flag to set
 	 */
 	void setUseBundleMapping(boolean usBundleMapping);
 
-	/** 
+	/**
 	 * Returns the jawr working directory path
+	 * 
 	 * @return the jawr working directory path
 	 */
 	String getJawrWorkingDirectory();
-	
-	/** 
+
+	/**
 	 * Sets the jawr working directory path
-	 * @param jawrWorkingDirectory the path to set
+	 * 
+	 * @param jawrWorkingDirectory
+	 *            the path to set
 	 */
 	void setJawrWorkingDirectory(String jawrWorkingDirectory);
-	
+
 	/**
-	 * Refresh the configuration. 
+	 * Refresh the configuration.
 	 */
 	void refreshConfig();
-	
+
 	/**
-	 * Rebuilds the dirty bundles. 
+	 * Rebuilds the dirty bundles.
 	 */
 	void rebuildDirtyBundles();
-	
+
 	/**
-	 * Returns the list of dirty bundles. 
+	 * Returns the list of dirty bundles.
+	 * 
+	 * @return the list of dirty bundles.
 	 */
 	public List<String> getDirtyBundleNames();
-	
+
 }

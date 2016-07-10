@@ -41,14 +41,13 @@ import org.slf4j.MarkerFactory;
 public class SkinSwitcherJsGenerator extends AbstractJavascriptGenerator {
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SkinSwitcherJsGenerator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SkinSwitcherJsGenerator.class);
 
 	/** The script template */
 	private static final String SCRIPT_TEMPLATE = "/net/jawr/web/resource/bundle/skin/skinSwitcher.js";
 
 	/** The resolver */
-	private ResourceGeneratorResolver resolver;
+	private final ResourceGeneratorResolver resolver;
 
 	/**
 	 * Constructor
@@ -61,21 +60,26 @@ public class SkinSwitcherJsGenerator extends AbstractJavascriptGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getPathMatcher
-	 * ()
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getPathMatcher ()
 	 */
+	@Override
 	public ResourceGeneratorResolver getResolver() {
 
 		return resolver;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.AbstractCachedGenerator#
+	 * generateResource(net.jawr.web.resource.bundle.generator.GeneratorContext,
+	 * java.lang.String)
 	 */
+	@Override
 	public Reader generateResource(String path, GeneratorContext context) {
-		JawrConfig config = context.getConfig();
-		String skinCookieName = config.getSkinCookieName();
+		JawrConfig ctxConfig = context.getConfig();
+		String skinCookieName = ctxConfig.getSkinCookieName();
 		String script = createScript(skinCookieName);
 		return new StringReader(script);
 	}
@@ -90,22 +94,18 @@ public class SkinSwitcherJsGenerator extends AbstractJavascriptGenerator {
 		StringWriter sw = new StringWriter();
 		InputStream is = null;
 		try {
-			is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE,
-					this);
+			is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE, this);
 			IOUtils.copy(is, sw);
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
-			LOGGER.error(fatal,
-					"a serious error occurred when initializing ThemeSwitcherJsGenerator");
+			LOGGER.error(fatal, "a serious error occurred when initializing ThemeSwitcherJsGenerator");
 			throw new BundlingProcessException(
-					"Classloading issues prevent loading the themeSwitcher template to be loaded. ",
-					e);
+					"Classloading issues prevent loading the themeSwitcher template to be loaded. ", e);
 		} finally {
 			IOUtils.close(is);
 		}
 
-		return sw.getBuffer().toString()
-				.replaceAll("\\{JAWR_SKIN_COOKIE_NAME\\}", skinCookieName);
+		return sw.getBuffer().toString().replaceAll("\\{JAWR_SKIN_COOKIE_NAME\\}", skinCookieName);
 	}
 
 }

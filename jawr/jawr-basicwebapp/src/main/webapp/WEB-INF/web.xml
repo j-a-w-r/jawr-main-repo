@@ -42,10 +42,10 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 			<param-name>configLocation</param-name>
 			<param-value>/jawr.properties</param-value>
 		</init-param>
-		<!-- init-param>
+		<init-param>
 			<param-name>mapping</param-name>
-			<param-value>/jwrImg/</param-value>
-		</init-param -->
+			<param-value>/jawr/binary/</param-value>
+		</init-param>
 		<init-param>
 			<param-name>type</param-name>
 			<param-value>binary</param-value>
@@ -63,6 +63,10 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 		<servlet-name>CssServlet</servlet-name>
 		<url-pattern>*.css</url-pattern>
 	</servlet-mapping -->
+	<servlet-mapping>
+		<servlet-name>JawrBinaryServlet</servlet-name>
+		<url-pattern>/jawr/binary/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.jpg</url-pattern>

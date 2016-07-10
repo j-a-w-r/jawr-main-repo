@@ -92,10 +92,10 @@ public class BundlePathMappingBuilder {
 	}
 
 	/**
-	 * Detects all files that belong to the bundle and adds them to the bundle
-	 * path mapping.
+	 * Detects all files that belong to the mapping given in parameter and adds
+	 * them to the bundle path mapping.
 	 * 
-	 * @param pathMappings
+	 * @param strPathMappings
 	 *            the list of path mappings
 	 * @return the bundlePathMapping
 	 */
@@ -120,10 +120,9 @@ public class BundlePathMappingBuilder {
 		bundlePathMapping.setPathMappings(strPathMappings);
 		List<PathMapping> pathMappings = bundlePathMapping.getPathMappings();
 		Map<String, VariantSet> variants = new TreeMap<>();
-		
+
 		if (pathMappings != null) {
-			for (Iterator<PathMapping> it = pathMappings.iterator(); it.hasNext();) {
-				PathMapping pathMapping = it.next();
+			for (PathMapping pathMapping : pathMappings) {
 				boolean isGeneratedPath = generatorRegistry.isPathGenerated(pathMapping.getPath());
 
 				// Handle generated resources
@@ -140,12 +139,12 @@ public class BundlePathMappingBuilder {
 					addPathMapping(bundlePathMapping, pathMapping.getPath());
 				} else if (pathMapping.getPath().endsWith(LICENSES_FILENAME)) {
 					bundlePathMapping.getLicensesPathList().add(asPath(pathMapping.getPath(), isGeneratedPath));
-				} else{
+				} else {
 					throw new BundlingProcessException("Wrong mapping [" + pathMapping + "] for bundle ["
 							+ this.bundle.getName() + "]. Please check configuration. ");
 				}
-				
-				if(isGeneratedPath){
+
+				if (isGeneratedPath) {
 					// Add variants
 					variants = VariantUtils.concatVariants(variants,
 							generatorRegistry.getAvailableVariants(pathMapping.getPath()));
@@ -154,11 +153,11 @@ public class BundlePathMappingBuilder {
 		}
 
 		bundle.setVariants(variants);
-		
+
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Finished creating bundle path List for " + this.bundle.getId());
 		}
-		
+
 		return bundlePathMapping;
 	}
 
@@ -249,9 +248,7 @@ public class BundlePathMappingBuilder {
 			SortFileParser parser = new SortFileParser(reader, resources, dirName.getPath());
 
 			List<String> sortedResources = parser.getSortedResources();
-			for (Iterator<String> it = sortedResources.iterator(); it.hasNext();) {
-				String resourceName = (String) it.next();
-
+			for (String resourceName : sortedResources) {
 				// Add subfolders or files
 				if (resourceName.endsWith(fileExtension) || generatorRegistry.isPathGenerated(resourceName)) {
 					addPathMapping(bundlePathMapping, asPath(resourceName, isGeneratedPath));
@@ -272,9 +269,8 @@ public class BundlePathMappingBuilder {
 
 		// Add remaining resources (remaining after sorting, or all if no sort
 		// file present)
-		List<String> folders = new ArrayList<String>();
-		for (Iterator<String> it = resources.iterator(); it.hasNext();) {
-			String resourceName = (String) it.next();
+		List<String> folders = new ArrayList<>();
+		for (String resourceName : resources) {
 			String resourcePath = joinPaths(dirName.getPath(), resourceName, isGeneratedPath);
 
 			boolean resourceIsDir = resourceReaderHandler.isDirectory(resourcePath);

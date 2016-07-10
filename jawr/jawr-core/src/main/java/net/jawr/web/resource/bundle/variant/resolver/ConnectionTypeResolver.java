@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Ibrahim Chaehoi
+ * Copyright 2010-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -27,33 +27,47 @@ import net.jawr.web.resource.bundle.variant.VariantSet;
  */
 public class ConnectionTypeResolver implements VariantResolver {
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.variant.VariantResolver#getVariantType()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.variant.VariantResolver#getVariantType()
 	 */
+	@Override
 	public String getVariantType() {
 		return JawrConstant.CONNECTION_TYPE_VARIANT_TYPE;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.variant.VariantResolver#getAvailableVariant(java.lang.String, net.jawr.web.resource.bundle.variant.VariantSet)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.variant.VariantResolver#getAvailableVariant(
+	 * java.lang.String, net.jawr.web.resource.bundle.variant.VariantSet)
 	 */
+	@Override
 	public String getAvailableVariant(String variant, VariantSet variantSet) {
-		
+
 		String connectionType = variantSet.getDefaultVariant();
-		if(variantSet.contains(variant)){
+		if (variantSet.contains(variant)) {
 			connectionType = variant;
 		}
-		
+
 		return connectionType;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.variant.VariantResolver#resolveVariant(javax.servlet.http.HttpServletRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.resource.bundle.variant.VariantResolver#resolveVariant(javax
+	 * .servlet.http.HttpServletRequest)
 	 */
+	@Override
 	public String resolveVariant(HttpServletRequest request) {
-		
+
 		String connectionType = "";
-		if(request.getScheme().equals(JawrConstant.HTTPS)){
+		if (request.getScheme().equals(JawrConstant.HTTPS)) {
 			connectionType = JawrConstant.SSL;
 		}
 		return connectionType;

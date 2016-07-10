@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Ibrahim Chaehoi
+ * Copyright 2007-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -59,10 +59,10 @@ public class JSMin {
 	private static final int EOF = -1;
 
 	/** The input stream */
-	private PushbackInputStream in;
-	
+	private final PushbackInputStream in;
+
 	/** The output stream */
-	private OutputStream out;
+	private final OutputStream out;
 
 	private int theA;
 	private int theB;
@@ -72,13 +72,13 @@ public class JSMin {
 
 	/** The flag indicating if the first character has been written */
 	private boolean firstCharacterWritten;
-	
+
 	/** The current byte index */
 	private int currentByteIndex;
-	
+
 	/** The current line number */
 	private int line;
-	
+
 	/** The current column number */
 	private int column;
 
@@ -101,8 +101,8 @@ public class JSMin {
 	 */
 
 	private boolean isAlphanum(int c) {
-		return ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
-				|| (c >= 'A' && c <= 'Z') || c == '_' || c == '$' || c == '\\' || c > 126);
+		return ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || c == '_' || c == '$'
+				|| c == '\\' || c > 126);
 	}
 
 	/*
@@ -125,7 +125,7 @@ public class JSMin {
 		theLookahead = EOF;
 		if (c == EOF) {
 			c = in.read();
-			if (c != EOF){
+			if (c != EOF) {
 				currentByteIndex++;
 			}
 		}
@@ -192,8 +192,7 @@ public class JSMin {
 						}
 						break;
 					case EOF:
-						throw new UnterminatedCommentException(
-								currentByteIndex, line, column);
+						throw new UnterminatedCommentException(currentByteIndex, line, column);
 					}
 				}
 				break;
@@ -216,8 +215,7 @@ public class JSMin {
 		switch (d) {
 		case 1:
 			write(theA);
-			if ((theY == '\n' || theY == ' ')
-					&& (theA == '+' || theA == '-' || theA == '*' || theA == '/')
+			if ((theY == '\n' || theY == ' ') && (theA == '+' || theA == '-' || theA == '*' || theA == '/')
 					&& (theB == '+' || theB == '-' || theB == '*' || theB == '/')) {
 				write(theY);
 			}
@@ -235,19 +233,15 @@ public class JSMin {
 						theA = get(true);
 					}
 					if (theA == EOF) {
-						throw new UnterminatedStringLiteralException(
-								currentByteIndex, line, column);
+						throw new UnterminatedStringLiteralException(currentByteIndex, line, column);
 					}
 				}
 			}
 		case 3:
 			theB = next();
-			if (theB == '/'
-					&& (theA == '(' || theA == ',' || theA == '='
-							|| theA == ':' || theA == '[' || theA == '!'
-							|| theA == '&' || theA == '|' || theA == '?'
-							|| theA == '+' || theA == '-' || theA == '~'
-							|| theA == '*' || theA == '/' || theA == '{' || theA == '\n')) {
+			if (theB == '/' && (theA == '(' || theA == ',' || theA == '=' || theA == ':' || theA == '[' || theA == '!'
+					|| theA == '&' || theA == '|' || theA == '?' || theA == '+' || theA == '-' || theA == '~'
+					|| theA == '*' || theA == '/' || theA == '{' || theA == '\n')) {
 				write(theA);
 				if (theA == '/' || theA == '*') {
 					write(' ');
@@ -294,8 +288,7 @@ public class JSMin {
 						theA = get();
 					}
 					if (theA == EOF) {
-						throw new UnterminatedRegExpLiteralException(
-								currentByteIndex, line, column);
+						throw new UnterminatedRegExpLiteralException(currentByteIndex, line, column);
 					}
 					write(theA);
 				}
@@ -306,16 +299,19 @@ public class JSMin {
 
 	/**
 	 * Writes the character on the output stream
-	 * @param c the character to write
-	 * @throws IOException if an IOException occurs
+	 * 
+	 * @param c
+	 *            the character to write
+	 * @throws IOException
+	 *             if an IOException occurs
 	 */
 	private void write(int c) throws IOException {
-		if(!firstCharacterWritten){
-			if(c != '\n'){
+		if (!firstCharacterWritten) {
+			if (c != '\n') {
 				out.write(c);
 				firstCharacterWritten = true;
 			}
-		}else{
+		} else {
 			out.write(c);
 		}
 	}
@@ -488,8 +484,7 @@ public class JSMin {
 		 * @param column
 		 *            the column where the exception occured
 		 */
-		public UnterminatedStringLiteralException(int byteIndex, int line,
-				int column) {
+		public UnterminatedStringLiteralException(int byteIndex, int line, int column) {
 			super(byteIndex, line, column);
 		}
 
@@ -510,8 +505,7 @@ public class JSMin {
 		 * @param column
 		 *            the column where the exception occured
 		 */
-		public UnterminatedRegExpLiteralException(int byteIndex, int line,
-				int column) {
+		public UnterminatedRegExpLiteralException(int byteIndex, int line, int column) {
 			super(byteIndex, line, column);
 		}
 
@@ -532,8 +526,7 @@ public class JSMin {
 		 * @param column
 		 *            the column where the exception occured
 		 */
-		public UnterminatedSetInRegExpLiteralException(int byteIndex, int line,
-				int column) {
+		public UnterminatedSetInRegExpLiteralException(int byteIndex, int line, int column) {
 			super(byteIndex, line, column);
 		}
 	}

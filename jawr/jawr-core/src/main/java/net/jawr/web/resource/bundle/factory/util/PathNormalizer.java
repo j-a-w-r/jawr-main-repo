@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Matt Ruby, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -43,21 +43,19 @@ import net.jawr.web.util.StringUtils;
  * 
  */
 public final class PathNormalizer {
-	
+
 	/** The LOGGER */
 	private static final Logger LOGGER = LoggerFactory.getLogger(PathNormalizer.class);
-	
+
 	/** The URL separator pattern */
-	private static final Pattern URL_SEPARATOR_PATTERN = Pattern
-			.compile("([^/]*)/");
+	private static final Pattern URL_SEPARATOR_PATTERN = Pattern.compile("([^/]*)/");
 
 	/** The pattern to go to the root */
 	private static final String ROOT_REPLACE_PATTERN = "../";
 
 	/** The cache buster pattern */
-	private static Pattern cacheBusterPattern = Pattern.compile("("
-			+ "((([a-zA-Z0-9]+)_)?" + JawrConstant.CACHE_BUSTER_PREFIX
-			+ ")[a-zA-Z0-9]+)(/.*)$");
+	private static final Pattern CACHE_BUSTER_PATTERN = Pattern
+			.compile("(" + "((([a-zA-Z0-9]+)_)?" + JawrConstant.CACHE_BUSTER_PREFIX + ")[a-zA-Z0-9]+)(/.*)$");
 
 	/**
 	 * The index of the generated web resource prefix in the cache buster
@@ -81,7 +79,8 @@ public final class PathNormalizer {
 	/**
 	 * Converts the bundle path to a physical path
 	 * 
-	 * @param bundlePath the bundle path
+	 * @param bundlePath
+	 *            the bundle path
 	 * @return the physical path
 	 */
 	public static String escapeToPhysicalPath(String bundlePath) {
@@ -92,8 +91,9 @@ public final class PathNormalizer {
 	 * Removes the URL prefix defined in the configuration from a path. If the
 	 * prefix contains a variant information, it adds it to the name.
 	 * 
-	 * @param path the path
-	* 
+	 * @param path
+	 *            the path
+	 * 
 	 * @return the path without the prefix
 	 */
 	public static String removeVariantPrefixFromPath(String path) {
@@ -111,10 +111,8 @@ public final class PathNormalizer {
 		// The prefix also contains variant information after a '.'
 		if (prefix.indexOf('.') != -1) {
 			String variantPrefix = prefix.substring(prefix.indexOf('.') + 1);
-			String suffix = '@' + variantPrefix
-					+ resultPath.substring(resultPath.lastIndexOf('.'));
-			resultPath = resultPath.substring(resultPath.indexOf("/"),
-					resultPath.lastIndexOf('.')) + suffix;
+			String suffix = '@' + variantPrefix + resultPath.substring(resultPath.lastIndexOf('.'));
+			resultPath = resultPath.substring(resultPath.indexOf("/"), resultPath.lastIndexOf('.')) + suffix;
 		} else
 			resultPath = resultPath.substring(resultPath.indexOf("/"));
 
@@ -125,9 +123,12 @@ public final class PathNormalizer {
 	 * Removes the URL prefix defined in the configuration from a path. If the
 	 * prefix contains a variant information, it adds it to the name.
 	 * 
-	 * @param path the path
-	 * @param bundlePrefixes the list of bundle prefixes
-	 * @return the bundle info from the path. Here is the content of the array : [bundlePrefix, path, variantPrefix, hashcode]
+	 * @param path
+	 *            the path
+	 * @param bundlePrefixes
+	 *            the list of bundle prefixes
+	 * @return the bundle info from the path. Here is the content of the array :
+	 *         [bundlePrefix, path, variantPrefix, hashcode]
 	 * 
 	 */
 	public static String[] extractBundleInfoFromPath(String path, List<String> bundlePrefixes) {
@@ -140,23 +141,21 @@ public final class PathNormalizer {
 			int idxGzip = path.indexOf(BundleRenderer.GZIP_PATH_PREFIX);
 			if (idxGzip != -1) {
 				if (idxGzip != 0) {
-					bundlePrefix = PathNormalizer.asDirPath(path.substring(1,
-							idxGzip));
+					bundlePrefix = PathNormalizer.asDirPath(path.substring(1, idxGzip));
 				}
 
-				resultPath = path.substring(idxGzip
-						+ BundleRenderer.GZIP_PATH_PREFIX.length());
+				resultPath = path.substring(idxGzip + BundleRenderer.GZIP_PATH_PREFIX.length());
 			} else {
-				
+
 				for (String prefix : bundlePrefixes) {
-					if(path.startsWith(prefix)){
+					if (path.startsWith(prefix)) {
 						bundlePrefix = PathNormalizer.asDirPath(prefix);
 						resultPath = path.substring(bundlePrefix.length());
 						break;
 					}
 				}
-				
-				if(bundlePrefix == null){
+
+				if (bundlePrefix == null) {
 					// Remove first slash
 					resultPath = path.substring(1);
 				}
@@ -175,8 +174,7 @@ public final class PathNormalizer {
 			int hashCodeVariantSeparatorIdx = prefix.indexOf('.');
 			if (hashCodeVariantSeparatorIdx != -1) {
 				hashcode = prefix.substring(0, hashCodeVariantSeparatorIdx);
-				variantPrefix = prefix
-						.substring(hashCodeVariantSeparatorIdx + 1);
+				variantPrefix = prefix.substring(hashCodeVariantSeparatorIdx + 1);
 				resultPath = resultPath.substring(realPathStartIdx);
 			} else {
 				hashcode = prefix.substring(0, realPathStartIdx);
@@ -194,40 +192,40 @@ public final class PathNormalizer {
 			result[2] = variantPrefix;
 			result[3] = hashcode;
 		} catch (Exception e) {
-			LOGGER.debug("Unable to extract bundle info for path : "+path);
+			LOGGER.debug("Unable to extract bundle info for path : " + path);
 			result = null;
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Returns the binary resource info from the path 
-	 * @param path the path
+	 * Returns the binary resource info from the path
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the binary resource info from the path
 	 */
-	public static String[] extractBinaryResourceInfo(String path){
-		
+	public static String[] extractBinaryResourceInfo(String path) {
+
 		String[] resourceInfo = new String[2];
 		String resourcePath = path;
 		if (resourcePath.startsWith(JawrConstant.URL_SEPARATOR)) {
 			resourcePath = resourcePath.substring(1);
 		}
 
-		Matcher matcher = cacheBusterPattern.matcher(resourcePath);
+		Matcher matcher = CACHE_BUSTER_PATTERN.matcher(resourcePath);
 		StringBuffer result = new StringBuffer();
 		if (matcher.find()) {
-			matcher.appendReplacement(
-					result,
-					StringUtils.isEmpty(matcher
-							.group(GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX)) ? CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN
+			matcher.appendReplacement(result,
+					StringUtils.isEmpty(matcher.group(GENERATED_BINARY_WEB_RESOURCE_PREFIX_INDEX))
+							? CACHE_BUSTER_STANDARD_BINARY_WEB_RESOURCE_REPLACE_PATTERN
 							: CACHE_BUSTER_GENERATED_BINARY_WEB_RESOURCE_REPLACE_PATTERN);
-			resourcePath = result.toString();
 			resourceInfo[0] = result.toString();
 			resourceInfo[1] = matcher.group(1);
-		}else{
+		} else {
 			resourceInfo[0] = path;
 		}
-		
+
 		return resourceInfo;
 	}
 
@@ -235,15 +233,15 @@ public final class PathNormalizer {
 	 * Normalizes a bundle path mapping. If it ends with a wildcard, the
 	 * wildcard is removed.
 	 * 
-	 * @param pathMapping the bundle path mapping
+	 * @param pathMapping
+	 *            the bundle path mapping
 	 * @return the normalized path mapping
 	 */
 	public static String normalizePathMapping(String pathMapping) {
 
 		String normalizedPathMapping = normalizePath(pathMapping);
 		if (normalizedPathMapping.endsWith("/**"))
-			normalizedPathMapping = normalizedPathMapping.substring(0,
-					normalizedPathMapping.length() - 3);
+			normalizedPathMapping = normalizedPathMapping.substring(0, normalizedPathMapping.length() - 3);
 		return normalizedPathMapping;
 	}
 
@@ -260,14 +258,14 @@ public final class PathNormalizer {
 	/**
 	 * Normalizes a path and adds a separator at its start and its end.
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the normalized path
 	 */
 	public static String asDirPath(String path) {
 		String dirPath = path;
 		if (!path.equals(JawrConstant.URL_SEPARATOR)) {
-			dirPath = JawrConstant.URL_SEPARATOR + normalizePath(path)
-					+ JawrConstant.URL_SEPARATOR;
+			dirPath = JawrConstant.URL_SEPARATOR + normalizePath(path) + JawrConstant.URL_SEPARATOR;
 		}
 		return dirPath;
 	}
@@ -277,13 +275,13 @@ public final class PathNormalizer {
 	 * 
 	 * @param prefix
 	 * @param path
+	 * @param generatorRegistry
+	 *            the generator registry
 	 * @return the joined path
 	 */
-	public static String joinPaths(String prefix, String path,
-			GeneratorRegistry generatorRegistry) {
+	public static String joinPaths(String prefix, String path, GeneratorRegistry generatorRegistry) {
 
-		return joinPaths(prefix, path,
-				generatorRegistry.isPathGenerated(prefix));
+		return joinPaths(prefix, path, generatorRegistry.isPathGenerated(prefix));
 	}
 
 	/**
@@ -293,8 +291,7 @@ public final class PathNormalizer {
 	 * @param path
 	 * @return the joined path
 	 */
-	public static String joinPaths(String prefix, String path,
-			boolean generatedPath) {
+	public static String joinPaths(String prefix, String path, boolean generatedPath) {
 
 		String result = null;
 		if (generatedPath) {
@@ -309,21 +306,22 @@ public final class PathNormalizer {
 	 * Normalizes two paths and joins them as a single path.
 	 * 
 	 * @param prefix
+	 *            the path prefix
 	 * @param path
+	 *            the path
 	 * @return the joined path
 	 */
 	public static String joinPaths(String prefix, String path) {
 
 		String joinedPath = null;
-		if (prefix.startsWith(JawrConstant.HTTP_URL_PREFIX)
-				|| prefix.startsWith(JawrConstant.HTTPS_URL_PREFIX)
+		if (prefix.startsWith(JawrConstant.HTTP_URL_PREFIX) || prefix.startsWith(JawrConstant.HTTPS_URL_PREFIX)
 				|| prefix.startsWith("//")) {
 			joinedPath = joinDomainToPath(prefix, path);
 		} else {
 
 			String normalizedPrefix = PathNormalizer.normalizePath(prefix);
 
-			StringBuffer sb = new StringBuffer(JawrConstant.URL_SEPARATOR);
+			StringBuilder sb = new StringBuilder(JawrConstant.URL_SEPARATOR);
 			if (!"".equals(normalizedPrefix))
 				sb.append(normalizedPrefix).append(JawrConstant.URL_SEPARATOR);
 			sb.append(PathNormalizer.normalizePath(path));
@@ -334,22 +332,21 @@ public final class PathNormalizer {
 	}
 
 	/**
-	 * Normalizes a dmoain name and a path and joins them as a single url.
+	 * Normalizes a domain name and a path and joins them as a single url.
 	 * 
 	 * @param domainName
 	 * @param path
 	 * @return
 	 */
 	public static String joinDomainToPath(String domainName, String path) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (domainName.endsWith(JawrConstant.URL_SEPARATOR)) {
 			sb.append(domainName.substring(0, domainName.length() - 1));
 		} else {
 			sb.append(domainName);
 		}
 
-		sb.append(JawrConstant.URL_SEPARATOR).append(
-				PathNormalizer.normalizePath(path));
+		sb.append(JawrConstant.URL_SEPARATOR).append(PathNormalizer.normalizePath(path));
 
 		return sb.toString();
 
@@ -359,15 +356,14 @@ public final class PathNormalizer {
 	 * Removes leading and trailing separators from a path, and removes double
 	 * separators (// is replaced by /).
 	 * 
-	 * @param path the path to normalize
+	 * @param path
+	 *            the path to normalize
 	 * @return the normalized path
 	 */
 	public static final String normalizePath(String path) {
-		String normalizedPath = path.replaceAll("//",
-				JawrConstant.URL_SEPARATOR);
-		StringTokenizer tk = new StringTokenizer(normalizedPath,
-				JawrConstant.URL_SEPARATOR);
-		StringBuffer sb = new StringBuffer();
+		String normalizedPath = path.replaceAll("//", JawrConstant.URL_SEPARATOR);
+		StringTokenizer tk = new StringTokenizer(normalizedPath, JawrConstant.URL_SEPARATOR);
+		StringBuilder sb = new StringBuilder();
 		while (tk.hasMoreTokens()) {
 			sb.append(tk.nextToken());
 			if (tk.hasMoreTokens())
@@ -384,7 +380,7 @@ public final class PathNormalizer {
 	 * @return
 	 */
 	public static final Set<String> normalizePaths(Set<String> paths) {
-		Set<String> ret = new HashSet<String>();
+		Set<String> ret = new HashSet<>();
 		for (Iterator<String> it = paths.iterator(); it.hasNext();) {
 			String path = normalizePath((String) it.next());
 			ret.add(path);
@@ -397,10 +393,14 @@ public final class PathNormalizer {
 	 * path that the request handler can understand and process.
 	 * 
 	 * @param path
-	 * @return
+	 *            the path
+	 * @param registry
+	 *            the generator registry
+	 * @param randomParam
+	 *            the random parameter
+	 * @return the generation path
 	 */
-	public static String createGenerationPath(String path,
-			GeneratorRegistry registry, String randomParam) {
+	public static String createGenerationPath(String path, GeneratorRegistry registry, String randomParam) {
 
 		String requestPath = null;
 		try {
@@ -411,13 +411,11 @@ public final class PathNormalizer {
 			} else {
 				requestPath += "?";
 			}
-			requestPath += JawrRequestHandler.GENERATION_PARAM + "="
-					+ URLEncoder.encode(path, "UTF-8");
+			requestPath += JawrRequestHandler.GENERATION_PARAM + "=" + URLEncoder.encode(path, "UTF-8");
 		} catch (UnsupportedEncodingException neverHappens) {
 			/* URLEncoder:how not to use checked exceptions... */
 			throw new JawrLinkRenderingException(
-					"Something went unexpectedly wrong while encoding a URL for a generator. ",
-					neverHappens);
+					"Something went unexpectedly wrong while encoding a URL for a generator. ", neverHappens);
 		}
 		return requestPath;
 	}
@@ -427,21 +425,23 @@ public final class PathNormalizer {
 	 * 
 	 * path + ? or & + parameterKey=parameter
 	 * 
-	 * @param path the url to add the parameterKey and parameter too
-	 * @param parameterKey the key in the get request (parameterKey=parameter)
-	 * @param parameter the parameter to add to the end of the url
+	 * @param path
+	 *            the url to add the parameterKey and parameter too
+	 * @param parameterKey
+	 *            the key in the get request (parameterKey=parameter)
+	 * @param parameter
+	 *            the parameter to add to the end of the url
 	 * @return a String with the url parameter added: path + ? or & +
 	 *         parameterKey=parameter
 	 */
-	public static String addGetParameter(String path, String parameterKey,
-			String parameter) {
-		StringBuffer sb = new StringBuffer(path);
+	public static String addGetParameter(String path, String parameterKey, String parameter) {
+		StringBuilder sb = new StringBuilder(path);
 		if (path.indexOf("?") > 0) {
 			sb.append("&");
 		} else {
 			sb.append("?");
 		}
-		sb.append(parameterKey + "=" + parameter);
+		sb.append(parameterKey).append("=").append(parameter);
 		return sb.toString();
 	}
 
@@ -464,7 +464,8 @@ public final class PathNormalizer {
 	 * PathUtils.getRelativePath( "/usr/local/bin/java.sh" )     = ""/usr/local/bin/"
 	 * </pre>
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the parent path.
 	 */
 	public static String getParentPath(String path) {
@@ -475,8 +476,7 @@ public final class PathNormalizer {
 		} else {
 
 			parentPath = path;
-			if (parentPath.length() > 1
-					&& parentPath.endsWith(JawrConstant.URL_SEPARATOR)) {
+			if (parentPath.length() > 1 && parentPath.endsWith(JawrConstant.URL_SEPARATOR)) {
 				parentPath = parentPath.substring(0, parentPath.length() - 2);
 			}
 			int index = parentPath.lastIndexOf(JawrConstant.URL_SEPARATOR);
@@ -502,7 +502,8 @@ public final class PathNormalizer {
 	 * PathNormalizer.getPathName( "/usr/local/bin/java.sh" )     = "java.sh"
 	 * </pre>
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the path name.
 	 */
 	public static String getPathName(String path) {
@@ -512,8 +513,7 @@ public final class PathNormalizer {
 			pathName = "";
 		} else {
 			pathName = path;
-			if (pathName.length() > 1
-					&& pathName.endsWith(JawrConstant.URL_SEPARATOR)) {
+			if (pathName.length() > 1 && pathName.endsWith(JawrConstant.URL_SEPARATOR)) {
 				pathName = pathName.substring(0, pathName.length() - 1);
 			}
 			int index = pathName.lastIndexOf(JawrConstant.URL_SEPARATOR);
@@ -547,8 +547,10 @@ public final class PathNormalizer {
 	 * PathUtils.getRelativePath( "/usr/local/java/bin/java.sh", "/usr/local/" ) = ""
 	 * </pre>
 	 * 
-	 * @param basedir The base directory.
-	 * @param filename The filename that is relative to the base directory.
+	 * @param basedir
+	 *            The base directory.
+	 * @param filename
+	 *            The filename that is relative to the base directory.
 	 * @return The relative path of the filename from the base directory. This
 	 *         value is not terminated with a forward slash. A zero-length
 	 *         string is returned if: the filename is not relative to the base
@@ -563,8 +565,7 @@ public final class PathNormalizer {
 		 * Verify the arguments and make sure the filename is relative to the
 		 * base directory.
 		 */
-		if (basedirPath == null || basedirPath.length() == 0
-				|| filenamePath == null || filenamePath.length() == 0
+		if (basedirPath == null || basedirPath.length() == 0 || filenamePath == null || filenamePath.length() == 0
 				|| !filenamePath.startsWith(basedirPath)) {
 			return "";
 		}
@@ -605,16 +606,16 @@ public final class PathNormalizer {
 	 * PathUtils.concatWebPath( "/css/folder/style.css", "../icons/img.png" ) 		= "/css/icons/img.png"
 	 * </pre>
 	 * 
-	 * @param basePath the base path
-	 * @param fullFilenameToAdd the file name to add
+	 * @param basePath
+	 *            the base path
+	 * @param fullFilenameToAdd
+	 *            the file name to add
 	 * @return the concatenated path, or null if invalid
 	 */
 	public static String concatWebPath(String basePath, String fullFilenameToAdd) {
 
-		if (fullFilenameToAdd == null
-				|| basePath == null
-				&& (fullFilenameToAdd.length() == 0 || fullFilenameToAdd
-						.charAt(0) != JawrConstant.URL_SEPARATOR_CHAR)) {
+		if (fullFilenameToAdd == null || basePath == null && (fullFilenameToAdd.length() == 0
+				|| fullFilenameToAdd.charAt(0) != JawrConstant.URL_SEPARATOR_CHAR)) {
 			return null;
 		}
 
@@ -623,8 +624,7 @@ public final class PathNormalizer {
 		}
 		// If the basePath is pointing to a file, set the base path to the
 		// parent directory
-		if (basePath.length() > 1
-				&& basePath.charAt(basePath.length() - 1) != '/') {
+		if (basePath.length() > 1 && basePath.charAt(basePath.length() - 1) != '/') {
 			basePath = getParentPath(basePath);
 		}
 
@@ -648,12 +648,13 @@ public final class PathNormalizer {
 	/**
 	 * Internal method to perform the normalization.
 	 * 
-	 * @param filename the filename
-	 * @param keepSeparator true to keep the final separator
+	 * @param filename
+	 *            the filename
+	 * @param keepSeparator
+	 *            true to keep the final separator
 	 * @return the normalized filename
 	 */
-	private static String doNormalizeIgnoreOtherSeparator(String filename,
-			boolean keepSeparator) {
+	private static String doNormalizeIgnoreOtherSeparator(String filename, boolean keepSeparator) {
 		if (filename == null) {
 			return null;
 		}
@@ -680,8 +681,7 @@ public final class PathNormalizer {
 
 		// adjoining slashes
 		for (int i = prefix + 1; i < size; i++) {
-			if (array[i] == JawrConstant.URL_SEPARATOR_CHAR
-					&& array[i - 1] == JawrConstant.URL_SEPARATOR_CHAR) {
+			if (array[i] == JawrConstant.URL_SEPARATOR_CHAR && array[i - 1] == JawrConstant.URL_SEPARATOR_CHAR) {
 				System.arraycopy(array, i, array, i - 1, size - i);
 				size--;
 				i--;
@@ -690,8 +690,7 @@ public final class PathNormalizer {
 
 		// dot slash
 		for (int i = prefix + 1; i < size; i++) {
-			if (array[i] == JawrConstant.URL_SEPARATOR_CHAR
-					&& array[i - 1] == '.'
+			if (array[i] == JawrConstant.URL_SEPARATOR_CHAR && array[i - 1] == '.'
 					&& (i == prefix + 1 || array[i - 2] == JawrConstant.URL_SEPARATOR_CHAR)) {
 				if (i == size - 1) {
 					lastIsDirectory = true;
@@ -704,9 +703,7 @@ public final class PathNormalizer {
 
 		// double dot slash
 		outer: for (int i = prefix + 2; i < size; i++) {
-			if (array[i] == JawrConstant.URL_SEPARATOR_CHAR
-					&& array[i - 1] == '.'
-					&& array[i - 2] == '.'
+			if (array[i] == JawrConstant.URL_SEPARATOR_CHAR && array[i - 1] == '.' && array[i - 2] == '.'
 					&& (i == prefix + 2 || array[i - 3] == JawrConstant.URL_SEPARATOR_CHAR)) {
 				if (i == prefix + 2) {
 					return null;
@@ -761,8 +758,7 @@ public final class PathNormalizer {
 	 * @param newPath
 	 * @return a relative web path from <code>oldPath</code>.
 	 */
-	public static final String getRelativeWebPath(final String oldPath,
-			final String newPath) {
+	public static final String getRelativeWebPath(final String oldPath, final String newPath) {
 		if (StringUtils.isEmpty(oldPath) || StringUtils.isEmpty(newPath)) {
 			return "";
 		}
@@ -800,8 +796,7 @@ public final class PathNormalizer {
 	 * @param newPath
 	 * @return a relative file path from <code>oldPath</code>.
 	 */
-	public static final String getRelativeFilePath(final String oldPath,
-			final String newPath) {
+	public static final String getRelativeFilePath(final String oldPath, final String newPath) {
 		if (StringUtils.isEmpty(oldPath) || StringUtils.isEmpty(newPath)) {
 			return "";
 		}
@@ -820,12 +815,10 @@ public final class PathNormalizer {
 
 		// lowercase windows drive letters.
 		if (fromPath.startsWith(":", 1)) {
-			fromPath = Character.toLowerCase(fromPath.charAt(0))
-					+ fromPath.substring(1);
+			fromPath = Character.toLowerCase(fromPath.charAt(0)) + fromPath.substring(1);
 		}
 		if (toPath.startsWith(":", 1)) {
-			toPath = Character.toLowerCase(toPath.charAt(0))
-					+ toPath.substring(1);
+			toPath = Character.toLowerCase(toPath.charAt(0)) + toPath.substring(1);
 		}
 
 		// check for the presence of windows drives. No relative way of
@@ -844,11 +837,9 @@ public final class PathNormalizer {
 			return null;
 		}
 
-		String resultPath = buildRelativePath(toPath, fromPath,
-				File.separatorChar);
+		String resultPath = buildRelativePath(toPath, fromPath, File.separatorChar);
 
-		if (newPath.endsWith(File.separator)
-				&& !resultPath.endsWith(File.separator)) {
+		if (newPath.endsWith(File.separator) && !resultPath.endsWith(File.separator)) {
 			return resultPath + File.separator;
 		}
 
@@ -864,14 +855,15 @@ public final class PathNormalizer {
 	 * filename (except the leading if present), append the "../" string to the
 	 * return value.
 	 * 
-	 * @param filename The filename to parse.
-	 * @param separator The separator used within the filename.
+	 * @param filename
+	 *            The filename to parse.
+	 * @param separator
+	 *            The separator used within the filename.
 	 * @return The relative path of the filename. This value is not terminated
 	 *         with a forward slash. A zero-length string is returned if: the
 	 *         filename is zero-length.
 	 */
-	private static final String determineRelativePath(String filename,
-			String separator) {
+	private static String determineRelativePath(String filename, String separator) {
 		if (filename.length() == 0) {
 			return "";
 		}
@@ -891,7 +883,7 @@ public final class PathNormalizer {
 		 * the file is within one or more directories. Thus, each slash
 		 * represents a "../" in the relative path.
 		 */
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < slashCount; i++) {
 			sb.append("../");
 		}
@@ -908,11 +900,12 @@ public final class PathNormalizer {
 	 * used in a filename. The slash that occurs more often is returned as the
 	 * separator.
 	 * 
-	 * @param filename The filename parsed to determine the file separator.
+	 * @param filename
+	 *            The filename parsed to determine the file separator.
 	 * @return The file separator used within <code>filename</code>. This value
 	 *         is either a forward or backward slash.
 	 */
-	private static final String determineSeparator(String filename) {
+	private static String determineSeparator(String filename) {
 		int forwardCount = StringUtils.countMatches(filename, "/");
 		int backwardCount = StringUtils.countMatches(filename, "\\");
 
@@ -930,8 +923,7 @@ public final class PathNormalizer {
 		String resultPath = null;
 		if (path != null) {
 			if (path.length() >= 2 && path.charAt(1) == ':') {
-				resultPath = Character.toUpperCase(path.charAt(0))
-						+ path.substring(1);
+				resultPath = Character.toUpperCase(path.charAt(0)) + path.substring(1);
 			} else {
 				resultPath = path;
 			}
@@ -939,21 +931,17 @@ public final class PathNormalizer {
 		return resultPath;
 	}
 
-	private static final String buildRelativePath(String toPath,
-			String fromPath, final char separatorChar) {
+	private static String buildRelativePath(String toPath, String fromPath, final char separatorChar) {
 		// use tokeniser to traverse paths and for lazy checking
-		StringTokenizer toTokeniser = new StringTokenizer(toPath,
-				String.valueOf(separatorChar));
-		StringTokenizer fromTokeniser = new StringTokenizer(fromPath,
-				String.valueOf(separatorChar));
+		StringTokenizer toTokeniser = new StringTokenizer(toPath, String.valueOf(separatorChar));
+		StringTokenizer fromTokeniser = new StringTokenizer(fromPath, String.valueOf(separatorChar));
 
 		int count = 0;
 
 		// walk along the to path looking for divergence from the from path
 		while (toTokeniser.hasMoreTokens() && fromTokeniser.hasMoreTokens()) {
 			if (separatorChar == '\\') {
-				if (!fromTokeniser.nextToken().equalsIgnoreCase(
-						toTokeniser.nextToken())) {
+				if (!fromTokeniser.nextToken().equalsIgnoreCase(toTokeniser.nextToken())) {
 					break;
 				}
 			} else {
@@ -969,15 +957,14 @@ public final class PathNormalizer {
 		// gobbled token
 
 		toTokeniser = new StringTokenizer(toPath, String.valueOf(separatorChar));
-		fromTokeniser = new StringTokenizer(fromPath,
-				String.valueOf(separatorChar));
+		fromTokeniser = new StringTokenizer(fromPath, String.valueOf(separatorChar));
 
 		while (count-- > 0) {
 			fromTokeniser.nextToken();
 			toTokeniser.nextToken();
 		}
 
-		StringBuffer relativePath = new StringBuffer();
+		StringBuilder relativePath = new StringBuilder();
 
 		// add back refs for the rest of from location.
 		while (fromTokeniser.hasMoreTokens()) {
@@ -1010,7 +997,8 @@ public final class PathNormalizer {
 	 * if the url path is defined as "/cssServletPath/css/myStyle.css" ->
 	 * "../../"
 	 * 
-	 * @param url the requested url
+	 * @param url
+	 *            the requested url
 	 * @return the relative path of an url to go back to the root.
 	 */
 	public static String getRootRelativePath(String url) {
@@ -1029,18 +1017,20 @@ public final class PathNormalizer {
 
 		return result.toString();
 	}
-	
+
 	/**
-	 * Checks whether a path is normalized (doesn't contain path traversal sequences like
-	 * "./", "/../" or "/.")
+	 * Checks whether a path is normalized (doesn't contain path traversal
+	 * sequences like "./", "/../" or "/.")
 	 * 
 	 * @author Luke Taylor (Spring security)
-	 *  
-	 * @param path the path to test
-	 * @return true if the path doesn't contain any path-traversal character sequences.
+	 * 
+	 * @param path
+	 *            the path to test
+	 * @return true if the path doesn't contain any path-traversal character
+	 *         sequences.
 	 */
 	public static boolean isNormalized(String path) {
-		
+
 		if (path == null) {
 			return true;
 		}
@@ -1052,8 +1042,7 @@ public final class PathNormalizer {
 			if (gap == 2 && path.charAt(i + 1) == '.') {
 				// ".", "/./" or "/."
 				return false;
-			}
-			else if (gap == 3 && path.charAt(i + 1) == '.' && path.charAt(i + 2) == '.') {
+			} else if (gap == 3 && path.charAt(i + 1) == '.' && path.charAt(i + 2) == '.') {
 				return false;
 			}
 
@@ -1062,6 +1051,5 @@ public final class PathNormalizer {
 
 		return true;
 	}
-
 
 }

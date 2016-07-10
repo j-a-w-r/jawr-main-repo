@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -140,11 +139,10 @@ public class BaseServletContextResourceReader implements ServletContextResourceR
 	@Override
 	public Set<String> getResourceNames(String path) {
 		Set<String> paths = context.getResourcePaths(path);
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		int length = path.length();
 		if (null != paths) {
-			for (Iterator<String> it = paths.iterator(); it.hasNext();) {
-				String resourcePath = (String) it.next();
+			for (String resourcePath : paths) {
 				names.add(resourcePath.substring(length, resourcePath.length()));
 			}
 		}

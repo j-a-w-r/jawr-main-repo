@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2015 Ibrahim Chaehoi
+ * Copyright 2014-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -39,22 +39,23 @@ import net.jawr.web.util.js.JavascriptEngine;
 public class UglifyJS {
 
 	/** The logger */
-	private static Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
-	
-	/** The Uglify scripts to load */
-	private static final String[] UGLIFY_SCRIPTS = { "utils.js", "ast.js",
-			"parse.js", "transform.js", "scope.js", "output.js", "compress.js",
-			"sourcemap.js", "uglify.js" };
+	private static final Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
-	/** The rhino engine */
+	/** The Uglify scripts to load */
+	private static final String[] UGLIFY_SCRIPTS = { "utils.js", "ast.js", "parse.js", "transform.js", "scope.js",
+			"output.js", "compress.js", "sourcemap.js", "uglify.js" };
+
+	/** The flag indicating if we use the base engine */
 	boolean baseEngine = true;
-	private JavascriptEngine jsEngine;
+
+	/** The JS engine */
+	private final JavascriptEngine jsEngine;
 
 	/** The Jawr configuration */
 	private final JawrConfig config;
 
 	/** The Uglify options in JSON format */
-	private Object options;
+	private final Object options;
 
 	/**
 	 * Constructor
@@ -66,8 +67,7 @@ public class UglifyJS {
 	 * @param optionsInJson
 	 *            the uglify options
 	 */
-	public UglifyJS(JawrConfig config, String scriptDirLocation,
-			String optionsInJson) {
+	public UglifyJS(JawrConfig config, String scriptDirLocation, String optionsInJson) {
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start("initializing JS engine for Uglify");
@@ -79,12 +79,11 @@ public class UglifyJS {
 		String baseJsLocation = StringUtils.isNotEmpty(scriptDirLocation) ? scriptDirLocation
 				: JawrConstant.UGLIFY_POSTPROCESSOR_DEFAULT_JS_BASE_LOCATION;
 		for (String script : UGLIFY_SCRIPTS) {
-			jsEngine.evaluate(script, getResourceInputStream(baseJsLocation
-					+ script));
+			jsEngine.evaluate(script, getResourceInputStream(baseJsLocation + script));
 
 		}
 		stopWatch.stop();
-		if(PERF_LOGGER.isDebugEnabled()){
+		if (PERF_LOGGER.isDebugEnabled()) {
 			PERF_LOGGER.debug(stopWatch.prettyPrint());
 		}
 	}
@@ -128,10 +127,10 @@ public class UglifyJS {
 		}
 
 		stopWatch.stop();
-		if(PERF_LOGGER.isDebugEnabled()){
+		if (PERF_LOGGER.isDebugEnabled()) {
 			PERF_LOGGER.debug(stopWatch.prettyPrint());
 		}
-	
+
 		return (CompressionResult) result;
 
 	}

@@ -16,25 +16,35 @@ package net.jawr.web.resource.bundle.generator;
 import net.jawr.web.JawrConstant;
 
 /**
- * Abstract implementation of ResourceGenerator with a default return value for the 
- * getMappingPrefix method. 
+ * Abstract implementation of ResourceGenerator with a default return value for
+ * the getMappingPrefix method.
  * 
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public abstract class AbstractJavascriptGenerator extends AbstractCachedGenerator implements TextResourceGenerator, SpecificCDNDebugPathResourceGenerator{
+public abstract class AbstractJavascriptGenerator extends AbstractCachedGenerator
+		implements TextResourceGenerator, SpecificCDNDebugPathResourceGenerator {
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#getDebugModeRequestPath()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.BaseResourceGenerator#
+	 * getDebugModeRequestPath()
 	 */
-	public String getDebugModeRequestPath() {		
+	@Override
+	public String getDebugModeRequestPath() {
 		return ResourceGenerator.JAVASCRIPT_DEBUGPATH;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#getDebugModeBuildTimeGenerationPath(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.generator.ResourceGenerator#
+	 * getDebugModeBuildTimeGenerationPath(java.lang.String)
 	 */
+	@Override
 	public String getDebugModeBuildTimeGenerationPath(String path) {
-		return path.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR)+"."+JawrConstant.JS_TYPE;
+		return path.replaceFirst(GeneratorRegistry.PREFIX_SEPARATOR, JawrConstant.URL_SEPARATOR) + "."
+				+ JawrConstant.JS_TYPE;
 	}
 }

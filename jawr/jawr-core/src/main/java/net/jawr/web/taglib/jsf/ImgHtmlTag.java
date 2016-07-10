@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -29,8 +29,10 @@ public class ImgHtmlTag extends AbstractHtmlImageTag {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.jawr.web.taglib.jsf.AbstractImageTag#render(javax.faces.context.FacesContext)
+	 * @see net.jawr.web.taglib.jsf.AbstractImageTag#render(javax.faces.context.
+	 * FacesContext)
 	 */
+	@Override
 	protected void render(FacesContext context) throws IOException {
 
 		// Generate the name definition or image element

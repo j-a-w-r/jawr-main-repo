@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2013 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -36,20 +36,17 @@ import org.slf4j.LoggerFactory;
  * @author Ibrahim Chaehoi
  * 
  */
-public class CssCharsetFilterPostProcessor extends
-		AbstractChainedResourceBundlePostProcessor {
+public class CssCharsetFilterPostProcessor extends AbstractChainedResourceBundlePostProcessor {
 
 	/** The logger */
-	private static Logger LOGGER = LoggerFactory
-			.getLogger(CssCharsetFilterPostProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CssCharsetFilterPostProcessor.class);
 
 	private static final String CHARSET_DECLARATION_SUFFIX = "\";";
 
 	private static final String CHARSET_DECLARATION_PREFIX = "@charset \"";
 
 	/** The charset declaration pattern */
-	private static Pattern CHARSET_DECLARATION = Pattern
-			.compile("@charset \"(.+)\";");
+	private static final Pattern CHARSET_DECLARATION = Pattern.compile("@charset \"(.+)\";");
 
 	/**
 	 * Constructor
@@ -67,8 +64,9 @@ public class CssCharsetFilterPostProcessor extends
 	 * .resource.bundle.postprocess.BundleProcessingStatus,
 	 * java.lang.StringBuffer)
 	 */
-	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status,
-			StringBuffer bundleData) throws IOException {
+	@Override
+	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
+			throws IOException {
 
 		Matcher matcher = CHARSET_DECLARATION.matcher(bundleData.toString());
 		StringBuffer sb = new StringBuffer();
@@ -81,14 +79,12 @@ public class CssCharsetFilterPostProcessor extends
 			} else {
 				if (currentCharset != null) {
 					if (!currentCharset.equalsIgnoreCase(matcher.group(1))) {
-						LOGGER.warn("The bundle '"
-								+ status.getCurrentBundle().getId()
+						LOGGER.warn("The bundle '" + status.getCurrentBundle().getId()
 								+ "' contains CSS with different charset declaration.");
 					}
 				} else {
 					currentCharset = matcher.group(1);
-					LOGGER.warn("For the bundle '"
-							+ status.getCurrentBundle().getId()
+					LOGGER.warn("For the bundle '" + status.getCurrentBundle().getId()
 							+ "', the charset declaration is not defined at the top. The charset which will be set is '"
 							+ currentCharset + "'.");
 				}
@@ -100,8 +96,8 @@ public class CssCharsetFilterPostProcessor extends
 
 		// Put the declaration on top
 		if (currentCharset != null && !charsetDefinedAtBegining) {
-			sb = new StringBuffer(CHARSET_DECLARATION_PREFIX + currentCharset
-					+ CHARSET_DECLARATION_SUFFIX + "\n" + sb.toString());
+			sb = new StringBuffer(
+					CHARSET_DECLARATION_PREFIX + currentCharset + CHARSET_DECLARATION_SUFFIX + "\n" + sb.toString());
 		}
 		return sb;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2012 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -22,11 +22,14 @@ package net.jawr.web.resource.bundle.generator;
 public interface SpecificCDNDebugPathResourceGenerator extends ResourceGenerator {
 
 	/**
-	 * Returns the path to use when generating a resource for the "build time processor". 
-	 * The path should just take in account the parameter used. 
-	 *   
-	 * @return the path to use when generating a resource for the "build time processor". 
+	 * Returns the path to use when generating a resource for the "build time
+	 * processor". The path should just take in account the parameter used.
+	 * 
+	 * @param parameter
+	 *            the parameter
+	 * @return the path to use when generating a resource for the "build time
+	 *         processor".
 	 */
 	public String getDebugModeBuildTimeGenerationPath(String parameter);
-	
+
 }

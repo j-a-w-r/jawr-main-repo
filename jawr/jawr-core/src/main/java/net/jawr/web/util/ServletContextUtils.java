@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2014 Ibrahim Chaehoi
+ * Copyright 2009-2016 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -34,8 +34,6 @@ public class ServletContextUtils {
 	 * @param servletContext
 	 *            the servlet context
 	 * @return the context path associated to the servlet context
-	 * @throws Exception
-	 *             if an exception occurs
 	 */
 	public static String getContextPath(ServletContext servletContext) {
 		String contextPath = DEFAULT_CONTEXT_PATH;
@@ -43,12 +41,12 @@ public class ServletContextUtils {
 		// Get the context path
 		if (servletContext != null) {
 			contextPath = servletContext.getContextPath();
-			if(StringUtils.isEmpty(contextPath)){
+			if (StringUtils.isEmpty(contextPath)) {
 				contextPath = DEFAULT_CONTEXT_PATH;
 			}
 		}
-			
+
 		return contextPath;
 	}
-	
+
 }

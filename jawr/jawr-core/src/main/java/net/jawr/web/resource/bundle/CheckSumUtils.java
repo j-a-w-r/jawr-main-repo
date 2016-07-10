@@ -41,103 +41,123 @@ import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 public final class CheckSumUtils {
 
 	/**
-	 * Return the checksum of the path given in parameter,
-	 * if the resource is not found, null will b returned. 
-	 * @param url the url path to the resource file
-	 * @param is the resource input stream 
-	 * @param jawrConfig the jawrConfig
+	 * Return the checksum of the path given in parameter, if the resource is
+	 * not found, null will b returned.
+	 * 
+	 * @param url
+	 *            the url path to the resource file
+	 * @param rsReader
+	 *            the resource reader handler
+	 * @param jawrConfig
+	 *            the jawrConfig
 	 * @return checksum of the path given in parameter
-	 * @throws IOException if an IO exception occurs.
-	 * @throws ResourceNotFoundException if the resource is not found.
+	 * @throws IOException
+	 *             if an IO exception occurs.
+	 * @throws ResourceNotFoundException
+	 *             if the resource is not found.
 	 */
-	public static String getChecksum(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig) throws IOException, ResourceNotFoundException {
-		
+	public static String getChecksum(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig)
+			throws IOException, ResourceNotFoundException {
+
 		String checksum = null;
 		InputStream is = null;
-		
+
 		boolean generatedBinaryResource = jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(url);
-		
+
 		try {
-			
-			if(!generatedBinaryResource){
+
+			if (!generatedBinaryResource) {
 				url = PathNormalizer.asPath(url);
 			}
-			
+
 			is = rsReader.getResourceAsStream(url);
-			
-			if(is != null){
+
+			if (is != null) {
 				checksum = CheckSumUtils.getChecksum(is, jawrConfig.getBinaryHashAlgorithm());
-			}else{
+			} else {
 				throw new ResourceNotFoundException(url);
 			}
-		}catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			throw new ResourceNotFoundException(url);
-		}
-		finally {
+		} finally {
 			IOUtils.close(is);
 		}
-		
+
 		return checksum;
 	}
-	
+
 	/**
-	 * Return the cache busted url associated to the url passed in parameter,
-	 * if the resource is not found, null will b returned. 
-	 * @param url the url path to the resource file
-	 * @param is the resource input stream 
-	 * @param jawrConfig the jawrConfig
+	 * Return the cache busted url associated to the url passed in parameter, if
+	 * the resource is not found, null will b returned.
+	 * 
+	 * @param url
+	 *            the url path to the resource file
+	 * @param rsReader
+	 *            the resource reader handler
+	 * @param jawrConfig
+	 *            the jawrConfig
 	 * @return the cache busted url
-	 * @throws IOException if an IO exception occurs.
-	 * @throws ResourceNotFoundException if the resource is not found.
+	 * @throws IOException
+	 *             if an IO exception occurs.
+	 * @throws ResourceNotFoundException
+	 *             if the resource is not found.
 	 */
-	public static String getCacheBustedUrl(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig) throws IOException, ResourceNotFoundException {
-		
+	public static String getCacheBustedUrl(String url, ResourceReaderHandler rsReader, JawrConfig jawrConfig)
+			throws IOException, ResourceNotFoundException {
+
 		String checksum = getChecksum(url, rsReader, jawrConfig);
 		String result = JawrConstant.CACHE_BUSTER_PREFIX;
 		boolean generatedBinaryResource = jawrConfig.getGeneratorRegistry().isGeneratedBinaryResource(url);
-		
-		if(generatedBinaryResource){
+
+		if (generatedBinaryResource) {
 			int idx = url.indexOf(GeneratorRegistry.PREFIX_SEPARATOR);
 			String generatorPrefix = url.substring(0, idx);
-			url = url.substring(idx+1);
-			result = generatorPrefix+"_cb";
+			url = url.substring(idx + 1);
+			result = generatorPrefix + "_cb";
 		}
-		
-		result = result+checksum;
-		
-		if(!url.startsWith("/")){
+
+		result = result + checksum;
+
+		if (!url.startsWith("/")) {
 			result = result + "/";
 		}
 		// Add the cache buster extension
-		return PathNormalizer.asPath(result+url);
+		return PathNormalizer.asPath(result + url);
 	}
-	
+
 	/**
-	 * Returns the checksum value of the input stream taking in count the algorithm passed in parameter
-	 * @param is the input stream
-	 * @param algorithm the checksum algorithm
+	 * Returns the checksum value of the input stream taking in count the
+	 * algorithm passed in parameter
+	 * 
+	 * @param is
+	 *            the input stream
+	 * @param algorithm
+	 *            the checksum algorithm
 	 * @return the checksum value
-	 * @throws IOException if an exception occurs.
+	 * @throws IOException
+	 *             if an exception occurs.
 	 */
 	public static String getChecksum(InputStream is, String algorithm) throws IOException {
-	
-		if(algorithm.equals(JawrConstant.CRC32_ALGORITHM)){
+
+		if (algorithm.equals(JawrConstant.CRC32_ALGORITHM)) {
 			return getCRC32Checksum(is);
-		}else if(algorithm.equals(JawrConstant.MD5_ALGORITHM)){
+		} else if (algorithm.equals(JawrConstant.MD5_ALGORITHM)) {
 			return getMD5Checksum(is);
-		}else{
-			throw new BundlingProcessException("The checksum algorithm '"+algorithm+"' is not supported.\n" +
-					"The only supported algorithm are 'CRC32' or 'MD5'.");
+		} else {
+			throw new BundlingProcessException("The checksum algorithm '" + algorithm + "' is not supported.\n"
+					+ "The only supported algorithm are 'CRC32' or 'MD5'.");
 		}
 	}
-	
+
 	/**
 	 * Returns the CRC 32 Checksum of the input stream
 	 * 
-	 * @param is the input stream
+	 * @param is
+	 *            the input stream
 	 * 
 	 * @return the CRC 32 checksum of the input stream
-	 * @throws IOException if an IO exception occurs
+	 * @throws IOException
+	 *             if an IO exception occurs
 	 */
 	public static String getCRC32Checksum(InputStream is) throws IOException {
 
@@ -156,39 +176,46 @@ public final class CheckSumUtils {
 	/**
 	 * Returns the MD5 Checksum of the string passed in parameter
 	 * 
-	 * @param is the input stream
-	 * @param charset the content charset
+	 * @param str
+	 *            the string content
+	 * @param charset
+	 *            the content charset
 	 * 
 	 * @return the Checksum of the input stream
-	 * @throws IOException if an IO exception occurs
+	 * @throws IOException
+	 *             if an IO exception occurs
 	 */
 	public static String getMD5Checksum(String str, Charset charset) throws IOException {
 
 		InputStream is = new ByteArrayInputStream(str.getBytes(charset.name()));
 		return getMD5Checksum(is);
 	}
-	
+
 	/**
 	 * Returns the MD5 Checksum of the string passed in parameter
 	 * 
-	 * @param is the input stream
+	 * @param str
+	 *            the string content
 	 * 
 	 * @return the Checksum of the input stream
-	 * @throws IOException if an IO exception occurs
+	 * @throws IOException
+	 *             if an IO exception occurs
 	 */
 	public static String getMD5Checksum(String str) throws IOException {
 
 		InputStream is = new ByteArrayInputStream(str.getBytes());
 		return getMD5Checksum(is);
 	}
-	
+
 	/**
 	 * Returns the MD5 Checksum of the input stream
 	 * 
-	 * @param is the input stream
+	 * @param is
+	 *            the input stream
 	 * 
 	 * @return the Checksum of the input stream
-	 * @throws IOException if an IO exception occurs
+	 * @throws IOException
+	 *             if an IO exception occurs
 	 */
 	public static String getMD5Checksum(InputStream is) throws IOException {
 

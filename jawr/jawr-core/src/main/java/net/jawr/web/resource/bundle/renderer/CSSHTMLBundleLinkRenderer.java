@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2014 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -42,15 +42,13 @@ import org.slf4j.LoggerFactory;
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
-public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
-		implements CssBundleLinkRenderer {
+public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer implements CssBundleLinkRenderer {
 
 	/** The serial version UID */
 	private static final long serialVersionUID = 8478334123266702133L;
 
 	/** The logger */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(CSSHTMLBundleLinkRenderer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CSSHTMLBundleLinkRenderer.class);
 
 	/** The start tag */
 	private static final String PRE_TAG = "<link rel=\"stylesheet\" type=\"text/css\" media=\"";
@@ -113,9 +111,9 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * .web.resource.bundle.handler.ResourceBundlesHandler, java.lang.Boolean,
 	 * java.lang.String, boolean, boolean, java.lang.String)
 	 */
-	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam,
-			String media, boolean alternate, boolean displayAlternateStyles,
-			String title) {
+	@Override
+	public void init(ResourceBundlesHandler bundler, Boolean useRandomParam, String media, boolean alternate,
+			boolean displayAlternateStyles, String title) {
 		init(bundler, useRandomParam);
 
 		this.media = null == media ? "screen" : media;
@@ -137,7 +135,6 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * 
 	 * @param flavor
 	 *            the flavor
-	 * @return the closing tag
 	 */
 	public static void setClosingTag(String flavor) {
 
@@ -156,6 +153,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @see
 	 * net.jawr.web.resource.bundle.renderer.BundleRenderer#getResourceType()
 	 */
+	@Override
 	public String getResourceType() {
 		return JawrConstant.CSS_TYPE;
 	}
@@ -171,12 +169,10 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @return true if the renderer must render a CSS bundle link even in debug
 	 *         mode
 	 */
-	private boolean isForcedToRenderIeCssBundleInDebug(
-			BundleRendererContext ctx, boolean debugOn) {
+	private boolean isForcedToRenderIeCssBundleInDebug(BundleRendererContext ctx, boolean debugOn) {
 
 		return debugOn && getResourceType().equals(JawrConstant.CSS_TYPE)
-				&& bundler.getConfig().isForceCssBundleInDebugForIEOn()
-				&& RendererRequestUtils.isIE(ctx.getRequest());
+				&& bundler.getConfig().isForceCssBundleInDebugForIEOn() && RendererRequestUtils.isIE(ctx.getRequest());
 	}
 
 	/**
@@ -191,15 +187,13 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @throws IOException
 	 *             if an IO exception occurs
 	 */
-	protected void performGlobalBundleLinksRendering(BundleRendererContext ctx,
-			Writer out, boolean debugOn) throws IOException {
+	@Override
+	protected void performGlobalBundleLinksRendering(BundleRendererContext ctx, Writer out, boolean debugOn)
+			throws IOException {
 
 		if (isForcedToRenderIeCssBundleInDebug(ctx, debugOn)) {
-			ResourceBundlePathsIterator resourceBundleIterator = bundler
-					.getGlobalResourceBundlePaths(
-							DebugMode.FORCE_NON_DEBUG_IN_IE,
-							new ConditionalCommentRenderer(out),
-							ctx.getVariants());
+			ResourceBundlePathsIterator resourceBundleIterator = bundler.getGlobalResourceBundlePaths(
+					DebugMode.FORCE_NON_DEBUG_IN_IE, new ConditionalCommentRenderer(out), ctx.getVariants());
 			while (resourceBundleIterator.hasNext()) {
 				BundlePath globalBundlePath = resourceBundleIterator.nextPath();
 				renderIeCssBundleLink(ctx, out, globalBundlePath);
@@ -226,9 +220,9 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void renderBundleLinks(JoinableResourceBundle bundle,
-			BundleRendererContext ctx, Map<String, String> variant, Writer out,
-			boolean debugOn) throws IOException {
+	@Override
+	protected void renderBundleLinks(JoinableResourceBundle bundle, BundleRendererContext ctx,
+			Map<String, String> variant, Writer out, boolean debugOn) throws IOException {
 
 		if (alternate && StringUtils.isNotEmpty(title)) {
 
@@ -239,8 +233,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 
 		if (isForcedToRenderIeCssBundleInDebug(ctx, debugOn)) {
 
-			ResourceBundlePathsIterator it = bundler.getBundlePaths(
-					DebugMode.FORCE_NON_DEBUG_IN_IE, bundle.getId(),
+			ResourceBundlePathsIterator it = bundler.getBundlePaths(DebugMode.FORCE_NON_DEBUG_IN_IE, bundle.getId(),
 					new ConditionalCommentRenderer(out), variant);
 			while (it.hasNext()) {
 				BundlePath bundlePath = it.nextPath();
@@ -269,38 +262,30 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	protected void renderBundleLinks(JoinableResourceBundle bundle,
-			String requestedPath, BundleRendererContext ctx, Writer out,
-			boolean debugOn, boolean renderDependencyLinks) throws IOException {
+	@Override
+	protected void renderBundleLinks(JoinableResourceBundle bundle, String requestedPath, BundleRendererContext ctx,
+			Writer out, boolean debugOn, boolean renderDependencyLinks) throws IOException {
 
-		boolean bundleAlreadyIncluded = ctx.getIncludedBundles().contains(
-				bundle.getId());
+		boolean bundleAlreadyIncluded = ctx.getIncludedBundles().contains(bundle.getId());
 
-		super.renderBundleLinks(bundle, requestedPath, ctx, out, debugOn,
-				renderDependencyLinks);
+		super.renderBundleLinks(bundle, requestedPath, ctx, out, debugOn, renderDependencyLinks);
 
 		if (!bundleAlreadyIncluded && displayAlternateStyles) {
 
 			if (debugOn) {
-				addComment("Start adding members resolved by '" + requestedPath
-						+ "'. Bundle id is: '" + bundle.getId() + "'", out);
+				addComment("Start adding members resolved by '" + requestedPath + "'. Bundle id is: '" + bundle.getId()
+						+ "'", out);
 			}
 
-			List<Map<String, String>> variants = VariantUtils
-					.getAllVariants(bundle.getVariants());
-			Map<String, String> currentVariant = bundler
-					.getConfig()
-					.getGeneratorRegistry()
-					.getAvailableVariantMap(bundle.getVariants(),
-							ctx.getVariants());
-			String currentLocale = (String) currentVariant
-					.get(JawrConstant.LOCALE_VARIANT_TYPE);
+			List<Map<String, String>> variants = VariantUtils.getAllVariants(bundle.getVariants());
+			Map<String, String> currentVariant = bundler.getConfig().getGeneratorRegistry()
+					.getAvailableVariantMap(bundle.getVariants(), ctx.getVariants());
+			String currentLocale = (String) currentVariant.get(JawrConstant.LOCALE_VARIANT_TYPE);
 			variants.remove(currentVariant);
 
 			// Renders the different variant as alternate stylesheet
 			alternate = true;
-			for (Iterator<Map<String, String>> itVariantMap = variants
-					.iterator(); itVariantMap.hasNext();) {
+			for (Iterator<Map<String, String>> itVariantMap = variants.iterator(); itVariantMap.hasNext();) {
 				Map<String, String> variant = itVariantMap.next();
 				if (variant != null) {
 					String skin = variant.get(JawrConstant.SKIN_VARIANT_TYPE);
@@ -311,8 +296,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 
 					// Only apply if the locale doesn't exists or is the current
 					// one
-					String locale = variant
-							.get(JawrConstant.LOCALE_VARIANT_TYPE);
+					String locale = variant.get(JawrConstant.LOCALE_VARIANT_TYPE);
 					if (currentLocale == null || currentLocale.equals(locale)) {
 
 						title = skin;
@@ -330,9 +314,10 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @see net.jawr.web.resource.bundle.renderer.AbstractBundleLinkRenderer#
 	 * createBundleLink(java.lang.String, java.lang.String)
 	 */
+	@Override
 	protected String renderLink(String fullPath) {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		// displayAlternateStyles
 		if (alternate) {
@@ -362,17 +347,15 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer
 	 * @throws IOException
 	 *             if an IOException occurs
 	 */
-	private void renderIeCssBundleLink(BundleRendererContext ctx, Writer out,
-			BundlePath bundlePath) throws IOException {
+	private void renderIeCssBundleLink(BundleRendererContext ctx, Writer out, BundlePath bundlePath)
+			throws IOException {
 		Random randomSeed = new Random();
 		int random = randomSeed.nextInt();
 		if (random < 0)
 			random *= -1;
-		String path = GeneratorRegistry.IE_CSS_GENERATOR_PREFIX
-				+ GeneratorRegistry.PREFIX_SEPARATOR + bundlePath.getPath();
-		path = PathNormalizer.createGenerationPath(path, bundler.getConfig()
-				.getGeneratorRegistry(), "d=" + random);
-		out.write(createBundleLink(path, null, null, ctx.getContextPath(),
-				ctx.isSslRequest()));
+		String path = GeneratorRegistry.IE_CSS_GENERATOR_PREFIX + GeneratorRegistry.PREFIX_SEPARATOR
+				+ bundlePath.getPath();
+		path = PathNormalizer.createGenerationPath(path, bundler.getConfig().getGeneratorRegistry(), "d=" + random);
+		out.write(createBundleLink(path, null, null, ctx.getContextPath(), ctx.isSslRequest()));
 	}
 }

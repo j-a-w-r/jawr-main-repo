@@ -334,13 +334,13 @@ public class JawrConfig implements Serializable {
 	 * to true.
 	 */
 	private boolean useSmartBundling = true;
-	
+
 	/**
 	 * Flag which defines if we should use the generator cache feature. defaults
 	 * to true.
 	 */
 	private boolean useGeneratorCache = true;
-	
+
 	/**
 	 * The delay after last event, this is used to to ensure that a batch
 	 * modification is ended before starting the build
@@ -365,7 +365,7 @@ public class JawrConfig implements Serializable {
 	/**
 	 * The allowed resource extensions
 	 */
-	private List<String> allowedExtensions = new ArrayList<String>();
+	private final List<String> allowedExtensions = new ArrayList<>();
 
 	/**
 	 * Override value to use instead of the context path of the application in
@@ -436,6 +436,8 @@ public class JawrConfig implements Serializable {
 	 * Initialize configuration using params contained in the initialization
 	 * properties file.
 	 * 
+	 * @param resourceType
+	 *            the resource type
 	 * @param props
 	 *            the properties
 	 */
@@ -447,8 +449,12 @@ public class JawrConfig implements Serializable {
 	 * Initialize configuration using params contained in the initialization
 	 * properties file.
 	 * 
+	 * @param resourceType
+	 *            the resource type
 	 * @param props
 	 *            the properties
+	 * @param resolver
+	 *            the property resolver
 	 */
 	public JawrConfig(final String resourceType, final Properties props, ConfigPropertyResolver resolver) {
 		this.resourceType = resourceType;
@@ -489,7 +495,7 @@ public class JawrConfig implements Serializable {
 
 		// If system flag is available, override debug mode from properties
 		if (null != System.getProperty(DEBUG_MODE_SYSTEM_FLAG)) {
-			this.debugModeOn = Boolean.valueOf(System.getProperty(DEBUG_MODE_SYSTEM_FLAG)).booleanValue();
+			this.debugModeOn = Boolean.parseBoolean(System.getProperty(DEBUG_MODE_SYSTEM_FLAG));
 		}
 
 		this.debugOverrideKey = getProperty(JAWR_DEBUG_OVERRIDE_KEY, "");
@@ -529,7 +535,7 @@ public class JawrConfig implements Serializable {
 		this.useSmartBundling = getBooleanProperty(JAWR_USE_SMART_BUNDLING, true);
 
 		this.useGeneratorCache = getBooleanProperty(JAWR_USE_GENERATOR_CACHE, true);
-		
+
 		String value = getProperty(JawrConstant.JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT);
 		if (StringUtils.isNotEmpty(value)) {
 			delayAfterLastEvent = Integer.parseInt(value) * 1000;
@@ -720,7 +726,7 @@ public class JawrConfig implements Serializable {
 	/**
 	 * Set debug mode.
 	 * 
-	 * @param debugModeOn
+	 * @param debugMode
 	 *            the flag to set
 	 */
 	public void setDebugModeOn(final boolean debugMode) {
@@ -764,7 +770,7 @@ public class JawrConfig implements Serializable {
 	public void setJawrWorkingDirectory(final String dirPath) {
 		this.jawrWorkingDirectory = dirPath;
 	}
-	
+
 	/**
 	 * Returns the flag indicating if we should use "generator cache".
 	 * 
@@ -773,7 +779,7 @@ public class JawrConfig implements Serializable {
 	public boolean isUseGeneratorCache() {
 		return useGeneratorCache;
 	}
-	
+
 	/**
 	 * Sets the flag indicating if we should use "generator cache".
 	 * 
@@ -783,8 +789,6 @@ public class JawrConfig implements Serializable {
 	public void setUseGeneratorCache(boolean useGeneratorCache) {
 		this.useGeneratorCache = useGeneratorCache;
 	}
-	
-	
 
 	/**
 	 * Returns the flag indicating if we should use "smart bundling".
@@ -1104,7 +1108,7 @@ public class JawrConfig implements Serializable {
 	 * Set the flag indicating if the URL of the image defines in CSS loaded
 	 * from classpath, should be overridden for the classpath CSS image servlet.
 	 * 
-	 * @param useClasspathCssImgServlet
+	 * @param classpathCssHandleImage
 	 *            the flag to set
 	 * 
 	 *            So if you have a CSS define in a jar file at
@@ -1379,8 +1383,9 @@ public class JawrConfig implements Serializable {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer(65);
+		StringBuilder sb = new StringBuilder(65);
 		sb.append("[JawrConfig:'charset name:'").append(this.charsetName).append("'\ndebugModeOn:'")
 				.append(isDebugModeOn()).append("'\nservletMapping:'").append(getServletMapping()).append("' ]");
 		return sb.toString();
@@ -1398,6 +1403,8 @@ public class JawrConfig implements Serializable {
 	/**
 	 * Returns the name of JS engine to use
 	 * 
+	 * @param defaultJsEnginePropName
+	 *            the default JS engine property name
 	 * @return the name of JS engine to use
 	 */
 	public String getJavascriptEngineName(String defaultJsEnginePropName) {

@@ -116,7 +116,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * The bundles that will be processed once when the server will be up and
 	 * running.
 	 */
-	private List<String> liveProcessBundles = new ArrayList<String>();
+	private List<String> liveProcessBundles = new ArrayList<>();
 
 	/** The resource handler */
 	private ResourceReaderHandler resourceHandler;
@@ -173,6 +173,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 *            List The JoinableResourceBundles to use for this handler.
 	 * @param resourceHandler
 	 *            The file system access handler.
+	 * @param resourceBundleHandler
+	 *            the resource bundle handler
 	 * @param config
 	 *            Configuration for this handler.
 	 */
@@ -189,9 +191,21 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 *            List The JoinableResourceBundles to use for this handler.
 	 * @param resourceHandler
 	 *            The file system access handler.
+	 * @param resourceBundleHandler
 	 * @param config
 	 *            Configuration for this handler.
 	 * @param postProcessor
+	 *            the bundle postprocessor
+	 * @param unitaryPostProcessor
+	 *            the unitary postprocessor
+	 * @param compositePostProcessor
+	 *            the composite postprocesor
+	 * @param unitaryCompositePostProcessor
+	 *            the unitary composite postprocessor
+	 * @param resourceTypePreprocessor
+	 *            the resource type preprocessor
+	 * @param resourceTypePostprocessor
+	 *            the resource type postprocessor
 	 */
 	public ResourceBundlesHandlerImpl(List<JoinableResourceBundle> bundles, ResourceReaderHandler resourceHandler,
 			ResourceBundleHandler resourceBundleHandler, JawrConfig config, ResourceBundlePostProcessor postProcessor,
@@ -427,14 +441,14 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	public ResourceBundlePathsIterator getGlobalResourceBundlePaths(String bundleId,
 			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
 
-		List<JoinableResourceBundle> bundles = new ArrayList<>();
+		List<JoinableResourceBundle> currentBundles = new ArrayList<>();
 		for (JoinableResourceBundle bundle : globalBundles) {
 			if (bundle.getId().equals(bundleId)) {
-				bundles.add(bundle);
+				currentBundles.add(bundle);
 				break;
 			}
 		}
-		return getBundleIterator(getDebugMode(), bundles, commentCallbackHandler, variants);
+		return getBundleIterator(getDebugMode(), currentBundles, commentCallbackHandler, variants);
 	}
 
 	/*
@@ -463,7 +477,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	public ResourceBundlePathsIterator getBundlePaths(DebugMode debugMode, String bundleId,
 			ConditionalCommentCallbackHandler commentCallbackHandler, Map<String, String> variants) {
 
-		List<JoinableResourceBundle> bundles = new ArrayList<>();
+		List<JoinableResourceBundle> currentBundles = new ArrayList<>();
 
 		// if the path did not correspond to a global bundle, find the requested
 		// one.
@@ -471,13 +485,13 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			for (JoinableResourceBundle bundle : contextBundles) {
 				if (bundle.getId().equals(bundleId)) {
 
-					bundles.add(bundle);
+					currentBundles.add(bundle);
 					break;
 				}
 			}
 		}
 
-		return getBundleIterator(debugMode, bundles, commentCallbackHandler, variants);
+		return getBundleIterator(debugMode, currentBundles, commentCallbackHandler, variants);
 	}
 
 	/**
@@ -670,7 +684,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 					StringBuilder msg = new StringBuilder(
 							"Jawr has detect changes on the following bundles, which will be updated :\n");
 					for (JoinableResourceBundle b : bundleToProcess) {
-						msg.append(b.getName() + "\n");
+						msg.append(b.getName()).append("\n");
 					}
 					LOGGER.debug(msg.toString());
 				}
@@ -726,8 +740,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 			// Update the list of bundle to rebuild if new bundles have been
 			// detected as dirty in the global preprocessing phase
-			List<JoinableResourceBundle> bundles = getBundlesToRebuild();
-			for (JoinableResourceBundle b : bundles) {
+			List<JoinableResourceBundle> currentBundles = getBundlesToRebuild();
+			for (JoinableResourceBundle b : currentBundles) {
 				if (!bundlesToBuild.contains(b)) {
 					bundlesToBuild.add(b);
 				}
@@ -1260,7 +1274,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * @return true if the bundle must be processed in live
 	 */
 	private boolean bundleMustBeProcessedInLive(String content) {
-		return content.indexOf(JawrConstant.JAWR_BUNDLE_PATH_PLACEHOLDER) != -1;
+		return content.contains(JawrConstant.JAWR_BUNDLE_PATH_PLACEHOLDER);
 	}
 
 	/**
@@ -1278,8 +1292,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		// Add the default bundle variant (the non variant one)
 		allVariants.add(null);
 
-		for (Iterator<Map<String, String>> it = allVariants.iterator(); it.hasNext();) {
-			Map<String, String> variantMap = it.next();
+		for (Map<String, String> variantMap : allVariants) {
 			status.setBundleVariants(variantMap);
 			String variantKey = VariantUtils.getVariantKey(variantMap);
 			String name = VariantUtils.getVariantBundleName(bundle.getId(), variantKey, false);
@@ -1445,6 +1458,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * @seenet.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * resolveBundleForPath(java.lang.String)
 	 */
+	@Override
 	public JoinableResourceBundle resolveBundleForPath(String path) {
 
 		JoinableResourceBundle theBundle = null;
@@ -1464,6 +1478,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * @seenet.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * getClientSideHandler()
 	 */
+	@Override
 	public ClientSideHandlerGenerator getClientSideHandler() {
 		return this.clientSideHandlerGenerator;
 	}
@@ -1474,6 +1489,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
 	 * getBundleTextDirPath()
 	 */
+	@Override
 	public String getBundleTextDirPath() {
 		return this.resourceBundleHandler.getBundleTextDirPath();
 	}
@@ -1539,8 +1555,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	public List<String> getDirtyBundleNames() {
 
 		List<String> bundleNames = new ArrayList<>();
-		List<JoinableResourceBundle> bundles = getBundlesToRebuild();
-		for (JoinableResourceBundle bundle : bundles) {
+		List<JoinableResourceBundle> bundlesToRebuild = getBundlesToRebuild();
+		for (JoinableResourceBundle bundle : bundlesToRebuild) {
 			bundleNames.add(bundle.getName());
 		}
 		return bundleNames;

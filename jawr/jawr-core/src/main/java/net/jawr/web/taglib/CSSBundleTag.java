@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2012 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -19,39 +19,43 @@ import net.jawr.web.resource.bundle.renderer.BundleRenderer;
 import net.jawr.web.resource.bundle.renderer.RendererFactory;
 
 /**
- * JSP taglib which uses a CSSHTMLBundleLinkRenderer to render links for CSS bundles. 
+ * JSP taglib which uses a CSSHTMLBundleLinkRenderer to render links for CSS
+ * bundles.
  * 
  * @author Jordi Hern�ndez Sell�s
  * @author Ibrahim Chaehoi
  */
-public class CSSBundleTag  extends AbstractResourceBundleTag {
-    
+public class CSSBundleTag extends AbstractResourceBundleTag {
+
 	/** The serial version UID */
 	private static final long serialVersionUID = 5087323727715427592L;
 
 	/** The media */
-    private String media;
+	private String media;
 
-    /** The flag indicating if it's an alternate stylesheet */
-    private boolean alternate;
-    
-    /** The flag indicating if they must display the alternate styles */
-    private boolean displayAlternate;
-    
-    /** The title */
-    private String title;
-    
-    /**
-     * Set the media type to use in the css tag
-     * @param media 
-     */
-    public void setMedia(String media) {
-        this.media = media;
-    }
-    
-    /**
-     * Sets the alternate flag
-	 * @param alternate the alternate to set
+	/** The flag indicating if it's an alternate stylesheet */
+	private boolean alternate;
+
+	/** The flag indicating if they must display the alternate styles */
+	private boolean displayAlternate;
+
+	/** The title */
+	private String title;
+
+	/**
+	 * Set the media type to use in the css tag
+	 * 
+	 * @param media
+	 */
+	public void setMedia(String media) {
+		this.media = media;
+	}
+
+	/**
+	 * Sets the alternate flag
+	 * 
+	 * @param alternate
+	 *            the alternate to set
 	 */
 	public void setAlternate(boolean alternate) {
 		this.alternate = alternate;
@@ -59,37 +63,54 @@ public class CSSBundleTag  extends AbstractResourceBundleTag {
 
 	/**
 	 * Sets the flag indicating if the styles must display the alternate styles
-	 * @param displayAlternate the falg indicating if we must display alternate skin styles or not
+	 * 
+	 * @param displayAlternate
+	 *            the falg indicating if we must display alternate skin styles
+	 *            or not
 	 */
 	public void setDisplayAlternate(boolean displayAlternate) {
 		this.displayAlternate = displayAlternate;
 	}
-	
+
 	/**
 	 * Sets the title
-	 * @param title the title to set
+	 * 
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-    /* (non-Javadoc)
-     * @see net.jawr.web.taglib.AbstractResourceBundleTag#createRenderer(boolean)
-     */
-    protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler, Boolean useRandomParam) {
-		return  RendererFactory.getCssBundleRenderer(rsHandler, useRandomParam, this.media, this.alternate, this.displayAlternate, this.title);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.taglib.AbstractResourceBundleTag#createRenderer(boolean)
+	 */
+	@Override
+	protected BundleRenderer createRenderer(ResourceBundlesHandler rsHandler, Boolean useRandomParam) {
+		return RendererFactory.getCssBundleRenderer(rsHandler, useRandomParam, this.media, this.alternate,
+				this.displayAlternate, this.title);
 	}
 
-    /* (non-Javadoc)
-     * @see net.jawr.web.taglib.AbstractResourceBundleTag#getResourceHandlerAttributeName()
-     */
-    protected String getResourceHandlerAttributeName() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.taglib.AbstractResourceBundleTag#
+	 * getResourceHandlerAttributeName()
+	 */
+	@Override
+	protected String getResourceHandlerAttributeName() {
 		return JawrConstant.CSS_CONTEXT_ATTRIBUTE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
+	@Override
 	public void release() {
 		super.release();
 		alternate = false;
@@ -97,5 +118,5 @@ public class CSSBundleTag  extends AbstractResourceBundleTag {
 		title = null;
 		media = null;
 	}
-	
+
 }
