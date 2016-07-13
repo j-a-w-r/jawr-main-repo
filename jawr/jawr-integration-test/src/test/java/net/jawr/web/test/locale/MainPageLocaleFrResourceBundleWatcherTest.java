@@ -156,7 +156,7 @@ public class MainPageLocaleFrResourceBundleWatcherTest extends AbstractPageTest 
 	}
 
 	protected void checkBeforeRun() {
-		Assume.assumeTrue(getJavaVersion() < 1.8f);
+		//Assume.assumeTrue(getJavaVersion() < 1.8f);
 	}
 
 	/**
