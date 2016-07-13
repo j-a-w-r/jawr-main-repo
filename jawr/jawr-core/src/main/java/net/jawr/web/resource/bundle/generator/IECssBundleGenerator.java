@@ -152,9 +152,10 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 			if (resourcePath != null) {
 
 				tempStatus.setLastPathAdded(resourcePath.getPath());
-				try {
+				Reader cssReader = null;
+				try{
 					JoinableResourceBundle bundle = context.getBundle();
-					Reader cssReader = context.getResourceReaderHandler().getResource(bundle, resourcePath.getPath(),
+					cssReader = context.getResourceReaderHandler().getResource(bundle, resourcePath.getPath(),
 							true);
 					StringWriter writer = new StringWriter();
 					IOUtils.copy(cssReader, writer, true);
@@ -169,6 +170,8 @@ public class IECssBundleGenerator extends AbstractCSSGenerator {
 					LOGGER.debug("The resource '" + resourcePath.getPath() + "' was not found");
 				} catch (IOException e) {
 					throw new BundlingProcessException(e);
+				}finally {
+					IOUtils.close(cssReader);
 				}
 			}
 		}

@@ -109,8 +109,11 @@ public class CoffeeScriptGenerator extends AbstractJavascriptGenerator implement
 		// Load JavaScript Script Engine
 		String script = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_LOCATION, DEFAULT_COFFEE_SCRIPT_JS_LOCATION);
 		jsEngine = new JavascriptEngine(config.getJavascriptEngineName(JAWR_JS_GENERATOR_COFFEE_SCRIPT_JS_ENGINE));
-		InputStream inputStream = getResourceInputStream(script);
-		jsEngine.evaluate("coffee-script.js", inputStream);
+		try(InputStream inputStream = getResourceInputStream(script)){
+			jsEngine.evaluate("coffee-script.js", inputStream);
+		} catch (IOException e) {
+			throw new BundlingProcessException(e);
+		}
 		String strOptions = config.getProperty(JAWR_JS_GENERATOR_COFFEE_SCRIPT_OPTIONS, COFFEE_SCRIPT_DEFAULT_OPTIONS);
 		options = jsEngine.execEval(strOptions);
 		coffeeScript = jsEngine.execEval("CoffeeScript");

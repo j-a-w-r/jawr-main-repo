@@ -1,18 +1,17 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	metadata-complete="true">
+	<display-name>Basic Jawr web app sample</display-name>
 
-<web-app>
-  <display-name>Basic Jawr web app sample</display-name>
-  	
 	<description>
-		
+
 	</description>
 	<context-param>
 		<param-name>contextPath</param-name>
 		<param-value>jawr-integration-test</param-value>
 	</context-param>
-	
+
 	<servlet>
 		<servlet-name>JavascriptServlet</servlet-name>
 		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
@@ -22,7 +21,7 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>CssServlet</servlet-name>
 		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
@@ -50,7 +49,7 @@
 		<!-- Start Jawr image servlet before Jawr CSS servlet -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>JavascriptServlet</servlet-name>
 		<url-pattern>*.js</url-pattern>
@@ -67,8 +66,9 @@
 		<servlet-name>JawrBinaryServlet</servlet-name>
 		<url-pattern>*.gif</url-pattern>
 	</servlet-mapping>
-	
+
 	<session-config>
 		<session-timeout>10</session-timeout>
 	</session-config>
+	<absolute-ordering />
 </web-app>

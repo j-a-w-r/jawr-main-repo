@@ -305,7 +305,7 @@ public class IOUtils {
 	 */
 	public static String toString(Reader rd) throws IOException {
 		StringWriter sw = new StringWriter();
-		copy(rd, sw);
+		copy(rd, sw, true);
 		return sw.toString();
 	}
 }

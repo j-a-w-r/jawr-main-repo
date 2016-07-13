@@ -48,10 +48,10 @@ public class JawrWatchEventProcessor extends Thread {
 	private final AtomicBoolean stopProcessing = new AtomicBoolean(false);
 
 	/** The resource watcher */
-	private final ResourceWatcher watcher;
+	private ResourceWatcher watcher;
 
 	/** The resource bundle handler */
-	private final ResourceBundlesHandler bundlesHandler;
+	private ResourceBundlesHandler bundlesHandler;
 
 	/** The watch events queue */
 	private final BlockingQueue<JawrWatchEvent> watchEvents;
@@ -112,6 +112,9 @@ public class JawrWatchEventProcessor extends Thread {
 				LOGGER.debug("Thread interrupted");
 			}
 		}
+		
+		this.bundlesHandler = null;
+		this.watcher = null;
 	}
 
 	/**

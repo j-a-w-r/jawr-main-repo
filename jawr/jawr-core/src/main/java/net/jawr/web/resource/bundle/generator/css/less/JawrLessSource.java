@@ -107,8 +107,7 @@ public class JawrLessSource extends StringSource {
 		if (!resource.startsWith("/")) { // relative URL
 			resource = PathNormalizer.concatWebPath(getName(), resource);
 		}
-		try {
-			Reader rd = getResourceReader(resource);
+		try (Reader rd = getResourceReader(resource)) {
 			result = IOUtils.toString(rd);
 			FilePathMapping linkedResource = FilePathMappingUtils.buildFilePathMapping(resource, rsReaderHandler);
 			if (linkedResource != null) {

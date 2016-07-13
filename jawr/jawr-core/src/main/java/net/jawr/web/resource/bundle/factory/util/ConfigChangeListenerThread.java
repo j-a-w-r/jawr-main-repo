@@ -47,10 +47,10 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 	private final Properties overriddenProperties;
 
 	/** The listener for configuration changes */
-	private final ConfigChangeListener listener;
+	private ConfigChangeListener listener;
 
 	/** The resource bundles handler */
-	private final ResourceBundlesHandler bundlesHandler;
+	private ResourceBundlesHandler bundlesHandler;
 
 	/** The flag indicating if we should continue the check */
 	private boolean continuePolling;
@@ -81,7 +81,6 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 		this.bundlesHandler = bundlesHandler;
 		this.waitMillis = secondsToWait * 1000;
 		continuePolling = true;
-		this.setDaemon(true);
 	}
 
 	/*
@@ -121,6 +120,9 @@ public class ConfigChangeListenerThread extends Thread implements Serializable {
 				}
 			}
 		}
+		
+		this.bundlesHandler = null;
+		this.listener = null;
 	}
 
 	/**

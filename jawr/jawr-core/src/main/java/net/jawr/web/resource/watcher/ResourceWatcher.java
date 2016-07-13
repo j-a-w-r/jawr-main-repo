@@ -307,6 +307,8 @@ public class ResourceWatcher extends Thread {
 	 */
 	private void close() {
 		try {
+			bundlesHandler = null;
+			rsReader = null;
 			watchService.close();
 		} catch (IOException e) {
 		}

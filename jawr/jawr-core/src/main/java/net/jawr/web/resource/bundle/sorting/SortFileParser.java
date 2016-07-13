@@ -66,9 +66,8 @@ public class SortFileParser {
 	 */
 	public List<String> getSortedResources() {
 		List<String> resources = new ArrayList<>();
-		BufferedReader bf = new BufferedReader(reader);
-		String res;
-		try {
+		try (BufferedReader bf = new BufferedReader(reader)) {
+			String res;
 			while ((res = bf.readLine()) != null) {
 				String name = PathNormalizer.normalizePath(res.trim());
 

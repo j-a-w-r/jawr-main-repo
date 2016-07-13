@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -592,11 +593,8 @@ public abstract class AbstractCachedGenerator
 	protected void loadCacheMapping() {
 		File f = new File(getCacheFilePath());
 		if (f.exists()) {
-			BufferedReader rd = null;
-			try {
-				cacheProperties.load(new FileInputStream(f));
-
-				rd = new BufferedReader(new FileReader(f));
+			try(InputStream is = new FileInputStream(f); BufferedReader rd = new BufferedReader(new FileReader(f))) {
+				cacheProperties.load(is);
 				for (Enumeration<?> properyNames = cacheProperties.propertyNames(); properyNames.hasMoreElements();) {
 					String propName = (String) properyNames.nextElement();
 					if (propName.startsWith(JAWR_MAPPING_PREFIX)) {
@@ -629,8 +627,6 @@ public abstract class AbstractCachedGenerator
 
 			} catch (IOException e) {
 				throw new BundlingProcessException("Unable to initialize " + getName() + " Generator cache", e);
-			} finally {
-				IOUtils.close(rd);
 			}
 		}
 	}

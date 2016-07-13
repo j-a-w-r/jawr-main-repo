@@ -554,7 +554,7 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 
 	/**
 	 * Creates a directory. If dir is note created for some reason a
-	 * runtimeexception is thrown.
+	 * runtime exception is thrown.
 	 * 
 	 * @param dir
 	 * @throws IOException

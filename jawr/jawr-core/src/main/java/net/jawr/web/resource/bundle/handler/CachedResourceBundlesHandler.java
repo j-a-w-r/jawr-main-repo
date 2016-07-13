@@ -212,7 +212,7 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 */
 	@Override
 	public void writeBundleTo(String bundlePath, Writer writer) throws ResourceNotFoundException {
-		// String text = (String) textCache.get(bundlePath);
+		
 		String text = (String) cacheMgr.get(TEXT_CACHE_PREFIX + bundlePath);
 		try {
 			// If it's not cached yet
@@ -232,6 +232,8 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 
 		} catch (IOException e) {
 			throw new BundlingProcessException("Unexpected IOException writing bundle[" + bundlePath + "]", e);
+		}finally {
+			IOUtils.close(writer);
 		}
 	}
 

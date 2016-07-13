@@ -558,6 +558,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			throw new BundlingProcessException("Unexpected IOException writing bundle[" + bundlePath + "]", e);
 		} finally {
 			IOUtils.close(rd);
+			IOUtils.close(writer);
 		}
 	}
 

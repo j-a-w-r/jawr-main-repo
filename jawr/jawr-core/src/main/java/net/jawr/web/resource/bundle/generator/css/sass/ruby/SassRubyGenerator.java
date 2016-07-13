@@ -196,9 +196,11 @@ public class SassRubyGenerator extends AbstractCSSGenerator implements ISassReso
 	private String compile(JoinableResourceBundle bundle, String content, String path, GeneratorContext ctx)
 			throws ScriptException, IOException {
 
-		InputStream is = getResourceInputStream(JAWR_IMPORTER_RB);
-		String script = IOUtils.toString(is);
-		rubyEngine.eval(script);
+		try(InputStream is = getResourceInputStream(JAWR_IMPORTER_RB)){
+			String script = IOUtils.toString(is);
+			rubyEngine.eval(script);
+		}
+		
 		SimpleBindings bindings = new SimpleBindings();
 		JawrSassResolver scssResolver = new JawrSassResolver(bundle, path, rsHandler, useAbsoluteURL);
 		bindings.put(JAWR_RESOLVER_VAR, scssResolver);

@@ -791,13 +791,14 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 						"Path '" + requestedPath + "' does not belong to a bundle. Forwarding request to the server. ");
 			}
 
-			InputStream is = servletContext.getResourceAsStream(requestedPath);
-			if (is != null) {
-				response.setContentType(contentType);
-				IOUtils.copy(is, response.getOutputStream());
-				IOUtils.close(is);
-				copyDone = true;
+			try (InputStream is = servletContext.getResourceAsStream(requestedPath)) {
+				if (is != null) {
+					response.setContentType(contentType);
+					IOUtils.copy(is, response.getOutputStream());
+					copyDone = true;
+				}
 			}
+
 		}
 		return copyDone;
 	}

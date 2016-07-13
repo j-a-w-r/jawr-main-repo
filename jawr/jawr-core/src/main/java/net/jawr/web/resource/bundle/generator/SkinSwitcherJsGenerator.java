@@ -92,17 +92,13 @@ public class SkinSwitcherJsGenerator extends AbstractJavascriptGenerator {
 	 */
 	private String createScript(String skinCookieName) {
 		StringWriter sw = new StringWriter();
-		InputStream is = null;
-		try {
-			is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE, this);
+		try (InputStream is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE, this);) {
 			IOUtils.copy(is, sw);
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
 			LOGGER.error(fatal, "a serious error occurred when initializing ThemeSwitcherJsGenerator");
 			throw new BundlingProcessException(
 					"Classloading issues prevent loading the themeSwitcher template to be loaded. ", e);
-		} finally {
-			IOUtils.close(is);
 		}
 
 		return sw.getBuffer().toString().replaceAll("\\{JAWR_SKIN_COOKIE_NAME\\}", skinCookieName);

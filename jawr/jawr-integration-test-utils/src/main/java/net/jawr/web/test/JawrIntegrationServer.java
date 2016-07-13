@@ -255,6 +255,8 @@ public class JawrIntegrationServer {
 		// to the current class.
 		LOGGER.info("Stop jetty webApp context....");
 		jettyWebAppContext.stop();
+		server.stop();
+		server.join();
 	}
 
 }
