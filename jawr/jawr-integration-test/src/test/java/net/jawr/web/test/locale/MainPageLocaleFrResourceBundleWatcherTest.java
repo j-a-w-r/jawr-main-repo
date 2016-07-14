@@ -156,7 +156,8 @@ public class MainPageLocaleFrResourceBundleWatcherTest extends AbstractPageTest 
 	}
 
 	protected void checkBeforeRun() {
-		//Assume.assumeTrue(getJavaVersion() < 1.8f);
+		// Ignore test on travis CI
+		Assume.assumeTrue(System.getProperty("CI") == null);
 	}
 
 	/**
