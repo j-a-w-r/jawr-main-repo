@@ -56,7 +56,7 @@ public abstract class AbstractJsChainedResourceBundlePostProcessor extends Abstr
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("postprocessing bundle:" + status.getCurrentBundle().getId());
 			processedBundle = doPostProcessBundle(status, bundleData);
-			if (processedBundle.toString().endsWith(")")) {
+			if (processedBundle.toString().trim().endsWith(")")) {
 				processedBundle.append(";");
 			}
 		} catch (IOException e) {

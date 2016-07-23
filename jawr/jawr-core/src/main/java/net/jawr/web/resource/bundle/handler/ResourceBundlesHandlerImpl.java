@@ -1413,7 +1413,6 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 		status.setProcessingType(BundleProcessingStatus.FILE_PROCESSING_TYPE);
 		if (null != bundle.getUnitaryPostProcessor()) {
 			StringBuffer resourceData = bundle.getUnitaryPostProcessor().postProcessBundle(status, content);
-
 			bundleData.append(resourceData);
 		} else if (null != defaultPostProcessor) {
 			if (LOGGER.isDebugEnabled())

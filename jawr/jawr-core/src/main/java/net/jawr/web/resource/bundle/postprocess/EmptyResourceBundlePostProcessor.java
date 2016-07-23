@@ -15,6 +15,8 @@ package net.jawr.web.resource.bundle.postprocess;
 
 import java.io.IOException;
 
+import net.jawr.web.JawrConstant;
+
 /**
  * Empty implementation of a bundle processor, which actually does nothing to a
  * bundle.
@@ -42,6 +44,14 @@ public class EmptyResourceBundlePostProcessor extends AbstractChainedResourceBun
 	@Override
 	protected StringBuffer doPostProcessBundle(BundleProcessingStatus status, StringBuffer bundleData)
 			throws IOException {
+		
+		if(status.getProcessingType().equals(BundleProcessingStatus.FILE_PROCESSING_TYPE)
+				&& status.getJawrConfig().getResourceType().equals(JawrConstant.JS_TYPE)){
+			if (bundleData.toString().trim().endsWith(")")) {
+				bundleData.append(";");
+			}
+		}
+		
 		return bundleData;
 	}
 

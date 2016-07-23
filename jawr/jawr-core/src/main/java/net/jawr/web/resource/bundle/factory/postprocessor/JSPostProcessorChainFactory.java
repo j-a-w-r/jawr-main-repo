@@ -15,6 +15,7 @@ package net.jawr.web.resource.bundle.factory.postprocessor;
 
 import net.jawr.web.resource.bundle.postprocess.AbstractChainedResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.ChainedResourceBundlePostProcessor;
+import net.jawr.web.resource.bundle.postprocess.EmptyResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.PostProcessFactoryConstant;
 import net.jawr.web.resource.bundle.postprocess.ResourceBundlePostProcessor;
 import net.jawr.web.resource.bundle.postprocess.impl.CustomJsPostProcessorChainWrapper;
@@ -70,7 +71,7 @@ public class JSPostProcessorChainFactory extends AbstractPostProcessorChainFacto
 	 */
 	@Override
 	public ResourceBundlePostProcessor buildDefaultUnitProcessorChain() {
-		return null;
+		return new EmptyResourceBundlePostProcessor();
 	}
 
 	/*
