@@ -588,7 +588,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		}
 
 		try (InputStream is = rsReaderHandler.getResourceAsStream(resourceName);
-				OutputStream os = response.getOutputStream();) {
+				OutputStream os = response.getOutputStream()) {
 			IOUtils.copy(is, os);
 		} catch (EOFException eofex) {
 			LOGGER.debug("Browser cut off response", eofex);

@@ -34,8 +34,8 @@ By default, the smart bundling feature is activated. The property
 
 
             jawr.use.smart.bundling=true #This will enable the smart bundling feature
-            jawr.use.bundle.mapping=true #This will make allow Jawr to cache information on resource bundling
 
+It is important to note that if you enable the smart bundling feature, the use bundle mapping property will be enable by default.
 
 ### Smart bundling with automatic bundle processing when application is started
 
@@ -54,13 +54,8 @@ If you want to use the automatic bundle processing when your application
 is started, and also being able to force the refresh using JMX, you have
 update your Jawr configuration file like below :
 
-            jawr.config.reload.interval=3600 #Here we configured Jawr to check for update every hour
+            jawr.use.smart.bundling=true #This will enable the smart bundling feature
             
-
-Using this configuration, if a change on a bundle is detected when Jawr
-checks the configuration, the bundle will be rebuild. Please check the
-[JMX documentation](../docs/jmx_support.html) for more detail on how to
-setup JMX for Jawr.
 
 To force bundle processing using JMX, you need to execute the method
 **refreshConfig()**. You'll be able to refresh the configuration for one
@@ -70,7 +65,7 @@ Please refer to the [JMX documentation](../docs/jmx_support.html) for
 more detail.
 
 Note : The recommended way to force rebuild is to use JMX. It's a more
-secure way to handle this case. In some cases, JMX could not be an
+secure way to handle this use case. In some cases, JMX could not be an
 option, in these cases, you can use the refreshKey URL parameter. (see
 below)
 
@@ -80,7 +75,7 @@ If you want to use the automatic bundle processing when your application
 is started, and also being able to force the refresh using a key, you
 have update your Jawr configuration file like below :
 
-            jawr.use.bundle.mapping=true #This will make allow Jawr to cache information on resource bundling
+            jawr.use.smart.bundling=true #This will enable the smart bundling feature
             jawr.config.reload.interval=3600 #Here we configured Jawr to check for update every hour
             jawr.config.reload.refreshKey=mySecretKey #To force a refresh of bundles which needs to be rebuild, hit any bundle URL and add ?refreshKey=mySecretKey to reload the bundles.
             
@@ -97,8 +92,7 @@ you only have to set the **jawr.use.bundle.mapping** property to
 **true**, in your Jawr configuration file like below :
 
 
-            jawr.use.bundle.mapping=true #This will make allow Jawr to cache information on resource bundling
-
+            jawr.use.smart.bundling=true #This will enable the smart bundling feature
 
 Using this configuration, if a change is detected on a bundle when the
 server is started, the bundle will not be rebuild until next server
@@ -106,8 +100,8 @@ restart.
 
 ### Delay since last resource event
 
-Jawr watch resources on server to detect resource creation, modification or deletion using WatchService.
-When there are a lot of events, to ensure that all events have been processed before staart the bundling process, Jawr use a delay after the last event to make sure that there no more event to process before starting the bundling process.
+Jawr watches resources on server to detect resource creation, modification or deletion using WatchService API.
+When there are a lot of events, to ensure that all events have been processed before starting the bundling process, Jawr uses a delay after the last event to make sure that there no more event to process before starting the bundling process.
 
 This delay is configurable using the property **jawr.smart.bundling.delay.after.last.event** :
 
@@ -119,7 +113,7 @@ This delay is configurable using the property **jawr.smart.bundling.delay.after.
 ### Global processing
 
 Jawr allows the user to defines processor which can process all the
-bundles at once. Some examples of these processor are the smartsprite
+bundles at once. An example of these kind of processors is the smartsprite
 global preprocessor, which will retrieve information about CSS sprite
 defines in every bundle and which will update sprite reference in all the bundles.
 
@@ -130,7 +124,7 @@ By nature, it is not possible to avoid the processing of all bundle for
 these global processors, but Jawr will try to find the impacted bundles
 after the global preprocessing phase, to only process those bundles.
 
-To make sure that change are detected, you need to put **\$[md5]()**
+To make sure that change are detected, you need to put **${md5}**
 property in the image of the sprite-ref, like below :
 
 
@@ -146,8 +140,10 @@ property in the image of the sprite-ref, like below :
 
 ### Force complete rebuild
 
-There is two way to force the complete rebuild :
+There is two way to force the complete rebuild (ignoring the information in cache) :
+
  - Clean the web application working directory where the files for cache are stored
+
  - Modify your Jawr configuration file
 
 

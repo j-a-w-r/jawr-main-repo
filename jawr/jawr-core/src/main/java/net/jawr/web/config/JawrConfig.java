@@ -324,10 +324,11 @@ public class JawrConfig implements Serializable {
 	private boolean forceCssBundleInDebugForIEOn = false;
 
 	/**
-	 * Flag which defines if we should process the bundle at server startup.
-	 * defaults to false.
+	 * Flag which defines if we should process use information of bundle mapping at server startup.
+	 * This is used to speed up server start up.
+	 * defaults to true.
 	 */
-	private boolean useBundleMapping = false;
+	private boolean useBundleMapping = true;
 
 	/**
 	 * Flag which defines if we should use the smart bundling feature. defaults
@@ -444,7 +445,7 @@ public class JawrConfig implements Serializable {
 	public JawrConfig(final String resourceType, final Properties props) {
 		this(resourceType, props, null);
 	}
-
+	
 	/**
 	 * Initialize configuration using params contained in the initialization
 	 * properties file.
@@ -532,8 +533,15 @@ public class JawrConfig implements Serializable {
 
 		this.useBundleMapping = getBooleanProperty(JAWR_USE_BUNDLE_MAPPING, false);
 
-		this.useSmartBundling = getBooleanProperty(JAWR_USE_SMART_BUNDLING, true);
+		this.useSmartBundling = getBooleanProperty(JAWR_USE_SMART_BUNDLING, false);
 
+		if(this.useSmartBundling && !this.useBundleMapping){
+			if(LOGGER.isInfoEnabled()){
+				LOGGER.info("As the property '"+JAWR_USE_SMART_BUNDLING+"' is set to true, the '"+JAWR_USE_BUNDLE_MAPPING+"' property has been forced to true.");
+			}
+			this.useBundleMapping = true;
+		}
+		
 		this.useGeneratorCache = getBooleanProperty(JAWR_USE_GENERATOR_CACHE, true);
 
 		String value = getProperty(JawrConstant.JAWR_SMART_BUNDLING_DELAY_AFTER_LAST_EVENT);

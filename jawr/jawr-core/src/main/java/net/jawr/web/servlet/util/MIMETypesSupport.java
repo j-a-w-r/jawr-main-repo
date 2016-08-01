@@ -54,7 +54,7 @@ public class MIMETypesSupport {
 			synchronized (MIMETypesSupport.class) {
 				if (null == supportedMIMETypes) {
 					// Load the supported MIME types out of a properties file
-					try (InputStream is = ClassLoaderResourceUtils.getResourceAsStream(MIME_PROPS_LOCATION, ref);) {
+					try (InputStream is = ClassLoaderResourceUtils.getResourceAsStream(MIME_PROPS_LOCATION, ref)) {
 						supportedMIMETypes = new Properties();
 						supportedMIMETypes.load(is);
 					} catch (FileNotFoundException e) {

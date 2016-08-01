@@ -92,7 +92,7 @@ public class SkinSwitcherJsGenerator extends AbstractJavascriptGenerator {
 	 */
 	private String createScript(String skinCookieName) {
 		StringWriter sw = new StringWriter();
-		try (InputStream is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE, this);) {
+		try (InputStream is = ClassLoaderResourceUtils.getResourceAsStream(SCRIPT_TEMPLATE, this)) {
 			IOUtils.copy(is, sw);
 		} catch (IOException e) {
 			Marker fatal = MarkerFactory.getMarker("FATAL");
