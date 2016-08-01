@@ -69,32 +69,32 @@
 		<maven.compile.encoding>UTF-8</maven.compile.encoding>
 		<maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
 		<mockito.version>1.9.5</mockito.version>
-		<junit.version>4.11</junit.version>
-		<slf4j-api.version>1.7.5</slf4j-api.version>
+		<junit.version>4.12</junit.version>
+		<slf4j-api.version>1.7.21</slf4j-api.version>
 		<log4j.version>1.2.17</log4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
 		<jsp-api.version>2.1</jsp-api.version>
-		<rhino.version>1.7.7</rhino.version>
-		<yuicompressor.version>2.4.7</yuicompressor.version>
+		<rhino.version>1.7.7.1</rhino.version>
+		<yuicompressor.version>2.4.8</yuicompressor.version>
 		<jsf-api.version>1.1_02</jsf-api.version>
-		<commons-validator.version>1.2.0</commons-validator.version>
+		<commons-validator.version>1.5.1</commons-validator.version>
 		<taglibs-standard.version>1.1.2</taglibs-standard.version>
-		<ehcache.version>2.7.4</ehcache.version>
-		<smartsprites.version>0.2.11</smartsprites.version>
-		<google-closure.version>v20150729</google-closure.version>
+		<ehcache.version>2.10.2.2.21</ehcache.version>
+		<smartsprites.version>0.2.12</smartsprites.version>
+		<google-closure.version>v20160713</google-closure.version>
 		<lesscss-engine.version>1.5.1</lesscss-engine.version>
-		<less4j.version>1.14.0</less4j.version>
-		<jackson-json.version>2.4.2</jackson-json.version>
+		<less4j.version>1.17.2</less4j.version>
+		<jackson-json.version>2.8.1</jackson-json.version>
 		<jetty.version>9.2.6.v20141205</jetty.version>
 		<htmlunit.version>2.5</htmlunit.version>
-		<webjars-locator.version>0.27</webjars-locator.version>
+		<webjars-locator.version>0.31</webjars-locator.version>
 		<jquery-version>1.11.1</jquery-version>
 		<bootstrap-version>3.2.0</bootstrap-version>
 		<wicket.version>6.10.0</wicket.version>
 		<spring.version>4.1.2.RELEASE</spring.version>
 		<vaadin.saas-compiler.version>0.9.12</vaadin.saas-compiler.version>
-		<jruby.version>9.0.5.0</jruby.version>
-		<saas-gems.version>3.4.4.3</saas-gems.version>
+		<jruby.version>9.1.2.0</jruby.version>
+		<saas-gems.version>3.4.20.0</saas-gems.version>
 		
 		<maven-deploy-plugin-version>2.8.2</maven-deploy-plugin-version>
 		<spring-boot.version>1.3.2.RELEASE</spring-boot.version>
