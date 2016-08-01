@@ -3,13 +3,13 @@
 }
 
 a {
-	background: -o-linear-gradient(top, white, black);
+	background: -o-linear-gradient(top,white,black);
 	background: linear-gradient(top,white,black)
 }
 
 h1 {
     -o-transition: all 1s;
-       transition: all 1s
+    transition: all 1s
 }
 
 #image {
