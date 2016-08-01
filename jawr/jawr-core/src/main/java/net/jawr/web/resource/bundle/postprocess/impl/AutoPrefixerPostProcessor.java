@@ -52,7 +52,7 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 	public static final String AUTOPREFIXER_SCRIPT_LOCATION = "jawr.css.autoprefixer.script";
 
 	/** The default location of the autoprefixer script */
-	public static final String AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION = "/net/jawr/web/resource/bundle/postprocessor/css/autoprefixer/autoprefixer-5.2.1.js";
+	public static final String AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION = "/net/jawr/web/resource/bundle/postprocessor/css/autoprefixer/autoprefixer-6.3.7.js";
 
 	/** The autoprefixer js engine property name */
 	public static final String AUTOPREFIXER_JS_ENGINE = "jawr.css.autoprefixer.js.engine";
@@ -93,10 +93,12 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 
 		jsEngine.evaluate("initAutoPrefixer.js", String.format("processor = autoprefixer(%s);", strOptions));
 		jsEngine.evaluate("jawrAutoPrefixerProcess.js",
-				String.format("function process(cssSource, opts){" + "var result = processor.process(cssSource, opts);"
-						+ "if(result.warnings){" + "result.warnings().forEach(function(message){"
-						+ "if(logger.isWarnEnabled()){" + "logger.warn(message.toString());" + "}" + "});}"
-						+ "return result.css;" + "}"));
+				"function process(cssSource, opts){\n"
+				+ "var result = autoprefixer.process.apply(autoprefixer, [cssSource, opts]);\n"
+				+ "if(result.warnings){\n" + "result.warnings().forEach(function(message){\n"
+				+ "if(logger.isWarnEnabled()){\n" + "logger.warn(message.toString());\n" + "}\n" + "});}\n"
+				+ "return result.css;\n" + "}");
+        
 
 		stopWatch.stop();
 		if (PERF_LOGGER.isDebugEnabled()) {

@@ -126,18 +126,19 @@ public class AutoPrefixerTest {
 	}
 
 	@Test
-	public void testPostProcessingWithSafeMode() throws Exception {
+	public void testPostProcessingWithSupportsDisabled() throws Exception {
 		if (isJsEngineAvailable()) {
 			when(config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS))
-					.thenReturn("{safe : true}");
+					.thenReturn("{supports : false}");
 
-			StringBuffer sb = new StringBuffer("a {");
+			String src = FileUtils.readClassPathFile("postprocessor/css/autoprefixer/supports.css");
+			StringBuffer sb = new StringBuffer(src);
 
 			BundleProcessingStatus status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,
 					bundle, null, config);
 			StringBuffer ret = processor.postProcessBundle(status, sb);
 
-			String expected = "a {}";
+			String expected = FileUtils.readClassPathFile("postprocessor/css/autoprefixer/supports_expected.css");
 			assertEquals(expected, ret.toString());
 		}
 	}
