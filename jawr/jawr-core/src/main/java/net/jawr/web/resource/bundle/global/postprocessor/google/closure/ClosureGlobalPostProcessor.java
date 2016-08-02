@@ -142,7 +142,7 @@ public class ClosureGlobalPostProcessor extends AbstractChainedGlobalProcessor<G
 	public static final String GOOGLE_CLOSURE_RESULT_ZIP_DIR = "/googleClosure/gzip/";
 
 	/** The JAWR root module file path */
-	private static final String JAWR_ROOT_MODULE_JS = "/JAWR_ROOT_MODULE.js";
+	private static final String JAWR_ROOT_MODULE_JS = "\\JAWR_ROOT_MODULE.js";
 
 	/** The JAWR root module file name */
 	private static final String JAWR_ROOT_MODULE_NAME = "JAWR_ROOT_MODULE";
@@ -677,19 +677,25 @@ public class ClosureGlobalPostProcessor extends AbstractChainedGlobalProcessor<G
 
 		}
 
-		/**
-		 * Creates inputs from a list of files.
+		/*
+		 * (non-Javadoc)
 		 * 
-		 * @param files A list of filenames @param allowStdIn Whether '-' is
-		 * allowed appear as a filename to represent stdin. If true, '-' is only
-		 * allowed to appear once. @return An array of inputs @throws
+		 * @see
+		 * com.google.javascript.jscomp.AbstractCommandLineRunner#createInputs(
+		 * java.util.List, java.util.List, boolean, java.util.List)
 		 */
 		@Override
-		protected List<SourceFile> createInputs(List<String> files, boolean allowStdIn) throws IOException {
+		// protected List<SourceFile> createInputs(List<String> files, boolean
+		// allowStdIn) throws IOException {
+		protected List<SourceFile> createInputs(List<FlagEntry<JsSourceType>> files, List<JsonFileSpec> jsonFiles,
+				boolean allowStdIn, List<JsModuleSpec> jsModuleSpecs) {
 
 			List<SourceFile> inputs = new ArrayList<>(files.size());
 
-			for (String filename : files) {
+			for (FlagEntry<JsSourceType> jsSource : files) {
+				String filename = jsSource.getValue();
+
+				// for (String filename : files) {
 				if (filename.equals(JAWR_ROOT_MODULE_JS)) {
 					SourceFile newFile = SourceFile.fromCode(filename, "");
 					inputs.add(newFile);
@@ -706,18 +712,18 @@ public class ClosureGlobalPostProcessor extends AbstractChainedGlobalProcessor<G
 							// Do nothing
 						}
 
-						if (rd == null) {
-							try {
-
+						try {
+							if (rd == null) {
 								rd = ctx.getRsReaderHandler().getResource(filename);
-							} catch (ResourceNotFoundException e1) {
-								throw new BundlingProcessException(e1);
 							}
+
+							String jsCode = CharStreams.toString(rd);
+							SourceFile newFile = SourceFile.fromCode(filename, jsCode);
+							inputs.add(newFile);
+						} catch (IOException | ResourceNotFoundException e) {
+							throw new BundlingProcessException(e);
 						}
 
-						String jsCode = CharStreams.toString(rd);
-						SourceFile newFile = SourceFile.fromCode(filename, jsCode);
-						inputs.add(newFile);
 					} finally {
 						IOUtils.close(is);
 						IOUtils.close(rd);
