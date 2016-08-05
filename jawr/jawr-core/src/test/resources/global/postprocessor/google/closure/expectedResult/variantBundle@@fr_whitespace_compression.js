@@ -1,1 +1,1 @@
-function isSsl(){return false};
+detector.prototype.isSsl=function(){return false};

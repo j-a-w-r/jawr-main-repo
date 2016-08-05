@@ -1,1 +1,4 @@
-function isSsl() { return false; }
+/**
+ * @override
+ */
+detector.prototype.isSsl = function() { return false; }

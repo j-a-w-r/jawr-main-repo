@@ -734,11 +734,11 @@ public class ClosureGlobalPostProcessor extends AbstractChainedGlobalProcessor<G
 			return inputs;
 		}
 
-		/**
-		 * Converts a file name into a Writer. Returns null if the file name is
-		 * null.
+		/*
+		 * (non-Javadoc)
 		 * 
-		 * @throws IOException
+		 * @see com.google.javascript.jscomp.AbstractCommandLineRunner#
+		 * filenameToOutputStream(java.lang.String)
 		 */
 		@Override
 		protected OutputStream filenameToOutputStream(String fileName) throws IOException {
