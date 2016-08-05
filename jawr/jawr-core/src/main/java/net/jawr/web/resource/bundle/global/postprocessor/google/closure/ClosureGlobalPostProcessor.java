@@ -685,8 +685,6 @@ public class ClosureGlobalPostProcessor extends AbstractChainedGlobalProcessor<G
 		 * java.util.List, java.util.List, boolean, java.util.List)
 		 */
 		@Override
-		// protected List<SourceFile> createInputs(List<String> files, boolean
-		// allowStdIn) throws IOException {
 		protected List<SourceFile> createInputs(List<FlagEntry<JsSourceType>> files, List<JsonFileSpec> jsonFiles,
 				boolean allowStdIn, List<JsModuleSpec> jsModuleSpecs) {
 
