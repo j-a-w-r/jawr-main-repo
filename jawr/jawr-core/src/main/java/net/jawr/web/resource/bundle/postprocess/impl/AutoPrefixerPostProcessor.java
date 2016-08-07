@@ -45,6 +45,9 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 	/** The Logger */
 	private static final Logger PERF_LOGGER = LoggerFactory.getLogger(JawrConstant.PERF_PROCESSING_LOGGER);
 
+	/** The Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(AutoPrefixerPostProcessor.class);
+
 	/** The property name of the autoprefixer options */
 	public static final String AUTOPREFIXER_SCRIPT_OPTIONS = "jawr.css.autoprefixer.options";
 
@@ -52,7 +55,7 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 	public static final String AUTOPREFIXER_SCRIPT_LOCATION = "jawr.css.autoprefixer.script";
 
 	/** The default location of the autoprefixer script */
-	public static final String AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION = "/net/jawr/web/resource/bundle/postprocessor/css/autoprefixer/autoprefixer-6.3.7.js";
+	public static final String AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION = "/net/jawr/web/resource/bundle/postprocessor/css/autoprefixer/autoprefixer-6.4.0.js";
 
 	/** The autoprefixer js engine property name */
 	public static final String AUTOPREFIXER_JS_ENGINE = "jawr.css.autoprefixer.js.engine";
@@ -85,13 +88,16 @@ public class AutoPrefixerPostProcessor extends AbstractChainedResourceBundlePost
 		String script = config.getProperty(AUTOPREFIXER_SCRIPT_LOCATION, AUTOPREFIXER_SCRIPT_DEFAULT_LOCATION);
 		String jsEngineName = config.getJavascriptEngineName(AUTOPREFIXER_JS_ENGINE);
 		jsEngine = new JavascriptEngine(jsEngineName, true);
-		jsEngine.getBindings().put("logger", PERF_LOGGER);
-		InputStream inputStream = getResourceInputStream(config, script);
-		jsEngine.evaluate("autoprefixer.js", inputStream);
+		jsEngine.getBindings().put("logger", LOGGER);
+		try(InputStream inputStream = getResourceInputStream(config, script)){
+			jsEngine.evaluate("autoprefixer.js", inputStream);
+		} catch (IOException e) {
+			throw new BundlingProcessException(e);
+		}
 		String strOptions = config.getProperty(AUTOPREFIXER_SCRIPT_OPTIONS, AUTOPREFIXER_DEFAULT_OPTIONS);
 		this.options = jsEngine.execEval(strOptions);
 
-		jsEngine.evaluate("initAutoPrefixer.js", String.format("processor = autoprefixer(%s);", strOptions));
+		jsEngine.evaluate("initAutoPrefixer.js", String.format("if(logger.isDebugEnabled()){ logger.debug('Autoprefixer config : '+autoprefixer(%s).info());}", strOptions));
 		jsEngine.evaluate("jawrAutoPrefixerProcess.js",
 				"function process(cssSource, opts){\n"
 				+ "var result = autoprefixer.process.apply(autoprefixer, [cssSource, opts]);\n"

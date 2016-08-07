@@ -40,7 +40,6 @@ div {
 .generated_class2 { color : #FFAD00; }
 :-webkit-full-screen a {
     display: -webkit-box;
-    display: -webkit-flex;
     display: flex
 }
 
@@ -55,19 +54,18 @@ div {
 
 :fullscreen a {
     display: -webkit-box;
-    display: -webkit-flex;
     display: -ms-flexbox;
     display: flex
 }
 
 a {
-	background: -webkit-linear-gradient(top, white, black);
+	background: -webkit-linear-gradient(top,white,black);
 	background: linear-gradient(top,white,black)
 }
 
 h1 {
     -webkit-transition: all 1s;
-            transition: all 1s
+    transition: all 1s
 }
 
 #image {

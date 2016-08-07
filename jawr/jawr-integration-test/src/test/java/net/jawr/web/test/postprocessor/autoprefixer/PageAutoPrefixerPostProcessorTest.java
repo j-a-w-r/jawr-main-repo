@@ -52,7 +52,7 @@ public class PageAutoPrefixerPostProcessorTest extends MainPageTest {
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/538371762/fwk/core/component.css",
+				getUrlPrefix()+"/N1667715926/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}

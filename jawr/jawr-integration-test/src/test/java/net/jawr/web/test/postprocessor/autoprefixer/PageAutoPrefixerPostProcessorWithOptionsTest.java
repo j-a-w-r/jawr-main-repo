@@ -51,7 +51,7 @@ public class PageAutoPrefixerPostProcessorWithOptionsTest extends PageAutoPrefix
 		assertEquals(1, styleSheets.size());
 		final HtmlLink css = styleSheets.get(0);
 		assertEquals(
-				getUrlPrefix()+"/N480141109/fwk/core/component.css",
+				getUrlPrefix()+"/N46287811/fwk/core/component.css",
 				css.getHrefAttribute());
 
 	}
