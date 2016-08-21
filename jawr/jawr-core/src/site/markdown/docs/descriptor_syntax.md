@@ -20,7 +20,7 @@ qualified name containing package prefix is expected.
 | jawr.gzip.on | Boolean | Enable the ability to serve gzipped resources to browsers that support it.| true |
 | jawr.gzip.ie6.on | Boolean | Disable the serving of gzipped resources to Internet Explorer 6 or less.| true |
 | jawr.use.generator.cache | Boolean | Define if we must use cache for the generated content. | true |
-| jawr.use.smart.bundling | Boolean | Define if we must use the "smart bundling" feature (processing only modified bundle). | true |
+| jawr.use.smart.bundling | Boolean | Define if we must use the "smart bundling" feature (processing only modified bundle). | false |
 | jawr.use.bundle.mapping | Boolean | Define if we must use the generated bundle mapping or not. | false |
 | jawr.smart.bundling.delay.after.last.event | Integer | Defines the delay after the last event before starting the bundle processing (in second) | 2 |
 | jawr.working.directory | String | Path to the jawr working directory. | *javax.servlet.context.tempdir*/jawrTmp |
