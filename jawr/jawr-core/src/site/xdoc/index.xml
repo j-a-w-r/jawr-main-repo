@@ -159,7 +159,7 @@
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
-      	  <li> <strong>XXth July 2016</strong>: Version 3.9 released:<br/>
+      	  <li> <strong>21srt August 2016</strong>: Version 3.9 released:<br/>
 	      This version is containing bug fixes and some new features.<br/>
 	      One of the focus of this new version is to speed up the bundling process, by adding caching feature to generated resources and also by providing "smart bundling" feature which allow Jawr to rebuild bundles only if they've been modified. 
 	      Please check the <a href="./tutorials/howToUseJawrSmartBundling.html/">smart bundling tutorial</a> for more information.
@@ -200,6 +200,10 @@
 				<li>[<a href='https://java.net/jira/browse/JAWR-389'>JAWR-389</a>] Use annotation to identify variant post processor
 				</li>
 	    	</ul>
+	    	</li>
+	    	<li>
+	    	Thanks to marrdev, paranoiabla, jmaslac, tsachev, H.Schulz, senorplankton, mayjak, jiri_pejchal for reporting the issues.<br/>
+	    	Thanks to dtrunk90, janningvygen, donv, jeremysnyder, holmis83, diocerty, davidwebster48 for reporting the issues and providing patches.
 	    	</li>
 	    	</ul>
 	    	<ul>
