@@ -159,6 +159,50 @@
       <p>Here are the latest announcements regarding Jawr. You can find older version announcements with all the features that have been 
       added over time at the <a href="./changes.html">change log.</a> </p>
       <ul>
+      	  <li> <strong>XXth July 2016</strong>: Version 3.9 released:<br/>
+	      This version is containing bug fixes and some new features.<br/>
+	      One of the focus of this new version is to speed up the bundling process, by adding caching feature to generated resources and also by providing "smart bundling" feature which allow Jawr to rebuild bundles only if they've been modified. 
+	      Please check the <a href="./tutorials/howToUseJawrSmartBundling.html/">smart bundling tutorial</a> for more information.
+	      <br/>
+	  	  <strong>New features &amp; improvements : </strong>
+	  	  	<ul>
+	  	  		<li>[<a href='https://java.net/jira/browse/JAWR-247'>JAWR-247</a>] Jawr now allows you to used extension based resources (.less, .coffee, ...) from classpath generators (like classpath, webjars, ...)
+				This means that you can now adds resources like : <b>jar:/less/myStyle.less</b> in your bundle mapping.
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-313'>JAWR-313</a>] The biggest feature of this new version is the "smart bundling". 
+				This feature is used to speed up bundle generation by detecting which bundle should be processed.
+				Please check the following <a href="./tutorials/howToUseJawrSmartBundling.html/">tutorial</a> to see how to set up this new feature.
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-364'>JAWR-364</a>] The DWR 3 extension has been updated to use the latest DWR 3.0.1-RELEASE version.
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-362'>JAWR-362</a>] Jawr provides now a JRuby sass compiler for Sass Generator, which is closer to the original version than the Vaadin one. 
+				Please check the <a href="./docs/generators#SASS_Ruby_generator">Saas Ruby generator documentation</a> for more detail.
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-398'>JAWR-398</a>] The Jawr javascript tag has been updated to add <b>crossorigin</b> attribute.
+				</li>
+	  	  		<li>[<a href='https://java.net/jira/browse/JAWR-404'>JAWR-404</a>] The <a href="./docs/postprocessors.html#Autoprefixer_postprocessor">Jawr Autoprefixer postprocessor</a> has been upgraded to use the version 6.4.0 
+	  	  		</li>
+	  	  		<li>[<a href='https://java.net/jira/browse/JAWR-403'>JAWR-403</a>] The <a href="./docs/global_postprocessors.html#Google_Closure_postprocessor">Google closure global postprocessor</a> has been upgraded to use the version v20160713
+	  	  		</li>
+	  		</ul>
+      	 	<strong>Fixed issues : </strong>
+	    	<ul>   
+	    		<li>[<a href='https://java.net/jira/browse/JAWR-365'>JAWR-365</a>] Add more exception info when failing to read resource
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-369'>JAWR-369</a>] Add semicolon between JavaScript files if necessary
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-381'>JAWR-381</a>] Improve performance generation of generated resources (less, saas, ...)
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-383'>JAWR-383</a>] Provide Spring Boot auto-configuration
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-388'>JAWR-388</a>] Convert site documentation from apt to markdown
+				</li>
+				<li>[<a href='https://java.net/jira/browse/JAWR-389'>JAWR-389</a>] Use annotation to identify variant post processor
+				</li>
+	    	</ul>
+	    	</li>
+	    	</ul>
+	    	<ul>
       	  <li> <strong>28th August 2015</strong>: Version 3.8 released:<br/>
 	      This version is containing bug fixes and some new features.<br/><br/>
 	  	  <strong>New features: </strong>
@@ -205,7 +249,7 @@
       			<li>
       		 	[<a href="https://java.net/jira/browse/JAWR-153">JAWR-153</a>] Jawr provides a new postprocessor based on <a href="https://github.com/postcss/autoprefixer">Autoprefixer</a>.<br/>
       		 	The autoprefixer postprocessor will generate vendor specific prefixes for CSS rules.
-      		 	Please check the <a href="./docs/postprocessors.html#Autoprefixer_postprocessor">generator documentation</a> for more detail.
+      		 	Please check the <a href="./docs/postprocessors.html#Autoprefixer_postprocessor">postprocessor documentation</a> for more detail.
       			</li>
       		</ul>
       	 	<strong>Fixed issues : </strong>

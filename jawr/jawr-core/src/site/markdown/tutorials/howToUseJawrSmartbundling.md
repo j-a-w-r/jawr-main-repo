@@ -29,13 +29,13 @@ that if a file content changed Jawr will rebuild the bundles.
 
 ### Enabling "Smart bundling"
 
-By default, the smart bundling feature is activated. The property
+By default, the smart bundling feature is deactivated. The property
 **jawr.use.smart.bundling** can be used to unable or disable it.
 
 
             jawr.use.smart.bundling=true #This will enable the smart bundling feature
 
-It is important to note that if you enable the smart bundling feature, the use bundle mapping property will be enable by default.
+Note : It is important to note that if you enable the smart bundling feature, the use bundle mapping property will be enable by default, because it's a prerequisite to use the smart bundling feature
 
 ### Smart bundling with automatic bundle processing when application is started
 
@@ -140,7 +140,7 @@ property in the image of the sprite-ref, like below :
 
 ### Force complete rebuild
 
-There is two way to force the complete rebuild (ignoring the information in cache) :
+There are two way to force the complete rebuild (ignoring the information in cache) :
 
  - Clean the web application working directory where the files for cache are stored
 

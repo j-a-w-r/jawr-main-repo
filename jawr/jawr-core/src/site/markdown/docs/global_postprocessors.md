@@ -98,7 +98,7 @@ accessing application classes.
 ### Jawr included global postprocessors reference
 
 
-**Google Closure postprocessor**
+[**Google Closure postprocessor**]()
 --------------------------------
 
 -   **Properties Key**: closure
