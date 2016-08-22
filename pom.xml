@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.jawr</groupId>
 	<artifactId>jawr</artifactId>
-	<version>3.9-SNAPSHOT</version>
+	<version>3.9</version>
 	<packaging>pom</packaging>
 	<url>http://jawr.java.net/</url>
 	<description>Javascript/CSS bundling and compressing tool for java web apps.
@@ -25,7 +25,7 @@
 		<connection>scm:git:git@github.com:ic3fox/jawr-main-repo.git</connection>
 		<developerConnection>scm:git:git@github.com:ic3fox/jawr-main-repo.git</developerConnection>
 		<url>http://github.com/ic3fox/jawr-main-repo</url>
-		<tag>HEAD</tag>
+		<tag>jawr-3.9</tag>
 	</scm>
 	<developers>
 		<developer>
