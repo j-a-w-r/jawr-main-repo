@@ -613,6 +613,12 @@
 	</modules>
 	<profiles>
 		<profile>
+			<id>noTest</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+		</profile>
+		<profile>
 			<id>release-sign-artifacts</id>
 			<activation>
 				<property>
