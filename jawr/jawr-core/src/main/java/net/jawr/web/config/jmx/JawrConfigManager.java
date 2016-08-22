@@ -81,72 +81,86 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 				.parseBoolean(configProperties.getProperty(JawrConfig.JAWR_USE_URL_CONTEXTPATH_OVERRIDE_IN_DEBUG_MODE));
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getDebugOverrideKey()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getDebugOverrideKey()
 	 */
 	@Override
 	public String getDebugOverrideKey() {
 		return configProperties.getProperty(JawrConfig.JAWR_DEBUG_OVERRIDE_KEY);
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getDwrMapping()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getDwrMapping()
 	 */
 	@Override
 	public String getDwrMapping() {
 		return configProperties.getProperty(JawrConfig.JAWR_DWR_MAPPING);
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getBinaryResourcesDefinition()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#
+	 * getBinaryResourcesDefinition()
 	 */
 	@Override
 	public String getBinaryResourcesDefinition() {
 		return configProperties.getProperty(JawrConfig.JAWR_BINARY_RESOURCES);
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getBinaryHashAlgorithm()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#getBinaryHashAlgorithm()
 	 */
 	@Override
 	public String getBinaryHashAlgorithm() {
 		return configProperties.getProperty(JawrConfig.JAWR_BINARY_HASH_ALGORITHM);
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#isDebugModeOn()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#isDebugModeOn()
 	 */
 	@Override
 	public boolean isDebugModeOn() {
 		return Boolean.parseBoolean(configProperties.getProperty(JawrConfig.JAWR_DEBUG_ON));
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#isGzipResourcesForIESixOn()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#isGzipResourcesForIESixOn(
+	 * )
 	 */
 	@Override
 	public boolean isGzipResourcesForIESixOn() {
 		return Boolean.parseBoolean(configProperties.getProperty(JawrConfig.JAWR_GZIP_IE6_ON));
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#isGzipResourcesModeOn()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#isGzipResourcesModeOn()
 	 */
 	@Override
 	public boolean isGzipResourcesModeOn() {
 		return Boolean.parseBoolean(configProperties.getProperty(JawrConfig.JAWR_GZIP_ON));
 	}
 
-	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#isCssClasspathImageHandledByClasspathCss()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#
+	 * isCssClasspathImageHandledByClasspathCss()
 	 */
 	@Override
 	public boolean isCssClasspathImageHandledByClasspathCss() {
@@ -174,27 +188,34 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 		return Boolean.parseBoolean(configProperties.getProperty(JawrConfig.JAWR_USE_BUNDLE_MAPPING));
 	}
 
-	/**
-	 * @param charsetName
-	 * @see net.jawr.web.config.JawrConfig#setCharsetName(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setCharsetName(java.lang.
+	 * String)
 	 */
 	@Override
 	public void setCharsetName(String charsetName) {
 		configProperties.setProperty(JawrConfig.JAWR_CHARSET_NAME, charsetName);
 	}
 
-	/**
-	 * @return the charset name
-	 * @see net.jawr.web.config.JawrConfig#setCharsetName(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getCharsetName()
 	 */
 	@Override
 	public String getCharsetName() {
 		return configProperties.getProperty(JawrConfig.JAWR_CHARSET_NAME);
 	}
 
-	/**
-	 * @param contextPathOverride
-	 * @see net.jawr.web.config.JawrConfig#setContextPathOverride(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setContextPathOverride(
+	 * java.lang.String)
 	 */
 	@Override
 	public void setContextPathOverride(String contextPathOverride) {
@@ -227,86 +248,115 @@ public class JawrConfigManager implements JawrConfigManagerMBean {
 				Boolean.toString(useContextPathOverrideInDebugMode));
 	}
 
-	/**
-	 * @param cssLinkFlavor
-	 * @see net.jawr.web.config.JawrConfig#setCssLinkFlavor(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setCssLinkFlavor(java.lang
+	 * .String)
 	 */
 	@Override
 	public void setCssLinkFlavor(String cssLinkFlavor) {
 		configProperties.setProperty(JawrConfig.JAWR_CSSLINKS_FLAVOR, cssLinkFlavor);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#getCssLinkFlavor()
+	 */
 	@Override
 	public String getCssLinkFlavor() {
 		return configProperties.getProperty(JawrConfig.JAWR_CSSLINKS_FLAVOR);
 	}
 
-	/**
-	 * @param debugMode
-	 * @see net.jawr.web.config.JawrConfig#setDebugModeOn(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setDebugModeOn(boolean)
 	 */
 	@Override
 	public void setDebugModeOn(boolean debugMode) {
 		configProperties.setProperty(JawrConfig.JAWR_DEBUG_ON, Boolean.toString(debugMode));
 	}
 
-	/**
-	 * @param debugOverrideKey
-	 * @see net.jawr.web.config.JawrConfig#setDebugOverrideKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setDebugOverrideKey(java.
+	 * lang.String)
 	 */
 	@Override
 	public void setDebugOverrideKey(String debugOverrideKey) {
 		configProperties.setProperty(JawrConfig.JAWR_DEBUG_OVERRIDE_KEY, debugOverrideKey);
 	}
 
-	/**
-	 * @param dwrMapping
-	 * @see net.jawr.web.config.JawrConfig#setDwrMapping(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setDwrMapping(java.lang.
+	 * String)
 	 */
 	@Override
 	public void setDwrMapping(String dwrMapping) {
 		configProperties.setProperty(JawrConfig.JAWR_DWR_MAPPING, dwrMapping);
 	}
 
-	/**
-	 * @param gzipResourcesForIESixOn
-	 * @see net.jawr.web.config.JawrConfig#setGzipResourcesForIESixOn(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setGzipResourcesForIESixOn
+	 * (boolean)
 	 */
 	@Override
 	public void setGzipResourcesForIESixOn(boolean gzipResourcesForIESixOn) {
 		configProperties.setProperty(JawrConfig.JAWR_GZIP_IE6_ON, Boolean.toString(gzipResourcesForIESixOn));
 	}
 
-	/**
-	 * @param gzipResourcesModeOn
-	 * @see net.jawr.web.config.JawrConfig#setGzipResourcesModeOn(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setGzipResourcesModeOn(
+	 * boolean)
 	 */
 	@Override
 	public void setGzipResourcesModeOn(boolean gzipResourcesModeOn) {
 		configProperties.setProperty(JawrConfig.JAWR_GZIP_ON, Boolean.toString(gzipResourcesModeOn));
 	}
 
-	/**
-	 * @param imageResourcesDefinition
-	 * @see net.jawr.web.config.JawrConfig#setBinaryResourcesDefinition(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#
+	 * setBinaryResourcesDefinition(java.lang.String)
 	 */
 	@Override
 	public void setBinaryResourcesDefinition(String imageResourcesDefinition) {
 		configProperties.setProperty(JawrConfig.JAWR_BINARY_RESOURCES, imageResourcesDefinition);
 	}
 
-	/**
-	 * @param imageHashAlgorithm
-	 * @see net.jawr.web.config.JawrConfig#setBinaryHashAlgorithm(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.jawr.web.config.jmx.JawrConfigManagerMBean#setBinaryHashAlgorithm(
+	 * java.lang.String)
 	 */
 	@Override
 	public void setBinaryHashAlgorithm(String imageHashAlgorithm) {
 		configProperties.setProperty(JawrConfig.JAWR_BINARY_HASH_ALGORITHM, imageHashAlgorithm);
 	}
 
-	/**
-	 * @param useClasspathCssImgServlet
-	 * @see net.jawr.web.config.JawrConfig#setCssClasspathImageHandledByClasspathCss(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.config.jmx.JawrConfigManagerMBean#
+	 * setCssClasspathImageHandledByClasspathCss(boolean)
 	 */
 	@Override
 	public void setCssClasspathImageHandledByClasspathCss(boolean useClasspathCssImgServlet) {

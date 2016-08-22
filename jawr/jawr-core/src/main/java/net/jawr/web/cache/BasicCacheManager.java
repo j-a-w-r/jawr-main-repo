@@ -29,7 +29,10 @@ public class BasicCacheManager extends JawrCacheManager {
 	private final Map<String, Object> cache = new ConcurrentHashMap<>();
 
 	/**
+	 * Constructor
+	 * 
 	 * @param config
+	 *            the jawr configuration
 	 */
 	public BasicCacheManager(JawrConfig config) {
 		super(config);

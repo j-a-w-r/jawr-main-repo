@@ -23,91 +23,114 @@ package net.jawr.web.config.jmx;
 public interface JawrApplicationConfigManagerMBean {
 
 	/**
-	 * @return
+	 * @return the debugOverrideKey that is used to override production mode per
+	 *         request
 	 * @see net.jawr.web.config.JawrConfig#getDebugOverrideKey()
 	 */
 	public String getDebugOverrideKey();
 
 	/**
+	 * Set the debugOverrideKey
+	 * 
 	 * @param debugOverrideKey
+	 *            the String to set as the key
 	 * @see net.jawr.web.config.JawrConfig#setDebugOverrideKey(java.lang.String)
 	 */
 	public void setDebugOverrideKey(String debugOverrideKey);
 
 	/**
-	 * @return
+	 * @return the debug mode flag.
 	 * @see net.jawr.web.config.JawrConfig#isDebugModeOn()
 	 */
 	public String getDebugModeOn();
 
 	/**
+	 * Set debug mode.
+	 * 
 	 * @param debugMode
+	 *            the flag to set
 	 * @see net.jawr.web.config.JawrConfig#setDebugModeOn(boolean)
 	 */
 	public void setDebugModeOn(String debugMode);
 
 	/**
-	 * @return
+	 * @return the flag indicating if the resource must be gzipped for IE6 or
+	 *         less
 	 * @see net.jawr.web.config.JawrConfig#isGzipResourcesForIESixOn()
 	 */
 	public String getGzipResourcesForIESixOn();
 
 	/**
+	 * Sets the flag indicating if the resource must be gzipped for IE6 or less
+	 * 
 	 * @param gzipResourcesForIESixOn
+	 *            the flag to set.
 	 * @see net.jawr.web.config.JawrConfig#setGzipResourcesForIESixOn(boolean)
 	 */
 	public void setGzipResourcesForIESixOn(String gzipResourcesForIESixOn);
 
 	/**
-	 * @return
+	 * @return the flag indicating if the resource must be gzipped or not
 	 * @see net.jawr.web.config.JawrConfig#isGzipResourcesModeOn()
 	 */
 	public String getGzipResourcesModeOn();
 
 	/**
+	 * Sets the flag indicating if the resource must be gzipped or not
+	 * 
 	 * @param gzipResourcesModeOn
+	 *            the flag to set
 	 * @see net.jawr.web.config.JawrConfig#setGzipResourcesModeOn(boolean)
 	 */
 	public void setGzipResourcesModeOn(String gzipResourcesModeOn);
 
 	/**
-	 * @return charsetName
-	 * @see net.jawr.web.config.JawrConfig#getCharsetName(java.lang.String)
+	 * @return the charset name
 	 */
 	public String getCharsetName();
 
 	/**
+	 * Set the charsetname to be used to interpret and generate resource.
+	 * 
 	 * @param charsetName
+	 *            the charset name to set
 	 * @see net.jawr.web.config.JawrConfig#setCharsetName(java.lang.String)
 	 */
 	public void setCharsetName(String charsetName);
 
 	/**
-	 * @return
+	 * @return The string to use instead of the regular context path.
 	 * @see net.jawr.web.config.JawrConfig#getContextPathOverride()
 	 */
 	public String getContextPathOverride();
 
 	/**
+	 * Set the string to use instead of the regular context path. If it is an
+	 * empty string, urls will be relative to the path (i.e, not start with a
+	 * slash).
+	 * 
 	 * @param contextPathOverride
+	 *            The string to use instead of the regular context path.
 	 * @see net.jawr.web.config.JawrConfig#setContextPathOverride(java.lang.String)
 	 */
 	public void setContextPathOverride(String contextPathOverride);
 
 	/**
-	 * @return
-	 * @see net.jawr.web.config.JawrConfig#getContextPathOverride()
+	 * @return the contextPathSslOverride
+	 * @see net.jawr.web.config.JawrConfig#getContextPathSslOverride()
 	 */
 	public String getContextPathSslOverride();
 
 	/**
-	 * @param contextPathOverride
-	 * @see net.jawr.web.config.JawrConfig#setContextPathOverride(java.lang.String)
+	 * @param contextPathSslOverride
+	 *            the contextPathSslOverride to set
+	 * @see net.jawr.web.config.JawrConfig#setContextPathSslOverride(java.lang.String)
 	 */
 	public void setContextPathSslOverride(String contextPathOverride);
 
 	/**
 	 * @param useContextPathOverrideInDebugMode
+	 *            the useContextPathOverrideInDebugMode to set
 	 * @see net.jawr.web.config.JawrConfig#setUseContextPathOverrideInDebugMode(boolean)
 	 */
 	public void setUseContextPathOverrideInDebugMode(String useContextPathOverrideInDebugMode);
