@@ -51,6 +51,7 @@ public class JawrAutoConfiguration {
 	private JawrProperties jawrProperties;
 
 	@Bean
+	@ConditionalOnMissingBean(name = "jawrProperties")
 	public Properties jawrProperties() {
 		Properties jawrProperties = new Properties();
 		for (Map.Entry<String, String> entry : this.jawrProperties.getJawr().entrySet()) {
