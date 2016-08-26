@@ -134,6 +134,8 @@ public class JawrAutoConfiguration {
 			urlMap.put("**/*.png", jawrBinaryController);
 			urlMap.put("**/*.ttf", jawrBinaryController);
 			urlMap.put("**/*.woff", jawrBinaryController);
+			urlMap.put("**/*.woff2", jawrBinaryController);
+			urlMap.put("**/*.svg", jawrBinaryController);
 			handlerMapping.setUrlMap(urlMap);
 
 			return handlerMapping;
