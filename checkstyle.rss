@@ -8,8 +8,8 @@
     <language>en-us</language>
     <copyright>&#169;2016</copyright>
     <item>
-      <title>File: 308,
-             Errors: 48423,
+      <title>File: 306,
+             Errors: 48351,
              Warnings: 0,
              Infos: 0
       </title>
@@ -164,7 +164,7 @@
                   0
                 </td>
                 <td>
-                  66
+                  65
                 </td>
               </tr>
                           <tr>
@@ -374,7 +374,7 @@
                   0
                 </td>
                 <td>
-                  187
+                  186
                 </td>
               </tr>
                           <tr>
@@ -514,7 +514,7 @@
                   0
                 </td>
                 <td>
-                  124
+                  123
                 </td>
               </tr>
                           <tr>
@@ -738,7 +738,7 @@
                   0
                 </td>
                 <td>
-                  458
+                  457
                 </td>
               </tr>
                           <tr>
@@ -878,7 +878,7 @@
                   0
                 </td>
                 <td>
-                  546
+                  545
                 </td>
               </tr>
                           <tr>
@@ -934,7 +934,7 @@
                   0
                 </td>
                 <td>
-                  42
+                  41
                 </td>
               </tr>
                           <tr>
@@ -1424,21 +1424,7 @@
                   0
                 </td>
                 <td>
-                  506
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://jawr.java.net/jawr-core-parent/jawr-core//checkstyle.html#net.jawr.web.resource.bundle.postprocess.BundleAggregator.java">net/jawr/web/resource/bundle/postprocess/BundleAggregator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  26
+                  505
                 </td>
               </tr>
                           <tr>
@@ -1830,7 +1816,7 @@
                   0
                 </td>
                 <td>
-                  674
+                  673
                 </td>
               </tr>
                           <tr>
@@ -1844,7 +1830,7 @@
                   0
                 </td>
                 <td>
-                  179
+                  178
                 </td>
               </tr>
                           <tr>
@@ -1970,7 +1956,7 @@
                   0
                 </td>
                 <td>
-                  199
+                  198
                 </td>
               </tr>
                           <tr>
@@ -3132,7 +3118,7 @@
                   0
                 </td>
                 <td>
-                  191
+                  190
                 </td>
               </tr>
                           <tr>
@@ -3398,7 +3384,7 @@
                   0
                 </td>
                 <td>
-                  1040
+                  1039
                 </td>
               </tr>
                           <tr>
@@ -4005,20 +3991,6 @@
               </tr>
                           <tr>
                 <td>
-                  <a href="http://jawr.java.net/jawr-core-parent/jawr-core//checkstyle.html#net.jawr.web.resource.bundle.generator.JsxGenerator.java">net/jawr/web/resource/bundle/generator/JsxGenerator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  32
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://jawr.java.net/jawr-core-parent/jawr-core//checkstyle.html#net.jawr.web.resource.bundle.IOUtils.java">net/jawr/web/resource/bundle/IOUtils.java</a>
                 </td>
                 <td>
@@ -4028,7 +4000,7 @@
                   0
                 </td>
                 <td>
-                  329
+                  328
                 </td>
               </tr>
                           <tr>
@@ -4126,7 +4098,7 @@
                   0
                 </td>
                 <td>
-                  59
+                  58
                 </td>
               </tr>
                           <tr>
