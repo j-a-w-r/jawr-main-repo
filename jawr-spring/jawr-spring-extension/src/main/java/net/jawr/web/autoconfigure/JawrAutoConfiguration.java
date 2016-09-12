@@ -109,6 +109,10 @@ public class JawrAutoConfiguration {
 	@Configuration
 	@ConditionalOnMissingBean(name = "jawrHandlerMapping")
 	public static class jawrHandlerMappingConfiguration {
+
+		@Autowired
+		private Properties jawrProperties;
+
 		@Autowired
 		private JawrSpringController jawrJsController;
 
@@ -121,7 +125,7 @@ public class JawrAutoConfiguration {
 		@Bean
 		public HandlerMapping jawrHandlerMapping() {
 			SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-			handlerMapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
+			handlerMapping.setOrder(Integer.valueOf(jawrProperties.getProperty("jawr.handler.mapping.order", String.valueOf(Ordered.LOWEST_PRECEDENCE - 2))));
 
 			Map<String, Object> urlMap = new HashMap<String, Object>();
 			urlMap.put("**/*.css", jawrCssController);
