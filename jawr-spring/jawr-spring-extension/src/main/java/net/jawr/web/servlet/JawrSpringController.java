@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2014 Jordi Hernández Sellés, Ibrahim Chaehoi 
+ * Copyright 2013-2016 Jordi Hernández Sellés, Ibrahim Chaehoi 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -32,6 +32,7 @@ import net.jawr.web.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,7 +48,7 @@ import org.springframework.web.util.UrlPathHelper;
  * @author Ibrahim Chaehoi
  */
 public class JawrSpringController implements Controller, ServletContextAware,
-		InitializingBean, ServletContextListener {
+		InitializingBean, ServletContextListener, DisposableBean {
 
 	/** The logger */
 	private static final Logger LOGGER = LoggerFactory
@@ -268,5 +269,13 @@ public class JawrSpringController implements Controller, ServletContextAware,
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		ThreadLocalJawrContext.reset();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.DisposableBean#destroy()
+	 */
+	@Override
+	public void destroy() throws Exception {
+		requestHandler.destroy();
 	}
 }
