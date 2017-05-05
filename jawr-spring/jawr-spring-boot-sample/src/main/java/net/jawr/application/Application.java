@@ -21,5 +21,8 @@ public class Application extends SpringBootServletInitializer {
 			SpringApplicationBuilder application) {
 		return application.sources(Application.class);
 	}
-	 
+	
+	public static void main(String[] args) throws Exception {
+		org.springframework.boot.SpringApplication.run(Application.class, args);
+    }
 }
