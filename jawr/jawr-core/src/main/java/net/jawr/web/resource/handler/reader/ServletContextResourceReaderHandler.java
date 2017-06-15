@@ -13,6 +13,22 @@
  */
 package net.jawr.web.resource.handler.reader;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.ServletContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jawr.web.JawrConstant;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.context.ThreadLocalJawrContext;
@@ -25,21 +41,6 @@ import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
 import net.jawr.web.resource.bundle.generator.ResourceGenerator;
 import net.jawr.web.servlet.util.MIMETypesSupport;
 import net.jawr.web.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletContext;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * This class defines the manager for resource reader.
@@ -88,7 +89,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 *             if an IOException occurs.
 	 */
 	public ServletContextResourceReaderHandler(ServletContext servletContext, JawrConfig jawrConfig,
-											   GeneratorRegistry generatorRegistry) throws IOException {
+			GeneratorRegistry generatorRegistry) throws IOException {
 
 		String tempWorkingDirectory = ((File) servletContext.getAttribute(JawrConstant.SERVLET_CONTEXT_TEMPDIR))
 				.getCanonicalPath();
@@ -267,7 +268,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 */
 	@Override
 	public Reader getResource(JoinableResourceBundle bundle, String resourceName, boolean processingBundle,
-							  List<Class<?>> excludedReader) throws ResourceNotFoundException {
+			List<Class<?>> excludedReader) throws ResourceNotFoundException {
 
 		if (ThreadLocalJawrContext.isInterruptingProcessingBundle()) {
 			throw new InterruptBundlingProcessException();
