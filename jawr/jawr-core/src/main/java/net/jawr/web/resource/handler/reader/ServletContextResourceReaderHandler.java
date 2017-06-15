@@ -1,11 +1,11 @@
 /**
  * Copyright 2009-2016 Ibrahim Chaehoi
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * 	http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language governing permissions
@@ -44,7 +44,7 @@ import net.jawr.web.util.StringUtils;
 
 /**
  * This class defines the manager for resource reader.
- *
+ * 
  * @author Ibrahim Chaehoi
  */
 public class ServletContextResourceReaderHandler implements ResourceReaderHandler {
@@ -78,7 +78,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param servletContext
 	 *            the servlet context
 	 * @param jawrConfig
@@ -156,7 +156,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.ResourceReaderHandler#getWorkingDirectory()
 	 */
@@ -167,7 +167,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.jawr.web.resource.handler.WorkingDirectoryLocationAware#
 	 * setWorkingDirectory(java.lang.String)
 	 */
@@ -178,7 +178,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/**
 	 * Initialize the reader
-	 *
+	 * 
 	 * @param obj
 	 *            the reader to initialize
 	 */
@@ -197,7 +197,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
 	 * addResourceReader(net.jawr.web.resource.handler.reader. ResourceReader)
 	 */
@@ -219,7 +219,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
 	 * java.lang.String)
@@ -232,7 +232,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String)
@@ -245,7 +245,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
@@ -260,7 +260,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getResource(
 	 * net.jawr.web.resource.bundle.JoinableResourceBundle, java.lang.String,
@@ -315,7 +315,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	/**
 	 * Checks if an object is an instance of on interface from a list of
 	 * interface
-	 *
+	 * 
 	 * @param rd
 	 *            the object
 	 * @param interfaces
@@ -339,7 +339,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
 	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
 	 * java.lang.String)
@@ -352,7 +352,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.jawr.web.resource.handler.reader.ResourceReaderHandler#
 	 * getResourceAsStream(net.jawr.web.resource.bundle.JoinableResourceBundle,
 	 * java.lang.String, boolean)
@@ -404,7 +404,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceBrowser#getResourceNames
 	 * (java.lang.String)
@@ -437,7 +437,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceBrowser#isDirectory(java
 	 * .lang.String)
@@ -467,7 +467,7 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.jawr.web.resource.handler.reader.ResourceReaderHandler#getFilePath(
 	 * java.lang.String)
