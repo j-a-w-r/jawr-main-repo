@@ -288,8 +288,19 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Initialize the ConfigPropertyResolver
 		initConfigPropertyResolver(context);
 
-		initializeJawrContext(props);
+		initializeJawrContext(props, propertiesSource);
 
+
+		if (LOGGER.isInfoEnabled()) {
+			long totaltime = System.currentTimeMillis() - initialTime;
+			LOGGER.info("Init method succesful. jawr started in " + (totaltime / 1000) + " seconds....");
+		}
+
+		// Reset ThreadLocalJawrContext
+		ThreadLocalJawrContext.reset();
+	}
+
+	private void startListenersAndWatchers(Properties props, ConfigPropertiesSource propsSrc) {
 		// Initialize the properties reloading checker daemon if specified
 		if (!ThreadLocalJawrContext.isBundleProcessingAtBuildTime()
 				&& null != props.getProperty(CONFIG_RELOAD_INTERVAL)) {
@@ -316,14 +327,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			this.watcher.start();
 		}
-
-		if (LOGGER.isInfoEnabled()) {
-			long totaltime = System.currentTimeMillis() - initialTime;
-			LOGGER.info("Init method succesful. jawr started in " + (totaltime / 1000) + " seconds....");
-		}
-
-		// Reset ThreadLocalJawrContext
-		ThreadLocalJawrContext.reset();
 	}
 
 	/**
@@ -332,11 +335,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * 
 	 * @param props
 	 *            the Jawr properties
-	 * 
+	 *
+	 * @param propsSrc
 	 * @throws ServletException
 	 *             if an exception occurs
 	 */
-	protected void initializeJawrContext(Properties props) throws ServletException {
+	protected void initializeJawrContext(Properties props, ConfigPropertiesSource propsSrc) throws ServletException {
 
 		// Initialize config
 		initializeJawrConfig(props);
@@ -349,6 +353,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		JmxUtils.initJMXBean(appConfigMgr, servletContext, resourceType,
 				props.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX));
+
+		startListenersAndWatchers(props, propsSrc);
 	}
 
 	/**
@@ -1257,7 +1263,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			}
 			props.putAll(newConfig);
 
-			initializeJawrContext(props);
+			stopWatchersAndListeners();
+
+			initializeJawrContext(props, propertiesSource);
 
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Jawr configuration succesfully reloaded. ");
@@ -1273,6 +1281,17 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			// Reset the Thread local for the Jawr context
 			ThreadLocalJawrContext.reset();
+		}
+
+	}
+
+	private void stopWatchersAndListeners() {
+		if (configChangeListenerThread !=null){
+			configChangeListenerThread.stopPolling();
+		}
+
+		if (watcher!=null) {
+			watcher.stopWatching();
 		}
 
 	}
