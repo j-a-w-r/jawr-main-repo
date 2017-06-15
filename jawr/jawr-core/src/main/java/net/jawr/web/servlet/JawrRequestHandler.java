@@ -13,30 +13,6 @@
  */
 package net.jawr.web.servlet;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ResourceBundle;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.jawr.web.JawrConstant;
 import net.jawr.web.cache.CacheManagerFactory;
 import net.jawr.web.config.ConfigPropertyResolver;
@@ -76,6 +52,29 @@ import net.jawr.web.resource.watcher.ResourceWatcher;
 import net.jawr.web.servlet.util.ClientAbortExceptionResolver;
 import net.jawr.web.util.StopWatch;
 import net.jawr.web.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Request handling class. Any jawr enabled servlet delegates to this class to
@@ -288,8 +287,19 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 		// Initialize the ConfigPropertyResolver
 		initConfigPropertyResolver(context);
 
-		initializeJawrContext(props);
+		initializeJawrContext(props, propertiesSource);
 
+
+		if (LOGGER.isInfoEnabled()) {
+			long totaltime = System.currentTimeMillis() - initialTime;
+			LOGGER.info("Init method succesful. jawr started in " + (totaltime / 1000) + " seconds....");
+		}
+
+		// Reset ThreadLocalJawrContext
+		ThreadLocalJawrContext.reset();
+	}
+
+	private void startListenersAndWatchers(Properties props, ConfigPropertiesSource propsSrc) {
 		// Initialize the properties reloading checker daemon if specified
 		if (!ThreadLocalJawrContext.isBundleProcessingAtBuildTime()
 				&& null != props.getProperty(CONFIG_RELOAD_INTERVAL)) {
@@ -316,14 +326,6 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			this.watcher.start();
 		}
-
-		if (LOGGER.isInfoEnabled()) {
-			long totaltime = System.currentTimeMillis() - initialTime;
-			LOGGER.info("Init method succesful. jawr started in " + (totaltime / 1000) + " seconds....");
-		}
-
-		// Reset ThreadLocalJawrContext
-		ThreadLocalJawrContext.reset();
 	}
 
 	/**
@@ -332,11 +334,12 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * 
 	 * @param props
 	 *            the Jawr properties
-	 * 
+	 *
+	 * @param propsSrc
 	 * @throws ServletException
 	 *             if an exception occurs
 	 */
-	protected void initializeJawrContext(Properties props) throws ServletException {
+	protected void initializeJawrContext(Properties props, ConfigPropertiesSource propsSrc) throws ServletException {
 
 		// Initialize config
 		initializeJawrConfig(props);
@@ -349,6 +352,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		JmxUtils.initJMXBean(appConfigMgr, servletContext, resourceType,
 				props.getProperty(JawrConstant.JAWR_JMX_MBEAN_PREFIX));
+
+		startListenersAndWatchers(props, propsSrc);
 	}
 
 	/**
@@ -1257,7 +1262,9 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			}
 			props.putAll(newConfig);
 
-			initializeJawrContext(props);
+			stopWatchersAndListeners();
+
+			initializeJawrContext(props, propertiesSource);
 
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Jawr configuration succesfully reloaded. ");
@@ -1273,6 +1280,17 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			// Reset the Thread local for the Jawr context
 			ThreadLocalJawrContext.reset();
+		}
+
+	}
+
+	private void stopWatchersAndListeners() {
+		if (configChangeListenerThread !=null){
+			configChangeListenerThread.stopPolling();
+		}
+
+		if (watcher!=null) {
+			watcher.stopWatching();
 		}
 
 	}
