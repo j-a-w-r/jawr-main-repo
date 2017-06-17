@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2017 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -190,6 +190,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 	 * 
 	 * @return a resources handler based on the configuration.
 	 * @throws DuplicateBundlePathException
+	 *             if a duplicateBundlePath exception occurs
 	 * @throws BundleDependencyException
 	 *             if an error exists in the dependency definition
 	 */
@@ -321,7 +322,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 				} else {
 					// Add the mappings
 					List<String> mappings = new ArrayList<>();
-					
+
 					StringTokenizer tk = new StringTokenizer(mappingsProperty, JawrConstant.COMMA_SEPARATOR);
 					while (tk.hasMoreTokens()) {
 						String mapping = tk.nextToken().trim();
