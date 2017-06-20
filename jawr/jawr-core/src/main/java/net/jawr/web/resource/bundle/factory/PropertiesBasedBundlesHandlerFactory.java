@@ -302,7 +302,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 			StringTokenizer tk = new StringTokenizer(childBundlesProperty, JawrConstant.COMMA_SEPARATOR);
 			while (tk.hasMoreTokens()) {
 				ResourceBundleDefinition childDef = buildCustomBundleDefinition(tk.nextToken().trim(), true);
-				childDef.setBundleId(bundleId);
+				childDef.setBundleId(props.getCustomBundleProperty(childDef.getBundleName(), BUNDLE_FACTORY_CUSTOM_ID));
 				if (StringUtils.isEmpty(childDef.getDebugURL())) {
 					children.add(childDef);
 				} else {
