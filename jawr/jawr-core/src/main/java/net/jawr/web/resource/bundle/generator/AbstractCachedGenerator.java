@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Ibrahim Chaehoi
+ * Copyright 2016-2017 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -115,7 +115,7 @@ public abstract class AbstractCachedGenerator
 	}
 
 	/**
-	 * The map which links a less resource path and the resources which it is
+	 * The map which links a resource path and the resources which it is
 	 * linked to
 	 */
 	protected Map<String, List<FilePathMapping>> linkedResourceMap = new ConcurrentHashMap<>();
@@ -269,6 +269,9 @@ public abstract class AbstractCachedGenerator
 						rd = retrieveFromCache(path, context, CacheMode.DEBUG);
 					}
 				}
+				
+				// Update the file path mapping
+				addLinkedResources(path, context, fMappings);
 			}
 		}
 
@@ -454,6 +457,7 @@ public abstract class AbstractCachedGenerator
 
 		Reader rd = null;
 		String filePath = getTempFilePath(context, cacheMode);
+		
 		FileInputStream fis = null;
 		File file = new File(filePath);
 		if (file.exists()) {
