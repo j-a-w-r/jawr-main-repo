@@ -90,12 +90,8 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 		InputStream is = null;
 		try {
 			if (path.startsWith(FILE_PREFIX)) {
-				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Using filesystem properties file location at: " + configLocation);
 				is = new FileInputStream(new File(path.substring(FILE_PREFIX.length())));
 			} else {
-				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Reading properties from file at classpath: " + configLocation);
 				is = ClassLoaderResourceUtils.getResourceAsStream(path, this);
 			}
 			loadConfig(props, path, is);
