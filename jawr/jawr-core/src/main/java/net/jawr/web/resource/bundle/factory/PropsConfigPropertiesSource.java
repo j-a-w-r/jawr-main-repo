@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2016 Ibrahim Chaehoi
+ * Copyright 2009-2017 Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -46,6 +46,9 @@ public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 	 */
 	public PropsConfigPropertiesSource(Properties props) {
 		this.configProps = props;
+		
+		// Initialize hashcode of newly loaded properties.
+		this.propsHashCode = props.hashCode();
 	}
 
 	/*
@@ -59,9 +62,10 @@ public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 		int currentConfigHash = this.configProps.hashCode();
 		boolean configChanged = this.propsHashCode != currentConfigHash;
 
-		if (configChanged && LOGGER.isDebugEnabled())
-			LOGGER.debug("Changes in configuration properties file detected.");
-
+		if (configChanged && LOGGER.isDebugEnabled()){
+			LOGGER.debug("Changes in Jawr configuration properties detected.");
+		}
+		
 		this.propsHashCode = currentConfigHash;
 
 		return configChanged;

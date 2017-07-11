@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2016  Jordi Hernández Sellés
+ * Copyright 2008-2017  Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -30,16 +30,22 @@ import org.slf4j.LoggerFactory;
  * .properties file.
  * 
  * @author Jordi Hernández Sellés
+ * @author Ibrahim Chaehoi
  */
 public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 
+	/** The logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropsFilePropertiesSource.class.getName());
 
+	/** The config location */
 	protected String configLocation;
+	
+	/** The properties hashcode */
 	protected int propsHashCode;
+	
+	/** The file prefix */
 	protected static final String FILE_PREFIX = "file:";
-	protected boolean checking;
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -59,7 +65,7 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	}
 
 	/**
-	 * Implements the loic to load the properties. Subclasses will override this
+	 * Implements the logic to load the properties. Subclasses will override this
 	 * method to implement the specific logic to load their configuration
 	 * properties.
 	 * 
@@ -84,11 +90,11 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 		InputStream is = null;
 		try {
 			if (path.startsWith(FILE_PREFIX)) {
-				if (LOGGER.isDebugEnabled() && !checking)
+				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Using filesystem properties file location at: " + configLocation);
 				is = new FileInputStream(new File(path.substring(FILE_PREFIX.length())));
 			} else {
-				if (LOGGER.isDebugEnabled() && !checking)
+				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Reading properties from file at classpath: " + configLocation);
 				is = ClassLoaderResourceUtils.getResourceAsStream(path, this);
 			}
@@ -128,6 +134,14 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	 *            the configLocation to set
 	 */
 	public void setConfigLocation(String configLocation) {
+		if (LOGGER.isDebugEnabled()){
+			if (configLocation.startsWith(FILE_PREFIX)) {
+				LOGGER.debug("Using filesystem properties file location at: " + configLocation);
+			}else{
+				
+				LOGGER.debug("Reading properties from file at classpath: " + configLocation);
+			}
+		}
 		this.configLocation = configLocation;
 	}
 
@@ -139,13 +153,13 @@ public class PropsFilePropertiesSource implements ConfigPropertiesSource {
 	 */
 	@Override
 	public final boolean configChanged() {
-		checking = true;
 		int currentConfigHash = doReadConfig().hashCode();
 		boolean configChanged = this.propsHashCode != currentConfigHash;
 
-		if (configChanged && LOGGER.isDebugEnabled())
-			LOGGER.debug("Changes in configuration properties file detected.");
-
+		if (configChanged && LOGGER.isDebugEnabled()){
+			LOGGER.debug("Changes in Jawr configuration properties file detected.");
+		}
+		
 		this.propsHashCode = currentConfigHash;
 
 		return configChanged;
