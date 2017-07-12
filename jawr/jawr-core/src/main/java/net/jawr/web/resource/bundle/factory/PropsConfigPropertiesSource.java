@@ -36,7 +36,7 @@ public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 	private final Properties configProps;
 
 	/** The properties hashcode */
-	protected int propsHashCode;
+	protected Integer propsHashCode;
 
 	/**
 	 * Constructor
@@ -60,7 +60,7 @@ public class PropsConfigPropertiesSource implements ConfigPropertiesSource {
 	@Override
 	public boolean configChanged() {
 		int currentConfigHash = this.configProps.hashCode();
-		boolean configChanged = this.propsHashCode != currentConfigHash;
+		boolean configChanged = propsHashCode!=null && this.propsHashCode != currentConfigHash;
 
 		if (configChanged && LOGGER.isDebugEnabled()){
 			LOGGER.debug("Changes in Jawr configuration properties detected.");

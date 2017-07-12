@@ -318,8 +318,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	 * 
 	 * @param rd
 	 *            the object
-	 * @param interfacesthe
-	 *            list of interfaces
+	 * @param interfaces
+	 *            the list of interfaces
 	 * @return true if the object is an instance of on interface from a list of
 	 *         interface
 	 */
@@ -486,6 +486,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 					if (rsGeneratorBrowser.getResolver().matchPath(resourcePath)) {
 						filePath = rsBrowser.getFilePath(resourcePath);
 					}
+				} else {
+					filePath = rsBrowser.getFilePath(resourcePath);
 				}
 			} else {
 				if (!(rsBrowser instanceof ResourceGenerator)) {

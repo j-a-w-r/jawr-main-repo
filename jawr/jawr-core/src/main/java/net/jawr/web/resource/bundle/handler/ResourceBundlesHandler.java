@@ -234,6 +234,14 @@ public interface ResourceBundlesHandler {
 	 */
 	public void notifyModification(List<JoinableResourceBundle> bundles);
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getBundlesToRebuild()
+	 */
+	List<JoinableResourceBundle> getBundlesToRebuild();
+
 	/**
 	 * Returns true if there are dirty bundles
 	 * 
