@@ -796,7 +796,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * 
 	 * @return the bundles which needs to be rebuild
 	 */
-	private List<JoinableResourceBundle> getBundlesToRebuild() {
+	@Override
+	public List<JoinableResourceBundle> getBundlesToRebuild() {
 		List<JoinableResourceBundle> bundlesToRebuild = new ArrayList<>();
 
 		if (config.getUseSmartBundling()) {

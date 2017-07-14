@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,6 +33,7 @@ import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
@@ -355,7 +357,37 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 */
 	@Override
 	public void rebuildModifiedBundles() {
+		List<JoinableResourceBundle> bundlesToRebuild = rsHandler.getBundlesToRebuild();
+		for (JoinableResourceBundle bundle : bundlesToRebuild) {
+			ResourceBundlePathsIterator bundlePaths = this.getBundlePaths(bundle.getId(), new ConditionalCommentCallbackHandler() {
+				@Override
+				public void openConditionalComment(String expression) {
+
+				}
+
+				@Override
+				public void closeConditionalComment() {
+
+				}
+			}, Collections.EMPTY_MAP);
+			
+			while (bundlePaths.hasNext()){
+				BundlePath bundlePath = bundlePaths.next();
+				cacheMgr.remove(TEXT_CACHE_PREFIX + bundlePath.getPath());
+			}
+		}
 		rsHandler.rebuildModifiedBundles();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getBundlesToRebuild()
+	 */
+	@Override
+	public List<JoinableResourceBundle> getBundlesToRebuild() {
+		return rsHandler.getBundlesToRebuild();
 	}
 
 	/*
