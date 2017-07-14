@@ -1,5 +1,5 @@
 /**
- * Copyright 2008-2016 Jordi Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2008-2017 Jordi Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -16,9 +16,11 @@ package net.jawr.web.resource.bundle.generator;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_RUBY;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_TYPE;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_VAADIN;
+import static net.jawr.web.resource.bundle.factory.PropertiesBundleConstant.BUNDLE_FACTORY_GLOBAL_PREPROCESSORS;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +41,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
+import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
@@ -240,9 +243,15 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE))) {
-			commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
+			PropertiesConfigHelper props = new PropertiesConfigHelper(config.getConfigProperties(), resourceType);
+			String globalPreprocessorsKey = props.getProperty(BUNDLE_FACTORY_GLOBAL_PREPROCESSORS);
+			if (globalPreprocessorsKey != null) {
+				List<String> globalKeys = Arrays.asList(globalPreprocessorsKey.split(","));
+				if (globalKeys.contains(JawrConstant.GLOBAL_CSS_SMARTSPRITES_PREPROCESSOR_ID)) {
+					commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
+				}
+			}
 		}
-
 	}
 
 	/**
