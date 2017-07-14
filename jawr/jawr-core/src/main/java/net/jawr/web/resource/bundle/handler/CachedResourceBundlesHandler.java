@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2017 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -20,19 +20,22 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.jawr.web.DebugMode;
-import net.jawr.web.cache.JawrCacheManager;
 import net.jawr.web.cache.CacheManagerFactory;
+import net.jawr.web.cache.JawrCacheManager;
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.bundle.IOUtils;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
+import net.jawr.web.resource.bundle.iterator.BundlePath;
 import net.jawr.web.resource.bundle.iterator.ConditionalCommentCallbackHandler;
+import net.jawr.web.resource.bundle.iterator.NoCommentCallbackHandler;
 import net.jawr.web.resource.bundle.iterator.ResourceBundlePathsIterator;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.watcher.ResourceWatcher;
@@ -355,7 +358,28 @@ public class CachedResourceBundlesHandler implements ResourceBundlesHandler {
 	 */
 	@Override
 	public void rebuildModifiedBundles() {
+		List<JoinableResourceBundle> bundlesToRebuild = rsHandler.getBundlesToRebuild();
+		for (JoinableResourceBundle bundle : bundlesToRebuild) {
+			ResourceBundlePathsIterator bundlePaths = this.getBundlePaths(bundle.getId(), new NoCommentCallbackHandler(), Collections.EMPTY_MAP);
+			
+			while (bundlePaths.hasNext()){
+				BundlePath bundlePath = bundlePaths.next();
+				cacheMgr.remove(TEXT_CACHE_PREFIX + bundlePath.getPath());
+				cacheMgr.remove(ZIP_CACHE_PREFIX + bundlePath.getPath());
+			}
+		}
 		rsHandler.rebuildModifiedBundles();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.jawr.web.resource.bundle.handler.ResourceBundlesHandler#
+	 * getBundlesToRebuild()
+	 */
+	@Override
+	public List<JoinableResourceBundle> getBundlesToRebuild() {
+		return rsHandler.getBundlesToRebuild();
 	}
 
 	/*

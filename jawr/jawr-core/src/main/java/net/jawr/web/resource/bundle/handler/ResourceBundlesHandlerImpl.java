@@ -1,5 +1,5 @@
 /**
- * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
+ * Copyright 2007-2017 Jordi Hernández Sellés, Ibrahim Chaehoi
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -512,8 +512,10 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 			bundlesIterator = new DebugModePathsIteratorImpl(bundles, commentCallbackHandler, variants);
 		} else if (debugMode.equals(DebugMode.FORCE_NON_DEBUG_IN_IE)) {
 			bundlesIterator = new IECssDebugPathsIteratorImpl(bundles, commentCallbackHandler, variants);
-		} else
+		} else {
 			bundlesIterator = new PathsIteratorImpl(bundles, commentCallbackHandler, variants);
+		}
+		
 		return bundlesIterator;
 	}
 
@@ -796,7 +798,8 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 	 * 
 	 * @return the bundles which needs to be rebuild
 	 */
-	private List<JoinableResourceBundle> getBundlesToRebuild() {
+	@Override
+	public List<JoinableResourceBundle> getBundlesToRebuild() {
 		List<JoinableResourceBundle> bundlesToRebuild = new ArrayList<>();
 
 		if (config.getUseSmartBundling()) {
