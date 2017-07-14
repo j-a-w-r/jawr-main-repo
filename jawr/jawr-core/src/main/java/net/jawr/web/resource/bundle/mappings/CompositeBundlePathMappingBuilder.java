@@ -50,11 +50,10 @@ public class CompositeBundlePathMappingBuilder extends BundlePathMappingBuilder 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.jawr.web.resource.bundle.mappings.BundlePathMappingBuilder#build(java
-	 * .util.List)
+	 * net.jawr.web.resource.bundle.mappings.BundlePathMappingBuilder#build()
 	 */
 	@Override
-	public BundlePathMapping build(List<String> strPathMappings) {
+	public BundlePathMapping build() {
 
 		BundlePathMapping bundlePathMapping = new BundlePathMapping(bundle);
 		for (JoinableResourceBundle child : ((CompositeResourceBundle) bundle).getChildBundles()) {
