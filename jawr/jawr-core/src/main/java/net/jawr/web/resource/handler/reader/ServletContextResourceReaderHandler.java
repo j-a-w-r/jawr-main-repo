@@ -73,8 +73,8 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	/** The list of resource generator info providers */
 	private final List<ResourceBrowser> resourceGeneratorInfoProviders = new ArrayList<>();
 
-	/** The list of resource info providers */
-	private final List<ResourceBrowser> resourceInfoProviders = new ArrayList<>();
+	/** The servlet context resource browser */
+	private ResourceBrowser servletCtxResourceBrowser;
 
 	/** The allowed file extension */
 	private final List<String> allowedExtensions = new ArrayList<>();
@@ -194,10 +194,10 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 		}
 
 		if (obj instanceof ResourceBrowser) {
-			if(obj instanceof ResourceGenerator){
+			if (obj instanceof ResourceGenerator) {
 				resourceGeneratorInfoProviders.add(0, (ResourceBrowser) obj);
-			}else{
-				resourceInfoProviders.add(0, (ResourceBrowser) obj);
+			} else {
+				servletCtxResourceBrowser = (ResourceBrowser) obj;
 			}
 		}
 	}
@@ -420,10 +420,11 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	public Set<String> getResourceNames(String dirName) {
 		Set<String> resourceNames = new TreeSet<>();
 
-		List<ResourceBrowser> list = new ArrayList<>();
-		list.addAll(resourceInfoProviders);
-		for (ResourceBrowser rsBrowser : list) {
-			if (generatorRegistry.isPathGenerated(dirName)) {
+		if (generatorRegistry.isPathGenerated(dirName)) {
+			List<ResourceBrowser> browsers = new ArrayList<>();
+			browsers.addAll(resourceGeneratorInfoProviders);
+			for (ResourceBrowser rsBrowser : browsers) {
+
 				if (rsBrowser instanceof ResourceGenerator) {
 					ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
 					if (rsGeneratorBrowser.getResolver().matchPath(dirName)) {
@@ -431,12 +432,9 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 						break;
 					}
 				}
-			} else {
-				if (!(rsBrowser instanceof ResourceGenerator)) {
-					resourceNames.addAll(rsBrowser.getResourceNames(dirName));
-					break;
-				}
 			}
+		} else {
+			resourceNames = servletCtxResourceBrowser.getResourceNames(dirName);
 		}
 
 		return resourceNames;
@@ -452,9 +450,9 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	@Override
 	public boolean isDirectory(String resourceName) {
 		boolean result = false;
-		List<ResourceBrowser> browsers = new ArrayList<>();
-		browsers.addAll(resourceGeneratorInfoProviders);
 		if (generatorRegistry.isPathGenerated(resourceName)) {
+			List<ResourceBrowser> browsers = new ArrayList<>();
+			browsers.addAll(resourceGeneratorInfoProviders);
 			for (Iterator<ResourceBrowser> iterator = browsers.iterator(); iterator.hasNext() && !result;) {
 				ResourceBrowser rsBrowser = iterator.next();
 				if (rsBrowser instanceof ResourceGenerator) {
@@ -462,33 +460,13 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 					if (rsGeneratorBrowser.getResolver().matchPath(resourceName)) {
 						result = rsBrowser.isDirectory(resourceName);
 					}
-				}	 				
-			}
-		}
-		
-		if(!result){
-			browsers.clear();
-			browsers.addAll(resourceInfoProviders);
-			
-			for (Iterator<ResourceBrowser> iterator = browsers.iterator(); iterator.hasNext() && !result;) {
-				ResourceBrowser rsBrowser = iterator.next();
-				if (generatorRegistry.isPathGenerated(resourceName)) {
-					if (rsBrowser instanceof ResourceGenerator) {
-						ResourceGenerator rsGeneratorBrowser = (ResourceGenerator) rsBrowser;
-						if (rsGeneratorBrowser.getResolver().matchPath(resourceName)) {
-							result = rsBrowser.isDirectory(resourceName);
-						}
-					}
-				} else {
-					if (!(rsBrowser instanceof ResourceGenerator)) {
-						result = rsBrowser.isDirectory(resourceName);
-					}
 				}
 			}
+		} else {
+			result = servletCtxResourceBrowser.isDirectory(resourceName);
 		}
 		return result;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -501,10 +479,10 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 	public String getFilePath(String resourcePath) {
 
 		String filePath = null;
-		
-		List<ResourceBrowser> browsers = new ArrayList<>();
-		
+
 		if (generatorRegistry.isPathGenerated(resourcePath)) {
+
+			List<ResourceBrowser> browsers = new ArrayList<>();
 			browsers.addAll(resourceGeneratorInfoProviders);
 			for (Iterator<ResourceBrowser> iterator = browsers.iterator(); iterator.hasNext() && filePath == null;) {
 				ResourceBrowser rsBrowser = iterator.next();
@@ -513,19 +491,13 @@ public class ServletContextResourceReaderHandler implements ResourceReaderHandle
 					if (rsGeneratorBrowser.getResolver().matchPath(resourcePath)) {
 						filePath = rsBrowser.getFilePath(resourcePath);
 					}
-				}	 				
+				}
 			}
+		} else {
+
+			filePath = servletCtxResourceBrowser.getFilePath(resourcePath);
 		}
-		
-		if(filePath == null){
-			browsers.clear();
-			browsers.addAll(resourceInfoProviders);
-			for (Iterator<ResourceBrowser> iterator = resourceInfoProviders.iterator(); iterator.hasNext() && filePath == null;) {
-				ResourceBrowser rsBrowser = iterator.next();
-				filePath = rsBrowser.getFilePath(resourcePath);
-			}
-		}
-		
+
 		return filePath;
 	}
 
