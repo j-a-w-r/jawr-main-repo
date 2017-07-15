@@ -127,11 +127,14 @@ public class JoinableResourceBundleImpl implements JoinableResourceBundle {
 
 		this.inclusionPattern = inclusionPattern;
 		this.generatorRegistry = generatorRegistry;
-		if (generatorRegistry.isPathGenerated(id)) {
-			this.id = id;
-		} else {
-			this.id = PathNormalizer.asPath(id);
+		if(id != null){
+			if (generatorRegistry.isPathGenerated(id)) {
+				this.id = id;
+			} else {
+				this.id = PathNormalizer.asPath(id);
+			}
 		}
+		
 		this.name = name;
 
 		if (bundlePrefix != null) {

@@ -369,12 +369,12 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 				List<JoinableResourceBundle> childBundles = ((CompositeResourceBundle) bundle).getChildBundles();
 				for (JoinableResourceBundle childBundle : childBundles) {
 					List<JoinableResourceBundle> associatedBundles = compositeResourceBundleMap
-							.get(childBundle.getId());
+							.get(childBundle.getName());
 					if (associatedBundles == null) {
 						associatedBundles = new ArrayList<>();
 					}
 					associatedBundles.add(bundle);
-					compositeResourceBundleMap.put(childBundle.getId(), associatedBundles);
+					compositeResourceBundleMap.put(childBundle.getName(), associatedBundles);
 				}
 			}
 		}
@@ -1524,7 +1524,7 @@ public class ResourceBundlesHandlerImpl implements ResourceBundlesHandler {
 
 			// Update the composite bundles which are linked to this bundle if
 			// they exists
-			List<JoinableResourceBundle> linkedBundles = compositeResourceBundleMap.get(bundle.getId());
+			List<JoinableResourceBundle> linkedBundles = compositeResourceBundleMap.get(bundle.getName());
 			if (linkedBundles != null) {
 				for (JoinableResourceBundle compositeBundle : linkedBundles) {
 					if (LOGGER.isInfoEnabled() && !compositeBundle.isDirty()) {
