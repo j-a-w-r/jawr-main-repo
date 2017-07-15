@@ -1,6 +1,6 @@
 jawr-main-repo
 ==============
-[![Build Status](https://travis-ci.org/ic3fox/jawr-main-repo.svg?branch=master)](https://travis-ci.org/ic3fox/jawr-main-repo)
+[![Build Status](https://travis-ci.org/j-a-w-r/jawr-main-repo.svg?branch=master)](https://travis-ci.org/j-a-w-r/jawr-main-repo)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.jawr/jawr-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.jawr/jawr-core)
 
 Jawr main repository :
