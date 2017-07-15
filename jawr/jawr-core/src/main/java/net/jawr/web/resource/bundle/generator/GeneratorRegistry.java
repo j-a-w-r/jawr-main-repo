@@ -243,7 +243,7 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE))) {
-			PropertiesConfigHelper props = new PropertiesConfigHelper(config.getConfigProperties(), resourceType);
+			PropertiesConfigHelper props = new PropertiesConfigHelper(config.getConfigProperties(), JawrConstant.CSS_TYPE);
 			String globalPreprocessorsKey = props.getProperty(BUNDLE_FACTORY_GLOBAL_PREPROCESSORS);
 			if (globalPreprocessorsKey != null) {
 				List<String> globalKeys = Arrays.asList(globalPreprocessorsKey.split(","));

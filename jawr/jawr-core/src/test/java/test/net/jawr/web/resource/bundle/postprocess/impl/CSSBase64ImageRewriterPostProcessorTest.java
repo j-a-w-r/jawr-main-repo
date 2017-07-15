@@ -513,6 +513,7 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
+		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		config = new JawrConfig("css", props);
 		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
@@ -522,6 +523,7 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 
 		// Set up the Image servlet Jawr config
 		props = new Properties();
+		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
 		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
@@ -559,6 +561,7 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "false");
+		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		config = new JawrConfig("css", props);
 		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
@@ -568,6 +571,7 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 
 		// Set up the Image servlet Jawr config
 		props = new Properties();
+		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
 		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
@@ -605,6 +609,7 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
+		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		config = new JawrConfig("css", props);
 		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
@@ -614,6 +619,7 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 
 		// Set up the Image servlet Jawr config
 		props = new Properties();
+		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		JawrConfig imgServletJawrConfig = new JawrConfig(JawrConstant.BINARY_TYPE, props);
 		imgServletJawrConfig.setServletMapping("/cssImg/");
 		addGeneratorRegistryToConfig(imgServletJawrConfig, JawrConstant.BINARY_TYPE);
