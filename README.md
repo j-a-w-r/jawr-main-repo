@@ -7,3 +7,5 @@ Jawr main repository :
 
 This repository contains the links to all Jawr related repositories, which are reference as subtrees.
 The core repository is named Jawr.
+
+The project documentation is available at the following link : https://j-a-w-r.github.io
