@@ -25,6 +25,7 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSURLPathRewriterPostProcessor;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -42,6 +43,10 @@ public class CSSURLRewriterPostProcessorTest {
 	private JawrConfig config;
 	private BundleProcessingStatus status;
 	private CSSURLPathRewriterPostProcessor processor;
+	private ServletContext servletContext;
+	
+	@Mock
+	private ResourceBundlesHandler rsBundleHandler;
 	
 	@SuppressWarnings("unchecked")
 	@Before
@@ -68,10 +73,12 @@ public class CSSURLRewriterPostProcessorTest {
 		when(bundle.getURLPrefix(Matchers.anyMap())).thenReturn(urlPrefix);
 		
 		config = new JawrConfig("css", new Properties());
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/js");
 		config.setCharsetName("UTF-8");		
+		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, rsBundleHandler);
+		
 		status = new BundleProcessingStatus(BundleProcessingStatus.BUNDLE_PROCESSING_TYPE,bundle,null,config);
 		addGeneratorRegistryToConfig(config, "js");
 		status.setLastPathAdded("/css/someCSS.css");
@@ -91,6 +98,13 @@ public class CSSURLRewriterPostProcessorTest {
 				return result;
 			}
 		};
+		
+		config.setContext(servletContext);
+		if(type.equals("css")){
+			when(rsBundleHandler.getConfig()).thenReturn(config);
+		}
+		
+		
 		generatorRegistry.setConfig(config);
 		config.setGeneratorRegistry(generatorRegistry);
 		return generatorRegistry;
@@ -390,7 +404,7 @@ public class CSSURLRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -433,7 +447,7 @@ public class CSSURLRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -475,7 +489,7 @@ public class CSSURLRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -513,7 +527,7 @@ public class CSSURLRewriterPostProcessorTest {
 		// Set the properties
 		Properties props = new Properties();
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -547,7 +561,7 @@ public class CSSURLRewriterPostProcessorTest {
 		// Set the properties
 		Properties props = new Properties();
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
