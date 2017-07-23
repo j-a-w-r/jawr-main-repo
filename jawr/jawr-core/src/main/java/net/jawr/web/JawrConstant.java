@@ -379,4 +379,6 @@ public class JawrConstant {
 	/** Separator between JAR URL and file path within the JAR: "!/" */
 	public static final String JAR_URL_SEPARATOR = "!/";
 
+	public static final String JAWR_CSS_BUNDLE_FACTORY_GLOBAL_PREPROCESSORS = "jawr.css.bundle.factory.global.preprocessors";
+
 }

@@ -7,11 +7,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import net.jawr.web.test.AbstractPageTest;
-import net.jawr.web.test.JawrTestConfigFiles;
-import net.jawr.web.test.utils.Utils;
-
-import org.apache.commons.httpclient.Cookie;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -23,6 +18,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlScript;
+import com.gargoylesoftware.htmlunit.util.Cookie;
+
+import net.jawr.web.test.AbstractPageTest;
+import net.jawr.web.test.JawrTestConfigFiles;
+import net.jawr.web.test.utils.Utils;
 
 /**
  * Test case for page using image generator feature in production mode.

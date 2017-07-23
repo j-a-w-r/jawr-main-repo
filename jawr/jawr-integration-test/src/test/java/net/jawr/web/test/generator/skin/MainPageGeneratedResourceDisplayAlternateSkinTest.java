@@ -89,7 +89,7 @@ public class MainPageGeneratedResourceDisplayAlternateSkinTest extends AbstractP
 
 	@SuppressWarnings("deprecation")
 	protected void checkAlternateStyle(HtmlLink css, String title) {
-		assertEquals(title, css.getTitleAttribute());
+		assertEquals(title, css.getAttribute("title"));
 		assertEquals("alternate stylesheet", css.getRelAttribute());
 	}
 
