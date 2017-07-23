@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.httpclient.Cookie;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
@@ -21,7 +22,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlScript;
-import com.gargoylesoftware.htmlunit.util.Cookie;
 
 import net.jawr.web.test.AbstractPageTest;
 import net.jawr.web.test.JawrTestConfigFiles;
