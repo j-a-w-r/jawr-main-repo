@@ -15,11 +15,14 @@ package net.jawr.web.resource.bundle.mappings;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -258,6 +261,8 @@ public class BundlePathMappingBuilder {
 				} else if (dirName.isRecursive() && resourceReaderHandler.isDirectory(resourceName))
 					addItemsFromDir(bundlePathMapping, new PathMapping(bundle, resourceName + "/**"), true);
 			}
+		}else { // Use alphabetical sorting
+			resources = new TreeSet<>(resources);
 		}
 
 		// Add licenses file
