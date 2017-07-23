@@ -19,6 +19,7 @@ import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.CSSImportPostProcessor;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -52,6 +53,11 @@ public class CSSImportPostProcessorTest {
 	BundleProcessingStatus status;
 	CSSImportPostProcessor processor;
 
+	ServletContext servletContext;
+	
+	@Mock
+	private ResourceBundlesHandler rsBundleHandler;
+	
 	@Before
 	@SuppressWarnings("unchecked")
 	public void setUp() throws Exception {
@@ -65,16 +71,19 @@ public class CSSImportPostProcessorTest {
 		when(bundle.getURLPrefix(Matchers.anyMap())).thenReturn(urlPrefix);
 		
 		config = new JawrConfig("css", new Properties());
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
-		config.setServletMapping("/js");
+		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
 		config.setCssClasspathImageHandledByClasspathCss(true);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(JawrConstant.CSS_TYPE);
 		generatorRegistry.setConfig(config);
 		config.setGeneratorRegistry(generatorRegistry);
+		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, rsBundleHandler);
+		when(rsBundleHandler.getConfig()).thenReturn(config);
 		
 		JawrConfig imgConfig = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
+		imgConfig.setContext(servletContext);
 		GeneratorRegistry imgGeneratorRegistry = new GeneratorRegistry(JawrConstant.BINARY_TYPE);
 		generatorRegistry.setConfig(imgConfig);
 		imgConfig.setGeneratorRegistry(imgGeneratorRegistry);
