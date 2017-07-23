@@ -16,7 +16,6 @@ package net.jawr.web.resource.bundle.generator;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_RUBY;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_TYPE;
 import static net.jawr.web.JawrConstant.SASS_GENERATOR_VAADIN;
-import static net.jawr.web.resource.bundle.factory.PropertiesBundleConstant.BUNDLE_FACTORY_GLOBAL_PREPROCESSORS;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.BundlingProcessException;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.factory.util.ClassLoaderResourceUtils;
-import net.jawr.web.resource.bundle.factory.util.PropertiesConfigHelper;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathBinaryResourceGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClassPathCSSGenerator;
 import net.jawr.web.resource.bundle.generator.classpath.ClasspathJSGenerator;
@@ -64,6 +62,7 @@ import net.jawr.web.resource.bundle.generator.resolver.SuffixedPathResolver;
 import net.jawr.web.resource.bundle.generator.validator.CommonsValidatorGenerator;
 import net.jawr.web.resource.bundle.generator.variant.VariantResourceGenerator;
 import net.jawr.web.resource.bundle.generator.variant.css.CssSkinGenerator;
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.lifecycle.BundlingProcessLifeCycleListener;
 import net.jawr.web.resource.bundle.locale.ResourceBundleMessagesGenerator;
 import net.jawr.web.resource.bundle.mappings.PathMapping;
@@ -243,15 +242,28 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE))) {
-			PropertiesConfigHelper props = new PropertiesConfigHelper(config.getConfigProperties(), JawrConstant.CSS_TYPE);
-			String globalPreprocessorsKey = props.getProperty(BUNDLE_FACTORY_GLOBAL_PREPROCESSORS);
-			if (globalPreprocessorsKey != null) {
-				List<String> globalKeys = Arrays.asList(globalPreprocessorsKey.split(","));
-				if (globalKeys.contains(JawrConstant.GLOBAL_CSS_SMARTSPRITES_PREPROCESSOR_ID)) {
-					commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
+			JawrConfig tmpConfig = null;
+			if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
+				ResourceBundlesHandler bundlesHandler = (ResourceBundlesHandler) config.getContext()
+						.getAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE);
+				if (bundlesHandler != null) {
+					tmpConfig = bundlesHandler.getConfig();
+				}
+			} else {
+				tmpConfig = config;
+			}
+			if (tmpConfig != null) {
+				String globalPreprocessorsKey = tmpConfig.getConfigProperties()
+						.getProperty(JawrConstant.JAWR_CSS_BUNDLE_FACTORY_GLOBAL_PREPROCESSORS);
+				if (globalPreprocessorsKey != null) {
+					List<String> globalKeys = Arrays.asList(globalPreprocessorsKey.split(JawrConstant.COMMA_SEPARATOR));
+					if (globalKeys.contains(JawrConstant.GLOBAL_CSS_SMARTSPRITES_PREPROCESSOR_ID)) {
+						commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
+					}
 				}
 			}
 		}
+
 	}
 
 	/**

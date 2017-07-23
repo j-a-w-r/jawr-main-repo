@@ -27,6 +27,7 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.JoinableResourceBundle;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.bundle.postprocess.BundleProcessingStatus;
 import net.jawr.web.resource.bundle.postprocess.impl.css.base64.Base64ImageEncoderPostProcessor;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
@@ -42,10 +43,14 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 	@Mock
 	private ResourceReaderHandler rsHandler;
 	
+	@Mock
+	private ResourceBundlesHandler rsBundleHandler;
+	
 	private JawrConfig config;
 	private BundleProcessingStatus status;
 	private Base64ImageEncoderPostProcessor processor;
 	private String workingDirectory;
+	private ServletContext servletContext = new MockServletContext();
 	
 	@SuppressWarnings("unchecked")
 	@Before
@@ -88,10 +93,11 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		when(bundle.getId()).thenReturn(bundlePath);
 		when(bundle.getURLPrefix(Matchers.anyMap())).thenReturn(urlPrefix);
 		config = new JawrConfig("css", new Properties());
-		ServletContext servletContext = new MockServletContext();
+		servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");		
+		servletContext.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, rsBundleHandler);
 		status = new BundleProcessingStatus(BundleProcessingStatus.FILE_PROCESSING_TYPE, bundle,null,config);
 		addGeneratorRegistryToConfig(config, "css");
 		status.setLastPathAdded("/css/someCSS.css");
@@ -116,8 +122,14 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 				return result;
 			}
 		};
+		config.setContext(servletContext);
+		if(type.equals("css")){
+			when(rsBundleHandler.getConfig()).thenReturn(config);
+		}
+		
 		generatorRegistry.setConfig(config);
 		config.setGeneratorRegistry(generatorRegistry);
+		
 		return generatorRegistry;
 	}
 
@@ -128,7 +140,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -171,7 +182,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH, "/myApp");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -213,7 +223,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		Properties props = new Properties();
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -256,7 +265,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -299,7 +307,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "false");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -342,7 +349,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -385,7 +391,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "false");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -428,7 +433,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -471,7 +475,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConfig.JAWR_CSS_CLASSPATH_HANDLE_IMAGE, "true");
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "false");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -515,7 +518,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
 		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -563,7 +565,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "false");
 		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");
@@ -611,7 +612,6 @@ public class CSSBase64ImageRewriterPostProcessorTest {
 		props.setProperty(JawrConstant.BASE64_ENCODE_BY_DEFAULT, "true");
 		props.setProperty("jawr.css.bundle.factory.global.preprocessors", "smartsprites");
 		config = new JawrConfig("css", props);
-		ServletContext servletContext = new MockServletContext();
 		config.setContext(servletContext);
 		config.setServletMapping("/css");
 		config.setCharsetName("UTF-8");

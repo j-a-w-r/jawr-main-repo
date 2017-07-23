@@ -3,11 +3,13 @@
  */
 package test.net.jawr.web.taglib;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,42 +19,59 @@ import net.jawr.web.config.JawrConfig;
 import net.jawr.web.exception.ResourceNotFoundException;
 import net.jawr.web.resource.BinaryResourcesHandler;
 import net.jawr.web.resource.bundle.generator.GeneratorRegistry;
+import net.jawr.web.resource.bundle.handler.ResourceBundlesHandler;
 import net.jawr.web.resource.handler.reader.ResourceReaderHandler;
 import net.jawr.web.taglib.ImageTagUtils;
+import test.net.jawr.web.servlet.mock.MockServletContext;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author ibrahim Chaehoi
  * 
  */
-public class ImageTagUtilsTest extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class ImageTagUtilsTest {
 
 	private JawrConfig config;
 	
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
+	@Mock
+	private ResourceBundlesHandler rsBundlesHandler;
+	
+	@Before
 	public void setUp(){
 		config = new JawrConfig(JawrConstant.BINARY_TYPE, new Properties());
 		config.setBinaryHashAlgorithm("MD5");
+		ServletContext context = new MockServletContext();
+		config.setContext(context);
+		context.setAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE, rsBundlesHandler);
+		JawrConfig cssConfig = new JawrConfig(JawrConstant.CSS_TYPE, new Properties());
+		when(rsBundlesHandler.getConfig()).thenReturn(cssConfig);
 		GeneratorRegistry generatorRegistry = new GeneratorRegistry(JawrConstant.BINARY_TYPE);
 		config.setGeneratorRegistry(generatorRegistry);
 		generatorRegistry.setConfig(config);
 	}
 	
+	@Test
 	public void testImageUrl() {
 
 		testImageUrlWithContextPathOverride("http://mycomp.com/basicwebapp", config, "/basicwebapp/");
 	}
 	
+	@Test
 	public void testImageUrlWithServletMapping() {
 
 		config.setServletMapping("/jawrImg/");
 		testImageUrlWithContextPathOverride("http://mycomp.com/basicwebapp", config, "/basicwebapp");
 	}
 
+	@Test
 	public void testImageUrlWithContextPathOverride() {
 
 		String contextPathOverride = "http://mycdn/";
@@ -62,6 +81,7 @@ public class ImageTagUtilsTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testImageUrlWithEmptyContextPathOverrideAndEmptyImgServletMapping() {
 
 		String contextPathOverride = "";
@@ -71,6 +91,7 @@ public class ImageTagUtilsTest extends TestCase {
 
 	}
 
+	@Test
 	public void testImageUrlWithContextPathSslOverride() {
 
 		String contextPathOverride = "https://mycdn/";
