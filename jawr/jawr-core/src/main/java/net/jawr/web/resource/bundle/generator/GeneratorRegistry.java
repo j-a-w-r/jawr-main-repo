@@ -242,24 +242,12 @@ public class GeneratorRegistry implements Serializable {
 		}
 
 		if ((resourceType.equals(JawrConstant.CSS_TYPE) || resourceType.equals(JawrConstant.BINARY_TYPE))) {
-			JawrConfig tmpConfig = null;
-			if (resourceType.equals(JawrConstant.BINARY_TYPE)) {
-				ResourceBundlesHandler bundlesHandler = (ResourceBundlesHandler) config.getContext()
-						.getAttribute(JawrConstant.CSS_CONTEXT_ATTRIBUTE);
-				if (bundlesHandler != null) {
-					tmpConfig = bundlesHandler.getConfig();
-				}
-			} else {
-				tmpConfig = config;
-			}
-			if (tmpConfig != null) {
-				String globalPreprocessorsKey = tmpConfig.getConfigProperties()
-						.getProperty(JawrConstant.JAWR_CSS_BUNDLE_FACTORY_GLOBAL_PREPROCESSORS);
-				if (globalPreprocessorsKey != null) {
-					List<String> globalKeys = Arrays.asList(globalPreprocessorsKey.split(JawrConstant.COMMA_SEPARATOR));
-					if (globalKeys.contains(JawrConstant.GLOBAL_CSS_SMARTSPRITES_PREPROCESSOR_ID)) {
-						commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
-					}
+			String globalPreprocessorsKey = config.getConfigProperties()
+					.getProperty(JawrConstant.JAWR_CSS_BUNDLE_FACTORY_GLOBAL_PREPROCESSORS);
+			if (globalPreprocessorsKey != null) {
+				List<String> globalKeys = Arrays.asList(globalPreprocessorsKey.split(JawrConstant.COMMA_SEPARATOR));
+				if (globalKeys.contains(JawrConstant.GLOBAL_CSS_SMARTSPRITES_PREPROCESSOR_ID)) {
+					commonGenerators.put(new PrefixedPathResolver(SPRITE_GENERATOR_PREFIX), SpriteGenerator.class);
 				}
 			}
 		}
