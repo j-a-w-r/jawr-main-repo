@@ -64,7 +64,7 @@ public class PropertiesConfigHelper {
 
 	/**
 	 * Build a properties wrapper that appends 'jawr.' and the specified
-	 * resourceType to a a supplied key before retrieveing its value from the
+	 * resourceType to a supplied key before retrieving its value from the
 	 * properties.
 	 * 
 	 * @param props

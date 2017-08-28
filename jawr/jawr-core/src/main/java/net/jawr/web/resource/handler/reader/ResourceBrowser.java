@@ -31,7 +31,7 @@ public interface ResourceBrowser {
 	Set<String> getResourceNames(String path);
 	
 	/**
-	 * Determines wether a given path is a directory. 
+	 * Determines whether a given path is a directory. 
 	 * @param path the path to check
 	 * @return true if the path is a directory
 	 */

@@ -928,7 +928,7 @@ public class BundlesHandlerFactory {
 	}
 
 	/**
-	 * Set wether resoures not specifically mapped to any bundle should be
+	 * Set whether resoures not specifically mapped to any bundle should be
 	 * joined together in a single bundle, or served separately.
 	 * 
 	 * @param useSingleResourceFactory
@@ -961,7 +961,7 @@ public class BundlesHandlerFactory {
 	}
 
 	/**
-	 * Set wether bundles will be cached using a cache manager instead of being
+	 * Set whether bundles will be cached using a cache manager instead of being
 	 * always read from the filesystem.
 	 * 
 	 * @param useCacheManager

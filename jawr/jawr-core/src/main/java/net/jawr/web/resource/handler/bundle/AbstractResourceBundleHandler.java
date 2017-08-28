@@ -494,9 +494,9 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	 * @param bundleName
 	 *            the bundle name
 	 * @param bundledResources
-	 *            the bundledRessources
+	 *            the bundledResources
 	 * @param gzipFile
-	 *            a fag defining if the file is gzipped or not
+	 *            a flag defining if the file is gzipped or not
 	 * @param rootDir
 	 *            the root directory
 	 */
@@ -553,7 +553,7 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	}
 
 	/**
-	 * Creates a directory. If dir is note created for some reason a
+	 * Creates a directory. If dir is not created for some reason a
 	 * runtime exception is thrown.
 	 * 
 	 * @param dir
@@ -574,7 +574,7 @@ public abstract class AbstractResourceBundleHandler implements ResourceBundleHan
 	}
 
 	/**
-	 * Creates a file. If dir is note created for some reson a runtimeexception
+	 * Creates a file. If dir is not created for some reason a runtimeexception
 	 * is thrown.
 	 * 
 	 * @param path

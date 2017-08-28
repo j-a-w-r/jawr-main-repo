@@ -219,9 +219,9 @@ public abstract class AbstractCachedGenerator
 	}
 
 	/**
-	 * Returns the temporary directory or null if the generator don't use cache
+	 * Returns the temporary directory or null if the generator doesn't use cache
 	 * 
-	 * @return the temporary directory or null if the generator don't use cache
+	 * @return the temporary directory or null if the generator doesn't use cache
 	 */
 	protected String getTempDirectory() {
 		return this.workingDir + JawrConstant.GENERATOR_CACHE_DIR + URL_SEPARATOR + cacheDirectory + URL_SEPARATOR;

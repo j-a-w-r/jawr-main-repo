@@ -68,7 +68,7 @@ public class ResourceBundleDefinition {
 	private String bundlePostProcessorKeys;
 
 	/**
-	 * The IE specific conditional expression, which is used to defined if the
+	 * The IE specific conditional expression, which is used to define if the
 	 * bundle must be included or not
 	 */
 	private String ieConditionalExpression;
@@ -371,7 +371,7 @@ public class ResourceBundleDefinition {
 	}
 
 	/**
-	 * Sets the IE specific conditional expression, which is used to defined if
+	 * Sets the IE specific conditional expression, which is used to define if
 	 * the bundle must be included or not
 	 * 
 	 * @param ieConditionalExpression

@@ -244,7 +244,7 @@ Here is the list of methods to be implemented by a VariantResolver.
 
 The Variant resolver is responsible for the default variant strategy.
 This means that the variant resolver is responsible to define what is
-the value to use if the variant doesn't exists in the VariantSet. If the
+the value to use if the variant doesn't exist in the VariantSet. If the
 VariantResolver doesn't find a suitable variant, it **must** returns the
 default variant.
 

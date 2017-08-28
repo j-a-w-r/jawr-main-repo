@@ -214,7 +214,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 			throw new IllegalArgumentException(
 					"No id defined for the bundle with name:" + bundleName + ". Please specify one in configuration. ");
 
-		// Wether it's a composite or not
+		// Whether it's a composite or not
 		boolean isComposite = Boolean
 				.parseBoolean(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_COMPOSITE_FLAG, "false"));
 
@@ -224,7 +224,7 @@ public class PropertiesBasedBundlesHandlerFactory {
 		bundle.setBundleName(bundleName);
 		bundle.setBundlePrefix(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_BUNDLE_PREFIX));
 
-		// Wether it's global or not
+		// Whether it's global or not
 		boolean isGlobal = Boolean
 				.parseBoolean(props.getCustomBundleProperty(bundleName, BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, "false"));
 		bundle.setGlobal(isGlobal);

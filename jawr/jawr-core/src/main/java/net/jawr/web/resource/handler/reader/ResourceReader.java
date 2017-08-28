@@ -15,7 +15,7 @@ package net.jawr.web.resource.handler.reader;
 
 
 /**
- * This inteface is implemented by the objects which can read resource either text resource 
+ * This interface is implemented by the objects which can read resource either text resource 
  * or image resource.
  * 
  * @author Ibrahim Chaehoi

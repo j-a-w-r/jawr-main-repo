@@ -132,7 +132,7 @@ public class OrphanResourceBundlesMapper {
 	}
 
 	/**
-	 * Determine wether a resource is already added to some bundle, add it to
+	 * Determine whether a resource is already added to some bundle, add it to
 	 * the list if it is not.
 	 * 
 	 * @param filePath

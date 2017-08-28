@@ -294,7 +294,7 @@ public class CSSHTMLBundleLinkRenderer extends AbstractBundleLinkRenderer implem
 								"You are trying to render alternate CSS for a bundle which don't have skin variant defined.");
 					}
 
-					// Only apply if the locale doesn't exists or is the current
+					// Only apply if the locale doesn't exist or is the current
 					// one
 					String locale = variant.get(JawrConstant.LOCALE_VARIANT_TYPE);
 					if (currentLocale == null || currentLocale.equals(locale)) {

@@ -14,7 +14,7 @@
 package net.jawr.web.resource.bundle;
 
 /**
- * Inclusion pattern for bundles. Indicates wether a bundle should be considered
+ * Inclusion pattern for bundles. Indicates whether a bundle should be considered
  * global (a library), the order of inclusion if it is global, and the behavior
  * for debugging.
  * 
@@ -108,7 +108,7 @@ public class InclusionPattern {
 	}
 
 	/**
-	 * Wether a bundle is global, if it is it will always be included on every
+	 * Whether a bundle is global, if it is it will always be included on every
 	 * page.
 	 * 
 	 * @return

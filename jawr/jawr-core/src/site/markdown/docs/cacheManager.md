@@ -45,7 +45,7 @@ properties :
 | jawr.ehcache.cache.name | String | The name of the cache. | none |
 
 
-Here is a example of jawr property file, to unable EhCache manager :
+Here is an example of jawr property file, to unable EhCache manager :
 
     ...
     jawr.cache.manager=net.jawr.web.cache.EhCacheManager
@@ -53,7 +53,7 @@ Here is a example of jawr property file, to unable EhCache manager :
     jawr.ehcache.cache.name=sampleCache1
     ...
 
-You will find below a example of EhCache configuration. Please note that
+You will find below an example of EhCache configuration. Please note that
 this is just an example, you will have to configure EhCache depending on
 your need :
 

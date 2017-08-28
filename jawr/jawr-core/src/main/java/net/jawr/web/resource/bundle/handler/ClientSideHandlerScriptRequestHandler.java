@@ -142,7 +142,7 @@ public class ClientSideHandlerScriptRequestHandler implements Serializable {
 			handlerCache.put(variantKey, handler);
 		}
 
-		// Decide wether to set a 304 response
+		// Decide whether to set a 304 response
 		if (useNotModifiedHeader(request, handler.hash)) {
 			response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
@@ -173,7 +173,7 @@ public class ClientSideHandlerScriptRequestHandler implements Serializable {
 	}
 
 	/**
-	 * Determines wether a response should get a 304 response and empty body,
+	 * Determines whether a response should get a 304 response and empty body,
 	 * according to etags and if-modified-since headers.
 	 * 
 	 * @param request

@@ -21,7 +21,7 @@ import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolve
 
 /**
  * This class defines the generator for webjars binary resources (images, fonts,
- * ..) which use the WebJarsLocator. So to reference a ressource you only need
+ * ..) which use the WebJarsLocator. So to reference a resource you only need
  * the short path reference instead of the full path one. <br/>
  * For example : webjars:/fonts/glyphicons-halflings-regular.eot instead of
  * webjars:/bootstrap/3.2.0/fonts/glyphicons-halflings-regular.eot

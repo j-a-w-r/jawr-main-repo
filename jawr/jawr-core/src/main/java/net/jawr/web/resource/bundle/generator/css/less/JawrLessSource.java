@@ -145,7 +145,7 @@ public class JawrLessSource extends StringSource {
 	 *            the resource
 	 * @return the resource reader
 	 * @throws ResourceNotFoundException
-	 *             if the resoure is not found
+	 *             if the resource is not found
 	 */
 	private Reader getResourceReader(String resource) throws ResourceNotFoundException {
 		List<Class<?>> excluded = new ArrayList<>();

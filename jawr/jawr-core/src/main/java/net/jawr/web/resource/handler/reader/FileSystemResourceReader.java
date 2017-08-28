@@ -77,7 +77,7 @@ public class FileSystemResourceReader implements TextResourceReader, StreamResou
 		File baseDirFile = new File(this.baseDir);
 		if (!baseDirFile.exists()) {
 			throw new BundlingProcessException("The base context directory '" + this.baseDir
-					+ " doesn't exists. Please check your configuration.");
+					+ " doesn't exist. Please check your configuration.");
 		} else if (!baseDirFile.isDirectory()) {
 			throw new BundlingProcessException("The base context directory '" + this.baseDir
 					+ " is not a directory. Please check your configuration.");

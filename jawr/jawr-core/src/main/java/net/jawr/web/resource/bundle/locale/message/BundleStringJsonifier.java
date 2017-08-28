@@ -110,7 +110,7 @@ public class BundleStringJsonifier {
 	 * a method that returns a function.
 	 * 
 	 * @param sb
-	 *            Stringbuffer to append the javascript code.
+	 *            StringBuffer to append the javascript code.
 	 * @param currentLeaf
 	 *            Current Map from the keys tree.
 	 * @param currentKey
@@ -119,7 +119,7 @@ public class BundleStringJsonifier {
 	 *            Key with ancestors as it appears in the message bundle(foo -->
 	 *            com.mycompany.foo)
 	 * @param isLeafLast
-	 *            Wether this is the las item in the current leaf, to append a
+	 *            Whether this is the last item in the current leaf, to append a
 	 *            separator.
 	 */
 	@SuppressWarnings("unchecked")

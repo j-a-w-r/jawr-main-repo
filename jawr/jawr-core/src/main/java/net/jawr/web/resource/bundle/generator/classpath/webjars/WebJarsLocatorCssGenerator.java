@@ -21,7 +21,7 @@ import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolve
 
 /**
  * This class defines the generator for webjars CSS resources which use the
- * WebJarsLocator. So to reference a ressource you only need the short path
+ * WebJarsLocator. So to reference a resource you only need the short path
  * reference instead of the full path one. <br/>
  * For example : webjars:/css/bootstrap.css instead of
  * webjars:/bootstrap/3.2.0/css/bootstrap.css

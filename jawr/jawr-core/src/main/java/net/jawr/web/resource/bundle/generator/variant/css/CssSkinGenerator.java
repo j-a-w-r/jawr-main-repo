@@ -677,7 +677,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	}
 
 	/**
-	 * Returns the reader for the resource path define in parameter
+	 * Returns the reader for the resource path defined in parameter
 	 * 
 	 * @param bundle
 	 *            the resource bundle

@@ -101,7 +101,7 @@ public class BundlePath {
 	/**
 	 * Returns true if the path is the path for an external URL
 	 * 
-	 * @return true if the path is the path for a external URL
+	 * @return true if the path is the path for an external URL
 	 */
 	public boolean isExternalURL() {
 		return externalURL;

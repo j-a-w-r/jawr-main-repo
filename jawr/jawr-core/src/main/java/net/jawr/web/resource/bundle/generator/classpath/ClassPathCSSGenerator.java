@@ -52,7 +52,7 @@ public class ClassPathCSSGenerator extends AbstractCSSGenerator implements Resou
 	private final ClassPathGeneratorHelper helper;
 
 	/**
-	 * The flag indicating if the generator is handling the Css Image ressources
+	 * The flag indicating if the generator is handling the Css Image resources
 	 */
 	private boolean isHandlingCssImage;
 

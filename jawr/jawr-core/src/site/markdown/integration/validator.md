@@ -4,7 +4,7 @@ Integration with Apache Commons Validator
 Commons Validator is an input validation component devised (originally)
 by David Winterfeldt as an addon for the Struts framework. It's
 functionality has since been split so that validator can serve as the
-basis for a independent component and is now part of Jakarta Commons.
+basis for an independent component and is now part of Jakarta Commons.
 
 Struts users use the html:javascript tag library to have Validator
 generate validation javascript for client side validation. The downside

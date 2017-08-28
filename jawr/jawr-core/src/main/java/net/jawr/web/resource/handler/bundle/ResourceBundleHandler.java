@@ -75,7 +75,7 @@ public interface ResourceBundleHandler {
 	 * 
 	 * @param bundleName
 	 *            the bundle name
-	 * @return a input stream of the resource bundle
+	 * @return an input stream of the resource bundle
 	 * @throws net.jawr.web.exception.ResourceNotFoundException
 	 *             if the resource is not found
 	 */
