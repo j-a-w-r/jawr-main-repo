@@ -168,7 +168,7 @@ public class CssSkinGenerator extends AbstractCSSGenerator implements VariantRes
 	@Override
 	public void afterPropertiesSet() {
 
-		this.urlRewriter = new CssImageUrlRewriter(config);
+		this.urlRewriter = new CssImageUrlRewriter(config, false);
 		cssSkinResolver = (AbstractCssSkinVariantResolver) config.getGeneratorRegistry()
 				.getVariantResolver(JawrConstant.SKIN_VARIANT_TYPE);
 		if (cssSkinResolver == null) {

@@ -90,17 +90,35 @@ public class CssImageUrlRewriter {
 	 */
 	public CssImageUrlRewriter(JawrConfig config) {
 
+		this(config, true);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param config
+	 *            the jawr config
+	 * @param useBinaryServletMapping
+	 *            the flag indicating if we must use the binary servlet mapping
+	 */
+	public CssImageUrlRewriter(JawrConfig config, boolean useBinaryServletMapping) {
+
 		this.config = config;
-		setContextPath(this.config.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
-		// Retrieve the binary resource handler
-		binaryRsHandler = (BinaryResourcesHandler) config.getContext()
-				.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
 
 		binaryServletPath = "";
 
-		if (binaryRsHandler != null) {
-			binaryServletPath = PathNormalizer.asPath(binaryRsHandler.getConfig().getServletMapping());
+		setContextPath(this.config.getProperty(JawrConstant.JAWR_CSS_URL_REWRITER_CONTEXT_PATH));
+
+		if (useBinaryServletMapping) {
+			// Retrieve the binary resource handler
+			binaryRsHandler = (BinaryResourcesHandler) config.getContext()
+					.getAttribute(JawrConstant.BINARY_CONTEXT_ATTRIBUTE);
+
+			if (binaryRsHandler != null) {
+				binaryServletPath = PathNormalizer.asPath(binaryRsHandler.getConfig().getServletMapping());
+			}
 		}
+
 	}
 
 	/**
