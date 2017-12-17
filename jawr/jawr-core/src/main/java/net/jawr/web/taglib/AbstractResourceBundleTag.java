@@ -1,23 +1,17 @@
 /**
  * Copyright 2007-2016 Jordi Hernández Sellés, Ibrahim Chaehoi
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * 	http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
 package net.jawr.web.taglib;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
 
 import net.jawr.web.config.JawrConfig;
 import net.jawr.web.context.ThreadLocalJawrContext;
@@ -27,11 +21,16 @@ import net.jawr.web.resource.bundle.renderer.BundleRendererContext;
 import net.jawr.web.servlet.RendererRequestUtils;
 import net.jawr.web.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
+
 /**
  * Abstract implementation of a tag lib component which will retrieve a Jawr
  * config object from the servlet context and use it to render bundles of
  * resources according to its src attribute.
- * 
+ *
  * @author Jordi Hernández Sellés
  * @author Ibrahim Chaehoi
  */
@@ -43,12 +42,15 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 	/** The source path */
 	protected String src;
 
+	/** The contextPath (if specified). If not specified we will use the one in the request */
+	protected String contextPath;
+
 	/** The flag to use random param */
 	protected String useRandomParam = null;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.jsp.tagext.TagSupport#doStartTag()
 	 */
 	@Override
@@ -82,6 +84,9 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 
 		try {
 			BundleRendererContext ctx = RendererRequestUtils.getBundleRendererContext(request, renderer);
+			if (contextPath != null) {
+				ctx.setContextPath(contextPath);
+			}
 			renderer.renderBundleLinks(src, ctx, pageContext.getOut());
 
 		} catch (IOException ex) {
@@ -94,9 +99,18 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 		return SKIP_BODY;
 	}
 
+    /**
+     * Set the contextPath (optional).
+     * 
+     * @param contextPath
+     */
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
+	}
+
 	/**
 	 * Set the source of the resource or bundle to retrieve.
-	 * 
+	 *
 	 * @param src
 	 */
 	public void setSrc(String src) {
@@ -106,7 +120,7 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 	/**
 	 * Set wether random param will be added in development mode to generated
 	 * urls.
-	 * 
+	 *
 	 * @param useRandomParam
 	 */
 	public void setUseRandomParam(String useRandomParam) {
@@ -115,14 +129,14 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 
 	/**
 	 * Returns the resource bundle attribute name
-	 * 
+	 *
 	 * @return the resource bundle attribute name
 	 */
 	protected abstract String getResourceHandlerAttributeName();
 
 	/**
 	 * Returns the bundle renderer
-	 * 
+	 *
 	 * @param rsHandler
 	 *            the resource bundle handler
 	 * @param useRandomParam
@@ -134,7 +148,7 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.jsp.tagext.TagSupport#release()
 	 */
 	@Override
