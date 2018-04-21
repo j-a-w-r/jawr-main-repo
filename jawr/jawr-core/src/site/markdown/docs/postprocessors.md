@@ -246,7 +246,7 @@ Uglify JS sources will be find, by defining the property
 based on javascript engine. The default JS engine used in Jawr is the
 Rhino javascript engine. You can also use Nashorn engine since Java 8.
 Please check [the tutorial about the use of JS
-engine](../tutorial/howToSetJsEngine.html) for more info. To use the
+engine](../tutorials/howToSetJsEngine.html) for more info. To use the
 Rhino engine, you'll have to add it to your project classpath to be able
 to us this postprocessor. For maven user, you can add the following
 snippet configuration to your pom.xml :
