@@ -83,7 +83,7 @@ public class ResourceBundleDirMapper extends AbstractResourceMapper {
 	}
 
 	/**
-	 * Generates the resource bunles mapping expressions.
+	 * Generates the resource bundles mapping expressions.
 	 * 
 	 * @throws DuplicateBundlePathException
 	 *             if a duplicate path is found in the bundle

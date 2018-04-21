@@ -14,7 +14,7 @@
 package net.jawr.web.resource.bundle.global.processor;
 
 /**
- * This class defines the abstract class for the preprocessor, which handle one
+ * This class defines the abstract class for the preprocessor, which handles one
  * type of resource bundle.
  * 
  * @author Ibrahim Chaehoi

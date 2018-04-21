@@ -238,7 +238,7 @@ public class ClassLoaderResourceUtils {
 			rets = clazz.newInstance();
 		} catch (Exception e) {
 			throw new BundlingProcessException(e.getMessage() + " [The custom class " + clazz.getName()
-					+ " could not be instantiated, check wether it is available on the classpath and"
+					+ " could not be instantiated, check whether it is available on the classpath and"
 					+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
 					+ e.getClass().getName() + ":" + e.getMessage(), e);
 		}
@@ -292,13 +292,13 @@ public class ClassLoaderResourceUtils {
 						clazz = Class.forName(classname, true, threadClassLoader);
 					} catch (Exception e) {
 						throw new BundlingProcessException(e.getMessage() + " [The custom class " + classname
-								+ " could not be instantiated, check wether it is available on the classpath and"
+								+ " could not be instantiated, check whether it is available on the classpath and"
 								+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
 								+ e.getClass().getName() + ":" + e.getMessage(), e);
 					}
 				} else {
 					throw new BundlingProcessException(classNotFoundEx.getMessage() + " [The custom class " + classname
-							+ " could not be instantiated, check wether it is available on the classpath and"
+							+ " could not be instantiated, check whether it is available on the classpath and"
 							+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
 							+ classNotFoundEx.getClass().getName() + ":" + classNotFoundEx.getMessage(),
 							classNotFoundEx);
@@ -333,7 +333,7 @@ public class ClassLoaderResourceUtils {
 
 		} catch (Exception e) {
 			throw new BundlingProcessException(e.getMessage() + " [The custom class " + classname
-					+ " could not be instantiated, check wether it is available on the classpath and"
+					+ " could not be instantiated, check whether it is available on the classpath and"
 					+ " verify that it has a zero-arg constructor].\n" + " The specific error message is: "
 					+ e.getClass().getName() + ":" + e.getMessage(), e);
 		}

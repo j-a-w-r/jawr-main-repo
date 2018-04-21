@@ -21,7 +21,7 @@ import net.jawr.web.resource.bundle.generator.resolver.WebJarsLocatorPathResolve
 
 /**
  * This class defines the generator for webjars JS resources which use the
- * WebJarsLocator. So to reference a ressource you only need the short path
+ * WebJarsLocator. So to reference a resource you only need the short path
  * reference instead of the full path one. <br/>
  * For example : webjars:jquery.js instead of webjars:/jquery/2.1.4/jquery.js
  * To avoid resource reference collision if there multiple resource with the same name in different webjars,

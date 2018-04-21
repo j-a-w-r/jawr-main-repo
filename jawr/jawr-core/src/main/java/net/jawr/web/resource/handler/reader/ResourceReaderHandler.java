@@ -111,7 +111,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * 
 	 * @param resourceName
 	 *            the name of the resource.
-	 * @return a input stream of the resource
+	 * @return an input stream of the resource
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
@@ -125,7 +125,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 	 * @param processingBundle
 	 *            the flag indicating that we are currently processing the
 	 *            bundles
-	 * @return a input stream of the resource
+	 * @return an input stream of the resource
 	 * @throws ResourceNotFoundException
 	 *             if the resource is not found
 	 */
@@ -133,7 +133,7 @@ public interface ResourceReaderHandler extends WorkingDirectoryLocationAware, Re
 
 	/**
 	 * Returns the last modified date of the resource path available on
-	 * filesystem or 0 if it doesn't exists.
+	 * filesystem or 0 if it doesn't exist.
 	 * 
 	 * @param filePath
 	 *            the file Path

@@ -45,7 +45,7 @@ public class LocaleUtils {
 	public static final Set<String> LOCALE_SUFFIXES = LocaleUtils.getAvailableLocaleSuffixes();
 
 	/**
-	 * Determines wether a key matches any of the set filters.
+	 * Determines whether a key matches any of the set filters.
 	 * 
 	 * @param key
 	 *            the property key

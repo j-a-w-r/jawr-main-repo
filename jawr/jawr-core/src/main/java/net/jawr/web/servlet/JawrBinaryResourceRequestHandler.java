@@ -447,7 +447,7 @@ public class JawrBinaryResourceRequestHandler extends JawrRequestHandler {
 		}
 
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug("request succesfully attended");
+			LOGGER.debug("request successfully attended");
 	}
 
 	/*

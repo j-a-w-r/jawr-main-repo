@@ -375,7 +375,7 @@ public class ClosureGlobalPostProcessor extends AbstractChainedGlobalProcessor<G
 		// Define Jawr root module
 		// The JAWR_ROOT_MODULE is a fake module to give a root module to the
 		// dependency graph
-		// This is it's only purpose. It is the root dependency for any module
+		// This is its only purpose. It is the root dependency for any module
 		// This is used because Google Closure use a unique module as root for
 		// dependency management
 		// in advance mode

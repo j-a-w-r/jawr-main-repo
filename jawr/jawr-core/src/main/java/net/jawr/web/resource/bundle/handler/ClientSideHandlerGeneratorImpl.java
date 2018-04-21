@@ -257,7 +257,7 @@ public class ClientSideHandlerGeneratorImpl implements ClientSideHandlerGenerato
 	}
 
 	/**
-	 * Creates a javascript objet that represents a bundle
+	 * Creates a javascript object that represents a bundle
 	 * 
 	 * @param bundle
 	 *            the bundle

@@ -59,7 +59,7 @@
 							] Jawr provides now a JRuby sass compiler for Sass Generator,
 							which is closer to the original version than the Vaadin one.
 							Please check the
-							<a href="./docs/generators#SASS_Ruby_generator">Saas Ruby generator documentation</a>
+							<a href="./docs/generators#SASS_Ruby_generator">Sass Ruby generator documentation</a>
 							for more detail.
 						</li>
 						<li>
@@ -101,7 +101,7 @@
 							[
 							<a href='https://java.net/jira/browse/JAWR-381'>JAWR-381</a>
 							] Improve performance generation of generated resources (less,
-							saas, ...)
+							sass, ...)
 						</li>
 						<li>
 							[
@@ -399,7 +399,7 @@
 						</li>
 						<li>
 							<strong>Issue #311 fixed:</strong>
-							Invalid ressource path generated for CSS with IE11 in SSL mode
+							Invalid resource path generated for CSS with IE11 in SSL mode
 						</li>
 						<li>
 							<strong>Issue #308 fixed:</strong>

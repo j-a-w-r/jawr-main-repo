@@ -97,14 +97,14 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Vaadin Saas compiler -->
+		<!-- Vaadin Sass compiler -->
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-sass-compiler</artifactId>
 			<optional>true</optional>
 		</dependency>
 
-		<!-- JRuby Saas compiler -->
+		<!-- JRuby Sass compiler -->
 		<dependency>
 			<groupId>org.jruby</groupId>
 			<artifactId>jruby-core</artifactId>

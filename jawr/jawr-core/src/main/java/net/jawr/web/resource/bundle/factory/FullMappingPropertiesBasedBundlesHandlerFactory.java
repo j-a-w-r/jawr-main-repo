@@ -392,7 +392,7 @@ public class FullMappingPropertiesBasedBundlesHandlerFactory {
 	 * @return the inclusion pattern for a bundle
 	 */
 	private InclusionPattern getInclusionPattern(PropertiesConfigHelper props, String bundleName) {
-		// Wether it's global or not
+		// Whether it's global or not
 		boolean isGlobal = Boolean.parseBoolean(props.getCustomBundleProperty(bundleName,
 				PropertiesBundleConstant.BUNDLE_FACTORY_CUSTOM_GLOBAL_FLAG, "false"));
 

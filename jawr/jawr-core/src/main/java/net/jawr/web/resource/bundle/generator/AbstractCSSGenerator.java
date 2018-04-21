@@ -170,7 +170,7 @@ public abstract class AbstractCSSGenerator extends AbstractCachedGenerator
 	/**
 	 * Retrieves the binary servlet mapping
 	 * 
-	 * @return the binary servlet mapping or null if it doesn't exists
+	 * @return the binary servlet mapping or null if it doesn't exist
 	 */
 	private String getBinaryServletMapping() {
 		String binaryServletMapping = null;

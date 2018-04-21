@@ -18,7 +18,7 @@ You will find below a migration guide to migrate from 3.5.x to 3.6.
     which can manages every binary resources (images, fonts, ...).  
     So you will have to update your web.xml file like below.
 
-   Here is a example of a web.xml configuration before the 3.6 version :
+   Here is an example of a web.xml configuration before the 3.6 version :
 
                                   
                 <servlet>
@@ -279,7 +279,7 @@ It is important to note that the 3.5 version requires at least the use of java 6
    
 -   ResourceBundlePathsIterator :
 
-   Jawr use internally a object to iterate over resource bundle path.  
+   Jawr use internally an object to iterate over resource bundle path.  
     The signature of the following method has changed :
 
 | **Old method name in ResourceBundlePathsIterator** | **New method name in ResourceBundlePathsIterator** |

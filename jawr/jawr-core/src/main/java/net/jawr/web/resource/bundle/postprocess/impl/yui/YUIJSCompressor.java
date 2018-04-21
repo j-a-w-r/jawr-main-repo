@@ -47,7 +47,7 @@ public class YUIJSCompressor extends AbstractJsChainedResourceBundlePostProcesso
 	 * Constructor.
 	 * 
 	 * @param obfuscate
-	 *            Wether obfuscation should be applied.
+	 *            Whether obfuscation should be applied.
 	 */
 	public YUIJSCompressor(boolean obfuscate) {
 		super(obfuscate ? PostProcessFactoryConstant.YUI_COMPRESSOR_OBFUSCATOR

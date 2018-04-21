@@ -47,7 +47,7 @@ public class RhinoEngine {
 	}
 
 	/**
-	 * Initialize the context if it doesn't exists
+	 * Initialize the context if it doesn't exist
 	 */
 	private void initContext() {
 		if (Context.getCurrentContext() == null) {

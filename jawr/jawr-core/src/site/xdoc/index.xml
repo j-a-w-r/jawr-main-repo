@@ -176,7 +176,7 @@
 				<li>[<a href='https://java.net/jira/browse/JAWR-364'>JAWR-364</a>] The DWR 3 extension has been updated to use the latest DWR 3.0.1-RELEASE version.
 				</li>
 				<li>[<a href='https://java.net/jira/browse/JAWR-362'>JAWR-362</a>] Jawr provides now a JRuby sass compiler for Sass Generator, which is closer to the original version than the Vaadin one. 
-				Please check the <a href="./docs/generators#SASS_Ruby_generator">Saas Ruby generator documentation</a> for more detail.
+				Please check the <a href="./docs/generators#SASS_Ruby_generator">Sass Ruby generator documentation</a> for more detail.
 				</li>
 				<li>[<a href='https://java.net/jira/browse/JAWR-398'>JAWR-398</a>] The Jawr javascript tag has been updated to add <b>crossorigin</b> attribute.
 				</li>
@@ -191,7 +191,7 @@
 				</li>
 				<li>[<a href='https://java.net/jira/browse/JAWR-369'>JAWR-369</a>] Add semicolon between JavaScript files if necessary
 				</li>
-				<li>[<a href='https://java.net/jira/browse/JAWR-381'>JAWR-381</a>] Improve performance generation of generated resources (less, saas, ...)
+				<li>[<a href='https://java.net/jira/browse/JAWR-381'>JAWR-381</a>] Improve performance generation of generated resources (less, sass, ...)
 				</li>
 				<li>[<a href='https://java.net/jira/browse/JAWR-383'>JAWR-383</a>] Provide Spring Boot auto-configuration
 				</li>
@@ -342,7 +342,7 @@
 	      		 	<strong>Issue #317 fixed:</strong> ResourceReaderHandler doesn't handle properly exception when retrieving stream
 				 </li>
 				 <li>
-	      		 	<strong>Issue #311 fixed:</strong> Invalid ressource path generated for CSS with IE11 in SSL mode
+	      		 	<strong>Issue #311 fixed:</strong> Invalid resource path generated for CSS with IE11 in SSL mode
 				 </li>
 				 <li>
 	      		 	<strong>Issue #308 fixed:</strong> Issue in debug mode for CSS resources where URL reference an HTTP resource

@@ -35,7 +35,7 @@ import net.jawr.web.resource.bundle.generator.classpath.webjars.WebJarsLocatorCs
 /**
  * This class define the WebJars locator resolver. If the webjars-jquery library
  * is in the classpath, 'webjars:jquery.js' will automatically locate the
- * resource instead of using the full ressource path
+ * resource instead of using the full resource path
  * 'webjars:/jquery/2.1.4/jquery.js' To avoid resource reference collision if
  * there multiple resource with the same name in different webjars, like below
  * :</br>
@@ -70,7 +70,7 @@ public class WebJarsLocatorPathResolver extends PrefixedPathResolver {
 	 */
 	private final boolean checkResourcePathForWarning;
 
-	/** The list of path checked to avoid polluting logs */
+	/** The list of paths checked to avoid polluting logs */
 	private List<String> pathsChecked;
 
 	/**

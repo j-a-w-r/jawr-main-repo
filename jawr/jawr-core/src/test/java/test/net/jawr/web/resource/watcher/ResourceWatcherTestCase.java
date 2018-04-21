@@ -294,7 +294,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/init.js")).thenReturn(path);
 
-		// Ensure that the file to create doesn't exists before starting the
+		// Ensure that the file to create doesn't exist before starting the
 		// watcher
 		File fToCreate = new File(f.getParent() + "/init2.js");
 		deleteFileIfExists(fToCreate);
@@ -341,7 +341,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		// Ensure that the file to create doesn't exists before starting the
+		// Ensure that the file to create doesn't exist before starting the
 		// watcher
 		File fToCreate = new File(f, "scriptToBeCreated.js");
 		deleteFileIfExists(fToCreate);
@@ -368,7 +368,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		// Ensure that the file to create doesn't exists before starting the
+		// Ensure that the file to create doesn't exist before starting the
 		// watcher
 		File dirToCreate = new File(f, "tempDir");
 		deleteFileIfExists(dirToCreate);
@@ -444,7 +444,7 @@ public class ResourceWatcherTestCase {
 
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		// Ensure that the file to create doesn't exists before starting the
+		// Ensure that the file to create doesn't exist before starting the
 		// watcher
 		File fToCreate = new File(f, "diagram/scriptToBeCreated1.js");
 		deleteFileIfExists(fToCreate);
@@ -517,7 +517,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		// Ensures that the file to create doesn't exists before starting the
+		// Ensures that the file to create doesn't exist before starting the
 		// watcher
 		File fToCreate = new File(f, "scriptToBeCreated1.js");
 		deleteFileIfExists(fToCreate);
@@ -553,7 +553,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		// Ensure that the file to create doesn't exists before starting the
+		// Ensure that the file to create doesn't exist before starting the
 		// watcher
 		File dirToCreate = new File(f, "tempDir/");
 		deleteFileIfExists(dirToCreate);
@@ -687,7 +687,7 @@ public class ResourceWatcherTestCase {
 		String path = f.getAbsolutePath();
 		when(rsReader.getFilePath("/js/lib/chart/")).thenReturn(path);
 
-		// Ensure that the file to create doesn't exists before starting the
+		// Ensure that the file to create doesn't exist before starting the
 		// watcher
 		File dirToCreate = new File(f.getAbsolutePath() + "/diagram/tempDir/");
 		deleteFileIfExists(dirToCreate);

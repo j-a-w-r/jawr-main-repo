@@ -27,7 +27,7 @@ public interface StreamResourceReader extends ResourceReader {
 	 * 
 	 * @param resourceName
 	 *            the name of the resource.
-	 * @return a input stream of the resource
+	 * @return an input stream of the resource
 	 */
 	public InputStream getResourceAsStream(String resourceName);
 
@@ -39,7 +39,7 @@ public interface StreamResourceReader extends ResourceReader {
 	 * @param processingBundle
 	 *            the flag indicating that we are currently processing the
 	 *            bundles
-	 * @return a input stream of the resource
+	 * @return an input stream of the resource
 	 */
 	public InputStream getResourceAsStream(String resourceName, boolean processingBundle);
 

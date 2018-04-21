@@ -60,14 +60,14 @@ public class ResourceReaderComparator implements Comparator<ResourceReader> {
 	 * Returns the priority of the resource reader
 	 * 
 	 * if the FileSystemResourceReader is configured with high priority the list
-	 * of priorities is as followed :
+	 * of priorities is as follows :
 	 * 
 	 * 5 - ServletContextResourceReader 4 - FileSystemResourceReader 3 -
 	 * Generator with prefixed path 2 - Generator with suffixed path 1 -
 	 * CssSmartSpriteResourceReader
 	 * 
 	 * if the FileSystemResourceReader is configured with high priority the list
-	 * of priorities is as followed :
+	 * of priorities is as follows :
 	 * 
 	 * 5 - FileSystemResourceReader 4 - ServletContextResourceReader 3 -
 	 * Generator with prefixed path 2 - Generator with suffixed path 1 -

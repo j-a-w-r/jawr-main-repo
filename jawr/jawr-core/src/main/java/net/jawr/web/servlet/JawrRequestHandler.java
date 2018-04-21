@@ -319,7 +319,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 		if (LOGGER.isInfoEnabled()) {
 			long totaltime = System.currentTimeMillis() - initialTime;
-			LOGGER.info("Init method succesful. jawr started in " + (totaltime / 1000) + " seconds....");
+			LOGGER.info("Init method successful. jawr started in " + (totaltime / 1000) + " seconds....");
 		}
 
 		// Reset ThreadLocalJawrContext
@@ -816,7 +816,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	 * @throws ServletException
 	 *             if a servlet exception occurs
 	 * @throws IOException
-	 *             if a IO exception occurs
+	 *             if an IO exception occurs
 	 */
 	protected boolean handleSpecificRequest(String requestedPath, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -921,7 +921,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 				response.setContentType(getContentType(requestedPath, request));
 				writeContent(requestedPath, request, response);
 				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("request succesfully attended");
+					LOGGER.debug("request successfully attended");
 			} else {
 				if (!writeResponseHeader) {
 					logBundleNotFound(requestedPath);
@@ -967,7 +967,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 	}
 
 	/**
-	 * Writes the content to the ouput stream
+	 * Writes the content to the output stream
 	 * 
 	 * @param requestedPath
 	 *            the requested path
@@ -1002,7 +1002,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			// StreamGenerator like classpath Image generator
 			// The following code will rewrite the URL path for the generated
 			// images,
-			// because in debug mode, we are retrieving the CSS ressources
+			// because in debug mode, we are retrieving the CSS resources
 			// directly from the webapp
 			// and if the CSS contains generated images, we should rewrite the
 			// URL.
@@ -1207,7 +1207,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			}
 
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Jawr configuration succesfully reloaded. ");
+				LOGGER.debug("Jawr configuration successfully reloaded. ");
 			}
 			if (PERF_PROCESSING_LOGGER.isDebugEnabled()) {
 				PERF_PROCESSING_LOGGER.debug(stopWatch.prettyPrint());
@@ -1260,7 +1260,7 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 			initializeJawrContext(props);
 
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Jawr configuration succesfully reloaded. ");
+				LOGGER.debug("Jawr configuration successfully reloaded. ");
 			}
 
 		} catch (InterruptBundlingProcessException e) {

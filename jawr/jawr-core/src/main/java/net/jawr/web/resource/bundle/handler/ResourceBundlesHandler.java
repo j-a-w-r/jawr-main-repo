@@ -108,7 +108,7 @@ public interface ResourceBundlesHandler {
 	/**
 	 * Returns an ordered list of the paths to use when accesing a resource
 	 * bundle. Each implementation may return one or several paths depending on
-	 * wether all resources are unified into one or several bundles. The paths
+	 * whether all resources are unified into one or several bundles. The paths
 	 * returned should include the prefix that uniquely identify the bundle
 	 * contents.
 	 * 
@@ -126,7 +126,7 @@ public interface ResourceBundlesHandler {
 	/**
 	 * Returns an ordered list of the paths to use when accesing a resource
 	 * bundle. Each implementation may return one or several paths depending on
-	 * wether all resources are unified into one or several bundles. The paths
+	 * whether all resources are unified into one or several bundles. The paths
 	 * returned should include the prefix that uniquely identify the bundle
 	 * contents.
 	 * 

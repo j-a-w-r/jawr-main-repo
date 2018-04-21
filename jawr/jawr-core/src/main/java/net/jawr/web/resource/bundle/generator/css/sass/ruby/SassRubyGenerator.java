@@ -47,7 +47,7 @@ import net.jawr.web.resource.bundle.generator.resolver.ResourceGeneratorResolver
 import net.jawr.web.util.StringUtils;
 
 /**
- * The Saas Generator based on ruby sass-gems.
+ * The Sass Generator based on ruby sass-gems.
  * 
  * @author Ibrahim Chaehoi
  */
@@ -111,7 +111,7 @@ public class SassRubyGenerator extends AbstractCSSGenerator implements ISassReso
 		if (!value.equalsIgnoreCase(SASS_GENERATOR_ABSOLUTE_URL_MODE)
 				&& !value.equalsIgnoreCase(SASS_GENERATOR_RELATIVE_URL_MODE)) {
 			throw new BundlingProcessException("The value '" + value + "' is not allowed for '"
-					+ SASS_GENERATOR_URL_MODE + "' in the Saas Ruby generator");
+					+ SASS_GENERATOR_URL_MODE + "' in the Sass Ruby generator");
 		}
 		useAbsoluteURL = value.equalsIgnoreCase(SASS_GENERATOR_ABSOLUTE_URL_MODE);
 	}

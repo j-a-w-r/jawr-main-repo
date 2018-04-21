@@ -104,7 +104,7 @@ public abstract class AbstractResourceBundleTag extends TagSupport {
 	}
 
 	/**
-	 * Set wether random param will be added in development mode to generated
+	 * Set whether random param will be added in development mode to generated
 	 * urls.
 	 * 
 	 * @param useRandomParam

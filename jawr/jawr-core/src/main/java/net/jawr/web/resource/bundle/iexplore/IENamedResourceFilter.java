@@ -56,9 +56,9 @@ public class IENamedResourceFilter {
 
 				Matcher matcher = OPERATORS_PATTERN.matcher(path);
 				matcher.find();
-				String sufix = matcher.group();
-				sufix = sufix.substring(0, sufix.lastIndexOf("."));
-				String expressionKey = createExpressionKey(sufix);
+				String suffix = matcher.group();
+				suffix = suffix.substring(0, suffix.lastIndexOf("."));
+				String expressionKey = createExpressionKey(suffix);
 
 				if (expressions.containsKey(expressionKey)) {
 					List<String> fileNames = expressions.get(expressionKey);
@@ -80,14 +80,14 @@ public class IENamedResourceFilter {
 	}
 
 	/**
-	 * Creates an IE conditional expression by transforming the sufix of a
+	 * Creates an IE conditional expression by transforming the suffix of a
 	 * filename.
 	 * 
-	 * @param sufix
+	 * @param suffix
 	 * @return
 	 */
-	private String createExpressionKey(String sufix) {
-		String[] parts = sufix.split("_");
+	private String createExpressionKey(String suffix) {
+		String[] parts = suffix.split("_");
 		StringBuilder ret = new StringBuilder("[if ");
 		boolean ieAdded = false;
 		for (String part : parts) {

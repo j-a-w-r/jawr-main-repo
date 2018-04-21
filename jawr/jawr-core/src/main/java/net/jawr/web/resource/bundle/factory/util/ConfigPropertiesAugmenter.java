@@ -101,7 +101,7 @@ public class ConfigPropertiesAugmenter {
 	}
 
 	/**
-	 * Determine wether a property is augmentable (so instead of overriding,
+	 * Determine whether a property is augmentable (so instead of overriding,
 	 * values are appended to the current values).
 	 * 
 	 * @param configKey

@@ -64,7 +64,7 @@ public class RendererRequestUtils {
 	private static final String FORWARD_REQUEST_URI = "javax.servlet.forward.request_uri";
 
 	/**
-	 * The attribute name of the flag indicating if Jawr is handling a error
+	 * The attribute name of the flag indicating if Jawr is handling an error
 	 * dispatch
 	 */
 	private static final String JAWR_ERROR_DISPATCH = "net.jawr.error.dispatch";
@@ -87,7 +87,7 @@ public class RendererRequestUtils {
 	public static BundleRendererContext getBundleRendererContext(HttpServletRequest request, BundleRenderer renderer) {
 		String bundleRendererCtxAttributeName = BUNDLE_RENDERER_CONTEXT_ATTR_PREFIX + renderer.getResourceType();
 
-		// If we are handling a error dispatch, we should remove the current
+		// If we are handling an error dispatch, we should remove the current
 		// RendererContext to use a new one
 		String jawrErrorDispathAttributeName = JAWR_ERROR_DISPATCH + renderer.getResourceType();
 		clearRequestWhenDispatch(request, ERROR_EXCEPTION, bundleRendererCtxAttributeName,
@@ -116,7 +116,7 @@ public class RendererRequestUtils {
 	 * @param requestDispatchAttribute
 	 *            the request attribute name to determine the dispatch type
 	 * @param bundleRendererCtxAttributeName
-	 *            the bundle renderer context attriubte to clean
+	 *            the bundle renderer context attribute to clean
 	 * @param jawrDispathAttributeName
 	 *            the jawr dispatch attribute used to ensure that the clear is
 	 *            done only once
@@ -147,7 +147,7 @@ public class RendererRequestUtils {
 	}
 
 	/**
-	 * Determines wether gzip is suitable for the current request given the
+	 * Determines whether gzip is suitable for the current request given the
 	 * current config.
 	 * 
 	 * @param req
@@ -219,7 +219,7 @@ public class RendererRequestUtils {
 	 * @param req
 	 *            the request
 	 * @param the
-	 *            ie version to check
+	 *            IE version to check
 	 * @return true if the user agent is IE and the version is equal or less
 	 *         than the one passed in parameter
 	 */
@@ -245,7 +245,7 @@ public class RendererRequestUtils {
 	}
 
 	/**
-	 * Determines wether to override the debug settings. Sets the debugOverride
+	 * Determines whether to override the debug settings. Sets the debugOverride
 	 * status on ThreadLocalJawrContext
 	 * 
 	 * @param req

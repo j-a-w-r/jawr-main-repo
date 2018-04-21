@@ -12,8 +12,8 @@ module Sass
 
       # Creates a new filesystem importer that imports files relative to a given path.
       #
-      # @param jawrResolver [JawrSassResolver] The Jawr Saas resolver.
-      #   This importer will import resource using the Jawr Saas resolver.
+      # @param jawrResolver [JawrSassResolver] The Jawr Sass resolver.
+      #   This importer will import resource using the Jawr Sass resolver.
       def initialize(jawrResolver)
     	  @resolver = jawrResolver
       end
@@ -107,7 +107,7 @@ module Sass
       #
       # @param uri [String] The URI of the file to check.
       #   Comes from a `:filename` option set on an engine returned by this importer.
-      # @param options [{Symbol => Objet}] Options for the Sass file
+      # @param options [{Symbol => Object}] Options for the Sass file
       #   containing the `@import` currently being checked.
       # @return [Time, nil]
       def mtime(uri, options)
