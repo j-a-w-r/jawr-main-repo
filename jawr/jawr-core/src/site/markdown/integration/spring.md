@@ -29,8 +29,8 @@ dependency in your pom file :
 Assuming you have an up and running Spring web application, you will
 first need to add a bean definition for the class
 *net.jawr.web.servlet.JawrSpringController*. You will need an instance
-for each resource type (.js and .css), so it will be best if you declare
-an abstract bean and then you create two instances from it. Take a look
+for each resource type (.js and .css) and a specific one for binary resources (*.jpg, *.png, ....), so it will be best if you declare
+an abstract bean and then you create three instances from it. Take a look
 at this full example and find all the details below:
 
     <!-- Base Jawr config -->
@@ -52,6 +52,11 @@ at this full example and find all the details below:
     <!-- CSS controller -->
     <bean id="jawrCSSController" parent="jawrBase">
             <property name="type" value="css" />
+    </bean>
+    
+    <!-- CSS controller -->
+    <bean id="jawrBinaryController" parent="jawrBase">
+            <property name="type" value="binary" />
     </bean>
 
 
@@ -111,17 +116,12 @@ requests to the controllers:
               <props>
               <prop key="/**/*.js">jawrJsController</prop>
               <prop key="/**/*.css">jawrCSSController</prop>
-              <prop key="/**/*.jpg">jawrCSSController</prop>
-              <prop key="/**/*.png">jawrCSSController</prop>
+              <prop key="/**/*.jpg">jawrBinaryController</prop>
+              <prop key="/**/*.png">jawrBinaryController</prop>
               </props>
              </property>
     </bean>
 
-
-You may have noticed the \*.jpg and \*.png mappings in the example. The
-reason for adding these is to handle background images referenced in css
-files, when Jawr is in debug mode. This is due to a known problem which
-will be addressed in future versions.
 
 If for some reason you need to add some kind of prefixing to the
 mappings, there is extra work to be done. For instance, if you mapped
