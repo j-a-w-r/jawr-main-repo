@@ -54,7 +54,7 @@ at this full example and find all the details below:
             <property name="type" value="css" />
     </bean>
     
-    <!-- CSS controller -->
+    <!-- Binary controller -->
     <bean id="jawrBinaryController" parent="jawrBase">
             <property name="type" value="binary" />
     </bean>
@@ -134,7 +134,8 @@ like this:
               <props>
               <prop key="/jawr/**/*.js">jawrJsController</prop>
               <prop key="/jawr/**/*.css">jawrCSSController</prop>
-              <prop key="/jawr/**/*">jawrCSSController</prop>
+              <prop key="/jawr/**/*.jpg">jawrBinaryController</prop>
+              <prop key="/jawr/**/*.png">jawrBinaryController</prop>
               </props>
              </property>
     </bean>
@@ -144,8 +145,7 @@ For this configuration, you will need to let the controllers know the
 extra path information. The reason for this is that Jawr needs not only
 to attend to requests, but also to generate URLs which will match its
 own controllers (incidentally, that's the same reason to need the
-*mapping* configuration attribute too). Note that the additional images
-mapping is simpler now, reduced to '/jawr/\*\*/\*' to cover all types.
+*mapping* configuration attribute too).
 The **controllerMapping** configuration attribute comes into play under
 this configuration. You will need to set it with the value of the
 additional prefixing:
