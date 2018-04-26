@@ -18,6 +18,11 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+        <attribute>
+            <name>contextPath</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
 		<attribute>
 			<name>type</name>
 			<required>false</required>
@@ -49,6 +54,11 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+        <attribute>
+            <name>contextPath</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
 		<attribute>
 			<name>useRandomParam</name>
 			<required>false</required>
@@ -94,6 +104,11 @@
                   <p>The URL of the image.</p>
                   ]]>
             </description>
+        </attribute>
+        <attribute>
+            <name>contextPath</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>base64</name>
