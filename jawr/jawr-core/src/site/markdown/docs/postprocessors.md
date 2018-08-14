@@ -12,7 +12,7 @@ bundle once all the files have been joined into it.  
 Normally, you won't need to worry about postprocessors, since Jawr will
 use them automatically: javascript will be minified using JSMin, and the
 license comments (if any) will be added afterwards. CSS files will also
-be minified ,license comments will be added and their image URLs will be
+be minified, license comments will be added and their image URLs will be
 rewritten so they keep working from within a bundle. But there are
 countless combinations you can use, plus you may create and use your own
 postprocessors, so here is how to configure the filter chain applied to
@@ -32,9 +32,9 @@ instance:
 As you see, we specify a couple of bundle postprocessors for both js and
 css resources, plus a file postprocessor for css files. We didn't
 specify any file postprocessor for javascript because, at the time of
-writing, there is none available yet.   Note that the previous example
+writing, there are none available yet.   Note that the previous example
 configuration matches the default behavior of Jawr, so it actually makes
-no difference whether you include it in your descriptor or not. You would
+no difference whether or not you include it in your descriptor. You would
 set these parameters only to change the default behavior, like for
 example, to remove minification:
 
@@ -58,7 +58,7 @@ In this example, the bundle postprocessor for the *foo* bundle is set to
 postprocessor, it is specified that none will be used.
 
 Jawr allows you to define the postprocessors for composite bundles. The
-format of the postprocessor properties is :
+format of the postprocessor properties is:
 
 -   jawr.*resourceType*.bundle.*bundleName*.composite.bundlepostprocessors
 -   jawr.*resourceType*.bundle.*bundleName*.composite.filepostprocessors
@@ -139,7 +139,7 @@ and *sample* and map them in different postprocessing chains:
 ### Custom postprocessors for composite bundle
 
 For a composite bundle, you can define the child bundle associated to it
-using the **child.names** property like follow.
+using the **child.names** property:
 
 
     jawr.css.bundle.myCompositeBundle.child.names=child_1,child_2
@@ -152,7 +152,7 @@ postprocessor on a composite bundle, the postprocessor will be applied
 on the whole bundle.
 
 To disable postprocessing on the composite bundle, you just need to
-configure you composite bundle as such :
+configure your composite bundle like this:
 
     jawr.css.bundle.myCompositeBundle.fileprocessors=none
     jawr.css.bundle.myCompositeBundle.bundlepostprocessors=none
@@ -239,9 +239,9 @@ whitespace in a very safe manner.
 
 This processor uses
 [UglifyJS2](https://github.com/mishoo/UglifyJS2)
-compressor. The built in version used is the version v2.4.15 The user is
+compressor. The built in version used is the version v2.4.15. The user is
 allowed to update the version used by specifying the directory where the
-Uglify JS sources will be find, by defining the property
+Uglify JS sources will be found, by defining the property
 **jawr.js.postprocessor.uglify.script.location**. This postprocessor is
 based on javascript engine. The default JS engine used in Jawr is the
 Rhino javascript engine. You can also use Nashorn engine since Java 8.
@@ -249,7 +249,7 @@ Please check [the tutorial about the use of JS
 engine](../tutorials/howToSetJsEngine.html) for more info. To use the
 Rhino engine, you'll have to add it to your project classpath to be able
 to us this postprocessor. For maven user, you can add the following
-snippet configuration to your pom.xml :
+snippet configuration to your pom.xml:
 
 
                     <dependency>
@@ -278,11 +278,11 @@ JSON containing the different options for compression, output format,
 ...
 
 For more information about uglify options, please check the following
-links : [UglifyJS2 site](http://lisperator.net/uglifyjs/)
-and [UglifyJS2 source repository](https://github.com/mishoo/UglifyJS2)
+links: [UglifyJS2 site](http://lisperator.net/uglifyjs/)
+and [UglifyJS2 source repository](https://github.com/mishoo/UglifyJS2).
 
 Here is an sample configuration where the script will be loaded from
-/js/uglify/ directory and with custom options :
+/js/uglify/ directory and with custom options:
 
 
             
@@ -296,7 +296,7 @@ Here is an sample configuration where the script will be loaded from
 -   **Configuration properties**
 
    Jawr provides the following properties to configure the Uglify
-    postprocessor :
+    postprocessor:
 
 | **Property name** | **Type** | **Purpose** | **Default value** |
 |-------------------|----------|-------------|-------------------|
@@ -327,11 +327,11 @@ or not by using the following attribute
 
 This processor will wrap the content of the bundle with the "media"
 value defined in the Jawr configuration file associated to this bundle.  
-Jawr will search for th value associated to :
+Jawr will search for th value associated to:
 jawr.css.bundle.**bundleName**.media to find the media value to set. If
 no media value is found, Jawr will set the media to **screen**.
 
-For example, if your bundle is define like this :
+For example, if your bundle is define like this:
 
 
             jawr.css.bundle.combine_print.id=/bundles/combine_print.css
@@ -385,7 +385,7 @@ only as a **bundle post processor** but as a **file post processor** AND
 a **bundle post processor**, because this post processor needs to
 prepend the MHTML part to the bundle and also to rewrite the URL for
 each file.  
-So **never** use this post processor only as a bundle post processor or
+So **never** use this post processor only as a bundle post processor nor
 only as a file post processor.
 
 ##### [**Autoprefixer postprocessor**]()
@@ -408,7 +408,7 @@ Nashorn JS engine.
 -   **Configuration properties**
 
    Jawr provides the following properties to configure the Autoprefixer
-    postprocessor :
+    postprocessor:
 
 | **Property name** | **Type** | **Purpose** | **Default value** |
 |-------------------|----------|-------------|-------------------|
