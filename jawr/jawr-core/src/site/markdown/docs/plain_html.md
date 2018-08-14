@@ -76,7 +76,7 @@ attribute is set to *screen*.
 
 Note that these functions are meant to be invoked while the page is
 loading (document.write is used). In the future an on-demand includer
-version will be available, but for now dont' try to invoke these
+version will be available, but for now don't try to invoke these
 functions after the page has loaded.
 
 
@@ -85,9 +85,9 @@ functions after the page has loaded.
 There is a penalty in using this technique: an additional script is
 included in every page. The loader script is itself small in size
 (although this will vary according to the number of scripts in your
-app). A worst case scenario yielded a 14Kb size, with 4-6Kb being a more
-normal size. Of course the script is minified and gzipped according to
-configuration, so the final size the client receives will be notably
+app). A worst-case scenario yielded a 14Kb size, with 4-6Kb being a more
+normal size. Of course, the script is minified and gzipped according to
+the configuration, so the final size the client receives will be notably
 smaller (3-5Kb at worst). Even so, this should still reduce the total
 number of imported scripts and its size. Also, all the imported
 resources remain in cache so when the user visits a JSP that uses the
