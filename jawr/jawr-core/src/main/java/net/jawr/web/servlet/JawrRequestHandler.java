@@ -650,6 +650,8 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			String requestedPath = "".equals(jawrConfig.getServletMapping()) ? request.getServletPath()
 					: request.getPathInfo();
+			// Remove context override prefix from the requested path
+			requestedPath = removePathOverridePrefix(request, requestedPath);
 			processRequest(requestedPath, request, response);
 
 		} catch (Exception e) {
@@ -660,6 +662,26 @@ public class JawrRequestHandler implements ConfigChangeListener, Serializable {
 
 			throw new ServletException(e);
 		}
+	}
+
+	/**
+	 * Remove the context override prefix from the requestedPath
+	 *
+	 * @param request       the request
+	 * @param requestedPath the requested path
+	 * @return the requested path without the context override prefix
+	 */
+	public String removePathOverridePrefix(HttpServletRequest request, String requestedPath) {
+		String prefix;
+		if (request.isSecure()) {
+			prefix = jawrConfig.getContextPathSslOverride();
+		} else {
+			prefix = jawrConfig.getContextPathOverride();
+		}
+		if (prefix != null && requestedPath.startsWith(prefix)) {
+			return requestedPath.substring(prefix.length());
+		}
+		return requestedPath;
 	}
 
 	/**
